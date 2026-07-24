@@ -3,81 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moviki — Acesso</title>
+<title>Moviki — Painel do Negócio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ciano:#00D4FF;
-    --azul:#0066FF;
-    --escuro:#0D1B2A;
-    --claro:#F2F5F9;
-    --card:#13263d;
-    --card-borda:#223a5c;
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
+    --card:#13263d; --card-borda:#223a5c; --campo:#0d1c30;
   }
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
   body{
     min-height:100vh;
     background:radial-gradient(1200px 600px at 50% -10%, #163155 0%, var(--escuro) 55%);
-    color:var(--claro);
-    display:flex;align-items:center;justify-content:center;
-    padding:20px;
+    color:var(--claro);display:flex;align-items:center;justify-content:center;padding:20px;
   }
-  .box{width:100%;max-width:400px;}
+  .box{width:100%;max-width:440px;}
   .marca{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;}
   .marca svg{width:38px;height:38px;}
   .marca .nome{font-size:30px;font-weight:700;letter-spacing:-1px;}
-  .marca .nome b{color:var(--ciano);font-weight:700;}
+  .marca .nome b{color:var(--ciano);}
   .slogan{text-align:center;font-size:12px;color:#8fa6c4;letter-spacing:.5px;text-transform:uppercase;margin-bottom:24px;}
-  .card{
-    background:var(--card);
-    border:1px solid var(--card-borda);
-    border-radius:18px;
-    padding:26px 22px;
-    box-shadow:0 20px 50px rgba(0,0,0,.35);
-  }
-  .abas{display:flex;background:#0d1c30;border-radius:12px;padding:4px;margin-bottom:22px;}
-  .abas button{
-    flex:1;border:none;background:transparent;color:#8fa6c4;
-    padding:10px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;
-  }
+  .card{background:var(--card);border:1px solid var(--card-borda);border-radius:18px;padding:26px 22px;box-shadow:0 20px 50px rgba(0,0,0,.35);}
+  .abas{display:flex;background:var(--campo);border-radius:12px;padding:4px;margin-bottom:22px;}
+  .abas button{flex:1;border:none;background:transparent;color:#8fa6c4;padding:10px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;}
   .abas button.ativa{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;}
   label{display:block;font-size:13px;font-weight:500;margin:0 0 6px 2px;color:#c7d6ea;}
   .campo{position:relative;margin-bottom:16px;}
-  input{
-    width:100%;padding:13px 14px;border-radius:11px;
-    border:1px solid var(--card-borda);background:#0d1c30;color:var(--claro);
-    font-size:15px;outline:none;transition:.15s;
-  }
-  input:focus{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15);}
-  .verSenha{
-    position:absolute;right:12px;top:50%;transform:translateY(-50%);
-    background:none;border:none;color:#8fa6c4;cursor:pointer;font-size:12px;font-weight:600;
-  }
-  .btn{
-    width:100%;padding:14px;border:none;border-radius:11px;cursor:pointer;
-    background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;
-    font-size:15px;font-weight:700;letter-spacing:.3px;transition:.15s;
-  }
+  input,textarea{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--card-borda);background:var(--campo);color:var(--claro);font-size:15px;outline:none;transition:.15s;resize:none;}
+  input:focus,textarea:focus{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15);}
+  .verSenha{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8fa6c4;cursor:pointer;font-size:12px;font-weight:600;}
+  .btn{width:100%;padding:14px;border:none;border-radius:11px;cursor:pointer;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-size:15px;font-weight:700;letter-spacing:.3px;transition:.15s;}
   .btn:hover{filter:brightness(1.07);}
   .btn:disabled{opacity:.6;cursor:default;}
-  .aviso{
-    margin-top:14px;padding:12px;border-radius:10px;font-size:13.5px;display:none;text-align:center;
-  }
+  .btn.secundario{background:transparent;border:1px solid var(--card-borda);color:#c7d6ea;}
+  .btn.secundario:hover{border-color:var(--ciano);color:var(--ciano);filter:none;}
+  .aviso{margin-top:14px;padding:12px;border-radius:10px;font-size:13.5px;display:none;text-align:center;}
   .aviso.erro{display:block;background:rgba(255,80,80,.12);color:#ff9a9a;border:1px solid rgba(255,80,80,.3);}
   .aviso.ok{display:block;background:rgba(0,212,255,.12);color:var(--ciano);border:1px solid rgba(0,212,255,.3);}
   .dica{font-size:12px;color:#7f95b3;text-align:center;margin-top:14px;line-height:1.5;}
-  /* painel logado */
-  .logado{display:none;text-align:center;}
-  .logado .check{font-size:44px;margin-bottom:8px;}
-  .logado h2{font-size:19px;margin-bottom:14px;}
-  .info{background:#0d1c30;border:1px solid var(--card-borda);border-radius:11px;padding:14px;margin-bottom:16px;text-align:left;font-size:13px;}
-  .info span{color:#8fa6c4;}
-  .info div{margin-bottom:8px;word-break:break-all;}
-  .info div:last-child{margin-bottom:0;}
-  .btn-sair{background:transparent;border:1px solid var(--card-borda);color:#c7d6ea;}
-  .btn-sair:hover{border-color:#ff8080;color:#ff9a9a;filter:none;}
+  .painel{display:none;}
+  .cabPainel{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .cabPainel .ola{font-size:13px;color:#8fa6c4;}
+  .cabPainel .ola b{color:var(--claro);display:block;font-size:14px;margin-top:2px;word-break:break-all;}
+  .sairMini{background:none;border:1px solid var(--card-borda);color:#8fa6c4;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
+  .sairMini:hover{border-color:#ff8080;color:#ff9a9a;}
+  .statusLinha{display:flex;gap:10px;margin-bottom:16px;}
+  .statusBtn{flex:1;padding:12px;border-radius:11px;border:1px solid var(--card-borda);background:var(--campo);color:#8fa6c4;font-weight:600;font-size:14px;cursor:pointer;transition:.15s;}
+  .statusBtn.aberto{background:rgba(0,212,255,.15);border-color:var(--ciano);color:var(--ciano);}
+  .statusBtn.fechado{background:rgba(255,120,120,.14);border-color:#ff8080;color:#ff9a9a;}
+  .gps{background:var(--campo);border:1px solid var(--card-borda);border-radius:11px;padding:14px;margin-bottom:16px;font-size:13px;color:#8fa6c4;}
+  .gps b{color:var(--claro);}
+  .linhaBtns{display:flex;gap:10px;}
 </style>
 </head>
 <body>
@@ -96,39 +73,55 @@
 
   <div class="card">
 
-    <!-- Formulário de acesso -->
     <div id="formArea">
       <div class="abas">
         <button id="abaEntrar" class="ativa" onclick="trocarAba('entrar')">Entrar</button>
         <button id="abaCriar" onclick="trocarAba('criar')">Criar conta</button>
       </div>
-
       <div class="campo">
         <label for="email">E-mail</label>
         <input id="email" type="email" placeholder="voce@email.com" autocomplete="email">
       </div>
-
       <div class="campo">
         <label for="senha">Senha</label>
         <input id="senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password">
         <button type="button" class="verSenha" onclick="verSenha()">mostrar</button>
       </div>
-
       <button id="btnAcao" class="btn" onclick="acao()">Entrar</button>
       <div id="aviso" class="aviso"></div>
       <div class="dica" id="dica"></div>
     </div>
 
-    <!-- Painel de quem já logou -->
-    <div id="painelLogado" class="logado">
-      <div class="check">✅</div>
-      <h2>Conta conectada!</h2>
-      <div class="info">
-        <div><span>E-mail:</span><br><b id="infoEmail"></b></div>
-        <div><span>ID da conta (uid):</span><br><b id="infoUid"></b></div>
+    <div id="painel" class="painel">
+      <div class="cabPainel">
+        <div class="ola">Conectado como:<b id="oExEmail"></b></div>
+        <button class="sairMini" onclick="sair()">Sair</button>
       </div>
-      <button class="btn btn-sair" onclick="sair()">Sair</button>
-      <div class="dica">Cada conta tem um ID único — é ele que garante que um cliente nunca vê os dados do outro.</div>
+
+      <div class="campo">
+        <label for="nome">Nome do negócio</label>
+        <input id="nome" type="text" placeholder="Ex.: Caldinho do Zé">
+      </div>
+
+      <label>Status agora</label>
+      <div class="statusLinha">
+        <button id="btnAberto" class="statusBtn" onclick="setStatus('aberto')">🟢 Aberto</button>
+        <button id="btnFechado" class="statusBtn" onclick="setStatus('fechado')">🔴 Fechado</button>
+      </div>
+
+      <div class="campo">
+        <label for="recado">Recado do dia (opcional)</label>
+        <textarea id="recado" rows="2" placeholder="Ex.: Hoje tem caldo de feijão!"></textarea>
+      </div>
+
+      <div class="gps" id="gpsInfo">📍 Localização ainda não definida.</div>
+
+      <div class="linhaBtns" style="margin-bottom:10px;">
+        <button class="btn secundario" onclick="pegarLocalizacao()">📍 Atualizar localização</button>
+      </div>
+      <button id="btnSalvar" class="btn" onclick="salvar()">Salvar</button>
+      <div id="avisoP" class="aviso"></div>
+      <div class="dica">Você está editando o negócio da conta: <span id="oUid" style="color:#8fa6c4;word-break:break-all;"></span></div>
     </div>
 
   </div>
@@ -136,10 +129,10 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
@@ -152,95 +145,140 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  let modo = 'entrar';
-
-  // elementos
   const el = id => document.getElementById(id);
+  let modo = 'entrar';
+  let usuarioAtual = null;
+  let statusAtual = 'fechado';
+  let coords = null;
+
   const aviso = el('aviso');
+  function limparAviso(){ aviso.className='aviso'; aviso.textContent=''; }
+  function erroAcesso(t){ aviso.className='aviso erro'; aviso.textContent=t; }
 
   window.trocarAba = function(novo){
     modo = novo;
-    el('abaEntrar').classList.toggle('ativa', novo === 'entrar');
-    el('abaCriar').classList.toggle('ativa', novo === 'criar');
-    el('btnAcao').textContent = novo === 'entrar' ? 'Entrar' : 'Criar conta';
-    el('dica').textContent = novo === 'criar'
-      ? 'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.'
-      : '';
+    el('abaEntrar').classList.toggle('ativa', novo==='entrar');
+    el('abaCriar').classList.toggle('ativa', novo==='criar');
+    el('btnAcao').textContent = novo==='entrar' ? 'Entrar' : 'Criar conta';
+    el('dica').textContent = novo==='criar' ? 'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.' : '';
     limparAviso();
   };
-
   window.verSenha = function(){
-    const s = el('senha');
-    const btn = document.querySelector('.verSenha');
-    if(s.type === 'password'){ s.type = 'text'; btn.textContent = 'ocultar'; }
-    else { s.type = 'password'; btn.textContent = 'mostrar'; }
+    const s=el('senha'), b=document.querySelector('.verSenha');
+    if(s.type==='password'){s.type='text';b.textContent='ocultar';} else {s.type='password';b.textContent='mostrar';}
   };
-
-  function limparAviso(){ aviso.className = 'aviso'; aviso.textContent = ''; }
-  function mostrarErro(t){ aviso.className = 'aviso erro'; aviso.textContent = t; }
-  function mostrarOk(t){ aviso.className = 'aviso ok'; aviso.textContent = t; }
-
   function msgErro(code){
-    const m = {
-      'auth/invalid-email':'E-mail inválido.',
-      'auth/missing-password':'Digite uma senha.',
+    const m={
+      'auth/invalid-email':'E-mail inválido.','auth/missing-password':'Digite uma senha.',
       'auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.',
       'auth/email-already-in-use':'Esse e-mail já tem conta. Tente "Entrar".',
-      'auth/invalid-credential':'E-mail ou senha incorretos.',
-      'auth/user-not-found':'Não encontrei conta com esse e-mail.',
-      'auth/wrong-password':'Senha incorreta.',
-      'auth/too-many-requests':'Muitas tentativas. Espere um pouco e tente de novo.',
-      'auth/network-request-failed':'Sem conexão. Confira a internet.',
-      'auth/unauthorized-domain':'Domínio não autorizado no Firebase (veja instruções).'
+      'auth/invalid-credential':'E-mail ou senha incorretos.','auth/user-not-found':'Não encontrei conta com esse e-mail.',
+      'auth/wrong-password':'Senha incorreta.','auth/too-many-requests':'Muitas tentativas. Espere um pouco.',
+      'auth/network-request-failed':'Sem conexão. Confira a internet.'
     };
-    return m[code] || ('Ops, deu um erro: ' + code);
+    return m[code] || ('Erro: '+code);
   }
-
   window.acao = async function(){
-    const email = el('email').value.trim();
-    const senha = el('senha').value;
-    const btn = el('btnAcao');
+    const email=el('email').value.trim(), senha=el('senha').value, btn=el('btnAcao');
     limparAviso();
+    if(!email){erroAcesso('Digite seu e-mail.');return;}
+    if(!senha){erroAcesso('Digite uma senha.');return;}
+    btn.disabled=true; const t=btn.textContent; btn.textContent='Aguarde...';
+    try{
+      if(modo==='criar') await createUserWithEmailAndPassword(auth,email,senha);
+      else await signInWithEmailAndPassword(auth,email,senha);
+    }catch(e){ erroAcesso(msgErro(e.code)); btn.disabled=false; btn.textContent=t; }
+  };
+  window.sair = async function(){ await signOut(auth); };
 
-    if(!email){ mostrarErro('Digite seu e-mail.'); return; }
-    if(!senha){ mostrarErro('Digite uma senha.'); return; }
+  const avisoP = el('avisoP');
+  function limparAvisoP(){ avisoP.className='aviso'; avisoP.textContent=''; }
+  function okP(t){ avisoP.className='aviso ok'; avisoP.textContent=t; }
+  function erroP(t){ avisoP.className='aviso erro'; avisoP.textContent=t; }
 
-    btn.disabled = true;
-    const textoOriginal = btn.textContent;
-    btn.textContent = 'Aguarde...';
+  window.setStatus = function(s){
+    statusAtual = s;
+    el('btnAberto').className = 'statusBtn' + (s==='aberto' ? ' aberto' : '');
+    el('btnFechado').className = 'statusBtn' + (s==='fechado' ? ' fechado' : '');
+  };
+
+  window.pegarLocalizacao = function(){
+    limparAvisoP();
+    if(!navigator.geolocation){ erroP('Seu aparelho não tem GPS disponível no navegador.'); return; }
+    el('gpsInfo').innerHTML = '📍 Pegando localização...';
+    navigator.geolocation.getCurrentPosition(
+      (pos)=>{
+        coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        el('gpsInfo').innerHTML = '📍 <b>Localização capturada!</b><br>'+coords.lat.toFixed(5)+', '+coords.lng.toFixed(5)+' <span style="color:#7f95b3">(lembre de Salvar)</span>';
+      },
+      (err)=>{
+        if(err.code===1) erroP('Você bloqueou o acesso à localização. Libere nas permissões do navegador.');
+        else erroP('Não consegui pegar a localização. Tente de novo.');
+        el('gpsInfo').innerHTML = '📍 Localização ainda não definida.';
+      },
+      { enableHighAccuracy:true, timeout:10000 }
+    );
+  };
+
+  window.salvar = async function(){
+    if(!usuarioAtual) return;
+    const btn=el('btnSalvar'); limparAvisoP();
+    const nome = el('nome').value.trim();
+    if(!nome){ erroP('Dê um nome ao seu negócio.'); return; }
+    btn.disabled=true; const t=btn.textContent; btn.textContent='Salvando...';
+
+    const dados = {
+      nome,
+      status: statusAtual,
+      recado: el('recado').value.trim(),
+      atualizadoEm: serverTimestamp()
+    };
+    if(coords){ dados.lat = coords.lat; dados.lng = coords.lng; }
 
     try{
-      if(modo === 'criar'){
-        await createUserWithEmailAndPassword(auth, email, senha);
-      } else {
-        await signInWithEmailAndPassword(auth, email, senha);
-      }
-      // onAuthStateChanged cuida da tela de sucesso
-    } catch(e){
-      mostrarErro(msgErro(e.code));
-      btn.disabled = false;
-      btn.textContent = textoOriginal;
+      await setDoc(doc(db,'negocios',usuarioAtual.uid), dados, { merge:true });
+      okP('✅ Salvo! Seus dados estão guardados no servidor.');
+    }catch(e){
+      erroP('Não consegui salvar: '+(e.code||e.message));
     }
+    btn.disabled=false; btn.textContent=t;
   };
 
-  window.sair = async function(){
-    await signOut(auth);
-  };
+  async function carregarDados(uid){
+    try{
+      const snap = await getDoc(doc(db,'negocios',uid));
+      if(snap.exists()){
+        const d = snap.data();
+        el('nome').value = d.nome || '';
+        el('recado').value = d.recado || '';
+        setStatus(d.status || 'fechado');
+        if(d.lat && d.lng){
+          coords = { lat:d.lat, lng:d.lng };
+          el('gpsInfo').innerHTML = '📍 <b>Localização salva:</b><br>'+d.lat.toFixed(5)+', '+d.lng.toFixed(5);
+        }
+      } else {
+        setStatus('fechado');
+      }
+    }catch(e){ setStatus('fechado'); }
+  }
 
-  // Detecta login/logout e troca a tela
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user)=>{
+    usuarioAtual = user;
     if(user){
-      el('formArea').style.display = 'none';
-      el('painelLogado').style.display = 'block';
-      el('infoEmail').textContent = user.email;
-      el('infoUid').textContent = user.uid;
+      el('formArea').style.display='none';
+      el('painel').style.display='block';
+      el('oExEmail').textContent = user.email;
+      el('oUid').textContent = user.uid;
+      coords = null;
+      el('gpsInfo').innerHTML = '📍 Localização ainda não definida.';
+      await carregarDados(user.uid);
     } else {
-      el('formArea').style.display = 'block';
-      el('painelLogado').style.display = 'none';
-      el('email').value = '';
-      el('senha').value = '';
-      el('btnAcao').disabled = false;
+      el('painel').style.display='none';
+      el('formArea').style.display='block';
+      el('email').value=''; el('senha').value='';
+      el('btnAcao').disabled=false;
       trocarAba('entrar');
     }
   });
