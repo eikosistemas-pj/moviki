@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moviki — Acesso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ciano:#00D4FF;
+    --azul:#0066FF;
+    --escuro:#0D1B2A;
+    --claro:#F2F5F9;
+    --card:#13263d;
+    --card-borda:#223a5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+  body{
+    min-height:100vh;
+    background:radial-gradient(1200px 600px at 50% -10%, #163155 0%, var(--escuro) 55%);
+    color:var(--claro);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .box{width:100%;max-width:400px;}
+  .marca{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;}
+  .marca svg{width:38px;height:38px;}
+  .marca .nome{font-size:30px;font-weight:700;letter-spacing:-1px;}
+  .marca .nome b{color:var(--ciano);font-weight:700;}
+  .slogan{text-align:center;font-size:12px;color:#8fa6c4;letter-spacing:.5px;text-transform:uppercase;margin-bottom:24px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-borda);
+    border-radius:18px;
+    padding:26px 22px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+  }
+  .abas{display:flex;background:#0d1c30;border-radius:12px;padding:4px;margin-bottom:22px;}
+  .abas button{
+    flex:1;border:none;background:transparent;color:#8fa6c4;
+    padding:10px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;
+  }
+  .abas button.ativa{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;}
+  label{display:block;font-size:13px;font-weight:500;margin:0 0 6px 2px;color:#c7d6ea;}
+  .campo{position:relative;margin-bottom:16px;}
+  input{
+    width:100%;padding:13px 14px;border-radius:11px;
+    border:1px solid var(--card-borda);background:#0d1c30;color:var(--claro);
+    font-size:15px;outline:none;transition:.15s;
+  }
+  input:focus{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15);}
+  .verSenha{
+    position:absolute;right:12px;top:50%;transform:translateY(-50%);
+    background:none;border:none;color:#8fa6c4;cursor:pointer;font-size:12px;font-weight:600;
+  }
+  .btn{
+    width:100%;padding:14px;border:none;border-radius:11px;cursor:pointer;
+    background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;
+    font-size:15px;font-weight:700;letter-spacing:.3px;transition:.15s;
+  }
+  .btn:hover{filter:brightness(1.07);}
+  .btn:disabled{opacity:.6;cursor:default;}
+  .aviso{
+    margin-top:14px;padding:12px;border-radius:10px;font-size:13.5px;display:none;text-align:center;
+  }
+  .aviso.erro{display:block;background:rgba(255,80,80,.12);color:#ff9a9a;border:1px solid rgba(255,80,80,.3);}
+  .aviso.ok{display:block;background:rgba(0,212,255,.12);color:var(--ciano);border:1px solid rgba(0,212,255,.3);}
+  .dica{font-size:12px;color:#7f95b3;text-align:center;margin-top:14px;line-height:1.5;}
+  /* painel logado */
+  .logado{display:none;text-align:center;}
+  .logado .check{font-size:44px;margin-bottom:8px;}
+  .logado h2{font-size:19px;margin-bottom:14px;}
+  .info{background:#0d1c30;border:1px solid var(--card-borda);border-radius:11px;padding:14px;margin-bottom:16px;text-align:left;font-size:13px;}
+  .info span{color:#8fa6c4;}
+  .info div{margin-bottom:8px;word-break:break-all;}
+  .info div:last-child{margin-bottom:0;}
+  .btn-sair{background:transparent;border:1px solid var(--card-borda);color:#c7d6ea;}
+  .btn-sair:hover{border-color:#ff8080;color:#ff9a9a;filter:none;}
+</style>
+</head>
+<body>
+<div class="box">
+
+  <div class="marca">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/>
+      <circle cx="32" cy="26" r="7" fill="#0D1B2A"/>
+      <path d="M44 14a17 17 0 0 1 5 12" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M48 9a24 24 0 0 1 7 17" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
+    </svg>
+    <div class="nome">movi<b>ki</b></div>
+  </div>
+  <div class="slogan">Onde os negócios encontram as pessoas</div>
+
+  <div class="card">
+
+    <!-- Formulário de acesso -->
+    <div id="formArea">
+      <div class="abas">
+        <button id="abaEntrar" class="ativa" onclick="trocarAba('entrar')">Entrar</button>
+        <button id="abaCriar" onclick="trocarAba('criar')">Criar conta</button>
+      </div>
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" placeholder="voce@email.com" autocomplete="email">
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password">
+        <button type="button" class="verSenha" onclick="verSenha()">mostrar</button>
+      </div>
+
+      <button id="btnAcao" class="btn" onclick="acao()">Entrar</button>
+      <div id="aviso" class="aviso"></div>
+      <div class="dica" id="dica"></div>
+    </div>
+
+    <!-- Painel de quem já logou -->
+    <div id="painelLogado" class="logado">
+      <div class="check">✅</div>
+      <h2>Conta conectada!</h2>
+      <div class="info">
+        <div><span>E-mail:</span><br><b id="infoEmail"></b></div>
+        <div><span>ID da conta (uid):</span><br><b id="infoUid"></b></div>
+      </div>
+      <button class="btn btn-sair" onclick="sair()">Sair</button>
+      <div class="dica">Cada conta tem um ID único — é ele que garante que um cliente nunca vê os dados do outro.</div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+    authDomain: "moviki-app.firebaseapp.com",
+    projectId: "moviki-app",
+    storageBucket: "moviki-app.firebasestorage.app",
+    messagingSenderId: "451920150738",
+    appId: "1:451920150738:web:be458392064c964c792d0b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  let modo = 'entrar';
+
+  // elementos
+  const el = id => document.getElementById(id);
+  const aviso = el('aviso');
+
+  window.trocarAba = function(novo){
+    modo = novo;
+    el('abaEntrar').classList.toggle('ativa', novo === 'entrar');
+    el('abaCriar').classList.toggle('ativa', novo === 'criar');
+    el('btnAcao').textContent = novo === 'entrar' ? 'Entrar' : 'Criar conta';
+    el('dica').textContent = novo === 'criar'
+      ? 'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.'
+      : '';
+    limparAviso();
+  };
+
+  window.verSenha = function(){
+    const s = el('senha');
+    const btn = document.querySelector('.verSenha');
+    if(s.type === 'password'){ s.type = 'text'; btn.textContent = 'ocultar'; }
+    else { s.type = 'password'; btn.textContent = 'mostrar'; }
+  };
+
+  function limparAviso(){ aviso.className = 'aviso'; aviso.textContent = ''; }
+  function mostrarErro(t){ aviso.className = 'aviso erro'; aviso.textContent = t; }
+  function mostrarOk(t){ aviso.className = 'aviso ok'; aviso.textContent = t; }
+
+  function msgErro(code){
+    const m = {
+      'auth/invalid-email':'E-mail inválido.',
+      'auth/missing-password':'Digite uma senha.',
+      'auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.',
+      'auth/email-already-in-use':'Esse e-mail já tem conta. Tente "Entrar".',
+      'auth/invalid-credential':'E-mail ou senha incorretos.',
+      'auth/user-not-found':'Não encontrei conta com esse e-mail.',
+      'auth/wrong-password':'Senha incorreta.',
+      'auth/too-many-requests':'Muitas tentativas. Espere um pouco e tente de novo.',
+      'auth/network-request-failed':'Sem conexão. Confira a internet.',
+      'auth/unauthorized-domain':'Domínio não autorizado no Firebase (veja instruções).'
+    };
+    return m[code] || ('Ops, deu um erro: ' + code);
+  }
+
+  window.acao = async function(){
+    const email = el('email').value.trim();
+    const senha = el('senha').value;
+    const btn = el('btnAcao');
+    limparAviso();
+
+    if(!email){ mostrarErro('Digite seu e-mail.'); return; }
+    if(!senha){ mostrarErro('Digite uma senha.'); return; }
+
+    btn.disabled = true;
+    const textoOriginal = btn.textContent;
+    btn.textContent = 'Aguarde...';
+
+    try{
+      if(modo === 'criar'){
+        await createUserWithEmailAndPassword(auth, email, senha);
+      } else {
+        await signInWithEmailAndPassword(auth, email, senha);
+      }
+      // onAuthStateChanged cuida da tela de sucesso
+    } catch(e){
+      mostrarErro(msgErro(e.code));
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    }
+  };
+
+  window.sair = async function(){
+    await signOut(auth);
+  };
+
+  // Detecta login/logout e troca a tela
+  onAuthStateChanged(auth, (user) => {
+    if(user){
+      el('formArea').style.display = 'none';
+      el('painelLogado').style.display = 'block';
+      el('infoEmail').textContent = user.email;
+      el('infoUid').textContent = user.uid;
+    } else {
+      el('formArea').style.display = 'block';
+      el('painelLogado').style.display = 'none';
+      el('email').value = '';
+      el('senha').value = '';
+      el('btnAcao').disabled = false;
+      trocarAba('entrar');
+    }
+  });
+</script>
+</body>
+</html>
