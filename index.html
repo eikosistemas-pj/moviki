@@ -5,19 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moviki — Painel do Negócio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
-    --card:#13263d; --card-borda:#223a5c; --campo:#0d1c30;
-  }
+  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;--card:#13263d;--card-borda:#223a5c;--campo:#0d1c30;}
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
-  body{
-    min-height:100vh;
-    background:radial-gradient(1200px 600px at 50% -10%, #163155 0%, var(--escuro) 55%);
-    color:var(--claro);display:flex;align-items:center;justify-content:center;padding:20px;
-  }
+  body{min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%, #163155 0%, var(--escuro) 55%);color:var(--claro);display:flex;align-items:center;justify-content:center;padding:20px;}
   .box{width:100%;max-width:440px;}
   .marca{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;}
   .marca svg{width:38px;height:38px;}
@@ -54,7 +46,17 @@
   .statusBtn.fechado{background:rgba(255,120,120,.14);border-color:#ff8080;color:#ff9a9a;}
   .gps{background:var(--campo);border:1px solid var(--card-borda);border-radius:11px;padding:14px;margin-bottom:16px;font-size:13px;color:#8fa6c4;}
   .gps b{color:var(--claro);}
-  .linhaBtns{display:flex;gap:10px;}
+  /* apelido / link */
+  .linkCampo{display:flex;align-items:center;border:1px solid var(--card-borda);background:var(--campo);border-radius:11px;overflow:hidden;}
+  .linkCampo:focus-within{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15);}
+  .linkCampo .pref{padding:13px 4px 13px 14px;color:#8fa6c4;font-size:15px;white-space:nowrap;}
+  .linkCampo input{border:none;background:transparent;box-shadow:none !important;padding-left:2px;}
+  .linkPronto{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.3);border-radius:11px;padding:14px;margin-bottom:16px;}
+  .linkPronto .rot{font-size:12px;color:#8fa6c4;margin-bottom:8px;}
+  .linkRow{display:flex;gap:8px;align-items:center;}
+  .linkRow a{flex:1;color:var(--ciano);font-weight:600;font-size:14px;text-decoration:none;word-break:break-all;}
+  .linkRow button{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;}
+  .escondido{display:none !important;}
 </style>
 </head>
 <body>
@@ -100,7 +102,23 @@
 
       <div class="campo">
         <label for="nome">Nome do negócio</label>
-        <input id="nome" type="text" placeholder="Ex.: Caldinho do Zé">
+        <input id="nome" type="text" placeholder="Ex.: Caldeirão Nordestino">
+      </div>
+
+      <div class="campo">
+        <label for="apelido">Seu link no Moviki</label>
+        <div class="linkCampo">
+          <span class="pref">moviki.com.br/</span>
+          <input id="apelido" type="text" placeholder="caldeirao" autocomplete="off">
+        </div>
+      </div>
+
+      <div id="linkPronto" class="linkPronto escondido">
+        <div class="rot">✅ Seu link pra divulgar (bio do Instagram, WhatsApp...):</div>
+        <div class="linkRow">
+          <a id="linkPublico" href="#" target="_blank" rel="noopener"></a>
+          <button onclick="copiarLink()" id="btnCopiar">Copiar</button>
+        </div>
       </div>
 
       <label>Status agora</label>
@@ -116,12 +134,11 @@
 
       <div class="gps" id="gpsInfo">📍 Localização ainda não definida.</div>
 
-      <div class="linhaBtns" style="margin-bottom:10px;">
+      <div style="margin-bottom:10px;">
         <button class="btn secundario" onclick="pegarLocalizacao()">📍 Atualizar localização</button>
       </div>
       <button id="btnSalvar" class="btn" onclick="salvar()">Salvar</button>
       <div id="avisoP" class="aviso"></div>
-      <div class="dica">Você está editando o negócio da conta: <span id="oUid" style="color:#8fa6c4;word-break:break-all;"></span></div>
     </div>
 
   </div>
@@ -142,144 +159,112 @@
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   const el = id => document.getElementById(id);
-  let modo = 'entrar';
-  let usuarioAtual = null;
-  let statusAtual = 'fechado';
-  let coords = null;
+  let modo='entrar', usuarioAtual=null, statusAtual='fechado', coords=null, slugSalvo='';
+  const RESERVADOS = ['index','mapa','404','assets','www','painel','login','moviki'];
 
-  const aviso = el('aviso');
-  function limparAviso(){ aviso.className='aviso'; aviso.textContent=''; }
-  function erroAcesso(t){ aviso.className='aviso erro'; aviso.textContent=t; }
+  const aviso=el('aviso');
+  function limparAviso(){aviso.className='aviso';aviso.textContent='';}
+  function erroAcesso(t){aviso.className='aviso erro';aviso.textContent=t;}
+  window.trocarAba=function(n){modo=n;el('abaEntrar').classList.toggle('ativa',n==='entrar');el('abaCriar').classList.toggle('ativa',n==='criar');el('btnAcao').textContent=n==='entrar'?'Entrar':'Criar conta';el('dica').textContent=n==='criar'?'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.':'';limparAviso();};
+  window.verSenha=function(){const s=el('senha'),b=document.querySelector('.verSenha');if(s.type==='password'){s.type='text';b.textContent='ocultar';}else{s.type='password';b.textContent='mostrar';}};
+  function msgErro(c){const m={'auth/invalid-email':'E-mail inválido.','auth/missing-password':'Digite uma senha.','auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.','auth/email-already-in-use':'Esse e-mail já tem conta. Tente "Entrar".','auth/invalid-credential':'E-mail ou senha incorretos.','auth/user-not-found':'Não encontrei conta com esse e-mail.','auth/wrong-password':'Senha incorreta.','auth/too-many-requests':'Muitas tentativas. Espere um pouco.','auth/network-request-failed':'Sem conexão. Confira a internet.'};return m[c]||('Erro: '+c);}
+  window.acao=async function(){const email=el('email').value.trim(),senha=el('senha').value,btn=el('btnAcao');limparAviso();if(!email){erroAcesso('Digite seu e-mail.');return;}if(!senha){erroAcesso('Digite uma senha.');return;}btn.disabled=true;const t=btn.textContent;btn.textContent='Aguarde...';try{if(modo==='criar')await createUserWithEmailAndPassword(auth,email,senha);else await signInWithEmailAndPassword(auth,email,senha);}catch(e){erroAcesso(msgErro(e.code));btn.disabled=false;btn.textContent=t;}};
+  window.sair=async function(){await signOut(auth);};
 
-  window.trocarAba = function(novo){
-    modo = novo;
-    el('abaEntrar').classList.toggle('ativa', novo==='entrar');
-    el('abaCriar').classList.toggle('ativa', novo==='criar');
-    el('btnAcao').textContent = novo==='entrar' ? 'Entrar' : 'Criar conta';
-    el('dica').textContent = novo==='criar' ? 'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.' : '';
-    limparAviso();
-  };
-  window.verSenha = function(){
-    const s=el('senha'), b=document.querySelector('.verSenha');
-    if(s.type==='password'){s.type='text';b.textContent='ocultar';} else {s.type='password';b.textContent='mostrar';}
-  };
-  function msgErro(code){
-    const m={
-      'auth/invalid-email':'E-mail inválido.','auth/missing-password':'Digite uma senha.',
-      'auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.',
-      'auth/email-already-in-use':'Esse e-mail já tem conta. Tente "Entrar".',
-      'auth/invalid-credential':'E-mail ou senha incorretos.','auth/user-not-found':'Não encontrei conta com esse e-mail.',
-      'auth/wrong-password':'Senha incorreta.','auth/too-many-requests':'Muitas tentativas. Espere um pouco.',
-      'auth/network-request-failed':'Sem conexão. Confira a internet.'
-    };
-    return m[code] || ('Erro: '+code);
+  const avisoP=el('avisoP');
+  function limparAvisoP(){avisoP.className='aviso';avisoP.textContent='';}
+  function okP(t){avisoP.className='aviso ok';avisoP.textContent=t;}
+  function erroP(t){avisoP.className='aviso erro';avisoP.textContent=t;}
+  window.setStatus=function(s){statusAtual=s;el('btnAberto').className='statusBtn'+(s==='aberto'?' aberto':'');el('btnFechado').className='statusBtn'+(s==='fechado'?' fechado':'');};
+
+  window.pegarLocalizacao=function(){limparAvisoP();if(!navigator.geolocation){erroP('Seu aparelho não tem GPS no navegador.');return;}el('gpsInfo').innerHTML='📍 Pegando localização...';navigator.geolocation.getCurrentPosition((pos)=>{coords={lat:pos.coords.latitude,lng:pos.coords.longitude};el('gpsInfo').innerHTML='📍 <b>Localização capturada!</b><br>'+coords.lat.toFixed(5)+', '+coords.lng.toFixed(5)+' <span style="color:#7f95b3">(lembre de Salvar)</span>';},(err)=>{if(err.code===1)erroP('Você bloqueou a localização. Libere nas permissões do navegador.');else erroP('Não consegui pegar a localização. Tente de novo.');el('gpsInfo').innerHTML='📍 Localização ainda não definida.';},{enableHighAccuracy:true,timeout:10000});};
+
+  function limpaSlug(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');}
+
+  function mostrarLink(slug){
+    slugSalvo=slug;
+    el('linkPublico').textContent='moviki.com.br/'+slug;
+    el('linkPublico').href='https://moviki.com.br/'+slug;
+    el('linkPronto').classList.remove('escondido');
   }
-  window.acao = async function(){
-    const email=el('email').value.trim(), senha=el('senha').value, btn=el('btnAcao');
-    limparAviso();
-    if(!email){erroAcesso('Digite seu e-mail.');return;}
-    if(!senha){erroAcesso('Digite uma senha.');return;}
-    btn.disabled=true; const t=btn.textContent; btn.textContent='Aguarde...';
-    try{
-      if(modo==='criar') await createUserWithEmailAndPassword(auth,email,senha);
-      else await signInWithEmailAndPassword(auth,email,senha);
-    }catch(e){ erroAcesso(msgErro(e.code)); btn.disabled=false; btn.textContent=t; }
-  };
-  window.sair = async function(){ await signOut(auth); };
-
-  const avisoP = el('avisoP');
-  function limparAvisoP(){ avisoP.className='aviso'; avisoP.textContent=''; }
-  function okP(t){ avisoP.className='aviso ok'; avisoP.textContent=t; }
-  function erroP(t){ avisoP.className='aviso erro'; avisoP.textContent=t; }
-
-  window.setStatus = function(s){
-    statusAtual = s;
-    el('btnAberto').className = 'statusBtn' + (s==='aberto' ? ' aberto' : '');
-    el('btnFechado').className = 'statusBtn' + (s==='fechado' ? ' fechado' : '');
+  window.copiarLink=function(){
+    if(!slugSalvo)return;
+    navigator.clipboard.writeText('https://moviki.com.br/'+slugSalvo).then(()=>{
+      const b=el('btnCopiar');b.textContent='Copiado!';setTimeout(()=>b.textContent='Copiar',1500);
+    });
   };
 
-  window.pegarLocalizacao = function(){
-    limparAvisoP();
-    if(!navigator.geolocation){ erroP('Seu aparelho não tem GPS disponível no navegador.'); return; }
-    el('gpsInfo').innerHTML = '📍 Pegando localização...';
-    navigator.geolocation.getCurrentPosition(
-      (pos)=>{
-        coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        el('gpsInfo').innerHTML = '📍 <b>Localização capturada!</b><br>'+coords.lat.toFixed(5)+', '+coords.lng.toFixed(5)+' <span style="color:#7f95b3">(lembre de Salvar)</span>';
-      },
-      (err)=>{
-        if(err.code===1) erroP('Você bloqueou o acesso à localização. Libere nas permissões do navegador.');
-        else erroP('Não consegui pegar a localização. Tente de novo.');
-        el('gpsInfo').innerHTML = '📍 Localização ainda não definida.';
-      },
-      { enableHighAccuracy:true, timeout:10000 }
-    );
-  };
+  window.salvar=async function(){
+    if(!usuarioAtual)return;
+    const btn=el('btnSalvar');limparAvisoP();
+    const nome=el('nome').value.trim();
+    if(!nome){erroP('Dê um nome ao seu negócio.');return;}
 
-  window.salvar = async function(){
-    if(!usuarioAtual) return;
-    const btn=el('btnSalvar'); limparAvisoP();
-    const nome = el('nome').value.trim();
-    if(!nome){ erroP('Dê um nome ao seu negócio.'); return; }
-    btn.disabled=true; const t=btn.textContent; btn.textContent='Salvando...';
-
-    const dados = {
-      nome,
-      status: statusAtual,
-      recado: el('recado').value.trim(),
-      atualizadoEm: serverTimestamp()
-    };
-    if(coords){ dados.lat = coords.lat; dados.lng = coords.lng; }
-
-    try{
-      await setDoc(doc(db,'negocios',usuarioAtual.uid), dados, { merge:true });
-      okP('✅ Salvo! Seus dados estão guardados no servidor.');
-    }catch(e){
-      erroP('Não consegui salvar: '+(e.code||e.message));
+    const apelidoDigitado=el('apelido').value.trim();
+    let slug='';
+    if(apelidoDigitado){
+      slug=limpaSlug(apelidoDigitado);
+      if(slug.length<3){erroP('O apelido precisa ter ao menos 3 letras/números (sem espaços ou acentos).');return;}
+      if(RESERVADOS.includes(slug)){erroP('Esse apelido é reservado, escolha outro.');return;}
     }
-    btn.disabled=false; btn.textContent=t;
+
+    btn.disabled=true;const t=btn.textContent;btn.textContent='Salvando...';
+
+    try{
+      // reserva do apelido
+      if(slug){
+        const ref=doc(db,'slugs',slug);
+        const snap=await getDoc(ref);
+        if(snap.exists() && snap.data().uid!==usuarioAtual.uid){
+          erroP('O apelido "'+slug+'" já está em uso. Escolha outro.');
+          btn.disabled=false;btn.textContent=t;return;
+        }
+        if(!snap.exists()){ await setDoc(ref,{uid:usuarioAtual.uid}); }
+        el('apelido').value=slug;
+      }
+
+      const dados={nome,status:statusAtual,recado:el('recado').value.trim(),atualizadoEm:serverTimestamp()};
+      if(coords){dados.lat=coords.lat;dados.lng=coords.lng;}
+      if(slug){dados.slug=slug;}
+
+      await setDoc(doc(db,'negocios',usuarioAtual.uid),dados,{merge:true});
+      okP('✅ Salvo!');
+      if(slug) mostrarLink(slug);
+    }catch(e){ erroP('Não consegui salvar: '+(e.code||e.message)); }
+    btn.disabled=false;btn.textContent=t;
   };
 
   async function carregarDados(uid){
     try{
-      const snap = await getDoc(doc(db,'negocios',uid));
+      const snap=await getDoc(doc(db,'negocios',uid));
       if(snap.exists()){
-        const d = snap.data();
-        el('nome').value = d.nome || '';
-        el('recado').value = d.recado || '';
-        setStatus(d.status || 'fechado');
-        if(d.lat && d.lng){
-          coords = { lat:d.lat, lng:d.lng };
-          el('gpsInfo').innerHTML = '📍 <b>Localização salva:</b><br>'+d.lat.toFixed(5)+', '+d.lng.toFixed(5);
-        }
-      } else {
-        setStatus('fechado');
-      }
-    }catch(e){ setStatus('fechado'); }
+        const d=snap.data();
+        el('nome').value=d.nome||'';
+        el('recado').value=d.recado||'';
+        el('apelido').value=d.slug||'';
+        setStatus(d.status||'fechado');
+        if(d.slug) mostrarLink(d.slug);
+        if(d.lat&&d.lng){coords={lat:d.lat,lng:d.lng};el('gpsInfo').innerHTML='📍 <b>Localização salva:</b><br>'+d.lat.toFixed(5)+', '+d.lng.toFixed(5);}
+      }else{setStatus('fechado');}
+    }catch(e){setStatus('fechado');}
   }
 
-  onAuthStateChanged(auth, async (user)=>{
-    usuarioAtual = user;
+  onAuthStateChanged(auth,async(user)=>{
+    usuarioAtual=user;
     if(user){
-      el('formArea').style.display='none';
-      el('painel').style.display='block';
-      el('oExEmail').textContent = user.email;
-      el('oUid').textContent = user.uid;
-      coords = null;
-      el('gpsInfo').innerHTML = '📍 Localização ainda não definida.';
+      el('formArea').style.display='none';el('painel').style.display='block';
+      el('oExEmail').textContent=user.email;
+      coords=null;slugSalvo='';el('linkPronto').classList.add('escondido');
+      el('gpsInfo').innerHTML='📍 Localização ainda não definida.';
       await carregarDados(user.uid);
-    } else {
-      el('painel').style.display='none';
-      el('formArea').style.display='block';
-      el('email').value=''; el('senha').value='';
-      el('btnAcao').disabled=false;
-      trocarAba('entrar');
+    }else{
+      el('painel').style.display='none';el('formArea').style.display='block';
+      el('email').value='';el('senha').value='';el('btnAcao').disabled=false;trocarAba('entrar');
     }
   });
 </script>
