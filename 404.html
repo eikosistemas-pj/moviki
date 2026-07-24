@@ -24,7 +24,9 @@
   .rodape{position:absolute;left:12px;right:12px;bottom:14px;z-index:1000;background:rgba(19,38,61,.96);border:1px solid #223a5c;border-radius:16px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.45);backdrop-filter:blur(4px);}
   .rodape .recado{color:var(--claro);font-size:14px;line-height:1.4;margin-bottom:12px;}
   .rodape .recado span{color:#8fa6c4;font-size:12px;display:block;margin-bottom:2px;}
-  .btnRota{display:block;width:100%;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:11px;}
+  .botoesRodape{display:flex;gap:8px;}
+  .btnRota{flex:1;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:11px;}
+  .btnCardapio{flex:1;text-align:center;background:transparent;border:1px solid var(--ciano);color:var(--ciano);font-weight:700;font-size:15px;padding:13px;border-radius:11px;cursor:pointer;}
   .tela{position:absolute;inset:0;z-index:1500;background:var(--escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--claro);gap:10px;}
   .tela svg{width:56px;height:56px;margin-bottom:6px;}
   .tela h1{font-size:20px;font-weight:700;}
@@ -32,6 +34,18 @@
   .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
   .escondido{display:none !important;}
   .pin{filter:drop-shadow(0 3px 5px rgba(0,0,0,.4));}
+  /* Painel do cardápio (overlay) */
+  .cardapioOverlay{position:absolute;inset:0;z-index:2000;background:rgba(6,15,25,.6);backdrop-filter:blur(2px);display:flex;align-items:flex-end;}
+  .cardapioSheet{width:100%;max-height:82%;overflow-y:auto;background:var(--escuro);border-radius:20px 20px 0 0;border-top:1px solid #223a5c;padding:18px 18px 26px;}
+  .cardapioSheet .barra{width:40px;height:4px;background:#33507a;border-radius:3px;margin:0 auto 16px;}
+  .cardapioSheet h2{color:var(--claro);font-size:19px;text-align:center;margin-bottom:2px;}
+  .cardapioSheet .sub{color:#8fa6c4;font-size:12px;text-align:center;margin-bottom:18px;}
+  .catTitulo{color:var(--ciano);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;}
+  .itemPub{display:flex;align-items:center;gap:10px;background:#13263d;border:1px solid #223a5c;border-radius:11px;padding:12px 14px;margin-bottom:8px;}
+  .itemPub .nm{flex:1;color:var(--claro);font-size:15px;font-weight:500;}
+  .acabando{background:#ff3b3b;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.5px;animation:pisca 1s infinite;}
+  @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .fecharCard{width:100%;margin-top:18px;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:11px;padding:13px;font-weight:700;font-size:15px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -50,7 +64,20 @@
 
 <div class="rodape escondido" id="rodape">
   <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
-  <a class="btnRota" id="btnRota" href="#" target="_blank" rel="noopener">📍 Como chegar</a>
+  <div class="botoesRodape">
+    <button class="btnCardapio escondido" id="btnCardapio" onclick="abrirCardapio()">🍽️ Cardápio</button>
+    <a class="btnRota" id="btnRota" href="#" target="_blank" rel="noopener">📍 Como chegar</a>
+  </div>
+</div>
+
+<div class="cardapioOverlay escondido" id="cardapioOverlay">
+  <div class="cardapioSheet">
+    <div class="barra"></div>
+    <h2 id="cardNome">Cardápio</h2>
+    <div class="sub">Cardápio de hoje</div>
+    <div id="cardConteudo"></div>
+    <button class="fecharCard" onclick="fecharCardapio()">Fechar</button>
+  </div>
 </div>
 
 <div class="tela" id="tela">
@@ -81,20 +108,38 @@
 
   function mostrarTela(t,x,link){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://moviki.com.br">Conhecer o Moviki</a>':'');el('tela').classList.remove('escondido');}
   function esconderTela(){el('tela').classList.add('escondido');}
+  window.abrirCardapio=function(){el('cardapioOverlay').classList.remove('escondido');};
+  window.fecharCardapio=function(){el('cardapioOverlay').classList.add('escondido');};
 
-  // Descobre o apelido: primeiro pelo caminho (moviki.com.br/caldeirao),
-  // e se não tiver, pela URL antiga (?loja= ou ?id=)
   const params=new URLSearchParams(window.location.search);
-  let slug = decodeURIComponent(window.location.pathname).replace(/^\/+/,'').replace(/\/+$/,'').trim().toLowerCase();
-  const idDireto = params.get('id'); // compatibilidade com o link antigo por uid
-  const lojaQuery = params.get('loja');
-  if(lojaQuery) slug = lojaQuery.toLowerCase();
+  let slug=decodeURIComponent(window.location.pathname).replace(/^\/+/,'').replace(/\/+$/,'').trim().toLowerCase();
+  const idDireto=params.get('id');
+  const lojaQuery=params.get('loja');
+  if(lojaQuery) slug=lojaQuery.toLowerCase();
 
-  // Monta o mapa
   const map=L.map('map',{zoomControl:true}).setView([-8.05,-34.9],13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
   const iconeMoviki=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0D1B2A" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0D1B2A"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
   let marcador=null;
+
+  function escapar(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  function montarCardapio(nome,cardapio){
+    el('cardNome').textContent=nome||'Cardápio';
+    if(!cardapio||!cardapio.length){el('btnCardapio').classList.add('escondido');return;}
+    el('btnCardapio').classList.remove('escondido');
+    // agrupa por categoria preservando a ordem de aparição
+    const grupos={};const ordem=[];
+    cardapio.forEach(it=>{const c=it.categoria||'Itens';if(!grupos[c]){grupos[c]=[];ordem.push(c);}grupos[c].push(it);});
+    let html='';
+    ordem.forEach(cat=>{
+      html+='<div class="catTitulo">'+escapar(cat)+'</div>';
+      grupos[cat].forEach(it=>{
+        html+='<div class="itemPub"><div class="nm">'+escapar(it.nome)+'</div>'+(it.acabando?'<span class="acabando">ACABANDO!</span>':'')+'</div>';
+      });
+    });
+    el('cardConteudo').innerHTML=html;
+  }
 
   function ouvirNegocio(uid){
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
@@ -105,24 +150,25 @@
       el('statusBadge').innerHTML='<span class="badge '+(aberto?'aberto':'fechado')+'"><span class="bolinha"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
       el('topo').classList.remove('escondido');
       if(d.recado&&d.recado.trim()){el('recado').textContent=d.recado;el('recadoBox').classList.remove('escondido');}else{el('recadoBox').classList.add('escondido');}
+      montarCardapio(d.nome,d.cardapio);
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
         esconderTela();el('rodape').classList.remove('escondido');
         el('btnRota').href='https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lng;
         const pos=[d.lat,d.lng];
         if(!marcador){marcador=L.marker(pos,{icon:iconeMoviki}).addTo(map);map.setView(pos,16);}else{marcador.setLatLng(pos);}
-        marcador.bindPopup('<b>'+(d.nome||'Negócio')+'</b>');
+        marcador.bindPopup('<b>'+escapar(d.nome||'Negócio')+'</b>');
       }else{el('rodape').classList.add('escondido');mostrarTela(d.nome||'Negócio','Este negócio ainda não ligou a localização. Volte daqui a pouco.');}
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
 
   (async()=>{
-    if(idDireto){ ouvirNegocio(idDireto); return; }           // link antigo por uid
-    if(!slug){ mostrarTela('Bem-vindo ao Moviki','Este link não aponta pra nenhum negócio.',true); return; }
+    if(idDireto){ouvirNegocio(idDireto);return;}
+    if(!slug){mostrarTela('Bem-vindo ao Moviki','Este link não aponta pra nenhum negócio.',true);return;}
     try{
       const s=await getDoc(doc(db,'slugs',slug));
-      if(!s.exists()){ mostrarTela('Negócio não encontrado','Não achamos "'+slug+'" no Moviki. Confira o link.',true); return; }
+      if(!s.exists()){mostrarTela('Negócio não encontrado','Não achamos "'+escapar(slug)+'" no Moviki. Confira o link.',true);return;}
       ouvirNegocio(s.data().uid);
-    }catch(e){ mostrarTela('Erro ao carregar','Tente de novo em instantes.'); }
+    }catch(e){mostrarTela('Erro ao carregar','Tente de novo em instantes.');}
   })();
 </script>
 </body>
