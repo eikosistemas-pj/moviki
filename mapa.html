@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moviki — Onde estou agora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+  html,body{height:100%;}
+  #map{position:absolute;inset:0;z-index:1;background:#0d1c30;}
+
+  /* Barra de cima */
+  .topo{
+    position:absolute;top:0;left:0;right:0;z-index:1000;
+    background:linear-gradient(180deg, rgba(13,27,42,.96), rgba(13,27,42,.82) 70%, transparent);
+    padding:14px 16px 26px;display:flex;align-items:center;gap:12px;
+  }
+  .topo svg{width:30px;height:30px;flex-shrink:0;}
+  .topo .info{flex:1;min-width:0;}
+  .topo .nome{color:var(--claro);font-size:18px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:4px;}
+  .badge.aberto{background:rgba(0,212,255,.18);color:var(--ciano);}
+  .badge.fechado{background:rgba(255,120,120,.18);color:#ff9a9a;}
+  .badge .bolinha{width:8px;height:8px;border-radius:50%;background:currentColor;}
+
+  /* Card de baixo */
+  .rodape{
+    position:absolute;left:12px;right:12px;bottom:14px;z-index:1000;
+    background:rgba(19,38,61,.96);border:1px solid #223a5c;border-radius:16px;
+    padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.45);backdrop-filter:blur(4px);
+  }
+  .rodape .recado{color:var(--claro);font-size:14px;line-height:1.4;margin-bottom:12px;}
+  .rodape .recado span{color:#8fa6c4;font-size:12px;display:block;margin-bottom:2px;}
+  .btnRota{
+    display:block;width:100%;text-align:center;text-decoration:none;
+    background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;
+    font-weight:700;font-size:15px;padding:13px;border-radius:11px;
+  }
+
+  /* Estados de aviso (sem localização / carregando / erro) */
+  .tela{
+    position:absolute;inset:0;z-index:1500;background:var(--escuro);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:30px;color:var(--claro);gap:10px;
+  }
+  .tela svg{width:56px;height:56px;margin-bottom:6px;}
+  .tela h1{font-size:20px;font-weight:700;}
+  .tela p{color:#8fa6c4;font-size:14px;max-width:300px;line-height:1.5;}
+  .escondido{display:none !important;}
+
+  /* Marcador Moviki */
+  .pin{filter:drop-shadow(0 3px 5px rgba(0,0,0,.4));}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div class="topo escondido" id="topo">
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/>
+    <circle cx="32" cy="26" r="7" fill="#0D1B2A"/>
+    <path d="M44 14a17 17 0 0 1 5 12" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M48 9a24 24 0 0 1 7 17" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
+  </svg>
+  <div class="info">
+    <div class="nome" id="nome">—</div>
+    <div id="statusBadge"></div>
+  </div>
+</div>
+
+<div class="rodape escondido" id="rodape">
+  <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
+  <a class="btnRota" id="btnRota" href="#" target="_blank" rel="noopener">📍 Como chegar</a>
+</div>
+
+<!-- Tela de carregando / aviso -->
+<div class="tela" id="tela">
+  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/>
+    <circle cx="32" cy="26" r="7" fill="#0D1B2A"/>
+  </svg>
+  <h1 id="telaTitulo">Carregando...</h1>
+  <p id="telaTexto"></p>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, onSnapshot }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+    authDomain: "moviki-app.firebaseapp.com",
+    projectId: "moviki-app",
+    storageBucket: "moviki-app.firebasestorage.app",
+    messagingSenderId: "451920150738",
+    appId: "1:451920150738:web:be458392064c964c792d0b"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const el = id => document.getElementById(id);
+
+  function mostrarTela(titulo, texto){
+    el('telaTitulo').textContent = titulo;
+    el('telaTexto').textContent = texto;
+    el('tela').classList.remove('escondido');
+  }
+  function esconderTela(){ el('tela').classList.add('escondido'); }
+
+  // Pega o id do negócio pela URL: ?id=xxxxx
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  if(!id){
+    mostrarTela('Link incompleto', 'Este link não aponta pra nenhum negócio. Peça ao empreendedor o link correto do Moviki.');
+    throw new Error('sem id');
+  }
+
+  // Monta o mapa
+  const map = L.map('map', { zoomControl:true, attributionControl:true }).setView([-8.05, -34.9], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // Ícone Moviki
+  const iconeMoviki = L.divIcon({
+    className:'pin',
+    html:`<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0D1B2A" stroke-width="2"/>
+            <circle cx="32" cy="28" r="7" fill="#0D1B2A"/>
+          </svg>`,
+    iconSize:[40,40], iconAnchor:[20,40], popupAnchor:[0,-38]
+  });
+  let marcador = null;
+
+  onSnapshot(doc(db,'negocios',id), (snap)=>{
+    if(!snap.exists()){
+      mostrarTela('Negócio não encontrado', 'Esse negócio não existe ou o link está errado.');
+      return;
+    }
+    const d = snap.data();
+
+    // Cabeçalho
+    el('nome').textContent = d.nome || 'Negócio';
+    const aberto = d.status === 'aberto';
+    el('statusBadge').innerHTML =
+      `<span class="badge ${aberto?'aberto':'fechado'}"><span class="bolinha"></span>${aberto?'Aberto agora':'Fechado no momento'}</span>`;
+    el('topo').classList.remove('escondido');
+
+    // Recado
+    if(d.recado && d.recado.trim()){
+      el('recado').textContent = d.recado;
+      el('recadoBox').classList.remove('escondido');
+    } else {
+      el('recadoBox').classList.add('escondido');
+    }
+
+    // Localização
+    if(typeof d.lat === 'number' && typeof d.lng === 'number'){
+      esconderTela();
+      el('rodape').classList.remove('escondido');
+      el('btnRota').href = `https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}`;
+      const pos = [d.lat, d.lng];
+      if(!marcador){
+        marcador = L.marker(pos, { icon: iconeMoviki }).addTo(map);
+        map.setView(pos, 16);
+      } else {
+        marcador.setLatLng(pos);
+      }
+      marcador.bindPopup(`<b>${d.nome||'Negócio'}</b>`);
+    } else {
+      // tem negócio mas ainda sem localização
+      el('rodape').classList.add('escondido');
+      mostrarTela(d.nome || 'Negócio', 'Este negócio ainda não ligou a localização. Volte daqui a pouco.');
+    }
+  }, (erro)=>{
+    mostrarTela('Erro ao carregar', 'Não consegui carregar os dados agora. Tente de novo em instantes.');
+  });
+</script>
+</body>
+</html>
