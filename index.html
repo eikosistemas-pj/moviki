@@ -10,7 +10,8 @@
   :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;--card:#13263d;--card-borda:#223a5c;--campo:#0d1c30;}
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
   body{min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%, #163155 0%, var(--escuro) 55%);color:var(--claro);display:flex;align-items:center;justify-content:center;padding:20px;}
-  .box{width:100%;max-width:440px;}
+  .box{width:100%;max-width:440px;transition:max-width .2s;}
+  .box.largo{max-width:660px;}
   .marca{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;}
   .marca svg{width:38px;height:38px;}
   .marca .nome{font-size:30px;font-weight:700;letter-spacing:-1px;}
@@ -35,11 +36,16 @@
   .aviso.ok{display:block;background:rgba(0,212,255,.12);color:var(--ciano);border:1px solid rgba(0,212,255,.3);}
   .dica{font-size:12px;color:#7f95b3;text-align:center;margin-top:14px;line-height:1.5;}
   .painel{display:none;}
-  .cabPainel{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .cabPainel{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
   .cabPainel .ola{font-size:13px;color:#8fa6c4;}
   .cabPainel .ola b{color:var(--claro);display:block;font-size:14px;margin-top:2px;word-break:break-all;}
   .sairMini{background:none;border:1px solid var(--card-borda);color:#8fa6c4;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
   .sairMini:hover{border-color:#ff8080;color:#ff9a9a;}
+  /* Abas do painel */
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+  .tab{flex:0 0 auto;border:1px solid var(--card-borda);background:var(--campo);color:#8fa6c4;padding:9px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .tab.ativa{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border-color:transparent;}
+  .tabConteudo{margin-bottom:6px;}
   .statusLinha{display:flex;gap:10px;margin-bottom:16px;}
   .statusBtn{flex:1;padding:12px;border-radius:11px;border:1px solid var(--card-borda);background:var(--campo);color:#8fa6c4;font-weight:600;font-size:14px;cursor:pointer;transition:.15s;}
   .statusBtn.aberto{background:rgba(0,212,255,.15);border-color:var(--ciano);color:var(--ciano);}
@@ -55,24 +61,28 @@
   .linkRow{display:flex;gap:8px;align-items:center;}
   .linkRow a{flex:1;color:var(--ciano);font-weight:600;font-size:14px;text-decoration:none;word-break:break-all;}
   .linkRow button{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;}
-  /* Cardápio */
-  .secTitulo{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 10px;}
-  .secTitulo label{margin:0;}
-  .addItem{background:none;border:1px solid var(--ciano);color:var(--ciano);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;}
-  .itemCard{background:var(--campo);border:1px solid var(--card-borda);border-radius:11px;padding:12px;margin-bottom:10px;}
-  .itemCard .l1{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
-  .itemCard .l1 input{padding:10px 12px;font-size:14px;}
-  .itemCard .rmv{background:none;border:none;color:#ff8080;font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0;}
-  .itemCard .l2{display:flex;gap:10px;align-items:center;}
-  .itemCard .l2 input[type=text]{padding:10px 12px;font-size:13px;flex:1;}
-  .acabLbl{display:flex;align-items:center;gap:6px;font-size:13px;color:#c7d6ea;white-space:nowrap;cursor:pointer;}
+  /* Blocos dinâmicos (categorias / produtos / promoções / eventos) */
+  .secTitulo{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 12px;}
+  .secTitulo label{margin:0;font-size:14px;}
+  .addBtn{background:none;border:1px solid var(--ciano);color:var(--ciano);border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .catBloco{background:var(--campo);border:1px solid var(--card-borda);border-radius:12px;padding:12px;margin-bottom:12px;}
+  .catCab{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+  .catCab .cat-nome{font-weight:600;}
+  .rmv{background:none;border:none;color:#ff8080;font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1;}
+  .prodRow{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+  .prodRow .p-nome{flex:1;padding:10px 12px;font-size:14px;}
+  .prodRow .p-preco{width:88px;flex-shrink:0;padding:10px 10px;font-size:14px;}
+  .acabLbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#c7d6ea;white-space:nowrap;cursor:pointer;}
   .acabLbl input{width:auto;}
+  .addProd{background:none;border:1px dashed var(--card-borda);color:#8fa6c4;border-radius:8px;padding:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}
+  .linha2{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+  .linha2 input{flex:1;}
   .vazioCard{font-size:13px;color:#7f95b3;text-align:center;padding:10px;}
   .escondido{display:none !important;}
 </style>
 </head>
 <body>
-<div class="box">
+<div class="box" id="box">
 
   <div class="marca">
     <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,79 +97,73 @@
 
   <div class="card">
 
+    <!-- ACESSO -->
     <div id="formArea">
       <div class="abas">
         <button id="abaEntrar" class="ativa" onclick="trocarAba('entrar')">Entrar</button>
         <button id="abaCriar" onclick="trocarAba('criar')">Criar conta</button>
       </div>
-      <div class="campo">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" placeholder="voce@email.com" autocomplete="email">
-      </div>
-      <div class="campo">
-        <label for="senha">Senha</label>
-        <input id="senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password">
-        <button type="button" class="verSenha" onclick="verSenha()">mostrar</button>
-      </div>
+      <div class="campo"><label for="email">E-mail</label><input id="email" type="email" placeholder="voce@email.com" autocomplete="email"></div>
+      <div class="campo"><label for="senha">Senha</label><input id="senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password"><button type="button" class="verSenha" onclick="verSenha()">mostrar</button></div>
       <button id="btnAcao" class="btn" onclick="acao()">Entrar</button>
       <div id="aviso" class="aviso"></div>
       <div class="dica" id="dica"></div>
     </div>
 
+    <!-- PAINEL -->
     <div id="painel" class="painel">
       <div class="cabPainel">
         <div class="ola">Conectado como:<b id="oExEmail"></b></div>
         <button class="sairMini" onclick="sair()">Sair</button>
       </div>
 
-      <div class="campo">
-        <label for="nome">Nome do negócio</label>
-        <input id="nome" type="text" placeholder="Ex.: Caldeirão Nordestino">
+      <div class="tabs">
+        <button class="tab ativa" data-tab="perfil" onclick="abrirTab('perfil')">Perfil</button>
+        <button class="tab" data-tab="cardapio" onclick="abrirTab('cardapio')">Cardápio</button>
+        <button class="tab" data-tab="promocoes" onclick="abrirTab('promocoes')">Promoções</button>
+        <button class="tab" data-tab="eventos" onclick="abrirTab('eventos')">Eventos</button>
+        <button class="tab" data-tab="local" onclick="abrirTab('local')">Localização</button>
       </div>
 
-      <div class="campo">
-        <label for="apelido">Seu link no Moviki</label>
-        <div class="linkCampo">
-          <span class="pref">moviki.com.br/</span>
-          <input id="apelido" type="text" placeholder="caldeirao" autocomplete="off">
-        </div>
+      <!-- Perfil -->
+      <div class="tabConteudo" id="tab-perfil">
+        <div class="campo"><label for="nome">Nome do negócio</label><input id="nome" type="text" placeholder="Ex.: Caldeirão Nordestino"></div>
+        <div class="campo"><label for="apelido">Seu link no Moviki</label><div class="linkCampo"><span class="pref">moviki.com.br/</span><input id="apelido" type="text" placeholder="caldeirao" autocomplete="off"></div></div>
+        <div id="linkPronto" class="linkPronto escondido"><div class="rot">✅ Link pra divulgar (bio do Instagram, WhatsApp...):</div><div class="linkRow"><a id="linkPublico" href="#" target="_blank" rel="noopener"></a><button onclick="copiarLink()" id="btnCopiar">Copiar</button></div></div>
+        <label>Status agora</label>
+        <div class="statusLinha"><button id="btnAberto" class="statusBtn" onclick="setStatus('aberto')">🟢 Aberto</button><button id="btnFechado" class="statusBtn" onclick="setStatus('fechado')">🔴 Fechado</button></div>
+        <div class="campo"><label for="recado">Recado do dia (opcional)</label><textarea id="recado" rows="2" placeholder="Ex.: Hoje tem caldo de feijão!"></textarea></div>
       </div>
 
-      <div id="linkPronto" class="linkPronto escondido">
-        <div class="rot">✅ Seu link pra divulgar (bio do Instagram, WhatsApp...):</div>
-        <div class="linkRow">
-          <a id="linkPublico" href="#" target="_blank" rel="noopener"></a>
-          <button onclick="copiarLink()" id="btnCopiar">Copiar</button>
-        </div>
+      <!-- Cardápio -->
+      <div class="tabConteudo escondido" id="tab-cardapio">
+        <div class="secTitulo"><label>Categorias e produtos</label><button class="addBtn" onclick="adicionarCategoria()">+ Categoria</button></div>
+        <div id="listaCategorias"></div>
+        <div id="vazioCat" class="vazioCard">Nenhuma categoria ainda. Crie uma (ex.: Caldos, Lanches, Bebidas).</div>
       </div>
 
-      <label>Status agora</label>
-      <div class="statusLinha">
-        <button id="btnAberto" class="statusBtn" onclick="setStatus('aberto')">🟢 Aberto</button>
-        <button id="btnFechado" class="statusBtn" onclick="setStatus('fechado')">🔴 Fechado</button>
+      <!-- Promoções -->
+      <div class="tabConteudo escondido" id="tab-promocoes">
+        <div class="secTitulo"><label>Promoções</label><button class="addBtn" onclick="adicionarPromo()">+ Promoção</button></div>
+        <div id="listaPromos"></div>
+        <div id="vazioPromo" class="vazioCard">Nenhuma promoção ainda.</div>
       </div>
 
-      <div class="campo">
-        <label for="recado">Recado do dia (opcional)</label>
-        <textarea id="recado" rows="2" placeholder="Ex.: Hoje tem caldo de feijão!"></textarea>
+      <!-- Eventos -->
+      <div class="tabConteudo escondido" id="tab-eventos">
+        <div class="secTitulo"><label>Eventos</label><button class="addBtn" onclick="adicionarEvento()">+ Evento</button></div>
+        <div id="listaEventos"></div>
+        <div id="vazioEvento" class="vazioCard">Nenhum evento ainda.</div>
       </div>
 
-      <!-- CARDÁPIO -->
-      <div class="secTitulo">
-        <label>Cardápio (opcional)</label>
-        <button class="addItem" onclick="adicionarItem()">+ Adicionar item</button>
+      <!-- Local -->
+      <div class="tabConteudo escondido" id="tab-local">
+        <div class="gps" id="gpsInfo">📍 Localização ainda não definida.</div>
+        <button class="btn secundario" onclick="pegarLocalizacao()">📍 Atualizar minha localização</button>
       </div>
-      <div id="listaCardapio"></div>
-      <div id="vazioCard" class="vazioCard">Nenhum item ainda. Clique em "+ Adicionar item".</div>
-      <datalist id="cats"></datalist>
-      <div style="height:6px;"></div>
 
-      <div class="gps" id="gpsInfo">📍 Localização ainda não definida.</div>
-
-      <div style="margin-bottom:10px;">
-        <button class="btn secundario" onclick="pegarLocalizacao()">📍 Atualizar localização</button>
-      </div>
-      <button id="btnSalvar" class="btn" onclick="salvar()">Salvar</button>
+      <div style="height:8px;"></div>
+      <button id="btnSalvar" class="btn" onclick="salvar()">Salvar tudo</button>
       <div id="avisoP" class="aviso"></div>
     </div>
 
@@ -184,11 +188,11 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
   const el = id => document.getElementById(id);
   let modo='entrar', usuarioAtual=null, statusAtual='fechado', coords=null, slugSalvo='';
-  const RESERVADOS = ['index','mapa','404','assets','www','painel','login','moviki'];
+  const RESERVADOS=['index','mapa','404','assets','www','painel','login','moviki'];
 
+  /* ---- ACESSO ---- */
   const aviso=el('aviso');
   function limparAviso(){aviso.className='aviso';aviso.textContent='';}
   function erroAcesso(t){aviso.className='aviso erro';aviso.textContent=t;}
@@ -198,79 +202,95 @@
   window.acao=async function(){const email=el('email').value.trim(),senha=el('senha').value,btn=el('btnAcao');limparAviso();if(!email){erroAcesso('Digite seu e-mail.');return;}if(!senha){erroAcesso('Digite uma senha.');return;}btn.disabled=true;const t=btn.textContent;btn.textContent='Aguarde...';try{if(modo==='criar')await createUserWithEmailAndPassword(auth,email,senha);else await signInWithEmailAndPassword(auth,email,senha);}catch(e){erroAcesso(msgErro(e.code));btn.disabled=false;btn.textContent=t;}};
   window.sair=async function(){await signOut(auth);};
 
+  /* ---- TABS ---- */
+  window.abrirTab=function(nome){
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('ativa',b.dataset.tab===nome));
+    document.querySelectorAll('.tabConteudo').forEach(c=>c.classList.add('escondido'));
+    el('tab-'+nome).classList.remove('escondido');
+  };
+
+  /* ---- PAINEL util ---- */
   const avisoP=el('avisoP');
   function limparAvisoP(){avisoP.className='aviso';avisoP.textContent='';}
   function okP(t){avisoP.className='aviso ok';avisoP.textContent=t;}
   function erroP(t){avisoP.className='aviso erro';avisoP.textContent=t;}
   window.setStatus=function(s){statusAtual=s;el('btnAberto').className='statusBtn'+(s==='aberto'?' aberto':'');el('btnFechado').className='statusBtn'+(s==='fechado'?' fechado':'');};
+  window.pegarLocalizacao=function(){limparAvisoP();if(!navigator.geolocation){erroP('Seu aparelho não tem GPS no navegador.');return;}el('gpsInfo').innerHTML='📍 Pegando localização...';navigator.geolocation.getCurrentPosition((pos)=>{coords={lat:pos.coords.latitude,lng:pos.coords.longitude};el('gpsInfo').innerHTML='📍 <b>Localização capturada!</b><br>'+coords.lat.toFixed(5)+', '+coords.lng.toFixed(5)+' <span style="color:#7f95b3">(lembre de Salvar)</span>';},(err)=>{if(err.code===1)erroP('Você bloqueou a localização. Libere nas permissões do navegador.');else erroP('Não consegui pegar a localização.');el('gpsInfo').innerHTML='📍 Localização ainda não definida.';},{enableHighAccuracy:true,timeout:10000});};
 
-  window.pegarLocalizacao=function(){limparAvisoP();if(!navigator.geolocation){erroP('Seu aparelho não tem GPS no navegador.');return;}el('gpsInfo').innerHTML='📍 Pegando localização...';navigator.geolocation.getCurrentPosition((pos)=>{coords={lat:pos.coords.latitude,lng:pos.coords.longitude};el('gpsInfo').innerHTML='📍 <b>Localização capturada!</b><br>'+coords.lat.toFixed(5)+', '+coords.lng.toFixed(5)+' <span style="color:#7f95b3">(lembre de Salvar)</span>';},(err)=>{if(err.code===1)erroP('Você bloqueou a localização. Libere nas permissões do navegador.');else erroP('Não consegui pegar a localização. Tente de novo.');el('gpsInfo').innerHTML='📍 Localização ainda não definida.';},{enableHighAccuracy:true,timeout:10000});};
-
-  /* ------- CARDÁPIO ------- */
-  function atualizarVazio(){
-    const tem = el('listaCardapio').children.length>0;
-    el('vazioCard').classList.toggle('escondido', tem);
+  /* ---- CARDÁPIO (categorias -> produtos) ---- */
+  function vazioCat(){el('vazioCat').classList.toggle('escondido',el('listaCategorias').children.length>0);}
+  function novaProdRow(catBloco,nome='',preco='',acabando=false){
+    const r=document.createElement('div');r.className='prodRow';
+    r.innerHTML='<input class="p-nome" type="text" placeholder="Produto"><input class="p-preco" type="text" placeholder="R$"><label class="acabLbl"><input type="checkbox" class="p-acab"> acabando</label><button class="rmv">✕</button>';
+    r.querySelector('.p-nome').value=nome;r.querySelector('.p-preco').value=preco;r.querySelector('.p-acab').checked=!!acabando;
+    r.querySelector('.rmv').onclick=()=>r.remove();
+    catBloco.querySelector('.listaProdutos').appendChild(r);
   }
-  window.adicionarItem=function(nome='',categoria='',acabando=false){
-    const div=document.createElement('div');
-    div.className='itemCard';
-    div.innerHTML =
-      '<div class="l1">'+
-        '<input class="it-nome" type="text" placeholder="Nome do item (ex.: Caldo de feijão)">'+
-        '<button class="rmv" title="Remover">✕</button>'+
-      '</div>'+
-      '<div class="l2">'+
-        '<input class="it-cat" type="text" list="cats" placeholder="Categoria (ex.: Caldos)">'+
-        '<label class="acabLbl"><input type="checkbox" class="it-acab"> Acabando</label>'+
-      '</div>';
-    div.querySelector('.it-nome').value=nome;
-    div.querySelector('.it-cat').value=categoria;
-    div.querySelector('.it-acab').checked=!!acabando;
-    div.querySelector('.rmv').onclick=()=>{div.remove();atualizarVazio();atualizarCats();};
-    div.querySelector('.it-cat').addEventListener('change',atualizarCats);
-    el('listaCardapio').appendChild(div);
-    atualizarVazio();
+  window.adicionarCategoria=function(nome='',produtos=[]){
+    const b=document.createElement('div');b.className='catBloco';
+    b.innerHTML='<div class="catCab"><input class="cat-nome" type="text" placeholder="Nome da categoria (ex.: Caldos)"><button class="rmv" title="Remover categoria">✕</button></div><div class="listaProdutos"></div><button class="addProd">+ Produto</button>';
+    b.querySelector('.cat-nome').value=nome;
+    b.querySelector('.rmv').onclick=()=>{b.remove();vazioCat();};
+    b.querySelector('.addProd').onclick=()=>novaProdRow(b);
+    el('listaCategorias').appendChild(b);
+    (produtos&&produtos.length?produtos:[{}]).forEach(p=>novaProdRow(b,p.nome||'',p.preco||'',p.acabando));
+    vazioCat();
   };
   function lerCardapio(){
-    const itens=[];
-    el('listaCardapio').querySelectorAll('.itemCard').forEach(c=>{
-      const nome=c.querySelector('.it-nome').value.trim();
-      if(!nome)return;
-      itens.push({nome,categoria:c.querySelector('.it-cat').value.trim()||'Itens',acabando:c.querySelector('.it-acab').checked});
+    const cats=[];
+    el('listaCategorias').querySelectorAll('.catBloco').forEach(b=>{
+      const nome=b.querySelector('.cat-nome').value.trim();if(!nome)return;
+      const produtos=[];
+      b.querySelectorAll('.prodRow').forEach(r=>{const pn=r.querySelector('.p-nome').value.trim();if(!pn)return;produtos.push({nome:pn,preco:r.querySelector('.p-preco').value.trim(),acabando:r.querySelector('.p-acab').checked});});
+      cats.push({categoria:nome,produtos});
     });
-    return itens;
-  }
-  function atualizarCats(){
-    const set=new Set();
-    el('listaCardapio').querySelectorAll('.it-cat').forEach(i=>{const v=i.value.trim();if(v)set.add(v);});
-    el('cats').innerHTML=[...set].map(v=>'<option value="'+v.replace(/"/g,'')+'">').join('');
+    return cats;
   }
 
+  /* ---- PROMOÇÕES ---- */
+  function vazioPromo(){el('vazioPromo').classList.toggle('escondido',el('listaPromos').children.length>0);}
+  window.adicionarPromo=function(titulo='',detalhe=''){
+    const r=document.createElement('div');r.className='catBloco';
+    r.innerHTML='<div class="linha2"><input class="pr-tit" type="text" placeholder="Título (ex.: Combo 2 por R$20)"><button class="rmv">✕</button></div><input class="pr-det" type="text" placeholder="Detalhe (opcional)">';
+    r.querySelector('.pr-tit').value=titulo;r.querySelector('.pr-det').value=detalhe;
+    r.querySelector('.rmv').onclick=()=>{r.remove();vazioPromo();};
+    el('listaPromos').appendChild(r);vazioPromo();
+  };
+  function lerPromos(){const a=[];el('listaPromos').querySelectorAll('.catBloco').forEach(r=>{const t=r.querySelector('.pr-tit').value.trim();if(!t)return;a.push({titulo:t,detalhe:r.querySelector('.pr-det').value.trim()});});return a;}
+
+  /* ---- EVENTOS ---- */
+  function vazioEvento(){el('vazioEvento').classList.toggle('escondido',el('listaEventos').children.length>0);}
+  window.adicionarEvento=function(titulo='',quando='',detalhe=''){
+    const r=document.createElement('div');r.className='catBloco';
+    r.innerHTML='<div class="linha2"><input class="ev-tit" type="text" placeholder="Nome do evento"><button class="rmv">✕</button></div><input class="ev-quando" type="text" placeholder="Quando (ex.: Sáb 26/07 às 18h)" style="margin-bottom:8px"><input class="ev-det" type="text" placeholder="Local / detalhe (opcional)">';
+    r.querySelector('.ev-tit').value=titulo;r.querySelector('.ev-quando').value=quando;r.querySelector('.ev-det').value=detalhe;
+    r.querySelector('.rmv').onclick=()=>{r.remove();vazioEvento();};
+    el('listaEventos').appendChild(r);vazioEvento();
+  };
+  function lerEventos(){const a=[];el('listaEventos').querySelectorAll('.catBloco').forEach(r=>{const t=r.querySelector('.ev-tit').value.trim();if(!t)return;a.push({titulo:t,quando:r.querySelector('.ev-quando').value.trim(),detalhe:r.querySelector('.ev-det').value.trim()});});return a;}
+
+  /* ---- LINK ---- */
   function limpaSlug(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');}
   function mostrarLink(slug){slugSalvo=slug;el('linkPublico').textContent='moviki.com.br/'+slug;el('linkPublico').href='https://moviki.com.br/'+slug;el('linkPronto').classList.remove('escondido');}
   window.copiarLink=function(){if(!slugSalvo)return;navigator.clipboard.writeText('https://moviki.com.br/'+slugSalvo).then(()=>{const b=el('btnCopiar');b.textContent='Copiado!';setTimeout(()=>b.textContent='Copiar',1500);});};
 
+  /* ---- SALVAR ---- */
   window.salvar=async function(){
     if(!usuarioAtual)return;
     const btn=el('btnSalvar');limparAvisoP();
     const nome=el('nome').value.trim();
-    if(!nome){erroP('Dê um nome ao seu negócio.');return;}
+    if(!nome){abrirTab('perfil');erroP('Dê um nome ao seu negócio (aba Perfil).');return;}
     const apelidoDigitado=el('apelido').value.trim();
     let slug='';
-    if(apelidoDigitado){slug=limpaSlug(apelidoDigitado);if(slug.length<3){erroP('O apelido precisa ter ao menos 3 letras/números (sem espaços ou acentos).');return;}if(RESERVADOS.includes(slug)){erroP('Esse apelido é reservado, escolha outro.');return;}}
+    if(apelidoDigitado){slug=limpaSlug(apelidoDigitado);if(slug.length<3){abrirTab('perfil');erroP('O apelido precisa ter ao menos 3 letras/números (sem espaços ou acentos).');return;}if(RESERVADOS.includes(slug)){abrirTab('perfil');erroP('Esse apelido é reservado, escolha outro.');return;}}
     btn.disabled=true;const t=btn.textContent;btn.textContent='Salvando...';
     try{
-      if(slug){
-        const ref=doc(db,'slugs',slug);const snap=await getDoc(ref);
-        if(snap.exists()&&snap.data().uid!==usuarioAtual.uid){erroP('O apelido "'+slug+'" já está em uso. Escolha outro.');btn.disabled=false;btn.textContent=t;return;}
-        if(!snap.exists()){await setDoc(ref,{uid:usuarioAtual.uid});}
-        el('apelido').value=slug;
-      }
-      const dados={nome,status:statusAtual,recado:el('recado').value.trim(),cardapio:lerCardapio(),atualizadoEm:serverTimestamp()};
+      if(slug){const ref=doc(db,'slugs',slug);const snap=await getDoc(ref);if(snap.exists()&&snap.data().uid!==usuarioAtual.uid){abrirTab('perfil');erroP('O apelido "'+slug+'" já está em uso. Escolha outro.');btn.disabled=false;btn.textContent=t;return;}if(!snap.exists()){await setDoc(ref,{uid:usuarioAtual.uid});}el('apelido').value=slug;}
+      const dados={nome,status:statusAtual,recado:el('recado').value.trim(),cardapio:lerCardapio(),promocoes:lerPromos(),eventos:lerEventos(),atualizadoEm:serverTimestamp()};
       if(coords){dados.lat=coords.lat;dados.lng=coords.lng;}
       if(slug){dados.slug=slug;}
       await setDoc(doc(db,'negocios',usuarioAtual.uid),dados,{merge:true});
-      okP('✅ Salvo!');
+      okP('✅ Tudo salvo!');
       if(slug) mostrarLink(slug);
     }catch(e){erroP('Não consegui salvar: '+(e.code||e.message));}
     btn.disabled=false;btn.textContent=t;
@@ -284,24 +304,26 @@
         el('nome').value=d.nome||'';el('recado').value=d.recado||'';el('apelido').value=d.slug||'';
         setStatus(d.status||'fechado');
         if(d.slug) mostrarLink(d.slug);
-        el('listaCardapio').innerHTML='';
-        (d.cardapio||[]).forEach(it=>adicionarItem(it.nome||'',it.categoria||'',it.acabando));
-        atualizarVazio();atualizarCats();
+        el('listaCategorias').innerHTML='';(d.cardapio||[]).forEach(c=>adicionarCategoria(c.categoria||'',c.produtos||[]));vazioCat();
+        el('listaPromos').innerHTML='';(d.promocoes||[]).forEach(p=>adicionarPromo(p.titulo||'',p.detalhe||''));vazioPromo();
+        el('listaEventos').innerHTML='';(d.eventos||[]).forEach(e2=>adicionarEvento(e2.titulo||'',e2.quando||'',e2.detalhe||''));vazioEvento();
         if(d.lat&&d.lng){coords={lat:d.lat,lng:d.lng};el('gpsInfo').innerHTML='📍 <b>Localização salva:</b><br>'+d.lat.toFixed(5)+', '+d.lng.toFixed(5);}
-      }else{setStatus('fechado');atualizarVazio();}
-    }catch(e){setStatus('fechado');atualizarVazio();}
+      }else{setStatus('fechado');vazioCat();vazioPromo();vazioEvento();}
+    }catch(e){setStatus('fechado');vazioCat();vazioPromo();vazioEvento();}
   }
 
   onAuthStateChanged(auth,async(user)=>{
     usuarioAtual=user;
     if(user){
-      el('formArea').style.display='none';el('painel').style.display='block';
+      el('formArea').style.display='none';el('painel').style.display='block';el('box').classList.add('largo');
       el('oExEmail').textContent=user.email;
-      coords=null;slugSalvo='';el('linkPronto').classList.add('escondido');el('listaCardapio').innerHTML='';
+      coords=null;slugSalvo='';el('linkPronto').classList.add('escondido');
+      el('listaCategorias').innerHTML='';el('listaPromos').innerHTML='';el('listaEventos').innerHTML='';
       el('gpsInfo').innerHTML='📍 Localização ainda não definida.';
+      abrirTab('perfil');
       await carregarDados(user.uid);
     }else{
-      el('painel').style.display='none';el('formArea').style.display='block';
+      el('painel').style.display='none';el('formArea').style.display='block';el('box').classList.remove('largo');
       el('email').value='';el('senha').value='';el('btnAcao').disabled=false;trocarAba('entrar');
     }
   });

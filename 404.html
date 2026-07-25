@@ -9,11 +9,11 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;}
+  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;--card:#13263d;--borda:#223a5c;}
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
   html,body{height:100%;}
   #map{position:absolute;inset:0;z-index:1;background:#0d1c30;}
-  .topo{position:absolute;top:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg,rgba(13,27,42,.96),rgba(13,27,42,.82) 70%,transparent);padding:14px 16px 26px;display:flex;align-items:center;gap:12px;}
+  .topo{position:absolute;top:0;left:0;right:0;z-index:900;background:linear-gradient(180deg,rgba(13,27,42,.96),rgba(13,27,42,.82) 70%,transparent);padding:14px 16px 26px;display:flex;align-items:center;gap:12px;}
   .topo svg{width:30px;height:30px;flex-shrink:0;}
   .topo .info{flex:1;min-width:0;}
   .topo .nome{color:var(--claro);font-size:18px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -21,31 +21,45 @@
   .badge.aberto{background:rgba(0,212,255,.18);color:var(--ciano);}
   .badge.fechado{background:rgba(255,120,120,.18);color:#ff9a9a;}
   .badge .bolinha{width:8px;height:8px;border-radius:50%;background:currentColor;}
-  .rodape{position:absolute;left:12px;right:12px;bottom:14px;z-index:1000;background:rgba(19,38,61,.96);border:1px solid #223a5c;border-radius:16px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.45);backdrop-filter:blur(4px);}
+  /* Barra de ícones à esquerda */
+  .toolbar{position:absolute;left:12px;top:88px;z-index:1000;display:flex;flex-direction:column;gap:10px;}
+  .toolBtn{width:56px;background:rgba(19,38,61,.94);border:1px solid var(--borda);border-radius:14px;color:var(--claro);cursor:pointer;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:.15s;}
+  .toolBtn:hover{border-color:var(--ciano);}
+  .toolBtn .ic{font-size:22px;line-height:1;}
+  .toolBtn .lb{font-size:9.5px;font-weight:600;color:#c7d6ea;}
+  /* Gaveta lateral */
+  .drawer{position:absolute;left:0;top:0;bottom:0;width:350px;max-width:86%;z-index:2000;background:var(--escuro);border-right:1px solid var(--borda);box-shadow:14px 0 40px rgba(0,0,0,.5);transform:translateX(-106%);transition:transform .25s ease;overflow-y:auto;padding:18px 18px 30px;}
+  .drawer.aberto{transform:translateX(0);}
+  .drawerCab{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .drawerCab h2{color:var(--claro);font-size:18px;}
+  .fechar{background:none;border:1px solid var(--borda);color:#8fa6c4;width:32px;height:32px;border-radius:9px;font-size:16px;cursor:pointer;}
+  .catTitulo{color:var(--ciano);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;}
+  .itemPub{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:11px 13px;margin-bottom:8px;}
+  .itemPub .nm{flex:1;color:var(--claro);font-size:14.5px;font-weight:500;}
+  .itemPub .pr{color:#8fa6c4;font-size:14px;font-weight:600;white-space:nowrap;}
+  .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
+  @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .promo{background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(0,102,255,.12));border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
+  .promo .t{color:var(--claro);font-weight:700;font-size:15px;margin-bottom:3px;}
+  .promo .d{color:#a9c0dd;font-size:13px;}
+  .evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:13px;margin-bottom:10px;}
+  .evento .t{color:var(--claro);font-weight:700;font-size:15px;}
+  .evento .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
+  .evento .d{color:#8fa6c4;font-size:13px;}
+  /* rodapé */
+  .rodape{position:absolute;left:12px;right:12px;bottom:14px;z-index:900;background:rgba(19,38,61,.96);border:1px solid var(--borda);border-radius:16px;padding:14px;box-shadow:0 12px 40px rgba(0,0,0,.45);}
   .rodape .recado{color:var(--claro);font-size:14px;line-height:1.4;margin-bottom:12px;}
   .rodape .recado span{color:#8fa6c4;font-size:12px;display:block;margin-bottom:2px;}
-  .botoesRodape{display:flex;gap:8px;}
-  .btnRota{flex:1;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:11px;}
-  .btnCardapio{flex:1;text-align:center;background:transparent;border:1px solid var(--ciano);color:var(--ciano);font-weight:700;font-size:15px;padding:13px;border-radius:11px;cursor:pointer;}
-  .tela{position:absolute;inset:0;z-index:1500;background:var(--escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--claro);gap:10px;}
+  .btnRota{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:11px;}
+  .tela{position:absolute;inset:0;z-index:3000;background:var(--escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--claro);gap:10px;}
   .tela svg{width:56px;height:56px;margin-bottom:6px;}
   .tela h1{font-size:20px;font-weight:700;}
   .tela p{color:#8fa6c4;font-size:14px;max-width:300px;line-height:1.5;}
   .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
+  .vazioMod{color:#8fa6c4;font-size:14px;text-align:center;padding:20px;}
   .escondido{display:none !important;}
   .pin{filter:drop-shadow(0 3px 5px rgba(0,0,0,.4));}
-  /* Painel do cardápio (overlay) */
-  .cardapioOverlay{position:absolute;inset:0;z-index:2000;background:rgba(6,15,25,.6);backdrop-filter:blur(2px);display:flex;align-items:flex-end;}
-  .cardapioSheet{width:100%;max-height:82%;overflow-y:auto;background:var(--escuro);border-radius:20px 20px 0 0;border-top:1px solid #223a5c;padding:18px 18px 26px;}
-  .cardapioSheet .barra{width:40px;height:4px;background:#33507a;border-radius:3px;margin:0 auto 16px;}
-  .cardapioSheet h2{color:var(--claro);font-size:19px;text-align:center;margin-bottom:2px;}
-  .cardapioSheet .sub{color:#8fa6c4;font-size:12px;text-align:center;margin-bottom:18px;}
-  .catTitulo{color:var(--ciano);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;}
-  .itemPub{display:flex;align-items:center;gap:10px;background:#13263d;border:1px solid #223a5c;border-radius:11px;padding:12px 14px;margin-bottom:8px;}
-  .itemPub .nm{flex:1;color:var(--claro);font-size:15px;font-weight:500;}
-  .acabando{background:#ff3b3b;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.5px;animation:pisca 1s infinite;}
-  @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
-  .fecharCard{width:100%;margin-top:18px;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:11px;padding:13px;font-weight:700;font-size:15px;cursor:pointer;}
+  @media(min-width:900px){.rodape{left:auto;right:16px;width:320px;}}
 </style>
 </head>
 <body>
@@ -62,22 +76,16 @@
   <div class="info"><div class="nome" id="nome">—</div><div id="statusBadge"></div></div>
 </div>
 
-<div class="rodape escondido" id="rodape">
-  <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
-  <div class="botoesRodape">
-    <button class="btnCardapio escondido" id="btnCardapio" onclick="abrirCardapio()">🍽️ Cardápio</button>
-    <a class="btnRota" id="btnRota" href="#" target="_blank" rel="noopener">📍 Como chegar</a>
-  </div>
+<div class="toolbar escondido" id="toolbar"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawerCab"><h2 id="drawerTitulo">—</h2><button class="fechar" onclick="fecharDrawer()">✕</button></div>
+  <div id="drawerConteudo"></div>
 </div>
 
-<div class="cardapioOverlay escondido" id="cardapioOverlay">
-  <div class="cardapioSheet">
-    <div class="barra"></div>
-    <h2 id="cardNome">Cardápio</h2>
-    <div class="sub">Cardápio de hoje</div>
-    <div id="cardConteudo"></div>
-    <button class="fecharCard" onclick="fecharCardapio()">Fechar</button>
-  </div>
+<div class="rodape escondido" id="rodape">
+  <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
+  <a class="btnRota" id="btnRota" href="#" target="_blank" rel="noopener">📍 Como chegar</a>
 </div>
 
 <div class="tela" id="tela">
@@ -102,46 +110,83 @@
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const el = id => document.getElementById(id);
+  const app=initializeApp(firebaseConfig);
+  const db=getFirestore(app);
+  const el=id=>document.getElementById(id);
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
   function mostrarTela(t,x,link){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://moviki.com.br">Conhecer o Moviki</a>':'');el('tela').classList.remove('escondido');}
   function esconderTela(){el('tela').classList.add('escondido');}
-  window.abrirCardapio=function(){el('cardapioOverlay').classList.remove('escondido');};
-  window.fecharCardapio=function(){el('cardapioOverlay').classList.add('escondido');};
+
+  let moduloAberto=null;
+  const modulos={}; // {cardapio:{titulo,html}, promocoes:{...}, eventos:{...}}
+  window.fecharDrawer=function(){el('drawer').classList.remove('aberto');moduloAberto=null;};
+  window.abrirModulo=function(nome){
+    if(!modulos[nome])return;
+    moduloAberto=nome;
+    el('drawerTitulo').textContent=modulos[nome].titulo;
+    el('drawerConteudo').innerHTML=modulos[nome].html;
+    el('drawer').classList.add('aberto');
+  };
+
+  function htmlCardapio(cardapio){
+    let h='';
+    cardapio.forEach(cat=>{
+      if(!cat.categoria&&!(cat.produtos&&cat.produtos.length))return;
+      h+='<div class="catTitulo">'+esc(cat.categoria||'Itens')+'</div>';
+      (cat.produtos||[]).forEach(p=>{
+        const preco=p.preco?('<span class="pr">'+esc(p.preco)+'</span>'):'';
+        const ac=p.acabando?'<span class="acabando">ACABANDO!</span>':'';
+        h+='<div class="itemPub"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>';
+      });
+    });
+    return h||'<div class="vazioMod">Cardápio em breve.</div>';
+  }
+  function htmlPromos(promos){
+    let h='';
+    promos.forEach(p=>{h+='<div class="promo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div>';});
+    return h||'<div class="vazioMod">Sem promoções agora.</div>';
+  }
+  function htmlEventos(evs){
+    let h='';
+    evs.forEach(e=>{h+='<div class="evento"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>';});
+    return h||'<div class="vazioMod">Sem eventos agora.</div>';
+  }
+
+  function montarToolbar(d){
+    const cardapio=(d.cardapio||[]).filter(c=>c.produtos&&c.produtos.length);
+    const promos=(d.promocoes||[]).filter(p=>p.titulo);
+    const eventos=(d.eventos||[]).filter(e=>e.titulo);
+    // limpa
+    for(const k in modulos)delete modulos[k];
+    const botoes=[];
+    if(cardapio.length){modulos.cardapio={titulo:'🍽️ Cardápio',html:htmlCardapio(cardapio)};botoes.push({m:'cardapio',ic:'🍽️',lb:'Cardápio'});}
+    if(promos.length){modulos.promocoes={titulo:'🏷️ Promoções',html:htmlPromos(promos)};botoes.push({m:'promocoes',ic:'🏷️',lb:'Promoções'});}
+    if(eventos.length){modulos.eventos={titulo:'📅 Eventos',html:htmlEventos(eventos)};botoes.push({m:'eventos',ic:'📅',lb:'Eventos'});}
+    const tb=el('toolbar');
+    tb.innerHTML='';
+    botoes.forEach(b=>{
+      const btn=document.createElement('button');btn.className='toolBtn';
+      btn.innerHTML='<span class="ic">'+b.ic+'</span><span class="lb">'+b.lb+'</span>';
+      btn.onclick=()=>window.abrirModulo(b.m);
+      tb.appendChild(btn);
+    });
+    tb.classList.toggle('escondido',botoes.length===0);
+    // se a gaveta estava aberta, atualiza ou fecha
+    if(moduloAberto){ modulos[moduloAberto]?window.abrirModulo(moduloAberto):fecharDrawer(); }
+  }
 
   const params=new URLSearchParams(window.location.search);
   let slug=decodeURIComponent(window.location.pathname).replace(/^\/+/,'').replace(/\/+$/,'').trim().toLowerCase();
-  const idDireto=params.get('id');
-  const lojaQuery=params.get('loja');
-  if(lojaQuery) slug=lojaQuery.toLowerCase();
+  const idDireto=params.get('id');const lojaQuery=params.get('loja');
+  if(lojaQuery)slug=lojaQuery.toLowerCase();
 
   const map=L.map('map',{zoomControl:true}).setView([-8.05,-34.9],13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
-  const iconeMoviki=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0D1B2A" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0D1B2A"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
+  const icone=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0D1B2A" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0D1B2A"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
   let marcador=null;
 
-  function escapar(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-  function montarCardapio(nome,cardapio){
-    el('cardNome').textContent=nome||'Cardápio';
-    if(!cardapio||!cardapio.length){el('btnCardapio').classList.add('escondido');return;}
-    el('btnCardapio').classList.remove('escondido');
-    // agrupa por categoria preservando a ordem de aparição
-    const grupos={};const ordem=[];
-    cardapio.forEach(it=>{const c=it.categoria||'Itens';if(!grupos[c]){grupos[c]=[];ordem.push(c);}grupos[c].push(it);});
-    let html='';
-    ordem.forEach(cat=>{
-      html+='<div class="catTitulo">'+escapar(cat)+'</div>';
-      grupos[cat].forEach(it=>{
-        html+='<div class="itemPub"><div class="nm">'+escapar(it.nome)+'</div>'+(it.acabando?'<span class="acabando">ACABANDO!</span>':'')+'</div>';
-      });
-    });
-    el('cardConteudo').innerHTML=html;
-  }
-
-  function ouvirNegocio(uid){
+  function ouvir(uid){
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
       if(!snap.exists()){mostrarTela('Negócio não encontrado','Esse negócio não existe mais.',true);return;}
       const d=snap.data();
@@ -150,24 +195,24 @@
       el('statusBadge').innerHTML='<span class="badge '+(aberto?'aberto':'fechado')+'"><span class="bolinha"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
       el('topo').classList.remove('escondido');
       if(d.recado&&d.recado.trim()){el('recado').textContent=d.recado;el('recadoBox').classList.remove('escondido');}else{el('recadoBox').classList.add('escondido');}
-      montarCardapio(d.nome,d.cardapio);
+      montarToolbar(d);
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
         esconderTela();el('rodape').classList.remove('escondido');
         el('btnRota').href='https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lng;
         const pos=[d.lat,d.lng];
-        if(!marcador){marcador=L.marker(pos,{icon:iconeMoviki}).addTo(map);map.setView(pos,16);}else{marcador.setLatLng(pos);}
-        marcador.bindPopup('<b>'+escapar(d.nome||'Negócio')+'</b>');
+        if(!marcador){marcador=L.marker(pos,{icon:icone}).addTo(map);map.setView(pos,16);}else{marcador.setLatLng(pos);}
+        marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>');
       }else{el('rodape').classList.add('escondido');mostrarTela(d.nome||'Negócio','Este negócio ainda não ligou a localização. Volte daqui a pouco.');}
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
 
   (async()=>{
-    if(idDireto){ouvirNegocio(idDireto);return;}
+    if(idDireto){ouvir(idDireto);return;}
     if(!slug){mostrarTela('Bem-vindo ao Moviki','Este link não aponta pra nenhum negócio.',true);return;}
     try{
       const s=await getDoc(doc(db,'slugs',slug));
-      if(!s.exists()){mostrarTela('Negócio não encontrado','Não achamos "'+escapar(slug)+'" no Moviki. Confira o link.',true);return;}
-      ouvirNegocio(s.data().uid);
+      if(!s.exists()){mostrarTela('Negócio não encontrado','Não achamos "'+esc(slug)+'" no Moviki. Confira o link.',true);return;}
+      ouvir(s.data().uid);
     }catch(e){mostrarTela('Erro ao carregar','Tente de novo em instantes.');}
   })();
 </script>
