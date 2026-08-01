@@ -80,6 +80,9 @@
   .linha2 input{flex:1;}
   .vazioCard{font-size:13px;color:#7f95b3;text-align:center;padding:10px;}
   .escondido{display:none !important;}
+  .tab.travada{opacity:.5}
+  .tab.travada::after{content:' 🔒';font-size:11px}
+  .avisoPlano{background:rgba(0,102,255,.14);border:1px solid rgba(0,212,255,.45);color:#dbe9ff;padding:10px 12px;border-radius:8px;margin:10px 0 0;font-size:14px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -127,6 +130,7 @@
       </div>
 
       <!-- Perfil -->
+      <div id="avisoPlano" class="avisoPlano escondido">🔒 <b>Cardápio</b>, <b>Promoções</b> e <b>Eventos</b> fazem parte do plano <b>Pró</b>. Faça upgrade pra liberar.</div>
       <div class="tabConteudo" id="tab-perfil">
         <div class="campo"><label for="nome">Nome do negócio</label><input id="nome" type="text" placeholder="Ex.: Caldeirão Nordestino"></div>
         <div class="campo"><label for="apelido">Seu link no Moviki</label><div class="linkCampo"><span class="pref">moviki.com.br/</span><input id="apelido" type="text" placeholder="caldeirao" autocomplete="off"></div></div>
@@ -203,8 +207,23 @@
   window.acao=async function(){const email=el('email').value.trim(),senha=el('senha').value,btn=el('btnAcao');limparAviso();if(!email){erroAcesso('Digite seu e-mail.');return;}if(!senha){erroAcesso('Digite uma senha.');return;}btn.disabled=true;const t=btn.textContent;btn.textContent='Aguarde...';try{if(modo==='criar')await createUserWithEmailAndPassword(auth,email,senha);else await signInWithEmailAndPassword(auth,email,senha);}catch(e){erroAcesso(msgErro(e.code));btn.disabled=false;btn.textContent=t;}};
   window.sair=async function(){await signOut(auth);};
 
+  let planoPainel='basico';
+  async function carregarPlanoPainel(uid){
+    try{const a=await getDoc(doc(db,'assinaturas',uid));planoPainel=(a.exists()&&a.data().ativo===true)?(a.data().plano||'basico'):'basico';}
+    catch(e){planoPainel='basico';}
+  }
+  function aplicarPlanoNasAbas(){
+    const libera=planoPainel==='pro'||planoPainel==='premium';
+    ['cardapio','promocoes','eventos'].forEach(t=>{const b=document.querySelector('.tab[data-tab="'+t+'"]');if(b)b.classList.toggle('travada',!libera);});
+    if(libera){const av=el('avisoPlano');if(av)av.classList.add('escondido');}
+  }
+  let _avisoPlanoTimer=null;
+  function mostrarAvisoPlano(){const av=el('avisoPlano');if(!av)return;av.classList.remove('escondido');if(_avisoPlanoTimer)clearTimeout(_avisoPlanoTimer);_avisoPlanoTimer=setTimeout(()=>av.classList.add('escondido'),5000);}
+
   /* ---- TABS ---- */
   window.abrirTab=function(nome){
+    const alvo=document.querySelector('.tab[data-tab="'+nome+'"]');
+    if(alvo&&alvo.classList.contains('travada')){mostrarAvisoPlano();return;}
     document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('ativa',b.dataset.tab===nome));
     document.querySelectorAll('.tabConteudo').forEach(c=>c.classList.add('escondido'));
     el('tab-'+nome).classList.remove('escondido');
@@ -323,6 +342,8 @@
       el('gpsInfo').innerHTML='📍 Localização ainda não definida.';
       abrirTab('perfil');
       await carregarDados(user.uid);
+      await carregarPlanoPainel(user.uid);
+      aplicarPlanoNasAbas();
     }else{
       el('painel').style.display='none';el('formArea').style.display='block';el('box').classList.remove('largo');
       el('email').value='';el('senha').value='';el('btnAcao').disabled=false;trocarAba('entrar');
