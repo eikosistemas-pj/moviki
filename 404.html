@@ -162,6 +162,13 @@
     return h||'<div class="vazioMod">Sem eventos agora.</div>';
   }
 
+  let planoAtual='basico';
+  function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium';}
+  async function carregarPlano(uid){
+    try{const a=await getDoc(doc(db,'assinaturas',uid));planoAtual=(a.exists()&&a.data().ativo===true)?(a.data().plano||'basico'):'basico';}
+    catch(e){planoAtual='basico';}
+  }
+
   function montarToolbar(d){
     const cardapio=(d.cardapio||[]).filter(c=>c.produtos&&c.produtos.length);
     const promos=(d.promocoes||[]).filter(p=>p.titulo);
@@ -169,9 +176,11 @@
     // limpa
     for(const k in modulos)delete modulos[k];
     const botoes=[];
+    if(liberaConteudo()){
     if(cardapio.length){modulos.cardapio={titulo:'🍽️ Cardápio',html:htmlCardapio(cardapio)};botoes.push({m:'cardapio',ic:'🍽️',lb:'Cardápio'});}
     if(promos.length){modulos.promocoes={titulo:'🏷️ Promoções',html:htmlPromos(promos)};botoes.push({m:'promocoes',ic:'🏷️',lb:'Promoções'});}
     if(eventos.length){modulos.eventos={titulo:'📅 Eventos',html:htmlEventos(eventos)};botoes.push({m:'eventos',ic:'📅',lb:'Eventos'});}
+    }
     const tb=el('toolbar');
     tb.innerHTML='';
     botoes.forEach(b=>{
@@ -205,7 +214,8 @@
     },(err)=>{alert(err.code===1?'Libere o acesso à sua localização nas permissões do navegador.':'Não consegui pegar sua localização.');},{enableHighAccuracy:true,timeout:10000});
   };
 
-  function ouvir(uid){
+  async function ouvir(uid){
+    await carregarPlano(uid);
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
       if(!snap.exists()){mostrarTela('Negócio não encontrado','Esse negócio não existe mais.',true);return;}
       const d=snap.data();
