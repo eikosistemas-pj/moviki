@@ -83,6 +83,23 @@
   .tab.travada{opacity:.5}
   .tab.travada::after{content:' 🔒';font-size:11px}
   .avisoPlano{background:rgba(0,102,255,.14);border:1px solid rgba(0,212,255,.45);color:#dbe9ff;padding:10px 12px;border-radius:8px;margin:10px 0 0;font-size:14px;line-height:1.4}
+  .modalPlano{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
+  .modalPlano.escondido{display:none}
+  .mpCaixa{background:#0D1B2A;border:1px solid rgba(0,212,255,.35);border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:20px;position:relative}
+  .mpFechar{position:absolute;top:12px;right:12px;background:none;border:none;color:#9fb3c8;font-size:20px;cursor:pointer}
+  .mpTitulo{color:#fff;margin:0 0 8px;font-size:20px}
+  .mpStatus{color:#dbe9ff;font-size:14px;margin-bottom:14px;padding:10px;background:rgba(0,102,255,.12);border-radius:8px}
+  .mpCampo{margin-bottom:14px}
+  .mpCampo label{display:block;color:#9fb3c8;font-size:13px;margin-bottom:4px}
+  .mpCampo input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:#13263d;color:#fff;font-size:15px;box-sizing:border-box}
+  .mpPlanos{display:flex;gap:12px;flex-wrap:wrap}
+  .mpPlano{flex:1;min-width:200px;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px}
+  .mpNome{color:#00D4FF;font-weight:700;font-size:18px}
+  .mpDesc{color:#9fb3c8;font-size:13px;margin:4px 0 10px}
+  .mpBtn{display:block;width:100%;margin:6px 0;padding:10px;border-radius:8px;border:none;background:#0066FF;color:#fff;font-size:14px;cursor:pointer;text-align:center}
+  .mpBtn:hover{background:#0052cc}
+  .mpTag{display:inline-block;background:#00D4FF;color:#0D1B2A;font-size:11px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:4px}
+  .mpAviso{color:#ff9b9b;font-size:14px;margin-top:12px;min-height:18px}
 </style>
 </head>
 <body>
@@ -118,6 +135,7 @@
     <div id="painel" class="painel">
       <div class="cabPainel">
         <div class="ola">Conectado como:<b id="oExEmail"></b></div>
+        <button class="sairMini" onclick="abrirPlano()">⭐ Meu plano</button>
         <button class="sairMini" onclick="sair()">Sair</button>
       </div>
 
@@ -130,7 +148,33 @@
       </div>
 
       <!-- Perfil -->
-      <div id="avisoPlano" class="avisoPlano escondido">🔒 <b>Cardápio</b>, <b>Promoções</b> e <b>Eventos</b> fazem parte do plano <b>Pró</b>. Faça upgrade pra liberar.</div>
+      <div id="avisoPlano" class="avisoPlano escondido" onclick="abrirPlano()" style="cursor:pointer">🔒 <b>Cardápio</b>, <b>Promoções</b> e <b>Eventos</b> são do plano <b>Pró</b>. <u>Clique aqui pra assinar</u>.</div>
+      <div id="modalPlano" class="modalPlano escondido">
+        <div class="mpCaixa">
+          <button class="mpFechar" onclick="fecharPlano()">✕</button>
+          <h2 class="mpTitulo">Meu plano</h2>
+          <div id="mpStatus" class="mpStatus"></div>
+          <div class="mpCampo"><label for="cpfAssinatura">Seu CPF ou CNPJ</label>
+            <input id="cpfAssinatura" type="text" placeholder="Só números" inputmode="numeric"></div>
+          <div class="mpPlanos">
+            <div class="mpPlano">
+              <div class="mpNome">Pró</div>
+              <div class="mpDesc">+ Cardápio, Promoções e Eventos</div>
+              <button class="mpBtn" onclick="assinar('pro','mensal')">Mensal · R$ 37,90</button>
+              <button class="mpBtn" onclick="assinar('pro','trimestral')">Trimestral · R$ 99,90</button>
+              <button class="mpBtn" onclick="assinar('pro','anual')">Anual · R$ 379,00 <span class="mpTag">2 meses grátis</span></button>
+            </div>
+            <div class="mpPlano">
+              <div class="mpNome">Premium</div>
+              <div class="mpDesc">Tudo do Pró + extras</div>
+              <button class="mpBtn" onclick="assinar('premium','mensal')">Mensal · R$ 49,90</button>
+              <button class="mpBtn" onclick="assinar('premium','trimestral')">Trimestral · R$ 134,90</button>
+              <button class="mpBtn" onclick="assinar('premium','anual')">Anual · R$ 499,00 <span class="mpTag">2 meses grátis</span></button>
+            </div>
+          </div>
+          <div id="mpAviso" class="mpAviso"></div>
+        </div>
+      </div>
       <div class="tabConteudo" id="tab-perfil">
         <div class="campo"><label for="nome">Nome do negócio</label><input id="nome" type="text" placeholder="Ex.: Caldeirão Nordestino"></div>
         <div class="campo"><label for="apelido">Seu link no Moviki</label><div class="linkCampo"><span class="pref">moviki.com.br/</span><input id="apelido" type="text" placeholder="caldeirao" autocomplete="off"></div></div>
@@ -195,6 +239,8 @@
   const db = getFirestore(app);
   const el = id => document.getElementById(id);
   let modo='entrar', usuarioAtual=null, statusAtual='fechado', coords=null, slugSalvo='';
+  const ROBO='https://moviki-robo.vercel.app';
+  let dadosAssinatura=null;
   const RESERVADOS=['index','mapa','404','assets','www','painel','login','moviki'];
 
   /* ---- ACESSO ---- */
@@ -204,13 +250,15 @@
   window.trocarAba=function(n){modo=n;el('abaEntrar').classList.toggle('ativa',n==='entrar');el('abaCriar').classList.toggle('ativa',n==='criar');el('btnAcao').textContent=n==='entrar'?'Entrar':'Criar conta';el('dica').textContent=n==='criar'?'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.':'';limparAviso();};
   window.verSenha=function(){const s=el('senha'),b=document.querySelector('.verSenha');if(s.type==='password'){s.type='text';b.textContent='ocultar';}else{s.type='password';b.textContent='mostrar';}};
   function msgErro(c){const m={'auth/invalid-email':'E-mail inválido.','auth/missing-password':'Digite uma senha.','auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.','auth/email-already-in-use':'Esse e-mail já tem conta. Tente "Entrar".','auth/invalid-credential':'E-mail ou senha incorretos.','auth/user-not-found':'Não encontrei conta com esse e-mail.','auth/wrong-password':'Senha incorreta.','auth/too-many-requests':'Muitas tentativas. Espere um pouco.','auth/network-request-failed':'Sem conexão. Confira a internet.'};return m[c]||('Erro: '+c);}
-  window.acao=async function(){const email=el('email').value.trim(),senha=el('senha').value,btn=el('btnAcao');limparAviso();if(!email){erroAcesso('Digite seu e-mail.');return;}if(!senha){erroAcesso('Digite uma senha.');return;}btn.disabled=true;const t=btn.textContent;btn.textContent='Aguarde...';try{if(modo==='criar')await createUserWithEmailAndPassword(auth,email,senha);else await signInWithEmailAndPassword(auth,email,senha);}catch(e){erroAcesso(msgErro(e.code));btn.disabled=false;btn.textContent=t;}};
+  window.acao=async function(){const email=el('email').value.trim(),senha=el('senha').value,btn=el('btnAcao');limparAviso();if(!email){erroAcesso('Digite seu e-mail.');return;}if(!senha){erroAcesso('Digite uma senha.');return;}btn.disabled=true;const t=btn.textContent;btn.textContent='Aguarde...';try{if(modo==='criar'){await createUserWithEmailAndPassword(auth,email,senha);try{const tk=await auth.currentUser.getIdToken();await fetch(ROBO+'/api/ativar-trial',{method:'POST',headers:{'Authorization':'Bearer '+tk}});}catch(_){}}else await signInWithEmailAndPassword(auth,email,senha);}catch(e){erroAcesso(msgErro(e.code));btn.disabled=false;btn.textContent=t;}};
   window.sair=async function(){await signOut(auth);};
 
   let planoPainel='basico';
   async function carregarPlanoPainel(uid){
-    try{const a=await getDoc(doc(db,'assinaturas',uid));planoPainel=(a.exists()&&a.data().ativo===true)?(a.data().plano||'basico'):'basico';}
-    catch(e){planoPainel='basico';}
+    try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;dadosAssinatura=d;
+      const ok=d&&d.ativo===true&&(!d.vence_em||d.vence_em.toMillis()>Date.now());
+      planoPainel=ok?(d.plano||'basico'):'basico';}
+    catch(e){planoPainel='basico';dadosAssinatura=null;}
   }
   function aplicarPlanoNasAbas(){
     const libera=planoPainel==='pro'||planoPainel==='premium';
@@ -219,6 +267,29 @@
   }
   let _avisoPlanoTimer=null;
   function mostrarAvisoPlano(){const av=el('avisoPlano');if(!av)return;av.classList.remove('escondido');if(_avisoPlanoTimer)clearTimeout(_avisoPlanoTimer);_avisoPlanoTimer=setTimeout(()=>av.classList.add('escondido'),5000);}
+  window.abrirPlano=function(){renderStatusPlano();el('modalPlano').classList.remove('escondido');};
+  window.fecharPlano=function(){el('modalPlano').classList.add('escondido');};
+  function renderStatusPlano(){
+    const s=el('mpStatus');if(!s)return;
+    if(planoPainel==='pro'||planoPainel==='premium'){
+      let ate='';if(dadosAssinatura&&dadosAssinatura.vence_em){ate=' até '+new Date(dadosAssinatura.vence_em.toMillis()).toLocaleDateString('pt-BR');}
+      s.innerHTML='✅ Seu plano atual: <b>'+(planoPainel==='premium'?'Premium':'Pró')+'</b>'+ate+'.';
+    }else{s.innerHTML='Seu plano atual: <b>Básico</b> (grátis). Escolha Pró ou Premium pra liberar mais recursos.';}
+  }
+  window.assinar=async function(plano,periodo){
+    const av=el('mpAviso');av.style.color='#9fb3c8';av.textContent='';
+    const cpf=(el('cpfAssinatura').value||'').replace(/\D/g,'');
+    if(cpf.length!==11&&cpf.length!==14){av.style.color='#ff9b9b';av.textContent='Informe um CPF (11 dígitos) ou CNPJ (14).';return;}
+    if(!usuarioAtual){av.style.color='#ff9b9b';av.textContent='Faça login primeiro.';return;}
+    av.textContent='Gerando seu pagamento...';
+    try{
+      const token=await usuarioAtual.getIdToken();
+      const r=await fetch(ROBO+'/api/criar-assinatura',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plano,periodo,cpfCnpj:cpf,nome:(el('nome').value||'').trim(),email:usuarioAtual.email})});
+      const data=await r.json();
+      if(r.ok&&data.invoiceUrl){window.location.href=data.invoiceUrl;return;}
+      av.style.color='#ff9b9b';av.textContent=data.erro||'Não consegui gerar o pagamento. Tente de novo.';
+    }catch(e){av.style.color='#ff9b9b';av.textContent='Erro de conexão. Tente de novo.';}
+  };
 
   /* ---- TABS ---- */
   window.abrirTab=function(nome){

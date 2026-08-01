@@ -165,7 +165,9 @@
   let planoAtual='basico';
   function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium';}
   async function carregarPlano(uid){
-    try{const a=await getDoc(doc(db,'assinaturas',uid));planoAtual=(a.exists()&&a.data().ativo===true)?(a.data().plano||'basico'):'basico';}
+    try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;
+      const ok=d&&d.ativo===true&&(!d.vence_em||d.vence_em.toMillis()>Date.now());
+      planoAtual=ok?(d.plano||'basico'):'basico';}
     catch(e){planoAtual='basico';}
   }
 
