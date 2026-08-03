@@ -3,423 +3,501 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moviki — Painel do Negócio</title>
+<title>Moviki — O mapa inteligente dos negócios em movimento</title>
+<meta name="description" content="Coloque seu negócio que se move — food truck, trailer, ambulante — no mapa ao vivo, com cardápio, promoções e um link só seu. Comece grátis, sem cartão.">
+<link rel="icon" type="image/png" href="favicon512.png">
+<link rel="apple-touch-icon" href="favicon512.png">
+<meta name="theme-color" content="#0D1B2A">
+<meta property="og:title" content="Moviki — O mapa inteligente dos negócios em movimento">
+<meta property="og:description" content="Seu negócio no mapa ao vivo. Comece grátis, sem cartão.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
 <style>
-  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;--card:#13263d;--card-borda:#223a5c;--campo:#0d1c30;}
-  *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
-  body{min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%, #163155 0%, var(--escuro) 55%);color:var(--claro);display:flex;align-items:center;justify-content:center;padding:20px;}
-  .box{width:100%;max-width:440px;transition:max-width .2s;}
-  .box.largo{max-width:660px;}
-  .marca{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;}
-  .marca svg{width:38px;height:38px;}
-  .marca .logoMarca{height:44px;width:auto;}
-  .marca .nome{font-size:30px;font-weight:700;letter-spacing:-1px;}
-  .marca .nome b{color:var(--ciano);}
-  .slogan{text-align:center;font-size:12px;color:#8fa6c4;letter-spacing:.5px;text-transform:uppercase;margin-bottom:24px;}
-  .card{background:var(--card);border:1px solid var(--card-borda);border-radius:18px;padding:26px 22px;box-shadow:0 20px 50px rgba(0,0,0,.35);}
-  .abas{display:flex;background:var(--campo);border-radius:12px;padding:4px;margin-bottom:22px;}
-  .abas button{flex:1;border:none;background:transparent;color:#8fa6c4;padding:10px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;}
-  .abas button.ativa{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;}
-  label{display:block;font-size:13px;font-weight:500;margin:0 0 6px 2px;color:#c7d6ea;}
-  .campo{position:relative;margin-bottom:16px;}
-  input,textarea{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--card-borda);background:var(--campo);color:var(--claro);font-size:15px;outline:none;transition:.15s;resize:none;}
-  input:focus,textarea:focus{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15);}
-  .verSenha{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8fa6c4;cursor:pointer;font-size:12px;font-weight:600;}
-  .btn{width:100%;padding:14px;border:none;border-radius:11px;cursor:pointer;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-size:15px;font-weight:700;letter-spacing:.3px;transition:.15s;}
-  .btn:hover{filter:brightness(1.07);}
-  .btn:disabled{opacity:.6;cursor:default;}
-  .btn.secundario{background:transparent;border:1px solid var(--card-borda);color:#c7d6ea;}
-  .btn.secundario:hover{border-color:var(--ciano);color:var(--ciano);filter:none;}
-  .aviso{margin-top:14px;padding:12px;border-radius:10px;font-size:13.5px;display:none;text-align:center;}
-  .aviso.erro{display:block;background:rgba(255,80,80,.12);color:#ff9a9a;border:1px solid rgba(255,80,80,.3);}
-  .aviso.ok{display:block;background:rgba(0,212,255,.12);color:var(--ciano);border:1px solid rgba(0,212,255,.3);}
-  .dica{font-size:12px;color:#7f95b3;text-align:center;margin-top:14px;line-height:1.5;}
-  .painel{display:none;}
-  .cabPainel{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
-  .cabPainel .ola{font-size:13px;color:#8fa6c4;}
-  .cabPainel .ola b{color:var(--claro);display:block;font-size:14px;margin-top:2px;word-break:break-all;}
-  .sairMini{background:none;border:1px solid var(--card-borda);color:#8fa6c4;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
-  .sairMini:hover{border-color:#ff8080;color:#ff9a9a;}
-  /* Abas do painel */
-  .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
-  .tab{flex:0 0 auto;border:1px solid var(--card-borda);background:var(--campo);color:#8fa6c4;padding:9px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
-  .tab.ativa{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border-color:transparent;}
-  .tabConteudo{margin-bottom:6px;}
-  .statusLinha{display:flex;gap:10px;margin-bottom:16px;}
-  .statusBtn{flex:1;padding:12px;border-radius:11px;border:1px solid var(--card-borda);background:var(--campo);color:#8fa6c4;font-weight:600;font-size:14px;cursor:pointer;transition:.15s;}
-  .statusBtn.aberto{background:rgba(0,212,255,.15);border-color:var(--ciano);color:var(--ciano);}
-  .statusBtn.fechado{background:rgba(255,120,120,.14);border-color:#ff8080;color:#ff9a9a;}
-  .gps{background:var(--campo);border:1px solid var(--card-borda);border-radius:11px;padding:14px;margin-bottom:16px;font-size:13px;color:#8fa6c4;}
-  .gps b{color:var(--claro);}
-  .linkCampo{display:flex;align-items:center;border:1px solid var(--card-borda);background:var(--campo);border-radius:11px;overflow:hidden;}
-  .linkCampo:focus-within{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15);}
-  .linkCampo .pref{padding:13px 4px 13px 14px;color:#8fa6c4;font-size:15px;white-space:nowrap;}
-  .linkCampo input{border:none;background:transparent;box-shadow:none !important;padding-left:2px;}
-  .linkPronto{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.3);border-radius:11px;padding:14px;margin-bottom:16px;}
-  .linkPronto .rot{font-size:12px;color:#8fa6c4;margin-bottom:8px;}
-  .linkRow{display:flex;gap:8px;align-items:center;}
-  .linkRow a{flex:1;color:var(--ciano);font-weight:600;font-size:14px;text-decoration:none;word-break:break-all;}
-  .linkRow button{background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;}
-  /* Blocos dinâmicos (categorias / produtos / promoções / eventos) */
-  .secTitulo{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 12px;}
-  .secTitulo label{margin:0;font-size:14px;}
-  .addBtn{background:none;border:1px solid var(--ciano);color:var(--ciano);border-radius:8px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
-  .catBloco{background:var(--campo);border:1px solid var(--card-borda);border-radius:12px;padding:12px;margin-bottom:12px;}
-  .catCab{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
-  .catCab .cat-nome{font-weight:600;}
-  .rmv{background:none;border:none;color:#ff8080;font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1;}
-  .prodRow{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
-  .prodRow .p-nome{flex:1;padding:10px 12px;font-size:14px;}
-  .prodRow .p-preco{width:88px;flex-shrink:0;padding:10px 10px;font-size:14px;}
-  .acabLbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#c7d6ea;white-space:nowrap;cursor:pointer;}
-  .acabLbl input{width:auto;}
-  .addProd{background:none;border:1px dashed var(--card-borda);color:#8fa6c4;border-radius:8px;padding:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}
-  .linha2{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
-  .linha2 input{flex:1;}
-  .vazioCard{font-size:13px;color:#7f95b3;text-align:center;padding:10px;}
-  .escondido{display:none !important;}
-  .tab.travada{opacity:.5}
-  .tab.travada::after{content:' 🔒';font-size:11px}
-  .avisoPlano{background:rgba(0,102,255,.14);border:1px solid rgba(0,212,255,.45);color:#dbe9ff;padding:10px 12px;border-radius:8px;margin:10px 0 0;font-size:14px;line-height:1.4}
-  .modalPlano{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
-  .modalPlano.escondido{display:none}
-  .mpCaixa{background:#0D1B2A;border:1px solid rgba(0,212,255,.35);border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:20px;position:relative}
-  .mpFechar{position:absolute;top:12px;right:12px;background:none;border:none;color:#9fb3c8;font-size:20px;cursor:pointer}
-  .mpTitulo{color:#fff;margin:0 0 8px;font-size:20px}
-  .mpStatus{color:#dbe9ff;font-size:14px;margin-bottom:14px;padding:10px;background:rgba(0,102,255,.12);border-radius:8px}
-  .mpCampo{margin-bottom:14px}
-  .mpCampo label{display:block;color:#9fb3c8;font-size:13px;margin-bottom:4px}
-  .mpCampo input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:#13263d;color:#fff;font-size:15px;box-sizing:border-box}
-  .mpPlanos{display:flex;gap:12px;flex-wrap:wrap}
-  .mpPlano{flex:1;min-width:200px;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px}
-  .mpNome{color:#00D4FF;font-weight:700;font-size:18px}
-  .mpDesc{color:#9fb3c8;font-size:13px;margin:4px 0 10px}
-  .mpBtn{display:block;width:100%;margin:6px 0;padding:10px;border-radius:8px;border:none;background:#0066FF;color:#fff;font-size:14px;cursor:pointer;text-align:center}
-  .mpBtn:hover{background:#0052cc}
-  .mpTag{display:inline-block;background:#00D4FF;color:#0D1B2A;font-size:11px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:4px}
-  .mpAviso{color:#ff9b9b;font-size:14px;margin-top:12px;min-height:18px}
+  :root{
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --breu:#081320;
+    --claro:#F2F5F9; --muted:#8fa6c4; --card:#0f2036; --card2:#12243d;
+    --borda:rgba(255,255,255,.09); --borda-forte:rgba(0,212,255,.35);
+    --raio:16px; --max:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Poppins',sans-serif;background:var(--escuro);color:var(--claro);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 20px;}
+  .eyebrow{font-size:12.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ciano);}
+  h1,h2,h3{line-height:1.15;letter-spacing:-.5px;font-weight:700;}
+  .ciano{color:var(--ciano);}
+
+  /* ---- botões ---- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-weight:700;font-size:15.5px;padding:14px 26px;border-radius:12px;border:none;cursor:pointer;transition:transform .12s ease, filter .12s ease;white-space:nowrap;}
+  .btn-primary{background:linear-gradient(100deg,var(--ciano),var(--azul));color:#04121f;box-shadow:0 10px 30px rgba(0,120,255,.28);}
+  .btn-primary:hover{transform:translateY(-2px);filter:brightness(1.05);}
+  .btn-ghost{background:transparent;color:var(--claro);border:1px solid var(--borda);}
+  .btn-ghost:hover{border-color:var(--borda-forte);color:#fff;}
+  .btn-block{width:100%;}
+
+  /* ---- header ---- */
+  header{position:sticky;top:0;z-index:50;background:rgba(9,17,28,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--borda);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:66px;}
+  .nav .logo{height:30px;width:auto;}
+  .nav-cta{display:flex;align-items:center;gap:14px;}
+  .nav-entrar{font-weight:600;font-size:15px;color:var(--muted);}
+  .nav-entrar:hover{color:#fff;}
+  .nav .btn{padding:10px 20px;font-size:14.5px;}
+
+  /* ---- hero ---- */
+  .hero{position:relative;padding:64px 0 72px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(8,15,26,.62),rgba(13,27,42,.86)), url('fundo.jpg') center top/cover no-repeat;}
+  .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1fr;gap:48px;align-items:center;}
+  .hero-copy .eyebrow{margin-bottom:16px;display:inline-block;}
+  .hero h1{font-size:clamp(32px,7vw,52px);font-weight:800;margin-bottom:18px;}
+  .hero p.lead{font-size:clamp(16px,2.4vw,19px);color:#cdddf0;max-width:560px;margin-bottom:28px;}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+  .hero-nota{font-size:13.5px;color:var(--muted);margin-top:16px;display:flex;align-items:center;gap:8px;}
+  .hero-nota b{color:var(--claro);font-weight:600;}
+  .checkzin{color:var(--ciano);font-weight:800;}
+
+  /* ---- mockup celular ---- */
+  .phone-holder{display:flex;justify-content:center;}
+  .phone{width:270px;max-width:78vw;background:#050d18;border:9px solid #16243a;border-radius:38px;padding:10px 8px 14px;box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 0 1px rgba(0,212,255,.12);position:relative;}
+  .phone::before{content:"";position:absolute;top:16px;left:50%;transform:translateX(-50%);width:96px;height:6px;border-radius:6px;background:#0c1626;}
+  .ph-screen{border-radius:26px;overflow:hidden;background:#0a1728;margin-top:14px;}
+  .ph-search{display:flex;align-items:center;gap:8px;background:#0f2135;margin:10px;padding:9px 12px;border-radius:10px;font-size:12px;color:#7f96b3;}
+  .ph-search svg{flex:0 0 auto;}
+  .ph-map{position:relative;height:240px;background:
+      radial-gradient(120px 120px at 72% 34%, rgba(0,102,255,.16), transparent 70%),
+      repeating-linear-gradient(58deg, transparent 0 26px, rgba(90,150,220,.10) 26px 27px),
+      repeating-linear-gradient(-32deg, transparent 0 30px, rgba(90,150,220,.08) 30px 31px),
+      #0a1728;}
+  .pin{position:absolute;width:20px;height:20px;border-radius:50% 50% 50% 0;background:var(--ciano);transform:rotate(-45deg);box-shadow:0 0 12px rgba(0,212,255,.6);}
+  .pin::after{content:"";position:absolute;top:5px;left:5px;width:10px;height:10px;border-radius:50%;background:#0a1728;}
+  .pin.p1{top:60px;left:60px;opacity:.65;width:15px;height:15px;}
+  .pin.p2{top:120px;right:44px;opacity:.7;width:15px;height:15px;}
+  .pin.big{top:96px;left:50%;margin-left:-13px;width:26px;height:26px;}
+  .pin.big::before{content:"";position:absolute;top:-9px;left:-9px;right:-9px;bottom:-9px;border-radius:50%;background:rgba(0,212,255,.35);animation:pulse 2.2s ease-out infinite;transform:rotate(0);}
+  @keyframes pulse{0%{transform:scale(.6);opacity:.8;}100%{transform:scale(2.1);opacity:0;}}
+  .ph-card{position:absolute;left:10px;right:10px;bottom:10px;background:#0f2236;border:1px solid var(--borda);border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;}
+  .ph-thumb{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#123,#0a4a63);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .ph-card b{font-size:13px;display:block;}
+  .ph-card .small{font-size:11px;color:var(--muted);}
+  .aovivo{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:#7ff0b5;font-weight:600;}
+  .aovivo .dot{width:6px;height:6px;border-radius:50%;background:#2ecc71;box-shadow:0 0 6px #2ecc71;}
+  .ph-nav{display:flex;justify-content:space-around;padding:10px 0 4px;font-size:10px;color:#6b83a1;}
+  .ph-nav .on{color:var(--ciano);}
+
+  /* ---- faixa "feito para" ---- */
+  .feito{background:var(--breu);border-top:1px solid var(--borda);border-bottom:1px solid var(--borda);padding:22px 0;}
+  .feito .wrap{display:flex;align-items:center;gap:14px 26px;flex-wrap:wrap;justify-content:center;}
+  .feito .lbl{font-size:12.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;}
+  .feito .tag{font-size:14.5px;font-weight:600;color:#c7d8ec;}
+  .feito .tag::before{content:"◈";color:var(--ciano);margin-right:7px;font-size:11px;}
+
+  /* ---- seções ---- */
+  section.bloco{padding:76px 0;}
+  .bloco.alt{background:var(--breu);}
+  .head-sec{text-align:center;max-width:640px;margin:0 auto 48px;}
+  .head-sec h2{font-size:clamp(26px,4.6vw,38px);margin:14px 0 12px;}
+  .head-sec p{color:var(--muted);font-size:16px;}
+
+  /* ---- benefícios ---- */
+  .grid-ben{display:grid;grid-template-columns:1fr;gap:18px;}
+  .ben{background:var(--card);border:1px solid var(--borda);border-radius:var(--raio);padding:26px 22px;transition:transform .15s, border-color .15s;}
+  .ben:hover{transform:translateY(-4px);border-color:var(--borda-forte);}
+  .ben .ic{width:48px;height:48px;border-radius:12px;background:rgba(0,212,255,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .ben h3{font-size:18px;margin-bottom:8px;}
+  .ben p{color:var(--muted);font-size:14.5px;}
+
+  /* ---- como funciona ---- */
+  .passos{display:grid;grid-template-columns:1fr;gap:24px;counter-reset:passo;}
+  .passo{position:relative;padding-left:66px;}
+  .passo::before{counter-increment:passo;content:counter(passo);position:absolute;left:0;top:2px;width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;}
+  .passo h3{font-size:18px;margin-bottom:5px;}
+  .passo p{color:var(--muted);font-size:14.5px;}
+
+  /* ---- planos ---- */
+  .toggle{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:34px;}
+  .toggle button{font-family:inherit;background:transparent;border:none;color:var(--muted);font-weight:600;font-size:15px;cursor:pointer;padding:8px 16px;border-radius:20px;}
+  .toggle button.on{background:rgba(0,212,255,.14);color:var(--ciano);}
+  .toggle .eco{font-size:12px;color:#7ff0b5;font-weight:600;}
+  .grid-planos{display:grid;grid-template-columns:1fr;gap:20px;align-items:stretch;}
+  .plano{background:var(--card);border:1px solid var(--borda);border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;position:relative;}
+  .plano.destaque{border-color:var(--ciano);box-shadow:0 0 0 1px var(--ciano),0 20px 50px rgba(0,120,255,.18);}
+  .plano .badge{position:absolute;top:-13px;left:24px;background:var(--ciano);color:#04121f;font-size:11.5px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.3px;}
+  .plano .pnome{font-size:19px;font-weight:700;}
+  .plano .pdesc{color:var(--muted);font-size:13.5px;margin:4px 0 18px;min-height:20px;}
+  .preco{display:flex;align-items:baseline;gap:4px;margin-bottom:4px;}
+  .preco .cifra{font-size:16px;font-weight:600;color:var(--muted);}
+  .preco .val{font-size:38px;font-weight:800;letter-spacing:-1px;}
+  .preco .per{font-size:14px;color:var(--muted);}
+  .preco-nota{font-size:12.5px;color:#7ff0b5;font-weight:600;min-height:18px;margin-bottom:20px;}
+  .plano ul{list-style:none;margin:0 0 24px;display:flex;flex-direction:column;gap:11px;flex:1;}
+  .plano li{font-size:14.5px;color:#d3e1f0;display:flex;gap:10px;align-items:flex-start;}
+  .plano li svg{flex:0 0 auto;margin-top:3px;}
+  .plano li.mudo{color:var(--muted);}
+
+  /* ---- garantia / fundador ---- */
+  .garantia{text-align:center;}
+  .garantia .selo{display:inline-flex;align-items:center;gap:10px;background:rgba(0,212,255,.1);border:1px solid var(--borda-forte);border-radius:40px;padding:10px 22px;font-weight:600;font-size:14.5px;margin-bottom:22px;}
+  .garantia h2{font-size:clamp(24px,4.4vw,34px);max-width:720px;margin:0 auto 16px;}
+  .garantia p{color:var(--muted);max-width:560px;margin:0 auto 28px;font-size:16px;}
+
+  /* ---- FAQ ---- */
+  .faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+  .faq-item{background:var(--card);border:1px solid var(--borda);border-radius:12px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;background:none;border:none;color:var(--claro);font-family:inherit;font-weight:600;font-size:15.5px;padding:18px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .faq-q .sinal{color:var(--ciano);font-size:22px;font-weight:400;transition:transform .2s;flex:0 0 auto;line-height:1;}
+  .faq-item.aberto .sinal{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;color:var(--muted);font-size:14.5px;}
+  .faq-a .in{padding:0 20px 18px;}
+
+  /* ---- CTA final ---- */
+  .cta-final{text-align:center;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--breu),#0a1a2e);border-top:1px solid var(--borda);}
+  .cta-final h2{font-size:clamp(26px,5vw,40px);margin-bottom:14px;}
+  .cta-final p{color:var(--muted);margin-bottom:28px;font-size:16px;}
+
+  /* ---- footer ---- */
+  footer{background:var(--breu);border-top:1px solid var(--borda);padding:52px 0 30px;}
+  .foot-top{display:grid;grid-template-columns:1fr;gap:34px;margin-bottom:36px;}
+  .foot-logo{height:30px;margin-bottom:14px;}
+  .foot-brand p{color:var(--muted);font-size:14px;max-width:300px;}
+  .foot-col h4{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-weight:600;}
+  .foot-col a,.foot-col span{display:block;color:#c1d2e6;font-size:14.5px;margin-bottom:10px;}
+  .foot-col a:hover{color:var(--ciano);}
+  .foot-bot{border-top:1px solid var(--borda);padding-top:22px;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;color:var(--muted);font-size:13px;}
+
+  /* ---- reveal ---- */
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .rv.on{opacity:1;transform:none;}
+
+  /* ---- desktop ---- */
+  @media(min-width:720px){
+    .grid-ben{grid-template-columns:1fr 1fr;}
+    .passos{grid-template-columns:1fr 1fr;gap:34px 40px;}
+    .grid-planos{grid-template-columns:repeat(3,1fr);}
+    .foot-top{grid-template-columns:1.6fr 1fr 1fr 1fr;}
+  }
+  @media(min-width:920px){
+    .hero .wrap{grid-template-columns:1.05fr .95fr;gap:40px;}
+    .hero{padding:88px 0 96px;}
+    .grid-ben{grid-template-columns:repeat(4,1fr);}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto!important;}
+    .rv{opacity:1;transform:none;transition:none;}
+  }
 </style>
 </head>
 <body>
-<div class="box" id="box">
 
-  <div class="marca">
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/>
-      <circle cx="32" cy="26" r="7" fill="#0D1B2A"/>
-      <path d="M44 14a17 17 0 0 1 5 12" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M48 9a24 24 0 0 1 7 17" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
-    </svg>
-    <div class="nome">movi<b>ki</b></div>
-  </div>
-  <div class="slogan">O mapa inteligente dos negócios em movimento</div>
-
-  <div class="card">
-
-    <!-- ACESSO -->
-    <div id="formArea">
-      <div class="abas">
-        <button id="abaEntrar" class="ativa" onclick="trocarAba('entrar')">Entrar</button>
-        <button id="abaCriar" onclick="trocarAba('criar')">Criar conta</button>
-      </div>
-      <div class="campo"><label for="email">E-mail</label><input id="email" type="email" placeholder="voce@email.com" autocomplete="email"></div>
-      <div class="campo"><label for="senha">Senha</label><input id="senha" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password"><button type="button" class="verSenha" onclick="verSenha()">mostrar</button></div>
-      <button id="btnAcao" class="btn" onclick="acao()">Entrar</button>
-      <div id="aviso" class="aviso"></div>
-      <div class="dica" id="dica"></div>
+<header>
+  <div class="wrap nav">
+    <a href="#topo"><img src="logo.png" alt="Moviki" class="logo" onerror="this.outerHTML='<span style=&quot;font-weight:800;font-size:22px&quot;>movi<span style=color:#00D4FF>ki</span></span>'"></a>
+    <div class="nav-cta">
+      <a class="nav-entrar app-link" href="https://app.moviki.com.br">Entrar</a>
+      <a class="btn btn-primary app-link" href="https://app.moviki.com.br">Começar grátis</a>
     </div>
+  </div>
+</header>
 
-    <!-- PAINEL -->
-    <div id="painel" class="painel">
-      <div class="cabPainel">
-        <div class="ola">Conectado como:<b id="oExEmail"></b></div>
-        <button class="sairMini" onclick="abrirPlano()">⭐ Meu plano</button>
-        <button class="sairMini" onclick="sair()">Sair</button>
+<main id="topo">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">O mapa inteligente dos negócios em movimento</span>
+        <h1>Seu negócio no mapa.<br>Seus clientes <span class="ciano">chegando até você.</span></h1>
+        <p class="lead">O Moviki coloca o seu negócio que se move — food truck, trailer, ambulante — no mapa ao vivo, com cardápio, promoções e um link só seu. Quem está por perto encontra você na hora.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary app-link" href="https://app.moviki.com.br">Começar grátis</a>
+          <a class="btn btn-ghost" href="#planos">Ver planos</a>
+        </div>
+        <div class="hero-nota"><span class="checkzin">✓</span> <span><b>30 dias de Pró grátis</b> · sem cartão de crédito · cancele quando quiser</span></div>
       </div>
 
-      <div class="tabs">
-        <button class="tab ativa" data-tab="perfil" onclick="abrirTab('perfil')">Perfil</button>
-        <button class="tab" data-tab="cardapio" onclick="abrirTab('cardapio')">Cardápio</button>
-        <button class="tab" data-tab="promocoes" onclick="abrirTab('promocoes')">Promoções</button>
-        <button class="tab" data-tab="eventos" onclick="abrirTab('eventos')">Eventos</button>
-        <button class="tab" data-tab="local" onclick="abrirTab('local')">Localização</button>
-      </div>
-
-      <!-- Perfil -->
-      <div id="avisoPlano" class="avisoPlano escondido" onclick="abrirPlano()" style="cursor:pointer">🔒 <b>Cardápio</b>, <b>Promoções</b> e <b>Eventos</b> são do plano <b>Pró</b>. <u>Clique aqui pra assinar</u>.</div>
-      <div id="modalPlano" class="modalPlano escondido">
-        <div class="mpCaixa">
-          <button class="mpFechar" onclick="fecharPlano()">✕</button>
-          <h2 class="mpTitulo">Meu plano</h2>
-          <div id="mpStatus" class="mpStatus"></div>
-          <div class="mpCampo"><label for="cpfAssinatura">Seu CPF ou CNPJ</label>
-            <input id="cpfAssinatura" type="text" placeholder="Só números" inputmode="numeric"></div>
-          <div class="mpPlanos">
-            <div class="mpPlano">
-              <div class="mpNome">Pró</div>
-              <div class="mpDesc">+ Cardápio, Promoções e Eventos</div>
-              <button class="mpBtn" onclick="assinar('pro','mensal')">Mensal · R$ 37,90</button>
-              <button class="mpBtn" onclick="assinar('pro','trimestral')">Trimestral · R$ 99,90</button>
-              <button class="mpBtn" onclick="assinar('pro','anual')">Anual · R$ 379,00 <span class="mpTag">2 meses grátis</span></button>
+      <div class="phone-holder">
+        <div class="phone" aria-hidden="true">
+          <div class="ph-screen">
+            <div class="ph-search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7f96b3" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+              Buscar no Moviki
             </div>
-            <div class="mpPlano">
-              <div class="mpNome">Premium</div>
-              <div class="mpDesc">Tudo do Pró + extras</div>
-              <button class="mpBtn" onclick="assinar('premium','mensal')">Mensal · R$ 49,90</button>
-              <button class="mpBtn" onclick="assinar('premium','trimestral')">Trimestral · R$ 134,90</button>
-              <button class="mpBtn" onclick="assinar('premium','anual')">Anual · R$ 499,00 <span class="mpTag">2 meses grátis</span></button>
+            <div class="ph-map">
+              <span class="pin p1"></span>
+              <span class="pin p2"></span>
+              <span class="pin big"></span>
+              <div class="ph-card">
+                <div class="ph-thumb">🌮</div>
+                <div>
+                  <b>Espetinho do Léo</b>
+                  <span class="small"><span class="aovivo"><span class="dot"></span>Aberto agora</span> · 300 m de você</span>
+                </div>
+              </div>
             </div>
+            <div class="ph-nav"><span class="on">◉ Mapa</span><span>◇ Explorar</span><span>♡ Favoritos</span><span>◍ Perfil</span></div>
           </div>
-          <div id="mpAviso" class="mpAviso"></div>
         </div>
       </div>
-      <div class="tabConteudo" id="tab-perfil">
-        <div class="campo"><label for="nome">Nome do negócio</label><input id="nome" type="text" placeholder="Ex.: Caldeirão Nordestino"></div>
-        <div class="campo"><label for="apelido">Seu link no Moviki</label><div class="linkCampo"><span class="pref">moviki.com.br/</span><input id="apelido" type="text" placeholder="caldeirao" autocomplete="off"></div></div>
-        <div id="linkPronto" class="linkPronto escondido"><div class="rot">✅ Link pra divulgar (bio do Instagram, WhatsApp...):</div><div class="linkRow"><a id="linkPublico" href="#" target="_blank" rel="noopener"></a><button onclick="copiarLink()" id="btnCopiar">Copiar</button></div></div>
-        <label>Status agora</label>
-        <div class="statusLinha"><button id="btnAberto" class="statusBtn" onclick="setStatus('aberto')">🟢 Aberto</button><button id="btnFechado" class="statusBtn" onclick="setStatus('fechado')">🔴 Fechado</button></div>
-        <div class="campo"><label for="recado">Recado do dia (opcional)</label><textarea id="recado" rows="2" placeholder="Ex.: Hoje tem caldo de feijão!"></textarea></div>
-      </div>
-
-      <!-- Cardápio -->
-      <div class="tabConteudo escondido" id="tab-cardapio">
-        <div class="secTitulo"><label>Categorias e produtos</label><button class="addBtn" onclick="adicionarCategoria()">+ Categoria</button></div>
-        <div id="listaCategorias"></div>
-        <div id="vazioCat" class="vazioCard">Nenhuma categoria ainda. Crie uma (ex.: Caldos, Lanches, Bebidas).</div>
-      </div>
-
-      <!-- Promoções -->
-      <div class="tabConteudo escondido" id="tab-promocoes">
-        <div class="secTitulo"><label>Promoções</label><button class="addBtn" onclick="adicionarPromo()">+ Promoção</button></div>
-        <div id="listaPromos"></div>
-        <div id="vazioPromo" class="vazioCard">Nenhuma promoção ainda.</div>
-      </div>
-
-      <!-- Eventos -->
-      <div class="tabConteudo escondido" id="tab-eventos">
-        <div class="secTitulo"><label>Eventos</label><button class="addBtn" onclick="adicionarEvento()">+ Evento</button></div>
-        <div id="listaEventos"></div>
-        <div id="vazioEvento" class="vazioCard">Nenhum evento ainda.</div>
-      </div>
-
-      <!-- Local -->
-      <div class="tabConteudo escondido" id="tab-local">
-        <div class="gps" id="gpsInfo">📍 Localização ainda não definida.</div>
-        <button class="btn secundario" onclick="pegarLocalizacao()">📍 Atualizar minha localização</button>
-      </div>
-
-      <div style="height:8px;"></div>
-      <button id="btnSalvar" class="btn" onclick="salvar()">Salvar tudo</button>
-      <div id="avisoP" class="aviso"></div>
     </div>
+  </section>
 
+  <!-- FEITO PARA -->
+  <div class="feito">
+    <div class="wrap">
+      <span class="lbl">Feito para quem se move:</span>
+      <span class="tag">Food trucks</span>
+      <span class="tag">Trailers</span>
+      <span class="tag">Ambulantes</span>
+      <span class="tag">Feirantes</span>
+      <span class="tag">Delivery</span>
+      <span class="tag">Serviços que vão até o cliente</span>
+    </div>
   </div>
-</div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <!-- BENEFÍCIOS -->
+  <section class="bloco">
+    <div class="wrap">
+      <div class="head-sec rv">
+        <span class="eyebrow">Por que Moviki</span>
+        <h2>Tudo que seu negócio precisa pra ser encontrado</h2>
+        <p>Simples de usar, feito pra quem não para no mesmo lugar.</p>
+      </div>
+      <div class="grid-ben">
+        <div class="ben rv">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2"><path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <h3>Apareça no mapa ao vivo</h3>
+          <p>Seus clientes veem exatamente onde você está agora, em tempo real, com status de aberto ou fechado.</p>
+        </div>
+        <div class="ben rv">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2"><path d="M4 5h16v14H4z"/><path d="M4 9h16M8 13h6"/></svg></div>
+          <h3>Monte seu cardápio</h3>
+          <p>Categorias, preços e o aviso "acabando!" pra criar urgência e vender o que resta do dia.</p>
+        </div>
+        <div class="ben rv">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2"><path d="M3 11l18-7-7 18-2.5-7.5L3 11Z"/></svg></div>
+          <h3>Divulgue promoções e eventos</h3>
+          <p>Avise quem está por perto das novidades de hoje e traga mais gente até o seu ponto.</p>
+        </div>
+        <div class="ben rv">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></div>
+          <h3>Tenha seu link próprio</h3>
+          <p>moviki.com.br/seunegocio pra colocar na bio do Instagram e mandar no WhatsApp dos clientes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
-    authDomain: "moviki-app.firebaseapp.com",
-    projectId: "moviki-app",
-    storageBucket: "moviki-app.firebasestorage.app",
-    messagingSenderId: "451920150738",
-    appId: "1:451920150738:web:be458392064c964c792d0b"
+  <!-- COMO FUNCIONA -->
+  <section class="bloco alt">
+    <div class="wrap">
+      <div class="head-sec rv">
+        <span class="eyebrow">Comece em minutos</span>
+        <h2>Como funciona</h2>
+        <p>Do cadastro ao primeiro cliente te achando no mapa.</p>
+      </div>
+      <div class="passos">
+        <div class="passo rv"><h3>Crie sua conta grátis</h3><p>Leva 1 minuto e não pede cartão. Você já entra com 30 dias de Pró liberados.</p></div>
+        <div class="passo rv"><h3>Monte seu perfil</h3><p>Ligue sua localização, defina se está aberto, e adicione cardápio, promoções e eventos.</p></div>
+        <div class="passo rv"><h3>Compartilhe seu link</h3><p>Divulgue seu link do Moviki nas redes e no WhatsApp. Quem está perto vê você no mapa.</p></div>
+        <div class="passo rv"><h3>Venda mais</h3><p>Atualize seu status e suas ofertas a qualquer momento — o mapa acompanha você onde estiver.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section class="bloco" id="planos">
+    <div class="wrap">
+      <div class="head-sec rv">
+        <span class="eyebrow">Planos</span>
+        <h2>Comece de graça. Cresça quando quiser.</h2>
+        <p>Sem fidelidade. Mude de plano ou cancele a qualquer momento.</p>
+      </div>
+
+      <div class="toggle rv">
+        <button id="tgMensal" class="on" onclick="setCiclo('mensal')">Mensal</button>
+        <button id="tgAnual" onclick="setCiclo('anual')">Anual</button>
+        <span class="eco" id="ecoLabel">&nbsp;</span>
+      </div>
+
+      <div class="grid-planos">
+        <!-- Básico -->
+        <div class="plano rv">
+          <div class="pnome">Básico</div>
+          <div class="pdesc">Pra sempre grátis. Apareça no mapa.</div>
+          <div class="preco"><span class="val">Grátis</span></div>
+          <div class="preco-nota">&nbsp;</div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Apareça no mapa ao vivo</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Status Aberto/Fechado e recado do dia</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Seu link próprio moviki.com.br/seunegocio</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Localização em tempo real</li>
+          </ul>
+          <a class="btn btn-ghost btn-block app-link" href="https://app.moviki.com.br">Começar grátis</a>
+        </div>
+
+        <!-- Pró -->
+        <div class="plano destaque rv">
+          <div class="badge">Recomendado</div>
+          <div class="pnome">Pró</div>
+          <div class="pdesc">Cardápio, promoções e eventos.</div>
+          <div class="preco"><span class="cifra">R$</span><span class="val" id="proVal">37,90</span><span class="per" id="proPer">/mês</span></div>
+          <div class="preco-nota" id="proNota">30 dias grátis pra testar</div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><b style="font-weight:600">Tudo do Básico</b>, e mais:</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Cardápio completo com categorias e "acabando!"</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Promoções</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Eventos</li>
+          </ul>
+          <a class="btn btn-primary btn-block app-link" href="https://app.moviki.com.br">Testar 30 dias grátis</a>
+        </div>
+
+        <!-- Premium -->
+        <div class="plano rv">
+          <div class="pnome">Premium</div>
+          <div class="pdesc">Pra quem quer o máximo.</div>
+          <div class="preco"><span class="cifra">R$</span><span class="val" id="premVal">49,90</span><span class="per" id="premPer">/mês</span></div>
+          <div class="preco-nota" id="premNota">&nbsp;</div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><b style="font-weight:600">Tudo do Pró</b>, e mais:</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Sua logo no pino do mapa</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Vários pontos de venda</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Relatórios</li>
+          </ul>
+          <a class="btn btn-ghost btn-block app-link" href="https://app.moviki.com.br">Começar grátis</a>
+        </div>
+      </div>
+      <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:22px;">Também tem plano trimestral. Você escolhe o período na hora de assinar, dentro do app.</p>
+    </div>
+  </section>
+
+  <!-- GARANTIA / FUNDADOR -->
+  <section class="bloco alt garantia">
+    <div class="wrap rv">
+      <div class="selo"><span class="checkzin">✓</span> Seja um dos primeiros negócios no Moviki</div>
+      <h2>Experimente sem risco. Sem cartão, sem pegadinha.</h2>
+      <p>Você entra com 30 dias de Pró grátis e testa tudo. Se não quiser continuar, sua conta volta pro plano Básico — de graça — e você segue aparecendo no mapa. O produto é a prova: crie sua conta e veja funcionando em minutos.</p>
+      <a class="btn btn-primary app-link" href="https://app.moviki.com.br">Criar minha conta grátis</a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bloco">
+    <div class="wrap">
+      <div class="head-sec rv">
+        <span class="eyebrow">Dúvidas</span>
+        <h2>Perguntas frequentes</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item rv"><button class="faq-q">Preciso de cartão pra testar?<span class="sinal">+</span></button><div class="faq-a"><div class="in">Não. Os 30 dias de Pró grátis não pedem cartão de crédito. Você só coloca uma forma de pagamento se decidir continuar no Pró ou Premium depois do teste.</div></div></div>
+        <div class="faq-item rv"><button class="faq-q">Como meus clientes me encontram?<span class="sinal">+</span></button><div class="faq-a"><div class="in">Você ganha um link só seu — moviki.com.br/seunegocio — e aparece no mapa ao vivo. É só compartilhar esse link nas suas redes e no WhatsApp. Quem estiver por perto vê onde você está agora.</div></div></div>
+        <div class="faq-item rv"><button class="faq-q">Preciso instalar algum aplicativo?<span class="sinal">+</span></button><div class="faq-a"><div class="in">Não. O Moviki abre direto no navegador do celular ou do computador. Se quiser, dá pra salvar na tela inicial do celular e usar como se fosse um app.</div></div></div>
+        <div class="faq-item rv"><button class="faq-q">Posso cancelar quando quiser?<span class="sinal">+</span></button><div class="faq-a"><div class="in">Sim, sem fidelidade e sem multa. Se cancelar, sua conta volta pro plano Básico gratuito e você continua no mapa. Nada é perdido.</div></div></div>
+        <div class="faq-item rv"><button class="faq-q">O que é o plano Básico grátis?<span class="sinal">+</span></button><div class="faq-a"><div class="in">É de graça pra sempre: você aparece no mapa, mostra se está aberto, deixa um recado e tem seu link próprio. Cardápio, promoções e eventos fazem parte do plano Pró.</div></div></div>
+        <div class="faq-item rv"><button class="faq-q">Serve pro meu tipo de negócio?<span class="sinal">+</span></button><div class="faq-a"><div class="in">Se você atende indo até o cliente ou muda de ponto — food truck, trailer, ambulante, feirante, delivery, serviços — o Moviki foi feito pra você. Também funciona pra ponto fixo que quer ser encontrado no mapa.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="bloco cta-final">
+    <div class="wrap rv">
+      <h2>Pronto pra aparecer no mapa?</h2>
+      <p>Crie sua conta grátis agora e comece a ser encontrado por quem está perto.</p>
+      <a class="btn btn-primary app-link" href="https://app.moviki.com.br" style="font-size:17px;padding:16px 34px;">Começar grátis</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="logo.png" alt="Moviki" class="foot-logo" onerror="this.outerHTML='<span style=&quot;font-weight:800;font-size:22px&quot;>movi<span style=color:#00D4FF>ki</span></span>'">
+        <p>O mapa inteligente dos negócios em movimento. Um produto da Eiko Sistemas.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Produto</h4>
+        <a href="#planos">Planos</a>
+        <a href="#topo">Como funciona</a>
+        <a class="app-link" href="https://app.moviki.com.br">Entrar</a>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href="#" data-legal>Termos de Uso</a>
+        <a href="#" data-legal>Política de Privacidade</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contato</h4>
+        <a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a>
+        <a class="app-link" href="https://app.moviki.com.br">Área do lojista</a>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 Moviki · Eiko Sistemas</span>
+      <span>Feito no Brasil 🇧🇷</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // preços por ciclo
+  var precos = {
+    mensal: { pro:{val:'37,90', per:'/mês', nota:'30 dias grátis pra testar'},
+              prem:{val:'49,90', per:'/mês', nota:'\u00A0'}, eco:'' },
+    anual:  { pro:{val:'379', per:'/ano', nota:'Economize 2 meses'},
+              prem:{val:'499', per:'/ano', nota:'Economize 2 meses'}, eco:'2 meses grátis' }
   };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const el = id => document.getElementById(id);
-  let modo='entrar', usuarioAtual=null, statusAtual='fechado', coords=null, slugSalvo='';
-  const ROBO='https://moviki-robo.vercel.app';
-  let dadosAssinatura=null;
-  const RESERVADOS=['index','mapa','404','assets','www','painel','login','moviki'];
-
-  /* ---- ACESSO ---- */
-  const aviso=el('aviso');
-  function limparAviso(){aviso.className='aviso';aviso.textContent='';}
-  function erroAcesso(t){aviso.className='aviso erro';aviso.textContent=t;}
-  window.trocarAba=function(n){modo=n;el('abaEntrar').classList.toggle('ativa',n==='entrar');el('abaCriar').classList.toggle('ativa',n==='criar');el('btnAcao').textContent=n==='entrar'?'Entrar':'Criar conta';el('dica').textContent=n==='criar'?'Vai criar uma conta de teste. Use um e-mail seu e uma senha simples.':'';limparAviso();};
-  window.verSenha=function(){const s=el('senha'),b=document.querySelector('.verSenha');if(s.type==='password'){s.type='text';b.textContent='ocultar';}else{s.type='password';b.textContent='mostrar';}};
-  function msgErro(c){const m={'auth/invalid-email':'E-mail inválido.','auth/missing-password':'Digite uma senha.','auth/weak-password':'A senha precisa ter pelo menos 6 caracteres.','auth/email-already-in-use':'Esse e-mail já tem conta. Tente "Entrar".','auth/invalid-credential':'E-mail ou senha incorretos.','auth/user-not-found':'Não encontrei conta com esse e-mail.','auth/wrong-password':'Senha incorreta.','auth/too-many-requests':'Muitas tentativas. Espere um pouco.','auth/network-request-failed':'Sem conexão. Confira a internet.'};return m[c]||('Erro: '+c);}
-  window.acao=async function(){const email=el('email').value.trim(),senha=el('senha').value,btn=el('btnAcao');limparAviso();if(!email){erroAcesso('Digite seu e-mail.');return;}if(!senha){erroAcesso('Digite uma senha.');return;}btn.disabled=true;const t=btn.textContent;btn.textContent='Aguarde...';try{if(modo==='criar'){await createUserWithEmailAndPassword(auth,email,senha);try{const tk=await auth.currentUser.getIdToken();await fetch(ROBO+'/api/ativar-trial',{method:'POST',headers:{'Authorization':'Bearer '+tk}});}catch(_){}}else await signInWithEmailAndPassword(auth,email,senha);}catch(e){erroAcesso(msgErro(e.code));btn.disabled=false;btn.textContent=t;}};
-  window.sair=async function(){await signOut(auth);};
-
-  let planoPainel='basico';
-  async function carregarPlanoPainel(uid){
-    try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;dadosAssinatura=d;
-      const ok=d&&d.ativo===true&&(!d.vence_em||d.vence_em.toMillis()>Date.now());
-      planoPainel=ok?(d.plano||'basico'):'basico';}
-    catch(e){planoPainel='basico';dadosAssinatura=null;}
+  function setCiclo(c){
+    var p = precos[c];
+    document.getElementById('proVal').textContent = p.pro.val;
+    document.getElementById('proPer').textContent = p.pro.per;
+    document.getElementById('proNota').textContent = p.pro.nota;
+    document.getElementById('premVal').textContent = p.prem.val;
+    document.getElementById('premPer').textContent = p.prem.per;
+    document.getElementById('premNota').textContent = p.prem.nota;
+    document.getElementById('ecoLabel').textContent = p.eco || '\u00A0';
+    document.getElementById('tgMensal').classList.toggle('on', c==='mensal');
+    document.getElementById('tgAnual').classList.toggle('on', c==='anual');
   }
-  function aplicarPlanoNasAbas(){
-    const libera=planoPainel==='pro'||planoPainel==='premium';
-    ['cardapio','promocoes','eventos'].forEach(t=>{const b=document.querySelector('.tab[data-tab="'+t+'"]');if(b)b.classList.toggle('travada',!libera);});
-    if(libera){const av=el('avisoPlano');if(av)av.classList.add('escondido');}
-  }
-  let _avisoPlanoTimer=null;
-  function mostrarAvisoPlano(){const av=el('avisoPlano');if(!av)return;av.classList.remove('escondido');if(_avisoPlanoTimer)clearTimeout(_avisoPlanoTimer);_avisoPlanoTimer=setTimeout(()=>av.classList.add('escondido'),5000);}
-  window.abrirPlano=function(){renderStatusPlano();el('modalPlano').classList.remove('escondido');};
-  window.fecharPlano=function(){el('modalPlano').classList.add('escondido');};
-  function renderStatusPlano(){
-    const s=el('mpStatus');if(!s)return;
-    if(planoPainel==='pro'||planoPainel==='premium'){
-      let ate='';if(dadosAssinatura&&dadosAssinatura.vence_em){ate=' até '+new Date(dadosAssinatura.vence_em.toMillis()).toLocaleDateString('pt-BR');}
-      s.innerHTML='✅ Seu plano atual: <b>'+(planoPainel==='premium'?'Premium':'Pró')+'</b>'+ate+'.';
-    }else{s.innerHTML='Seu plano atual: <b>Básico</b> (grátis). Escolha Pró ou Premium pra liberar mais recursos.';}
-  }
-  window.assinar=async function(plano,periodo){
-    const av=el('mpAviso');av.style.color='#9fb3c8';av.textContent='';
-    const cpf=(el('cpfAssinatura').value||'').replace(/\D/g,'');
-    if(cpf.length!==11&&cpf.length!==14){av.style.color='#ff9b9b';av.textContent='Informe um CPF (11 dígitos) ou CNPJ (14).';return;}
-    if(!usuarioAtual){av.style.color='#ff9b9b';av.textContent='Faça login primeiro.';return;}
-    av.textContent='Gerando seu pagamento...';
-    try{
-      const token=await usuarioAtual.getIdToken();
-      const r=await fetch(ROBO+'/api/criar-assinatura',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plano,periodo,cpfCnpj:cpf,nome:(el('nome').value||'').trim(),email:usuarioAtual.email})});
-      const data=await r.json();
-      if(r.ok&&data.invoiceUrl){window.location.href=data.invoiceUrl;return;}
-      av.style.color='#ff9b9b';av.textContent=data.erro||'Não consegui gerar o pagamento. Tente de novo.';
-    }catch(e){av.style.color='#ff9b9b';av.textContent='Erro de conexão. Tente de novo.';}
-  };
 
-  /* ---- TABS ---- */
-  window.abrirTab=function(nome){
-    const alvo=document.querySelector('.tab[data-tab="'+nome+'"]');
-    if(alvo&&alvo.classList.contains('travada')){mostrarAvisoPlano();return;}
-    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('ativa',b.dataset.tab===nome));
-    document.querySelectorAll('.tabConteudo').forEach(c=>c.classList.add('escondido'));
-    el('tab-'+nome).classList.remove('escondido');
-  };
-
-  /* ---- PAINEL util ---- */
-  const avisoP=el('avisoP');
-  function limparAvisoP(){avisoP.className='aviso';avisoP.textContent='';}
-  function okP(t){avisoP.className='aviso ok';avisoP.textContent=t;}
-  function erroP(t){avisoP.className='aviso erro';avisoP.textContent=t;}
-  window.setStatus=function(s){statusAtual=s;el('btnAberto').className='statusBtn'+(s==='aberto'?' aberto':'');el('btnFechado').className='statusBtn'+(s==='fechado'?' fechado':'');};
-  window.pegarLocalizacao=function(){limparAvisoP();if(!navigator.geolocation){erroP('Seu aparelho não tem GPS no navegador.');return;}el('gpsInfo').innerHTML='📍 Pegando localização...';navigator.geolocation.getCurrentPosition((pos)=>{coords={lat:pos.coords.latitude,lng:pos.coords.longitude};el('gpsInfo').innerHTML='📍 <b>Localização capturada!</b><br>'+coords.lat.toFixed(5)+', '+coords.lng.toFixed(5)+' <span style="color:#7f95b3">(lembre de Salvar)</span>';},(err)=>{if(err.code===1)erroP('Você bloqueou a localização. Libere nas permissões do navegador.');else erroP('Não consegui pegar a localização.');el('gpsInfo').innerHTML='📍 Localização ainda não definida.';},{enableHighAccuracy:true,timeout:10000});};
-
-  /* ---- CARDÁPIO (categorias -> produtos) ---- */
-  function vazioCat(){el('vazioCat').classList.toggle('escondido',el('listaCategorias').children.length>0);}
-  function novaProdRow(catBloco,nome='',preco='',acabando=false){
-    const r=document.createElement('div');r.className='prodRow';
-    r.innerHTML='<input class="p-nome" type="text" placeholder="Produto"><input class="p-preco" type="text" placeholder="R$"><label class="acabLbl"><input type="checkbox" class="p-acab"> acabando</label><button class="rmv">✕</button>';
-    r.querySelector('.p-nome').value=nome;r.querySelector('.p-preco').value=preco;r.querySelector('.p-acab').checked=!!acabando;
-    r.querySelector('.rmv').onclick=()=>r.remove();
-    catBloco.querySelector('.listaProdutos').appendChild(r);
-  }
-  window.adicionarCategoria=function(nome='',produtos=[]){
-    const b=document.createElement('div');b.className='catBloco';
-    b.innerHTML='<div class="catCab"><input class="cat-nome" type="text" placeholder="Nome da categoria (ex.: Caldos)"><button class="rmv" title="Remover categoria">✕</button></div><div class="listaProdutos"></div><button class="addProd">+ Produto</button>';
-    b.querySelector('.cat-nome').value=nome;
-    b.querySelector('.rmv').onclick=()=>{b.remove();vazioCat();};
-    b.querySelector('.addProd').onclick=()=>novaProdRow(b);
-    el('listaCategorias').appendChild(b);
-    (produtos&&produtos.length?produtos:[{}]).forEach(p=>novaProdRow(b,p.nome||'',p.preco||'',p.acabando));
-    vazioCat();
-  };
-  function lerCardapio(){
-    const cats=[];
-    el('listaCategorias').querySelectorAll('.catBloco').forEach(b=>{
-      const nome=b.querySelector('.cat-nome').value.trim();if(!nome)return;
-      const produtos=[];
-      b.querySelectorAll('.prodRow').forEach(r=>{const pn=r.querySelector('.p-nome').value.trim();if(!pn)return;produtos.push({nome:pn,preco:r.querySelector('.p-preco').value.trim(),acabando:r.querySelector('.p-acab').checked});});
-      cats.push({categoria:nome,produtos});
+  // FAQ acordeão
+  document.querySelectorAll('.faq-q').forEach(function(b){
+    b.addEventListener('click', function(){
+      var item = b.parentElement;
+      var ans = b.nextElementSibling;
+      var aberto = item.classList.toggle('aberto');
+      ans.style.maxHeight = aberto ? (ans.scrollHeight + 'px') : '0';
     });
-    return cats;
-  }
-
-  /* ---- PROMOÇÕES ---- */
-  function vazioPromo(){el('vazioPromo').classList.toggle('escondido',el('listaPromos').children.length>0);}
-  window.adicionarPromo=function(titulo='',detalhe=''){
-    const r=document.createElement('div');r.className='catBloco';
-    r.innerHTML='<div class="linha2"><input class="pr-tit" type="text" placeholder="Título (ex.: Combo 2 por R$20)"><button class="rmv">✕</button></div><input class="pr-det" type="text" placeholder="Detalhe (opcional)">';
-    r.querySelector('.pr-tit').value=titulo;r.querySelector('.pr-det').value=detalhe;
-    r.querySelector('.rmv').onclick=()=>{r.remove();vazioPromo();};
-    el('listaPromos').appendChild(r);vazioPromo();
-  };
-  function lerPromos(){const a=[];el('listaPromos').querySelectorAll('.catBloco').forEach(r=>{const t=r.querySelector('.pr-tit').value.trim();if(!t)return;a.push({titulo:t,detalhe:r.querySelector('.pr-det').value.trim()});});return a;}
-
-  /* ---- EVENTOS ---- */
-  function vazioEvento(){el('vazioEvento').classList.toggle('escondido',el('listaEventos').children.length>0);}
-  window.adicionarEvento=function(titulo='',quando='',detalhe=''){
-    const r=document.createElement('div');r.className='catBloco';
-    r.innerHTML='<div class="linha2"><input class="ev-tit" type="text" placeholder="Nome do evento"><button class="rmv">✕</button></div><input class="ev-quando" type="text" placeholder="Quando (ex.: Sáb 26/07 às 18h)" style="margin-bottom:8px"><input class="ev-det" type="text" placeholder="Local / detalhe (opcional)">';
-    r.querySelector('.ev-tit').value=titulo;r.querySelector('.ev-quando').value=quando;r.querySelector('.ev-det').value=detalhe;
-    r.querySelector('.rmv').onclick=()=>{r.remove();vazioEvento();};
-    el('listaEventos').appendChild(r);vazioEvento();
-  };
-  function lerEventos(){const a=[];el('listaEventos').querySelectorAll('.catBloco').forEach(r=>{const t=r.querySelector('.ev-tit').value.trim();if(!t)return;a.push({titulo:t,quando:r.querySelector('.ev-quando').value.trim(),detalhe:r.querySelector('.ev-det').value.trim()});});return a;}
-
-  /* ---- LINK ---- */
-  function limpaSlug(v){return (v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');}
-  function mostrarLink(slug){slugSalvo=slug;el('linkPublico').textContent='moviki.com.br/'+slug;el('linkPublico').href='https://moviki.com.br/'+slug;el('linkPronto').classList.remove('escondido');}
-  window.copiarLink=function(){if(!slugSalvo)return;navigator.clipboard.writeText('https://moviki.com.br/'+slugSalvo).then(()=>{const b=el('btnCopiar');b.textContent='Copiado!';setTimeout(()=>b.textContent='Copiar',1500);});};
-
-  /* ---- SALVAR ---- */
-  window.salvar=async function(){
-    if(!usuarioAtual)return;
-    const btn=el('btnSalvar');limparAvisoP();
-    const nome=el('nome').value.trim();
-    if(!nome){abrirTab('perfil');erroP('Dê um nome ao seu negócio (aba Perfil).');return;}
-    const apelidoDigitado=el('apelido').value.trim();
-    let slug='';
-    if(apelidoDigitado){slug=limpaSlug(apelidoDigitado);if(slug.length<3){abrirTab('perfil');erroP('O apelido precisa ter ao menos 3 letras/números (sem espaços ou acentos).');return;}if(RESERVADOS.includes(slug)){abrirTab('perfil');erroP('Esse apelido é reservado, escolha outro.');return;}}
-    btn.disabled=true;const t=btn.textContent;btn.textContent='Salvando...';
-    try{
-      if(slug){const ref=doc(db,'slugs',slug);const snap=await getDoc(ref);if(snap.exists()&&snap.data().uid!==usuarioAtual.uid){abrirTab('perfil');erroP('O apelido "'+slug+'" já está em uso. Escolha outro.');btn.disabled=false;btn.textContent=t;return;}if(!snap.exists()){await setDoc(ref,{uid:usuarioAtual.uid});}el('apelido').value=slug;}
-      const dados={nome,status:statusAtual,recado:el('recado').value.trim(),cardapio:lerCardapio(),promocoes:lerPromos(),eventos:lerEventos(),atualizadoEm:serverTimestamp()};
-      if(coords){dados.lat=coords.lat;dados.lng=coords.lng;}
-      if(slug){dados.slug=slug;}
-      await setDoc(doc(db,'negocios',usuarioAtual.uid),dados,{merge:true});
-      okP('✅ Tudo salvo!');
-      if(slug) mostrarLink(slug);
-    }catch(e){erroP('Não consegui salvar: '+(e.code||e.message));}
-    btn.disabled=false;btn.textContent=t;
-  };
-
-  async function carregarDados(uid){
-    try{
-      const snap=await getDoc(doc(db,'negocios',uid));
-      if(snap.exists()){
-        const d=snap.data();
-        el('nome').value=d.nome||'';el('recado').value=d.recado||'';el('apelido').value=d.slug||'';
-        setStatus(d.status||'fechado');
-        if(d.slug) mostrarLink(d.slug);
-        el('listaCategorias').innerHTML='';(d.cardapio||[]).forEach(c=>adicionarCategoria(c.categoria||'',c.produtos||[]));vazioCat();
-        el('listaPromos').innerHTML='';(d.promocoes||[]).forEach(p=>adicionarPromo(p.titulo||'',p.detalhe||''));vazioPromo();
-        el('listaEventos').innerHTML='';(d.eventos||[]).forEach(e2=>adicionarEvento(e2.titulo||'',e2.quando||'',e2.detalhe||''));vazioEvento();
-        if(d.lat&&d.lng){coords={lat:d.lat,lng:d.lng};el('gpsInfo').innerHTML='📍 <b>Localização salva:</b><br>'+d.lat.toFixed(5)+', '+d.lng.toFixed(5);}
-      }else{setStatus('fechado');vazioCat();vazioPromo();vazioEvento();}
-    }catch(e){setStatus('fechado');vazioCat();vazioPromo();vazioEvento();}
-  }
-
-  onAuthStateChanged(auth,async(user)=>{
-    usuarioAtual=user;
-    if(user){
-      el('formArea').style.display='none';el('painel').style.display='block';el('box').classList.add('largo');
-      el('oExEmail').textContent=user.email;
-      coords=null;slugSalvo='';el('linkPronto').classList.add('escondido');
-      el('listaCategorias').innerHTML='';el('listaPromos').innerHTML='';el('listaEventos').innerHTML='';
-      el('gpsInfo').innerHTML='📍 Localização ainda não definida.';
-      abrirTab('perfil');
-      await carregarDados(user.uid);
-      await carregarPlanoPainel(user.uid);
-      aplicarPlanoNasAbas();
-    }else{
-      el('painel').style.display='none';el('formArea').style.display='block';el('box').classList.remove('largo');
-      el('email').value='';el('senha').value='';el('btnAcao').disabled=false;trocarAba('entrar');
-    }
   });
+
+  // passa o ?ref= (afiliado) adiante pros links do app, quando existir
+  (function(){
+    try{
+      var ref = new URLSearchParams(location.search).get('ref');
+      if(ref){
+        document.querySelectorAll('a.app-link').forEach(function(a){
+          var u = new URL(a.href);
+          u.searchParams.set('ref', ref);
+          a.href = u.toString();
+        });
+      }
+    }catch(e){}
+  })();
+
+  // reveal no scroll
+  (function(){
+    var els = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('on');}); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('on'); io.unobserve(en.target); } });
+    }, {threshold:.12});
+    els.forEach(function(e){ io.observe(e); });
+  })();
 </script>
 </body>
 </html>
