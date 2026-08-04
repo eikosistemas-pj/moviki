@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>Moviki · Onde os negócios encontram as pessoas</title>
+<title>Moviki · O mapa inteligente dos negócios em movimento</title>
 <meta name="description" content="O mapa inteligente dos negócios em movimento. Mostre no mapa, em tempo real, onde seu negócio está — com cardápio, promoções e um link só seu. Comece grátis.">
 <link rel="icon" href="favicon512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,12 +100,9 @@
   .toplabel{position:absolute;top:46px;left:0;right:0;text-align:center;z-index:10;font-weight:800;font-size:15px;pointer-events:none;display:none}
   .phone-img{position:relative;z-index:1;width:300px;max-width:82%;animation:float 6.5s ease-in-out infinite;filter:drop-shadow(0 34px 60px rgba(0,0,0,.55))}
   .storyband{position:relative;min-height:560px;display:flex;align-items:center;overflow:hidden;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
-  .storyband>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .storyband>img{position:absolute;top:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover}
   .storyband .scrim{position:absolute;inset:0;z-index:1}
-  .storyband.left .scrim{background:linear-gradient(90deg,rgba(5,11,20,.95) 0%,rgba(5,11,20,.72) 40%,rgba(5,11,20,.2) 66%,rgba(5,11,20,0) 86%)}
-  .storyband.right .scrim{background:linear-gradient(270deg,rgba(5,11,20,.95) 0%,rgba(5,11,20,.72) 40%,rgba(5,11,20,.2) 66%,rgba(5,11,20,0) 86%)}
   .storyband .content{position:relative;z-index:2;width:100%;max-width:1140px;margin:0 auto;padding:56px 20px;display:flex}
-  .storyband.right .content{justify-content:flex-end}
   .storyband .txt{max-width:470px}
   .storyband .txt h2{text-align:left;font-size:clamp(26px,4vw,40px);text-shadow:0 2px 22px rgba(0,0,0,.6)}
   .storyband .txt h2 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -114,7 +111,24 @@
   .storyband .txt ul{list-style:none;margin-top:18px;display:grid;gap:10px}
   .storyband .txt li{display:flex;gap:10px;color:#eef4fb;font-size:15px;text-shadow:0 1px 12px rgba(0,0,0,.75)}
   .storyband .txt li::before{content:"✓";color:var(--ciano);font-weight:700}
-  @media(max-width:820px){.storyband{min-height:76vh}.storyband.left .scrim,.storyband.right .scrim{background:linear-gradient(180deg,rgba(5,11,20,.25) 0%,rgba(5,11,20,.45) 45%,rgba(5,11,20,.96) 100%)}.storyband .content{align-items:flex-end;padding:0 20px 40px}.storyband.right .content{justify-content:flex-start}.storyband .txt{max-width:100%}}
+  @media(min-width:821px){
+    .storyband{min-height:600px}
+    .storyband>img{width:53%}
+    .storyband.right>img{left:0;right:auto}
+    .storyband.left>img{left:auto;right:0}
+    .storyband.right .content{justify-content:flex-end}
+    .storyband.left .content{justify-content:flex-start}
+    .storyband.right .scrim{background:linear-gradient(270deg,var(--escuro) 0%,rgba(5,11,20,.88) 33%,rgba(5,11,20,.28) 49%,rgba(5,11,20,0) 60%)}
+    .storyband.left .scrim{background:linear-gradient(90deg,var(--escuro) 0%,rgba(5,11,20,.88) 33%,rgba(5,11,20,.28) 49%,rgba(5,11,20,0) 60%)}
+  }
+  @media(max-width:820px){
+    .storyband{min-height:76vh}
+    .storyband>img{width:100%;left:0;right:auto}
+    .storyband.left .scrim,.storyband.right .scrim{background:linear-gradient(180deg,rgba(5,11,20,.25) 0%,rgba(5,11,20,.45) 45%,rgba(5,11,20,.96) 100%)}
+    .storyband .content{align-items:flex-end;padding:0 20px 40px}
+    .storyband.right .content{justify-content:flex-start}
+    .storyband .txt{max-width:100%}
+  }
 
   /* feature quad */
   .quad{position:relative;z-index:2;margin-top:52px}
@@ -190,7 +204,8 @@
   .fundador p{color:#cdd9e6;max-width:620px;margin:16px auto 0;font-size:16.5px}
   .garantias{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:26px}
   .gtag{border:1px solid var(--linha);border-radius:12px;padding:12px 18px;font-size:14px;color:#d6e2ee;display:flex;gap:8px;align-items:center}
-  .gtag b{color:var(--claro)}
+  .gtag b{color:var(--claro);white-space:nowrap}
+  @media(max-width:560px){.garantias{flex-direction:column;align-items:center}.gtag{width:100%;max-width:330px;justify-content:center}}
 
   /* faq */
   .faq{max-width:760px;margin:40px auto 0}
@@ -260,8 +275,8 @@
       <div class="hero-inner">
         <div>
           <span class="eyebrow"><span class="dot"></span> Ao vivo no mapa</span>
-          <h1>Onde os negócios <span class="g">encontram as pessoas.</span></h1>
-          <p class="sub">O mapa inteligente dos negócios em movimento. Mostre em tempo real onde você está — com cardápio, promoções e um link só seu. Seus clientes te acham na hora.</p>
+          <h1>O mapa inteligente dos <span class="g">negócios em movimento.</span></h1>
+          <p class="sub">Mostre em tempo real onde seu negócio está — com cardápio, promoções e um link só seu. Seus clientes te acham na hora, sem pagar comissão por venda.</p>
           <div class="hero-btns">
             <a class="btn btn-primary app-link" href="https://app.moviki.com.br">Começar grátis →</a>
             <a class="btn btn-ghost" href="#planos">Ver planos</a>
@@ -302,7 +317,7 @@
 
   <!-- PROPOSITO (vendedor) -->
   <section class="storyband right">
-    <img src="vendedor.jpg" alt="Empreendedor de food truck sorrindo" style="object-position:40% 14%" loading="lazy">
+    <img src="vendedor.jpg" alt="Empreendedor de food truck sorrindo" style="object-position:center 22%" loading="lazy">
     <div class="scrim"></div>
     <div class="content">
       <div class="txt">
@@ -359,7 +374,7 @@
 
   <!-- CLIENTE -->
   <section class="storyband left">
-    <img src="cliente.jpg" alt="Cliente encontrando negócios pelo celular à noite" style="object-position:70% 12%" loading="lazy">
+    <img src="cliente.jpg" alt="Cliente encontrando negócios pelo celular à noite" style="object-position:center 20%" loading="lazy">
     <div class="scrim"></div>
     <div class="content">
       <div class="txt">
@@ -475,7 +490,7 @@
           <div class="garantias">
             <div class="gtag">✅ <b>30 dias grátis</b> sem cartão</div>
             <div class="gtag">🔒 <b>Cancele</b> quando quiser</div>
-            <div class="gtag">⚖️ <b>7 dias</b> de arrependimento por lei</div>
+            <div class="gtag">⚖️ <b>Garantia de 7 dias</b> por lei</div>
           </div>
         </div>
       </div>
