@@ -122,12 +122,12 @@
     .storyband.left .scrim{background:linear-gradient(90deg,var(--escuro) 0%,rgba(5,11,20,.88) 33%,rgba(5,11,20,.28) 49%,rgba(5,11,20,0) 60%)}
   }
   @media(max-width:820px){
-    .storyband{min-height:76vh}
-    .storyband>img{width:100%;left:0;right:auto}
-    .storyband.left .scrim,.storyband.right .scrim{background:linear-gradient(180deg,rgba(5,11,20,.25) 0%,rgba(5,11,20,.45) 45%,rgba(5,11,20,.96) 100%)}
-    .storyband .content{align-items:flex-end;padding:0 20px 40px}
-    .storyband.right .content{justify-content:flex-start}
+    .storyband{display:block;min-height:0}
+    .storyband>img{position:relative;width:100%;height:420px;object-fit:cover}
+    .storyband .scrim{display:none}
+    .storyband .content{display:block;padding:28px 20px 40px;max-width:none}
     .storyband .txt{max-width:100%}
+    .storyband .txt h2,.storyband .txt p,.storyband .txt li{text-shadow:none}
   }
 
   /* feature quad */
@@ -528,7 +528,7 @@
     <div class="wrap foot">
       <div>
         <a class="brand" href="/"><img src="logo.png" alt="Moviki" style="height:30px" onerror="this.style.display='none';var t=document.getElementById('brandtxt2');if(t)t.style.display='inline-flex'"><span id="brandtxt2" style="display:none">mo<b>viki</b></span></a>
-        <p class="slogan">Conecte. Descubra. Apoie. Movimente sua cidade.</p>
+        <p class="slogan">Conecte. Descubra. Apoie.<br>Movimente sua cidade.</p>
         <p class="empresa">
           EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA<br>
           CNPJ 68.289.841/0001-02<br>
@@ -543,7 +543,7 @@
         <a href="/privacidade.html">Política de Privacidade</a>
       </div>
     </div>
-    <div class="wrap"><div class="copy">© <span id="ano"></span> Moviki · EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA. Todos os direitos reservados.</div></div>
+    <div class="wrap"><div class="copy">© <span id="ano"></span> Moviki · Todos os direitos reservados.</div></div>
   </footer>
 
 <script>
