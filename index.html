@@ -214,8 +214,8 @@
   <header>
     <div class="wrap nav">
       <a class="brand" href="/">
-        <img src="logo.png" alt="Moviki" onerror="this.style.display='none'">
-        <span>mo<b>viki</b></span>
+        <img src="logo.png" alt="Moviki" onerror="this.style.display='none';var t=document.getElementById('brandtxt');if(t)t.style.display='inline'">
+        <span id="brandtxt" style="display:none">mo<b>viki</b></span>
       </a>
       <nav class="nav-links">
         <a class="lnk" href="#como">Como funciona</a>
