@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://*.googleapis.com; base-uri 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moviki</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,101 +11,133 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0D1B2A;--claro:#F2F5F9;--card:#13263d;--borda:#223a5c;}
+  :root{--ciano:#00D4FF;--azul:#0066FF;--escuro:#0A1524;--claro:#F2F5F9;--card:#12253d;--borda:#1c3457;--muted:#8fa6c4;}
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
   html,body{height:100%;}
-  #map{position:absolute;inset:0;z-index:1;background:#0d1c30;}
-  .topo{position:absolute;top:0;left:0;right:0;z-index:900;background:linear-gradient(180deg,rgba(13,27,42,.96),rgba(13,27,42,.82) 70%,transparent);padding:14px 16px 26px;display:flex;align-items:center;gap:12px;}
-  .topo svg{width:30px;height:30px;flex-shrink:0;}
-  .topo .info{flex:1;min-width:0;}
-  .topo .nome{color:var(--claro);font-size:18px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:4px;}
-  .badge.aberto{background:rgba(0,212,255,.18);color:var(--ciano);}
-  .badge.fechado{background:rgba(255,120,120,.18);color:#ff9a9a;}
-  .badge .bolinha{width:8px;height:8px;border-radius:50%;background:currentColor;}
-  /* Barra de ícones à esquerda */
-  .toolbar{position:absolute;left:12px;top:88px;z-index:1000;display:flex;flex-direction:column;gap:10px;}
-  .toolBtn{width:56px;background:rgba(19,38,61,.94);border:1px solid var(--borda);border-radius:14px;color:var(--claro);cursor:pointer;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:.15s;}
-  .toolBtn:hover{border-color:var(--ciano);}
-  .toolBtn .ic{font-size:22px;line-height:1;}
-  .toolBtn .lb{font-size:9.5px;font-weight:600;color:#c7d6ea;}
-  /* Gaveta lateral */
-  .drawer{position:absolute;left:0;top:0;bottom:0;width:350px;max-width:86%;z-index:2000;background:var(--escuro);border-right:1px solid var(--borda);box-shadow:14px 0 40px rgba(0,0,0,.5);transform:translateX(-106%);transition:transform .25s ease;overflow-y:auto;padding:18px 18px 30px;}
-  .drawer.aberto{transform:translateX(0);}
-  .drawerCab{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-  .drawerCab h2{color:var(--claro);font-size:18px;}
-  .fechar{background:none;border:1px solid var(--borda);color:#8fa6c4;width:32px;height:32px;border-radius:9px;font-size:16px;cursor:pointer;}
-  .catTitulo{color:var(--ciano);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;}
+  body{background:#060f1c;color:var(--claro);}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:var(--escuro);position:relative;overflow:hidden;}
+  /* Cabeçalho */
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:13px 16px 9px;flex-shrink:0;}
+  .hd .lg{display:flex;align-items:center;gap:7px;}
+  .hd .lg svg{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(0,212,255,.6));}
+  .hd .lg span{font-size:19px;font-weight:700;letter-spacing:-.5px;}
+  .hd .lg b{color:var(--ciano);}
+  .iconBtn{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;display:flex;border-radius:9px;}
+  .iconBtn:hover{color:var(--ciano);}
+  .iconBtn svg{width:21px;height:21px;}
+  /* Hero */
+  .hero{padding:0 16px 8px;flex-shrink:0;}
+  .hero .nm{font-size:19px;font-weight:600;line-height:1.15;}
+  .hero .rw{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;}
+  .pill.aberto{background:rgba(46,204,113,.16);color:#57e39a;border:1px solid rgba(46,204,113,.4);}
+  .pill.fechado{background:rgba(255,120,120,.16);color:#ff9a9a;border:1px solid rgba(255,120,120,.4);}
+  .pill.dist{background:rgba(0,212,255,.12);color:var(--ciano);border:1px solid rgba(0,212,255,.3);}
+  .pill .bol{width:8px;height:8px;border-radius:50%;background:currentColor;}
+  .recado{margin-top:9px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.25);border-radius:11px;padding:9px 12px;font-size:13.5px;line-height:1.4;}
+  .recado span{display:block;color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;}
+  /* Palco central (telinha que troca) */
+  .stage{position:relative;flex:1;min-height:220px;margin:8px 12px 0;border-radius:16px;overflow:hidden;border:1px solid var(--borda);background:#0b1a2e;box-shadow:0 0 30px rgba(0,102,255,.12) inset;}
+  .pane{position:absolute;inset:0;display:none;}
+  .pane.on{display:block;}
+  .pane.scroll{overflow-y:auto;padding:14px;}
+  #map{position:absolute;inset:0;background:#0d1c30;}
+  .maphint{position:absolute;left:10px;bottom:10px;z-index:600;font-size:10.5px;color:#bcd4ef;background:rgba(10,21,36,.72);padding:4px 9px;border-radius:8px;pointer-events:none;}
+  .catTitulo{color:var(--ciano);font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;}
+  .catTitulo:first-child{margin-top:0;}
   .itemPub{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:11px 13px;margin-bottom:8px;}
   .itemPub .nm{flex:1;color:var(--claro);font-size:14.5px;font-weight:500;}
-  .itemPub .pr{color:#8fa6c4;font-size:14px;font-weight:600;white-space:nowrap;}
+  .itemPub .pr{color:#57e39a;font-size:14px;font-weight:600;white-space:nowrap;}
   .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
   @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
-  .promo{background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(0,102,255,.12));border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
-  .promo .t{color:var(--claro);font-weight:700;font-size:15px;margin-bottom:3px;}
+  .promo{background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
+  .promo .t{color:var(--claro);font-weight:600;font-size:15px;margin-bottom:3px;}
   .promo .d{color:#a9c0dd;font-size:13px;}
   .evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:13px;margin-bottom:10px;}
-  .evento .t{color:var(--claro);font-weight:700;font-size:15px;}
+  .evento .t{color:var(--claro);font-weight:600;font-size:15px;}
   .evento .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
-  .evento .d{color:#8fa6c4;font-size:13px;}
-  /* rodapé */
-  .rodape{position:absolute;left:12px;right:12px;bottom:14px;z-index:900;background:rgba(19,38,61,.96);border:1px solid var(--borda);border-radius:16px;padding:14px;box-shadow:0 12px 40px rgba(0,0,0,.45);}
-  .rodape .recado{color:var(--claro);font-size:14px;line-height:1.4;margin-bottom:12px;}
-  .rodape .recado span{color:#8fa6c4;font-size:12px;display:block;margin-bottom:2px;}
-  .btnRota{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:11px;}
-  .tela{position:absolute;inset:0;z-index:3000;background:var(--escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--claro);gap:10px;}
-  .tela svg{width:56px;height:56px;margin-bottom:6px;}
-  .tela h1{font-size:20px;font-weight:700;}
-  .tela p{color:#8fa6c4;font-size:14px;max-width:300px;line-height:1.5;}
-  .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
-  .vazioMod{color:#8fa6c4;font-size:14px;text-align:center;padding:20px;}
-  .escondido{display:none !important;}
-  .pin{filter:drop-shadow(0 3px 5px rgba(0,0,0,.4));}
-  .btnLocal{position:absolute;right:16px;bottom:100px;z-index:950;width:46px;height:46px;border-radius:50%;background:rgba(19,38,61,.96);border:1px solid var(--borda);color:var(--ciano);font-size:22px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;}
+  .evento .d{color:var(--muted);font-size:13px;}
+  .vazioMod{color:var(--muted);font-size:14px;text-align:center;padding:24px 10px;}
+  /* Botão localização (só na aba mapa) */
+  .btnLocal{position:absolute;right:12px;bottom:12px;z-index:600;width:44px;height:44px;border-radius:50%;background:rgba(19,38,61,.96);border:1px solid var(--borda);color:var(--ciano);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;}
   .btnLocal:hover{border-color:var(--ciano);}
-  .logoMini{height:30px;width:auto;flex-shrink:0;}
-  .leaflet-top.leaflet-right{top:70px;}
-  .leaflet-control-zoom{border:none!important;box-shadow:0 6px 18px rgba(0,0,0,.4);border-radius:12px!important;overflow:hidden;}
-  .leaflet-control-zoom a{background:rgba(19,38,61,.96)!important;color:var(--ciano)!important;border-bottom:1px solid var(--borda)!important;width:44px;height:44px;line-height:42px;font-size:22px;font-weight:700;}
+  .btnLocal svg{width:22px;height:22px;}
+  /* CTA */
+  .cta{flex-shrink:0;margin:11px 12px 0;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:12px;box-shadow:0 8px 22px rgba(0,102,255,.35);}
+  .cta svg{width:19px;height:19px;}
+  /* Crédito discreto */
+  .credit{flex-shrink:0;text-align:center;font-size:10px;color:#54708f;margin:9px 0 8px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;}
+  .credit svg{width:11px;height:11px;opacity:.7;}
+  /* Menu inferior */
+  .nav{flex-shrink:0;display:flex;justify-content:space-around;align-items:center;padding:8px 4px calc(9px + env(safe-area-inset-bottom));border-top:1px solid var(--borda);background:#0c1a2c;}
+  .nv{display:flex;flex-direction:column;align-items:center;gap:3px;color:#6f88a8;font-size:10px;cursor:pointer;background:none;border:none;font-family:inherit;padding:2px 6px;}
+  .nv svg{width:21px;height:21px;}
+  .nv.on{color:var(--ciano);}
+  /* Estilo dos controles de zoom do Leaflet */
+  .leaflet-control-zoom{border:none!important;box-shadow:0 6px 18px rgba(0,0,0,.4);border-radius:12px!important;overflow:hidden;margin:12px!important;}
+  .leaflet-control-zoom a{background:rgba(19,38,61,.96)!important;color:var(--ciano)!important;border-bottom:1px solid var(--borda)!important;width:40px;height:40px;line-height:38px;font-size:20px;font-weight:700;}
   .leaflet-control-zoom a:hover{background:#1b3253!important;}
-  @media(min-width:900px){.rodape{left:auto;right:16px;width:320px;}}
+  .pin{filter:drop-shadow(0 0 6px rgba(0,212,255,.7));}
+  /* Tela de estados (carregando / erro / não encontrado) */
+  .tela{position:absolute;inset:0;z-index:3000;background:var(--escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:10px;}
+  .tela svg{width:56px;height:56px;margin-bottom:6px;filter:drop-shadow(0 0 10px rgba(0,212,255,.5));}
+  .tela h1{font-size:20px;font-weight:600;}
+  .tela p{color:var(--muted);font-size:14px;max-width:300px;line-height:1.5;}
+  .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
+  .escondido{display:none !important;}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div id="map"></div>
+  <div class="hd">
+    <div class="lg">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
+      <span>movi<b>ki</b></span>
+    </div>
+    <button class="iconBtn" id="btnShare" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+    </button>
+  </div>
 
-<div class="topo escondido" id="topo">
-  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/>
-    <circle cx="32" cy="26" r="7" fill="#0D1B2A"/>
-    <path d="M44 14a17 17 0 0 1 5 12" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
-    <path d="M48 9a24 24 0 0 1 7 17" stroke="#00D4FF" stroke-width="3.2" stroke-linecap="round"/>
-  </svg>
-  <div class="info"><div class="nome" id="nome">—</div><div id="statusBadge"></div></div>
-</div>
+  <div class="hero">
+    <div class="nm" id="nome">—</div>
+    <div class="rw" id="statusRow"></div>
+    <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
+  </div>
 
-<div class="toolbar escondido" id="toolbar"></div>
+  <div class="stage" id="stage">
+    <div class="pane on" id="pane-mapa">
+      <div id="map"></div>
+      <div class="maphint">use dois dedos pra aproximar</div>
+      <button class="btnLocal" onclick="localizarme()" title="Ver minha localização" aria-label="Ver minha localização">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      </button>
+    </div>
+    <div class="pane scroll" id="pane-cardapio"></div>
+    <div class="pane scroll" id="pane-promocoes"></div>
+    <div class="pane scroll" id="pane-eventos"></div>
+    <div class="pane scroll" id="pane-fotos"></div>
+  </div>
 
-<div class="drawer" id="drawer">
-  <div class="drawerCab"><h2 id="drawerTitulo">—</h2><button class="fechar" onclick="fecharDrawer()">✕</button></div>
-  <div id="drawerConteudo"></div>
-</div>
+  <a class="cta escondido" id="btnRota" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10m0 0L9 5"/></svg>
+    Como chegar
+  </a>
 
-<div class="rodape escondido" id="rodape">
-  <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
-  <a class="btnRota" id="btnRota" href="#" target="_blank" rel="noopener">📍 Como chegar</a>
-</div>
+  <a class="credit" href="https://moviki.com.br" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+    feito com moviki
+  </a>
 
-<button class="btnLocal escondido" id="btnLocal" onclick="localizarme()" title="Ver minha localização">◎</button>
+  <div class="nav" id="nav"></div>
 
-<div class="tela" id="tela">
-  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/>
-    <circle cx="32" cy="26" r="7" fill="#0D1B2A"/>
-  </svg>
-  <h1 id="telaTitulo">Carregando...</h1>
-  <p id="telaTexto"></p>
+  <div class="tela" id="tela">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
+    <h1 id="telaTitulo">Carregando...</h1>
+    <p id="telaTexto"></p>
+  </div>
+
 </div>
 
 <script type="module">
@@ -130,17 +161,16 @@
   function mostrarTela(t,x,link){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://moviki.com.br">Conhecer o Moviki</a>':'');el('tela').classList.remove('escondido');}
   function esconderTela(){el('tela').classList.add('escondido');}
 
-  let moduloAberto=null;
-  const modulos={}; // {cardapio:{titulo,html}, promocoes:{...}, eventos:{...}}
-  window.fecharDrawer=function(){el('drawer').classList.remove('aberto');moduloAberto=null;};
-  window.abrirModulo=function(nome){
-    if(!modulos[nome])return;
-    moduloAberto=nome;
-    el('drawerTitulo').textContent=modulos[nome].titulo;
-    el('drawerConteudo').innerHTML=modulos[nome].html;
-    el('drawer').classList.add('aberto');
+  /* ---- ícones do menu (SVG inline, sem dependência externa) ---- */
+  const IC={
+    mapa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
+    cardapio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a3 3 0 0 0 6 0V3M9 10v11M17 3c-1.5 0-3 1.8-3 5s1.5 4 3 4v9"/></svg>',
+    promocoes:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0l-7.2-7.2a2 2 0 0 1-.6-1.4V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.4 7.4a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/></svg>',
+    eventos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>',
+    fotos:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 17l5-4 4 3 3-2 6 5"/></svg>'
   };
 
+  /* ---- construtores de conteúdo (com esc() anti-XSS) ---- */
   function htmlCardapio(cardapio){
     let h='';
     cardapio.forEach(cat=>{
@@ -165,6 +195,7 @@
     return h||'<div class="vazioMod">Sem eventos agora.</div>';
   }
 
+  /* ---- plano / gating ---- */
   let planoAtual='basico';
   function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium';}
   async function carregarPlano(uid){
@@ -174,41 +205,81 @@
     catch(e){planoAtual='basico';}
   }
 
-  function montarToolbar(d){
+  /* ---- navegação de tela única (troca a telinha) ---- */
+  let abaAtiva='mapa';
+  window.trocarAba=function(nome){
+    abaAtiva=nome;
+    document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+    const alvo=el('pane-'+nome); if(alvo)alvo.classList.add('on');
+    document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.aba===nome));
+    if(nome==='mapa'&&map){setTimeout(()=>map.invalidateSize(),60);}
+  };
+
+  function montarNav(d){
     const cardapio=(d.cardapio||[]).filter(c=>c.produtos&&c.produtos.length);
     const promos=(d.promocoes||[]).filter(p=>p.titulo);
     const eventos=(d.eventos||[]).filter(e=>e.titulo);
-    // limpa
-    for(const k in modulos)delete modulos[k];
-    const botoes=[];
+    const fotos=(d.fotos||[]).filter(f=>f); // galeria: entra sozinha quando o lojista tiver fotos
+
+    // Mapa sempre disponível
+    const abas=[{k:'mapa',lb:'Mapa'}];
+
     if(liberaConteudo()){
-    if(cardapio.length){modulos.cardapio={titulo:'🍽️ Cardápio',html:htmlCardapio(cardapio)};botoes.push({m:'cardapio',ic:'🍽️',lb:'Cardápio'});}
-    if(promos.length){modulos.promocoes={titulo:'🏷️ Promoções',html:htmlPromos(promos)};botoes.push({m:'promocoes',ic:'🏷️',lb:'Promoções'});}
-    if(eventos.length){modulos.eventos={titulo:'📅 Eventos',html:htmlEventos(eventos)};botoes.push({m:'eventos',ic:'📅',lb:'Eventos'});}
+      if(cardapio.length){el('pane-cardapio').innerHTML=htmlCardapio(cardapio);abas.push({k:'cardapio',lb:'Cardápio'});}
+      if(promos.length){el('pane-promocoes').innerHTML=htmlPromos(promos);abas.push({k:'promocoes',lb:'Promoções'});}
+      if(eventos.length){el('pane-eventos').innerHTML=htmlEventos(eventos);abas.push({k:'eventos',lb:'Eventos'});}
+      // fotos: reservado pra galeria (liga quando houver dados + storage); mantém pane pronto
     }
-    const tb=el('toolbar');
-    tb.innerHTML='';
-    botoes.forEach(b=>{
-      const btn=document.createElement('button');btn.className='toolBtn';
-      btn.innerHTML='<span class="ic">'+b.ic+'</span><span class="lb">'+b.lb+'</span>';
-      btn.onclick=()=>window.abrirModulo(b.m);
-      tb.appendChild(btn);
+
+    const nav=el('nav');nav.innerHTML='';
+    abas.forEach(a=>{
+      const b=document.createElement('button');
+      b.className='nv'+(a.k===abaAtiva?' on':'');
+      b.dataset.aba=a.k;
+      b.innerHTML=IC[a.k]+'<span>'+a.lb+'</span>';
+      b.onclick=()=>window.trocarAba(a.k);
+      nav.appendChild(b);
     });
-    tb.classList.toggle('escondido',botoes.length===0);
-    // se a gaveta estava aberta, atualiza ou fecha
-    if(moduloAberto){ modulos[moduloAberto]?window.abrirModulo(moduloAberto):fecharDrawer(); }
+    // se a aba ativa deixou de existir (ex.: plano caiu), volta pro mapa
+    if(!abas.some(a=>a.k===abaAtiva))window.trocarAba('mapa');
   }
 
+  /* ---- compartilhar ---- */
+  window.compartilhar=async function(){
+    const url=window.location.href;
+    const titulo=(el('nome').textContent||'Moviki');
+    try{ if(navigator.share){await navigator.share({title:titulo,url});return;} }catch(e){return;}
+    try{ await navigator.clipboard.writeText(url); const b=el('btnShare'); b.style.color='#57e39a'; setTimeout(()=>b.style.color='',1500); }catch(e){}
+  };
+
+  /* ---- resolução do link (slug -> uid) ---- */
   const params=new URLSearchParams(window.location.search);
   let slug=decodeURIComponent(window.location.pathname).replace(/^\/+/,'').replace(/\/+$/,'').trim().toLowerCase();
   const idDireto=params.get('id');const lojaQuery=params.get('loja');
   if(lojaQuery)slug=lojaQuery.toLowerCase();
 
-  const map=L.map('map',{zoomControl:false}).setView([-8.05,-34.9],13);
+  /* ---- mapa ---- */
+  const map=L.map('map',{zoomControl:false,attributionControl:false}).setView([-8.05,-34.9],13);
   L.control.zoom({position:'topright'}).addTo(map);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
-  const icone=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0D1B2A" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0D1B2A"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
-  let marcador=null, viewerMarker=null;
+  L.control.attribution({position:'bottomright',prefix:false}).addAttribution('© OpenStreetMap').addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+  const icone=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0A1524" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0A1524"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
+  let marcador=null, viewerMarker=null, negocioPos=null;
+
+  function distanciaKm(a,b){
+    const R=6371,rad=x=>x*Math.PI/180;
+    const dLat=rad(b[0]-a[0]),dLng=rad(b[1]-a[1]);
+    const s=Math.sin(dLat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dLng/2)**2;
+    return 2*R*Math.asin(Math.sqrt(s));
+  }
+  function mostrarDistancia(p){
+    if(!negocioPos)return;
+    const km=distanciaKm(p,negocioPos);
+    const txt=km<1?Math.round(km*1000)+' m de você':km.toFixed(1).replace('.',',')+' km de você';
+    let pill=el('distPill');
+    if(!pill){pill=document.createElement('span');pill.id='distPill';pill.className='pill dist';el('statusRow').appendChild(pill);}
+    pill.innerHTML='<span class="bol" style="width:0"></span>a '+txt;
+  }
 
   window.localizarme=function(){
     if(!navigator.geolocation){alert('Seu navegador não tem GPS.');return;}
@@ -216,6 +287,7 @@
       const p=[pos.coords.latitude,pos.coords.longitude];
       if(!viewerMarker){viewerMarker=L.circleMarker(p,{radius:8,color:'#fff',weight:2,fillColor:'#0066FF',fillOpacity:1}).addTo(map).bindPopup('Você está aqui');}else{viewerMarker.setLatLng(p);}
       map.setView(p,16);
+      mostrarDistancia(p);
     },(err)=>{alert(err.code===1?'Libere o acesso à sua localização nas permissões do navegador.':'Não consegui pegar sua localização.');},{enableHighAccuracy:true,timeout:10000});
   };
 
@@ -226,17 +298,20 @@
       const d=snap.data();
       el('nome').textContent=d.nome||'Negócio';
       const aberto=d.status==='aberto';
-      el('statusBadge').innerHTML='<span class="badge '+(aberto?'aberto':'fechado')+'"><span class="bolinha"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
-      el('topo').classList.remove('escondido');
+      el('statusRow').innerHTML='<span class="pill '+(aberto?'aberto':'fechado')+'"><span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
       if(d.recado&&d.recado.trim()){el('recado').textContent=d.recado;el('recadoBox').classList.remove('escondido');}else{el('recadoBox').classList.add('escondido');}
-      montarToolbar(d);
+      montarNav(d);
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
-        esconderTela();el('rodape').classList.remove('escondido');el('btnLocal').classList.remove('escondido');
+        esconderTela();
+        negocioPos=[d.lat,d.lng];
         el('btnRota').href='https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lng;
-        const pos=[d.lat,d.lng];
-        if(!marcador){marcador=L.marker(pos,{icon:icone}).addTo(map);map.setView(pos,16);}else{marcador.setLatLng(pos);}
+        el('btnRota').classList.remove('escondido');
+        if(!marcador){marcador=L.marker(negocioPos,{icon:icone}).addTo(map);map.setView(negocioPos,16);setTimeout(()=>map.invalidateSize(),80);}else{marcador.setLatLng(negocioPos);}
         marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>');
-      }else{el('rodape').classList.add('escondido');mostrarTela(d.nome||'Negócio','Este negócio ainda não ligou a localização. Volte daqui a pouco.');}
+      }else{
+        el('btnRota').classList.add('escondido');
+        mostrarTela(d.nome||'Negócio','Este negócio ainda não ligou a localização. Volte daqui a pouco.');
+      }
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
 
