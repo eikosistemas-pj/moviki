@@ -85,6 +85,25 @@
   .tela p{color:var(--muted);font-size:14px;max-width:300px;line-height:1.5;}
   .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
   .escondido{display:none !important;}
+
+  .ratingChip{display:inline-flex;align-items:center;gap:5px;margin-top:7px;font-size:13px;color:#cfe0f5;}
+  .ratingChip .stars{color:#ffc340;letter-spacing:1px;}
+  .ratingChip b{color:#fff;}
+  .acoes{display:flex;gap:8px;margin-top:11px;}
+  .acoes button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--card);border:1px solid var(--borda);color:#cfe0f5;font-family:inherit;font-weight:600;font-size:13px;padding:9px 6px;border-radius:11px;cursor:pointer;}
+  .acoes button:hover{border-color:var(--ciano);color:var(--ciano);}
+  .acoes button svg{width:15px;height:15px;flex:0 0 auto;}
+  .ctaWpp{background:linear-gradient(135deg,#25D366,#128C4B)!important;color:#fff!important;box-shadow:0 8px 22px rgba(37,211,102,.35)!important;}
+  .modalAv{position:fixed;inset:0;background:rgba(4,10,20,.72);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+  .mavBox{background:var(--card);border:1px solid var(--borda);border-radius:18px;padding:24px 20px;width:100%;max-width:360px;position:relative;}
+  .mavBox h3{font-size:19px;margin-bottom:14px;font-weight:600;}
+  .mavX{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;}
+  .estrelasPick{display:flex;gap:8px;justify-content:center;font-size:36px;margin:4px 0 18px;}
+  .estrelasPick .stp{color:#3a5578;cursor:pointer;transition:.1s;line-height:1;}
+  .estrelasPick .stp.on{color:#ffc340;}
+  .mavBox input,.mavBox textarea{width:100%;background:var(--escuro);border:1px solid var(--borda);border-radius:10px;padding:11px 13px;color:var(--claro);font-family:inherit;font-size:14px;margin-bottom:11px;resize:vertical;}
+  .mavEnviar{width:100%;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:11px;padding:13px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;}
+  .mavAviso{text-align:center;font-size:13px;margin-top:10px;min-height:16px;}
 </style>
 </head>
 <body>
@@ -103,6 +122,12 @@
   <div class="hero">
     <div class="nm" id="nome">—</div>
     <div class="rw" id="statusRow"></div>
+    <div class="ratingChip escondido" id="ratingChip"></div>
+    <div class="acoes" id="acoes">
+      <button type="button" onclick="abrirAvaliar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 22l-5.2-2.9 1-5.8L3.5 9.2l5.9-.9z"/></svg>Avaliar</button>
+      <button type="button" onclick="compartilhar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Compartilhar</button>
+      <button type="button" onclick="chegar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10"/></svg>Chegar</button>
+    </div>
     <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
   </div>
 
@@ -120,9 +145,14 @@
     <div class="pane scroll" id="pane-fotos"></div>
   </div>
 
-  <a class="cta escondido" id="btnRota" href="#" target="_blank" rel="noopener">
+  <a class="cta escondido" id="btnRota" href="#" target="_blank" rel="noopener" style="display:none">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10m0 0L9 5"/></svg>
     Como chegar
+  </a>
+
+  <a class="cta ctaWpp escondido" id="btnWpp" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.24.68-1.4 1.3-1.94 1.35-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.15-.2-1.19-1.58-1.19-3.01s.75-2.14 1.02-2.43c.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.51-.1.2-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.02 1.12.99 2.06 1.3 2.35 1.45.29.14.46.12.63-.07.17-.2.72-.84.91-1.13.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+    Chamar no WhatsApp
   </a>
 
   <a class="credit" href="https://moviki.com.br" target="_blank" rel="noopener">
@@ -140,9 +170,23 @@
 
 </div>
 
+<div class="modalAv escondido" id="modalAv">
+  <div class="mavBox">
+    <button class="mavX" onclick="fecharAvaliar()" aria-label="Fechar">✕</button>
+    <h3>Deixe sua avaliação</h3>
+    <div class="estrelasPick" id="estrelasPick">
+      <span class="stp" onclick="pickNota(1)">★</span><span class="stp" onclick="pickNota(2)">★</span><span class="stp" onclick="pickNota(3)">★</span><span class="stp" onclick="pickNota(4)">★</span><span class="stp" onclick="pickNota(5)">★</span>
+    </div>
+    <input id="avNome" type="text" placeholder="Seu nome (opcional)" maxlength="40" autocomplete="name">
+    <textarea id="avComent" rows="3" placeholder="Conte como foi (opcional)" maxlength="300"></textarea>
+    <button class="mavEnviar" id="mavEnviar" onclick="enviarAvaliacao()">Enviar avaliação</button>
+    <div class="mavAviso" id="mavAviso"></div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, getDoc, onSnapshot }
+  import { getFirestore, doc, getDoc, onSnapshot, collection, getDocs, addDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -207,6 +251,8 @@
 
   /* ---- navegação de tela única (troca a telinha) ---- */
   let abaAtiva='mapa';
+  let negocioUid='';
+  let notaEscolhida=0;
   window.trocarAba=function(nome){
     abaAtiva=nome;
     document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
@@ -252,6 +298,38 @@
     try{ await navigator.clipboard.writeText(url); const b=el('btnShare'); b.style.color='#57e39a'; setTimeout(()=>b.style.color='',1500); }catch(e){}
   };
 
+  /* ---- avaliações (estrelas públicas) ---- */
+  async function carregarAvaliacoesPub(uid){
+    const chip=el('ratingChip');
+    try{
+      const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
+      let n=0,soma=0;qs.forEach(dd=>{const r=Number(dd.data().nota||0);if(r>=1&&r<=5){n++;soma+=r;}});
+      if(n>0){const m=soma/n,c=Math.round(m);
+        chip.innerHTML='<span class="stars">'+('★'.repeat(c)+'☆'.repeat(5-c))+'</span> <b>'+m.toFixed(1).replace('.',',')+'</b> · '+n+' avaliação'+(n>1?'ões':'');
+        chip.classList.remove('escondido');
+      }else{chip.classList.add('escondido');}
+    }catch(e){chip.classList.add('escondido');}
+  }
+  window.abrirAvaliar=function(){el('modalAv').classList.remove('escondido');};
+  window.fecharAvaliar=function(){el('modalAv').classList.add('escondido');};
+  window.pickNota=function(v){notaEscolhida=v;document.querySelectorAll('#estrelasPick .stp').forEach((sp,i)=>sp.classList.toggle('on',i<v));};
+  window.chegar=function(){const b=el('btnRota');if(b&&b.getAttribute('href')&&b.getAttribute('href')!=='#'){b.click();}else{window.trocarAba('mapa');}};
+  window.enviarAvaliacao=async function(){
+    const av=el('mavAviso');av.style.color='';
+    if(!negocioUid){av.textContent='Recarregue a página e tente de novo.';return;}
+    if(notaEscolhida<1){av.textContent='Toque nas estrelas pra dar sua nota.';return;}
+    let ja=false;try{ja=!!localStorage.getItem('av_'+negocioUid);}catch(_){}
+    if(ja){av.style.color='#57e39a';av.textContent='Você já avaliou este negócio. Obrigado!';return;}
+    const btn=el('mavEnviar');btn.disabled=true;const t=btn.textContent;btn.textContent='Enviando...';
+    try{
+      await addDoc(collection(db,'negocios',negocioUid,'avaliacoes'),{nota:notaEscolhida,nome:(el('avNome').value||'').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),criadoEm:serverTimestamp()});
+      try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){}
+      av.style.color='#57e39a';av.textContent='✅ Obrigado pela sua avaliação!';
+      setTimeout(()=>{fecharAvaliar();carregarAvaliacoesPub(negocioUid);},1000);
+    }catch(e){av.textContent='Não deu pra enviar agora. Tente mais tarde.';}
+    btn.disabled=false;btn.textContent=t;
+  };
+
   /* ---- resolução do link (slug -> uid) ---- */
   const params=new URLSearchParams(window.location.search);
   let slug=decodeURIComponent(window.location.pathname).replace(/^\/+/,'').replace(/\/+$/,'').trim().toLowerCase();
@@ -292,13 +370,17 @@
   };
 
   async function ouvir(uid){
+    negocioUid=uid;
     await carregarPlano(uid);
+    carregarAvaliacoesPub(uid);
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
       if(!snap.exists()){mostrarTela('Negócio não encontrado','Esse negócio não existe mais.',true);return;}
       const d=snap.data();
       el('nome').textContent=d.nome||'Negócio';
       const aberto=d.status==='aberto';
       el('statusRow').innerHTML='<span class="pill '+(aberto?'aberto':'fechado')+'"><span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
+      const wpp=(d.whatsapp||'').replace(/\D/g,'');const bw=el('btnWpp');
+      if(wpp){bw.href='https://wa.me/55'+wpp;bw.classList.remove('escondido');}else{bw.classList.add('escondido');}
       if(d.recado&&d.recado.trim()){el('recado').textContent=d.recado;el('recadoBox').classList.remove('escondido');}else{el('recadoBox').classList.add('escondido');}
       montarNav(d);
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
