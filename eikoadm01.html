@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com; connect-src 'self' https://*.googleapis.com https://www.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'; form-action 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(self!==top){try{top.location=self.location}catch(e){document.documentElement.style.display='none'}}</script>
+<meta name="robots" content="noindex,nofollow">
+<title>Moviki — Painel do Dono</title>
+<link rel="icon" href="favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ciano:#00D4FF;--azul:#0066FF;--claro:#F2F5F9;--suave:#9fb2c6;--card:rgba(15,28,44,.66);--borda:rgba(0,212,255,.16);--campo:rgba(9,20,32,.9)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',system-ui,-apple-system,sans-serif;background:#050b14;color:var(--claro);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .wrap{max-width:640px;margin:0 auto;padding:22px 18px 60px}
+  .marca{text-align:center;padding:14px 0 6px}
+  .marca img{height:34px}
+  .marca .txt{font-weight:800;font-size:24px}
+  .marca .txt b{color:var(--ciano)}
+  .slogan{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--suave);font-weight:600;text-align:center;margin-bottom:14px}
+  .escondido{display:none!important}
+  /* login */
+  .box{background:var(--card);border:1px solid var(--borda);border-radius:18px;padding:24px 20px;max-width:420px;margin:20px auto}
+  .box h2{font-size:19px;font-weight:700;margin-bottom:4px;text-align:center}
+  .box p.sub{font-size:13px;color:var(--suave);text-align:center;margin-bottom:16px}
+  label{display:block;font-size:13px;font-weight:600;color:#cfe0f5;margin:12px 0 6px}
+  input{width:100%;background:var(--campo);border:1px solid var(--borda);border-radius:10px;padding:12px 14px;color:var(--claro);font-family:inherit;font-size:14px}
+  .btn{width:100%;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;border:none;border-radius:11px;padding:13px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;margin-top:16px}
+  .btn:disabled{opacity:.6}
+  .aviso{text-align:center;font-size:13px;color:#ff9a9a;margin-top:10px;min-height:16px}
+  .link{background:none;border:none;color:var(--ciano);font-family:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+  /* header dono */
+  .cab{display:flex;align-items:center;gap:11px;background:linear-gradient(120deg,rgba(0,102,255,.22),rgba(0,212,255,.14));border:1px solid var(--borda);border-radius:14px;padding:13px 15px;margin-bottom:18px}
+  .cab .ic{font-size:24px}
+  .cab .info{flex:1;min-width:0}
+  .cab .info b{display:block;font-size:16px}
+  .cab .info span{font-size:11.5px;color:#8fa6c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .cab .sair{background:rgba(255,255,255,.07);border:1px solid var(--borda);color:#cfe0f5;font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 13px;border-radius:9px;cursor:pointer}
+  h1sec,.secTit{display:block;font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--suave);margin:6px 2px 12px}
+  /* convites */
+  .convBloco{background:var(--card);border:1px solid var(--borda);border-radius:15px;padding:15px;margin-bottom:14px}
+  .convTopo{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .convIc{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 auto}
+  .i-com{background:rgba(0,212,255,.16)}
+  .i-par{background:rgba(37,227,155,.16)}
+  .convTxt b{display:block;font-size:15px;color:#eaf2fd}
+  .convTxt span{font-size:12.5px;color:#8fa6c4}
+  .convLink{display:flex;gap:8px;margin-bottom:11px}
+  .convLink input{flex:1;min-width:0;font-size:12.5px;padding:10px 12px}
+  .convCopy{flex:0 0 auto;background:rgba(255,255,255,.07);border:1px solid var(--borda);color:#cfe0f5;font-family:inherit;font-weight:600;font-size:12.5px;padding:0 13px;border-radius:9px;cursor:pointer}
+  .convAcoes{display:flex;gap:9px;flex-wrap:wrap}
+  .convBtn{flex:1;min-width:150px;border:none;font-family:inherit;font-weight:700;font-size:13.5px;padding:12px;border-radius:11px;cursor:pointer;color:#fff}
+  .convBtn.wpp{background:linear-gradient(135deg,#25D366,#128C4B)}
+  .convBtn.insta{background:linear-gradient(135deg,#E1306C,#C13584)}
+  .convBtn:disabled{opacity:.7}
+  .convDica{background:var(--campo);border:1px solid var(--borda);border-radius:11px;padding:13px 14px;font-size:12.5px;color:#b9cbe4;line-height:1.5;margin-bottom:22px}
+  .convDica b{color:#e6eefb}
+  .convIgOpen{display:inline-block;margin-top:9px;background:rgba(225,48,108,.16);border:1px solid rgba(225,48,108,.4);color:#ff9ec2;font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 13px;border-radius:9px;cursor:pointer}
+  /* em breve */
+  .breveGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .breve{background:var(--card);border:1px dashed var(--borda);border-radius:14px;padding:16px;text-align:center;opacity:.7}
+  .breve .bi{font-size:24px}
+  .breve b{display:block;font-size:14px;margin-top:6px}
+  .breve span{font-size:11px;color:var(--suave);display:block;margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="marca">
+    <img src="favicon512.png" alt="Moviki" onerror="this.style.display='none';document.getElementById('mt').style.display='inline'">
+    <span class="txt" id="mt" style="display:none">movi<b>ki</b></span>
+  </div>
+  <div class="slogan">Painel do Dono</div>
+
+  <!-- LOGIN -->
+  <div id="login" class="box escondido">
+    <h2>Entrar</h2>
+    <p class="sub">Acesso exclusivo do dono do Moviki.</p>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" placeholder="voce@email.com" autocomplete="username">
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" placeholder="sua senha" autocomplete="current-password">
+    <button class="btn" id="btnEntrar" onclick="entrar()">Entrar</button>
+    <div class="aviso" id="avisoLogin"></div>
+  </div>
+
+  <!-- ACESSO RESTRITO -->
+  <div id="restrito" class="box escondido">
+    <h2>🔒 Acesso restrito</h2>
+    <p class="sub">Este painel é do dono do Moviki.</p>
+    <p style="text-align:center;font-size:13px;color:#cfe0f5">Você entrou como:<br><b id="restritoEmail" style="color:#fff"></b></p>
+    <div class="aviso" id="restritoDica" style="color:#8fa6c4"></div>
+    <button class="btn" style="background:rgba(255,255,255,.08);color:#cfe0f5" onclick="sair()">Sair</button>
+  </div>
+
+  <!-- PAINEL DO DONO -->
+  <div id="painelDono" class="escondido">
+    <div class="cab">
+      <span class="ic">👑</span>
+      <div class="info"><b>Painel do Dono</b><span id="donoEmail"></span></div>
+      <button class="sair" onclick="sair()">Sair</button>
+    </div>
+
+    <div class="secTit">📨 Convites</div>
+    <div class="convBloco">
+      <div class="convTopo"><span class="convIc i-com">🛍️</span><div class="convTxt"><b>Convidar comerciante</b><span>Dono de negócio pra usar o Moviki</span></div></div>
+      <div class="convLink"><input id="linkCom" readonly value="https://moviki.com.br/comerciantes.html"><button class="convCopy" onclick="copiarLink('linkCom',this)">Copiar link</button></div>
+      <div class="convAcoes">
+        <button class="convBtn wpp" onclick="convidarWhats('com')">💬 Enviar pelo WhatsApp</button>
+        <button class="convBtn insta" onclick="copiarInsta('com',this)">📸 Copiar p/ Instagram</button>
+      </div>
+    </div>
+    <div class="convBloco">
+      <div class="convTopo"><span class="convIc i-par">🤝</span><div class="convTxt"><b>Convidar parceiro</b><span>Influenciador/afiliado pra indicar e ganhar</span></div></div>
+      <div class="convLink"><input id="linkPar" readonly value="https://moviki.com.br/parceiros.html"><button class="convCopy" onclick="copiarLink('linkPar',this)">Copiar link</button></div>
+      <div class="convAcoes">
+        <button class="convBtn wpp" onclick="convidarWhats('par')">💬 Enviar pelo WhatsApp</button>
+        <button class="convBtn insta" onclick="copiarInsta('par',this)">📸 Copiar p/ Instagram</button>
+      </div>
+    </div>
+    <div class="convDica">💡 No Instagram não dá pra abrir a conversa já com o texto — o botão <b>copia a mensagem pronta</b>. Aí é só abrir o Direct e colar. <button class="convIgOpen" onclick="abrirInstagram()">Abrir Instagram</button></div>
+
+    <div class="secTit">Em breve neste painel</div>
+    <div class="breveGrid">
+      <div class="breve"><div class="bi">💰</div><b>Comissões</b><span>Em breve</span></div>
+      <div class="breve"><div class="bi">📊</div><b>Relatórios</b><span>Em breve</span></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  /* ============================================================
+     >>> COLOQUE AQUI O(S) E-MAIL(S) DE DONO (o que você usa pra logar) <<<
+     Pode ter mais de um, separados por vírgula. Ex.: ["paulo@moviki.com.br","socio@moviki.com.br"]
+  ============================================================ */
+  const ADMIN_EMAILS = ["paulorico2030@gmail.com"];
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+    authDomain: "moviki-app.firebaseapp.com",
+    projectId: "moviki-app",
+    storageBucket: "moviki-app.firebasestorage.app",
+    messagingSenderId: "451920150738",
+    appId: "1:451920150738:web:be458392064c964c792d0b"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const el = id => document.getElementById(id);
+  const mostra = id => { ['login','restrito','painelDono'].forEach(x=>el(x).classList.add('escondido')); el(id).classList.remove('escondido'); };
+
+  window.entrar = async () => {
+    const b=el('btnEntrar'), av=el('avisoLogin');
+    av.textContent=''; b.disabled=true; const t=b.textContent; b.textContent='Entrando...';
+    try{
+      await signInWithEmailAndPassword(auth, el('email').value.trim(), el('senha').value);
+    }catch(e){
+      av.textContent = 'E-mail ou senha incorretos.';
+    }
+    b.disabled=false; b.textContent=t;
+  };
+  window.sair = () => signOut(auth);
+
+  onAuthStateChanged(auth, user => {
+    if(!user){ mostra('login'); return; }
+    const email = (user.email||'').toLowerCase();
+    const lista = ADMIN_EMAILS.map(e=>e.toLowerCase());
+    if(lista.includes(email)){
+      el('donoEmail').textContent = user.email;
+      mostra('painelDono');
+    } else {
+      el('restritoEmail').textContent = user.email;
+      if(lista.includes('seu_email_admin@exemplo.com')){
+        el('restritoDica').textContent = 'Configure o e-mail de dono no arquivo eikoadm01.html (campo ADMIN_EMAILS).';
+      }
+      mostra('restrito');
+    }
+  });
+
+  /* ---- Convites (mesmas mensagens do material) ---- */
+  const LINK = { com:'https://moviki.com.br/comerciantes.html', par:'https://moviki.com.br/parceiros.html' };
+  const MSG_WPP = {
+    com:'Opa! 👋 Isso pode te ajudar a vender mais: o *Moviki* coloca seu negócio no mapa em tempo real, com um link só seu (cardápio, promoções, WhatsApp) e *sem cobrar comissão por venda*. Dá pra testar *30 dias grátis*, sem cartão. Olha aqui 👉 ',
+    par:'E aí! 🚀 Te chamo pra uma parada que dá *renda recorrente*: indicando o *Moviki* pra comerciantes, você ganha *15% da mensalidade todo mês*, enquanto eles forem clientes. Sem custo pra começar. Vê como funciona 👉 '
+  };
+  const MSG_IG = {
+    com:'Oi! 👋 Isso pode te ajudar a vender mais: o Moviki coloca seu negócio no mapa em tempo real, com um link só seu e sem comissão por venda. 30 dias grátis pra testar. Olha 👉 ',
+    par:'Oi! 🚀 Bora ganhar renda recorrente? Indicando o Moviki pra comerciantes você recebe 15% da mensalidade todo mês. Sem custo pra começar. Vê aqui 👉 '
+  };
+  function copiar(txt){ try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); return; } }catch(e){} const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); }
+  function feedback(btn,txt){ if(!btn)return; const o=btn.textContent; btn.textContent=txt; btn.disabled=true; setTimeout(()=>{btn.textContent=o;btn.disabled=false;},1600); }
+  window.convidarWhats = t => window.open('https://wa.me/?text='+encodeURIComponent(MSG_WPP[t]+LINK[t]),'_blank');
+  window.copiarInsta = (t,btn) => { copiar(MSG_IG[t]+LINK[t]); feedback(btn,'✅ Mensagem copiada!'); };
+  window.copiarLink = (id,btn) => { const e=el(id); if(e) copiar(e.value); feedback(btn,'✅ Copiado!'); };
+  window.abrirInstagram = () => window.open('https://instagram.com/','_blank');
+</script>
+</body>
+</html>
