@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moviki · Coloque seu negócio no mapa</title>
+<meta name="description" content="Mostre seu negócio em tempo real no mapa, com link só seu, sem pagar comissão por venda. 30 dias grátis.">
+<link rel="icon" href="favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
+    --suave:#9fb2c6; --linha:rgba(0,212,255,.16); --verde:#25e39b;
+    --card:rgba(15,28,44,.66); --grad:linear-gradient(120deg,#00D4FF,#0066FF);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',system-ui,-apple-system,sans-serif;color:var(--claro);background:#050b14;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  a{color:inherit;text-decoration:none}
+  .topo{display:flex;align-items:center;gap:12px;justify-content:center;padding:26px 0 6px;text-align:center;flex-direction:column}
+  .topo img{height:40px}
+  .topo .logotxt{font-weight:800;font-size:26px}
+  .topo .logotxt b{color:var(--ciano)}
+  .slogan{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--suave);font-weight:600}
+  .pill{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--linha);border-radius:999px;padding:7px 15px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ciano)}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--ciano);box-shadow:0 0 10px var(--ciano)}
+  .hero{text-align:center;padding:30px 0 8px}
+  h1{font-size:38px;line-height:1.12;font-weight:800;letter-spacing:-.5px;margin:16px 0 14px}
+  h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{font-size:17px;color:#cdd9e6;max-width:560px;margin:0 auto}
+  .cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--grad);color:#04121f;font-weight:800;font-size:17px;padding:16px 30px;border-radius:999px;margin-top:22px;box-shadow:0 14px 34px rgba(0,102,255,.34)}
+  .cta.wpp{background:linear-gradient(135deg,#25D366,#0e8a45);color:#fff;box-shadow:0 14px 34px rgba(37,211,102,.32)}
+  .cta.sec{background:transparent;color:var(--claro);border:1px solid var(--linha);box-shadow:none;font-weight:700}
+  .ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .selo{margin-top:12px;font-size:13px;color:var(--suave)}
+  .selo b{color:var(--verde)}
+  section{padding:30px 0}
+  h2{font-size:25px;font-weight:800;letter-spacing:-.3px;margin-bottom:6px;text-align:center}
+  .lead{text-align:center;color:var(--suave);max-width:560px;margin:0 auto 22px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:18px}
+  .card .ic{font-size:26px;margin-bottom:8px}
+  .card h3{font-size:16px;font-weight:700;margin-bottom:4px}
+  .card p{font-size:14px;color:#c2cfdd}
+  .passos{counter-reset:p;display:grid;gap:12px;max-width:560px;margin:0 auto}
+  .passo{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:15px 17px}
+  .passo::before{counter-increment:p;content:counter(p);flex:0 0 34px;height:34px;border-radius:50%;background:var(--grad);color:#04121f;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .passo b{display:block;font-size:15px}
+  .passo span{font-size:14px;color:#c2cfdd}
+  .planos{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .plano{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:15px 12px;text-align:center}
+  .plano.destaque{border-color:var(--ciano);box-shadow:0 0 0 1px var(--ciano),0 12px 30px rgba(0,212,255,.14)}
+  .plano .nome{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--suave)}
+  .plano.destaque .nome{color:var(--ciano)}
+  .plano .preco{font-size:20px;font-weight:800;margin:6px 0 2px}
+  .plano .preco small{font-size:12px;color:var(--suave);font-weight:500}
+  .plano .desc{font-size:12px;color:#c2cfdd;line-height:1.4}
+  .tag{display:inline-block;background:rgba(37,227,155,.14);color:var(--verde);font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-top:6px}
+  .box{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:22px;text-align:center;max-width:620px;margin:0 auto}
+  .ganho{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:600px;margin:16px auto 0}
+  .ganho div{background:var(--card);border:1px solid var(--linha);border-radius:12px;padding:14px 8px;text-align:center}
+  .ganho .n{font-size:22px;font-weight:800;color:var(--ciano)}
+  .ganho .l{font-size:12px;color:var(--suave)}
+  .final{text-align:center;background:linear-gradient(160deg,rgba(0,212,255,.10),rgba(0,102,255,.06));border:1px solid var(--linha);border-radius:22px;padding:34px 22px;margin:20px 0}
+  .rodape{text-align:center;color:var(--suave);font-size:13px;padding:24px 0 40px;border-top:1px solid var(--linha);margin-top:10px}
+  .rodape a{color:var(--ciano)}
+  @media(max-width:560px){h1{font-size:30px}.cards{grid-template-columns:1fr}.planos{grid-template-columns:1fr 1fr}}
+  @media print{body{background:#050b14 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.cta{box-shadow:none}section{padding:18px 0}.final{margin:12px 0}}
+</style></head><body><div class="wrap"><div class="topo">
+  <img src="logo.png" alt="Moviki" onerror="this.style.display='none';document.getElementById('lt').style.display='block'">
+  <div class="logotxt" id="lt" style="display:none">movi<b>ki</b></div>
+  <div class="slogan">O mapa inteligente dos negócios em movimento</div>
+</div></div>
+<div class="wrap">
+  <div class="hero">
+    <span class="pill"><span class="dot"></span> Para o seu negócio</span>
+    <h1>Seus clientes <span class="g">procuram você</span>. Apareça no mapa.</h1>
+    <p class="sub">O Moviki mostra em tempo real onde seu negócio está — com cardápio, promoções e um link só seu. Sem pagar comissão por venda.</p>
+    <div class="ctas"><a class="cta" href="https://app.moviki.com.br">Começar grátis →</a></div>
+    <div class="selo"><b>30 dias grátis</b> do plano Pró · sem cartão de crédito</div>
+  </div>
+
+  <section>
+    <h2>Cansou disso?</h2>
+    <p class="lead">O cliente passa perto e não sabe que você existe. E quando aparece em app de entrega, leva uma fatia da sua venda.</p>
+    <div class="cards">
+      <div class="card"><div class="ic">🙈</div><h3>Ninguém te acha</h3><p>Seu ponto muda, o horário muda, e o cliente fica perdido sem saber se você está aberto.</p></div>
+      <div class="card"><div class="ic">💸</div><h3>Comissão te corta</h3><p>Plataformas de venda tiram um pedaço de cada pedido. No fim do mês, isso pesa.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Como o Moviki te ajuda</h2>
+    <p class="lead">Tudo num link só seu, que você manda no WhatsApp, cola na bio do Instagram e imprime no cartão.</p>
+    <div class="cards">
+      <div class="card"><div class="ic">📍</div><h3>No mapa, em tempo real</h3><p>Mostra onde você está agora — perfeito pra quem trabalha na rua, em feira ou muda de ponto.</p></div>
+      <div class="card"><div class="ic">🔗</div><h3>Um link só seu</h3><p>moviki.com.br/seunome. Fácil de divulgar e sempre seu.</p></div>
+      <div class="card"><div class="ic">🍽️</div><h3>Cardápio e promoções</h3><p>Mostre o que você vende, o preço e as ofertas do dia — atualiza em segundos.</p></div>
+      <div class="card"><div class="ic">🟢</div><h3>Aberto ou fechado</h3><p>O cliente vê na hora se dá pra ir, e chama você direto no WhatsApp.</p></div>
+      <div class="card"><div class="ic">⭐</div><h3>Avaliações</h3><p>Seus clientes deixam estrelas e recado — sua reputação trabalhando por você.</p></div>
+      <div class="card"><div class="ic">🚫</div><h3>Zero comissão por venda</h3><p>Você paga uma mensalidade justa e fica com 100% do que vende. Simples.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Funciona em 3 passos</h2>
+    <div class="passos">
+      <div class="passo"><div><b>Crie sua conta grátis</b><span>Leva menos de 2 minutos, sem cartão.</span></div></div>
+      <div class="passo"><div><b>Monte seu link</b><span>Nome, localização, cardápio e promoções.</span></div></div>
+      <div class="passo"><div><b>Compartilhe</b><span>Manda no WhatsApp e na bio — e os clientes te acham.</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Planos</h2>
+    <p class="lead">Comece de graça. Suba de plano quando quiser. Cancele quando quiser.</p>
+    <div class="planos">
+      <div class="plano"><div class="nome">Básico</div><div class="preco">Grátis</div><div class="desc">Seu ponto no mapa</div></div>
+      <div class="plano destaque"><div class="nome">Pró</div><div class="preco">R$37,90<small>/mês</small></div><div class="desc">Cardápio, promoções e eventos</div><span class="tag">30 dias grátis</span></div>
+      <div class="plano"><div class="nome">Premium</div><div class="preco">R$49,90<small>/mês</small></div><div class="desc">Pró + logo no pino + relatórios</div></div>
+      <div class="plano"><div class="nome">Enterprise</div><div class="preco">R$99,90<small>/mês</small></div><div class="desc">Vários pontos + suporte prioritário</div></div>
+    </div>
+  </section>
+
+  <div class="final">
+    <h2>Bora colocar seu negócio no mapa?</h2>
+    <p class="lead">Seja um dos primeiros da sua cidade. 30 dias de Pró grátis pra testar sem compromisso.</p>
+    <div class="ctas"><a class="cta" href="https://app.moviki.com.br">Começar grátis agora →</a></div>
+  </div>
+
+  <div class="rodape">
+    Dúvidas? Chame a gente no Instagram <a href="https://instagram.com/moviki.app">@moviki.app</a> ou por e-mail <a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a><br>moviki.com.br
+  </div>
+</div></body></html>
