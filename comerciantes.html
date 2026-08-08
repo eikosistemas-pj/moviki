@@ -135,4 +135,16 @@
   <div class="rodape">
     Dúvidas? Chame a gente no Instagram <a href="https://instagram.com/moviki.app">@moviki.app</a> ou por e-mail <a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a><br>moviki.com.br
   </div>
-</div></body></html>
+</div><script>
+/* Rastreio de parceiro: se veio ?ref na URL, carrega no(s) botão(ões) que levam ao app */
+(function(){
+  try{
+    var ref=(new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    if(ref.length<3) return;
+    document.querySelectorAll('a[href^="https://app.moviki.com.br"]').forEach(function(a){
+      var u=new URL(a.href); u.searchParams.set('ref',ref); a.href=u.toString();
+    });
+  }catch(e){}
+})();
+</script>
+</body></html>
