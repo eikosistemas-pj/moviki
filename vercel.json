@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/pp/:slug", "destination": "/pp.html" },
     { "source": "/p/:slug", "destination": "/p.html" }
   ]
 }
