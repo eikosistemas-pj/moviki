@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moviki</title>
+<script>
+(function(){
+  var m=location.pathname.match(/\/pp\/([^\/?#]+)/);
+  var ref=(m?decodeURIComponent(m[1]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+  var base='https://app.moviki.com.br/seja-parceiro.html';
+  location.replace(base+(ref.length>=3?('?ref='+encodeURIComponent(ref)):''));
+})();
+</script>
+</head>
+<body style="background:#050b14"></body>
+</html>
