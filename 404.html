@@ -45,9 +45,17 @@
   .maphint{position:absolute;left:10px;bottom:10px;z-index:600;font-size:10.5px;color:#bcd4ef;background:rgba(10,21,36,.72);padding:4px 9px;border-radius:8px;pointer-events:none;}
   .catTitulo{color:var(--ciano);font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;}
   .catTitulo:first-child{margin-top:0;}
-  .itemPub{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:11px 13px;margin-bottom:8px;}
+  .itemPub{background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:11px 13px;margin-bottom:8px;}
+  .itemTopo{display:flex;align-items:center;gap:10px;}
   .itemPub .nm{flex:1;color:var(--claro);font-size:14.5px;font-weight:500;}
   .itemPub .pr{color:#57e39a;font-size:14px;font-weight:600;white-space:nowrap;}
+  .itemFotos{display:flex;gap:7px;margin-top:10px;}
+  .itemFotos img{width:33.333%;max-width:118px;aspect-ratio:1/1;object-fit:cover;border-radius:9px;border:1px solid var(--borda);cursor:zoom-in;transition:transform .12s;}
+  .itemFotos img:hover{transform:scale(1.03);}
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px;cursor:zoom-out;}
+  .lb.on{display:flex;}
+  .lb img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 12px 44px rgba(0,0,0,.6);}
+  .lb .lbX{position:absolute;top:14px;right:18px;color:#fff;font-size:32px;font-weight:700;line-height:1;background:none;border:none;cursor:pointer;}
   .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
   @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
   .promo{background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
@@ -218,7 +226,7 @@
   };
 
   /* ---- construtores de conteúdo (com esc() anti-XSS) ---- */
-  function htmlCardapio(cardapio){
+  function htmlCardapio(cardapio,mostrarFotos){
     let h='';
     cardapio.forEach(cat=>{
       if(!cat.categoria&&!(cat.produtos&&cat.produtos.length))return;
@@ -226,7 +234,12 @@
       (cat.produtos||[]).forEach(p=>{
         const preco=p.preco?('<span class="pr">'+esc(p.preco)+'</span>'):'';
         const ac=p.acabando?'<span class="acabando">ACABANDO!</span>':'';
-        h+='<div class="itemPub"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>';
+        let fotos='';
+        if(mostrarFotos&&Array.isArray(p.fotos)){
+          const val=p.fotos.filter(fotoOk).slice(0,3);
+          if(val.length){ fotos='<div class="itemFotos">'+val.map(u=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" onclick="abrirFoto(this.src)">').join('')+'</div>'; }
+        }
+        h+='<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+fotos+'</div>';
       });
     });
     return h||'<div class="vazioMod">Cardápio em breve.</div>';
@@ -244,12 +257,14 @@
 
   /* ---- plano / gating ---- */
   let planoAtual='basico';
+  let periodoAtual='';
   function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium';}
   async function carregarPlano(uid){
     try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;
       const ok=d&&d.ativo===true&&(!d.vence_em||d.vence_em.toMillis()>Date.now());
-      planoAtual=ok?(d.plano||'basico'):'basico';}
-    catch(e){planoAtual='basico';}
+      planoAtual=ok?(d.plano||'basico'):'basico';
+      periodoAtual=ok?(d.periodo||''):'';}
+    catch(e){planoAtual='basico';periodoAtual='';}
   }
 
   /* ---- navegação de tela única (troca a telinha) ---- */
@@ -274,7 +289,7 @@
     const abas=[{k:'mapa',lb:'Mapa'}];
 
     if(liberaConteudo()){
-      if(cardapio.length){el('pane-cardapio').innerHTML=htmlCardapio(cardapio);abas.push({k:'cardapio',lb:'Cardápio'});}
+      if(cardapio.length){el('pane-cardapio').innerHTML=htmlCardapio(cardapio,liberaFotos());abas.push({k:'cardapio',lb:'Cardápio'});}
       if(promos.length){el('pane-promocoes').innerHTML=htmlPromos(promos);abas.push({k:'promocoes',lb:'Promoções'});}
       if(eventos.length){el('pane-eventos').innerHTML=htmlEventos(eventos);abas.push({k:'eventos',lb:'Eventos'});}
       // fotos: reservado pra galeria (liga quando houver dados + storage); mantém pane pronto
@@ -346,6 +361,10 @@
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
   const icone=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0A1524" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0A1524"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
   function liberaLogoPino(){return planoAtual==='premium'||planoAtual==='enterprise';}
+  function liberaFotos(){return planoAtual==='premium'||planoAtual==='enterprise'||periodoAtual==='trial';}
+  function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*ibb\.co\//i.test(u);}
+  window.abrirFoto=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on');};
+  window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
   function iconePara(d){
     if(liberaLogoPino() && d && d.markerLogo){
       return L.divIcon({className:'pin plPin',html:'<div class="plWrap"><img class="plImg" src="'+d.markerLogo+'" referrerpolicy="no-referrer" alt=""><span class="plTip"></span></div>',iconSize:[46,54],iconAnchor:[23,54],popupAnchor:[0,-50]});
@@ -417,5 +436,6 @@
     }catch(e){mostrarTela('Erro ao carregar','Tente de novo em instantes.');}
   })();
 </script>
+<div class="lb" id="lb" onclick="fecharFoto()"><button class="lbX" type="button" onclick="fecharFoto()" aria-label="Fechar">✕</button><img src="" alt="foto ampliada"></div>
 </body>
 </html>
