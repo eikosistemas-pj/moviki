@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://*.googleapis.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com https://i.ibb.co https://*.ibb.co; connect-src 'self' https://*.googleapis.com; base-uri 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moviki</title>
@@ -78,6 +78,9 @@
   .leaflet-control-zoom a{background:rgba(19,38,61,.96)!important;color:var(--ciano)!important;border-bottom:1px solid var(--borda)!important;width:40px;height:40px;line-height:38px;font-size:20px;font-weight:700;}
   .leaflet-control-zoom a:hover{background:#1b3253!important;}
   .pin{filter:drop-shadow(0 0 6px rgba(0,212,255,.7));}
+  .plWrap{position:relative;width:46px;height:46px}
+  .plImg{width:46px;height:46px;border-radius:50%;object-fit:cover;border:3px solid #00D4FF;background:#0A1524;box-shadow:0 0 6px rgba(0,212,255,.7);display:block}
+  .plTip{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid #00D4FF}
   /* Tela de estados (carregando / erro / não encontrado) */
   .tela{position:absolute;inset:0;z-index:3000;background:var(--escuro);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:10px;}
   .tela svg{width:56px;height:56px;margin-bottom:6px;filter:drop-shadow(0 0 10px rgba(0,212,255,.5));}
@@ -342,6 +345,13 @@
   L.control.attribution({position:'bottomright',prefix:false}).addAttribution('© OpenStreetMap').addTo(map);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
   const icone=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0A1524" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0A1524"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
+  function liberaLogoPino(){return planoAtual==='premium'||planoAtual==='enterprise';}
+  function iconePara(d){
+    if(liberaLogoPino() && d && d.markerLogo){
+      return L.divIcon({className:'pin plPin',html:'<div class="plWrap"><img class="plImg" src="'+d.markerLogo+'" referrerpolicy="no-referrer" alt=""><span class="plTip"></span></div>',iconSize:[46,54],iconAnchor:[23,54],popupAnchor:[0,-50]});
+    }
+    return icone;
+  }
   let marcador=null, viewerMarker=null, negocioPos=null;
 
   function distanciaKm(a,b){
@@ -388,7 +398,7 @@
         negocioPos=[d.lat,d.lng];
         el('btnRota').href='https://www.google.com/maps/dir/?api=1&destination='+d.lat+','+d.lng;
         el('btnRota').classList.remove('escondido');
-        if(!marcador){marcador=L.marker(negocioPos,{icon:icone}).addTo(map);map.setView(negocioPos,16);setTimeout(()=>map.invalidateSize(),80);}else{marcador.setLatLng(negocioPos);}
+        if(!marcador){marcador=L.marker(negocioPos,{icon:iconePara(d)}).addTo(map);map.setView(negocioPos,16);setTimeout(()=>map.invalidateSize(),80);}else{marcador.setLatLng(negocioPos);marcador.setIcon(iconePara(d));}
         marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>');
       }else{
         el('btnRota').classList.add('escondido');
