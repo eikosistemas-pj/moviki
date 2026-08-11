@@ -54,8 +54,9 @@
   .fotoCapa img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;}
   .itemInfo{display:flex;align-items:center;gap:10px;padding:11px 13px;}
   .miniFotos{display:flex;gap:7px;padding:0 13px 12px;}
-  .miniFotos img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--borda);cursor:zoom-in;transition:transform .12s;}
-  .miniFotos img:hover{transform:scale(1.04);}
+  .miniFotos img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--borda);cursor:pointer;opacity:.72;transition:opacity .12s,border-color .12s;}
+  .miniFotos img:hover{opacity:1;}
+  .miniFotos img.ativa{opacity:1;border-color:var(--ciano);box-shadow:0 0 0 2px var(--ciano);}
   .lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px;cursor:zoom-out;}
   .lb.on{display:flex;}
   .lb img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 12px 44px rgba(0,0,0,.6);}
@@ -243,7 +244,7 @@
         if(fotos.length){
           const capa='<div class="fotoCapa"><img src="'+esc(fotos[0])+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" onclick="abrirFoto(this.src)"></div>';
           let mini='';
-          if(fotos.length>1){ mini='<div class="miniFotos">'+fotos.slice(1).map(u=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" onclick="abrirFoto(this.src)">').join('')+'</div>'; }
+          if(fotos.length>1){ mini='<div class="miniFotos">'+fotos.map((u,idx)=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" class="'+(idx===0?'ativa':'')+'" onclick="trocarCapa(this)">').join('')+'</div>'; }
           h+='<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+mini+'</div>';
         } else {
           h+='<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div></div>';
@@ -371,6 +372,7 @@
   function liberaLogoPino(){return planoAtual==='premium'||planoAtual==='enterprise';}
   function liberaFotos(){return planoAtual==='premium'||planoAtual==='enterprise'||periodoAtual==='trial';}
   function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*ibb\.co\//i.test(u);}
+  window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;var capa=card.querySelector('.fotoCapa img');if(capa)capa.src=mini.src;card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
   window.abrirFoto=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on');};
   window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
   function iconePara(d){
