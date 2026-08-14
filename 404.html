@@ -64,15 +64,32 @@
   .lb.story img{max-width:auto;max-height:88vh;height:88vh;width:auto;aspect-ratio:9/16;border-radius:10px;}
   .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
   @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
-  .promo{background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
-  .promo .t{color:var(--claro);font-weight:600;font-size:15px;margin-bottom:3px;}
-  .promo .d{color:#a9c0dd;font-size:13px;}
-  .promo .fotoStory{width:108px;aspect-ratio:9/16;border-radius:10px;margin-top:10px;border:1px solid rgba(0,212,255,.4);object-fit:contain;cursor:pointer;display:block;}
-  .evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:13px;margin-bottom:10px;}
-  .evento .t{color:var(--claro);font-weight:600;font-size:15px;}
-  .evento .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
-  .evento .d{color:var(--muted);font-size:13px;}
-  .evento .fotoStory{width:108px;aspect-ratio:9/16;border-radius:10px;margin-top:10px;border:1px solid var(--borda);object-fit:contain;cursor:pointer;display:block;}
+  /* ===== PROMOCOES: imagem esquerda, texto direita ===== */
+.promo{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex;min-height:120px;}
+.promoImg{width:130px;flex-shrink:0;aspect-ratio:9/16;border-radius:0 10px 10px 0;object-fit:contain;cursor:pointer;background:#0a1622;border-right:1px solid rgba(0,212,255,.4);display:block;}
+.promoInfo{flex:1;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.promo .t{color:var(--claro);font-weight:700;font-size:18px;line-height:1.2;margin-bottom:6px;word-break:break-word;}
+.promo .d{color:#a9c0dd;font-size:14px;line-height:1.45;}
+
+/* ===== EVENTOS: texto esquerda, imagem direita ===== */
+.evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex;min-height:120px;}
+.eventoInfo{flex:1;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.evento .t{color:var(--claro);font-weight:700;font-size:18px;line-height:1.2;margin-bottom:4px;word-break:break-word;}
+.evento .q{color:var(--ciano);font-size:14px;font-weight:600;margin-bottom:6px;}
+.evento .d{color:var(--muted);font-size:13.5px;line-height:1.4;}
+.eventoImg{width:130px;flex-shrink:0;aspect-ratio:9/16;border-radius:10px 0 0 10px;object-fit:contain;cursor:pointer;background:#0a1622;border-left:1px solid var(--borda);display:block;}
+
+/* Mobile: empilha verticalmente */
+@media (max-width: 520px){
+  .promo,.evento{flex-direction:column;min-height:auto;}
+  .promoImg{border-radius:10px 10px 0 0;border-right:none;border-bottom:1px solid rgba(0,212,255,.4);width:100%;height:130px;aspect-ratio:auto;}
+  .eventoImg{border-radius:0 0 10px 10px;border-left:none;border-top:1px solid var(--borda);width:100%;height:130px;aspect-ratio:auto;}
+  .promoInfo,.eventoInfo{padding:14px 16px;}
+  .promo .t,.evento .t{font-size:16px;}
+  .promo .d{font-size:13px;}
+  .evento .q{font-size:13px;}
+  .evento .d{font-size:13px;}
+}
   .catGrade{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:2px;}
   .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;}
   .catCardTop{padding:9px 11px 8px;}
@@ -287,12 +304,12 @@
   }
   function htmlPromos(promos){
     let h='';
-    promos.forEach(p=>{h+='<div class="promo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+(fotoOk(p.imagem)?'<img class="fotoStory" src="'+esc(p.imagem)+'" onclick="abrirStory(this.src)" alt="imagem da promoção" loading="lazy">' : '')+'</div>';});
+    promos.forEach(p=>{h+='<div class="promo">'+(fotoOk(p.imagem)?'<img class="promoImg" src="'+esc(p.imagem)+'" onclick="abrirStory(this.src)" alt="imagem da promoção" loading="lazy">':'')+'<div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';});
     return h||'<div class="vazioMod">Sem promoções agora.</div>';
   }
   function htmlEventos(evs){
     let h='';
-    evs.forEach(e=>{h+='<div class="evento"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+(fotoOk(e.imagem)?'<img class="fotoStory" src="'+esc(e.imagem)+'" onclick="abrirStory(this.src)" alt="imagem do evento" loading="lazy">' : '')+'</div>';});
+    evs.forEach(e=>{h+='<div class="evento"><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>'+(fotoOk(e.imagem)?'<img class="eventoImg" src="'+esc(e.imagem)+'" onclick="abrirStory(this.src)" alt="imagem do evento" loading="lazy">':'')+'</div>';});
     return h||'<div class="vazioMod">Sem eventos agora.</div>';
   }
 
