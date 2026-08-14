@@ -400,7 +400,7 @@
   const icone=L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="#00D4FF" stroke="#0A1524" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0A1524"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
   function liberaLogoPino(){return planoAtual==='premium'||planoAtual==='enterprise';}
   function liberaFotos(){return planoAtual==='premium'||planoAtual==='enterprise'||periodoAtual==='trial';}
-  function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*ibb\.co\//i.test(u);}
+  function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
   window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;var capa=card.querySelector('.fotoCapa img');if(capa)capa.src=mini.src;card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
   window.abrirFoto=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on');};
   window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
