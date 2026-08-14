@@ -64,34 +64,36 @@
   .lb.story img{max-width:auto;max-height:88vh;height:88vh;width:auto;aspect-ratio:9/16;border-radius:10px;}
   .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
   @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
-  /* ===== PROMOCOES: imagem esquerda, texto direita ===== */
-.promo{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex;min-height:120px;}
-.promoImg{width:130px;flex-shrink:0;aspect-ratio:9/16;border-radius:0 10px 10px 0;object-fit:contain;cursor:pointer;background:#0a1622;border-right:1px solid rgba(0,212,255,.4);display:block;}
-.promoInfo{flex:1;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
-.promo .t{color:var(--claro);font-weight:700;font-size:18px;line-height:1.2;margin-bottom:6px;word-break:break-word;}
-.promo .d{color:#a9c0dd;font-size:14px;line-height:1.45;}
+  /* ===== MOLDURA BASE (promos, eventos, cardapio) ===== */
+.cardMoldura{background:var(--card);border:1px solid var(--borda);border-radius:14px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.25);margin-bottom:12px;}
 
-/* ===== EVENTOS: texto esquerda, imagem direita ===== */
-.evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;margin-bottom:10px;overflow:hidden;display:flex;min-height:120px;}
-.eventoInfo{flex:1;padding:16px 18px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
-.evento .t{color:var(--claro);font-weight:700;font-size:18px;line-height:1.2;margin-bottom:4px;word-break:break-word;}
-.evento .q{color:var(--ciano);font-size:14px;font-weight:600;margin-bottom:6px;}
-.evento .d{color:var(--muted);font-size:13.5px;line-height:1.4;}
-.eventoImg{width:130px;flex-shrink:0;aspect-ratio:9/16;border-radius:10px 0 0 10px;object-fit:contain;cursor:pointer;background:#0a1622;border-left:1px solid var(--borda);display:block;}
+/* ===== PROMOCOES: imagem ESQUERDA 50% (altura total), texto DIREITA ===== */
+.promo{display:flex;min-height:140px;}
+.promoImg{width:50%;flex-shrink:0;object-fit:contain;cursor:pointer;background:#0a1622;display:block;}
+.promoInfo{width:50%;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;min-width:0;background:linear-gradient(180deg,rgba(0,212,255,.03),transparent);}
+.promo .t{color:var(--claro);font-weight:800;font-size:20px;line-height:1.2;margin-bottom:8px;word-break:break-word;letter-spacing:-0.3px;}
+.promo .d{color:#b9d6f0;font-size:15px;line-height:1.5;}
+
+/* ===== EVENTOS: texto ESQUERDA 50%, imagem DIREITA 50% (altura total) ===== */
+.evento{display:flex;min-height:140px;}
+.eventoInfo{width:50%;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;min-width:0;background:linear-gradient(180deg,rgba(0,212,255,.03),transparent);}
+.evento .t{color:var(--claro);font-weight:800;font-size:20px;line-height:1.2;margin-bottom:6px;word-break:break-word;letter-spacing:-0.3px;}
+.evento .q{color:var(--ciano);font-size:15px;font-weight:700;margin-bottom:8px;letter-spacing:-0.2px;}
+.evento .d{color:var(--muted);font-size:14px;line-height:1.5;}
+.eventoImg{width:50%;flex-shrink:0;object-fit:contain;cursor:pointer;background:#0a1622;display:block;}
 
 /* Mobile: empilha verticalmente */
 @media (max-width: 520px){
   .promo,.evento{flex-direction:column;min-height:auto;}
-  .promoImg{border-radius:10px 10px 0 0;border-right:none;border-bottom:1px solid rgba(0,212,255,.4);width:100%;height:130px;aspect-ratio:auto;}
-  .eventoImg{border-radius:0 0 10px 10px;border-left:none;border-top:1px solid var(--borda);width:100%;height:130px;aspect-ratio:auto;}
-  .promoInfo,.eventoInfo{padding:14px 16px;}
-  .promo .t,.evento .t{font-size:16px;}
-  .promo .d{font-size:13px;}
-  .evento .q{font-size:13px;}
+  .promoImg,.eventoImg{width:100%;height:160px;aspect-ratio:auto;}
+  .promoInfo,.eventoInfo{width:100%;padding:16px 20px;}
+  .promo .t,.evento .t{font-size:18px;}
+  .promo .d{font-size:14px;}
+  .evento .q{font-size:14px;}
   .evento .d{font-size:13px;}
 }
   .catGrade{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:2px;}
-  .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;}
+  .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:14px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;box-shadow:0 4px 18px rgba(0,0,0,.25);}
   .catCardTop{padding:9px 11px 8px;}
   .catCardNome{display:block;color:#fff;font-weight:700;font-size:14px;line-height:1.2;}
   .catCardQtd{display:block;color:#9fb4cc;font-size:11.5px;margin-top:2px;}
@@ -304,12 +306,12 @@
   }
   function htmlPromos(promos){
     let h='';
-    promos.forEach(p=>{h+='<div class="promo">'+(fotoOk(p.imagem)?'<img class="promoImg" src="'+esc(p.imagem)+'" onclick="abrirStory(this.src)" alt="imagem da promoção" loading="lazy">':'')+'<div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';});
+    promos.forEach(p=>{h+='<div class="cardMoldura promo">'+(fotoOk(p.imagem)?'<img class="promoImg" src="'+esc(p.imagem)+'" onclick="abrirStory(this.src)" alt="imagem da promoção" loading="lazy">':'')+'<div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';});
     return h||'<div class="vazioMod">Sem promoções agora.</div>';
   }
   function htmlEventos(evs){
     let h='';
-    evs.forEach(e=>{h+='<div class="evento"><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>'+(fotoOk(e.imagem)?'<img class="eventoImg" src="'+esc(e.imagem)+'" onclick="abrirStory(this.src)" alt="imagem do evento" loading="lazy">':'')+'</div>';});
+    evs.forEach(e=>{h+='<div class="cardMoldura evento"><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>'+(fotoOk(e.imagem)?'<img class="eventoImg" src="'+esc(e.imagem)+'" onclick="abrirStory(this.src)" alt="imagem do evento" loading="lazy">':'')+'</div>';});
     return h||'<div class="vazioMod">Sem eventos agora.</div>';
   }
 
