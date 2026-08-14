@@ -16,25 +16,26 @@
   html,body{height:100%;}
   body{background:#060f1c;color:var(--claro);}
   .app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:var(--escuro);position:relative;overflow:hidden;}
-  /* Cabeçalho minimalista - marca centralizada + status à direita */
-  .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 4px;flex-shrink:0;gap:8px;}
-  .hdLeft{width:40px;} /* espaço reservado para simetria */
-  .hdCenter{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;pointer-events:none;}
-  .hdRight{display:flex;align-items:center;gap:8px;min-width:40px;justify-content:flex-end;}
-  .hd .lg{display:flex;align-items:center;gap:5px;}
-  .hd .lg svg{width:18px;height:18px;filter:drop-shadow(0 0 5px rgba(0,212,255,.6));}
-  .hd .lg span{font-size:14px;font-weight:700;letter-spacing:-.3px;}
+  /* Cabeçalho */
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:13px 16px 9px;flex-shrink:0;}
+  .hd .lg{display:flex;align-items:center;gap:7px;}
+  .hd .lg svg{width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(0,212,255,.6));}
+  .hd .lg span{font-size:19px;font-weight:700;letter-spacing:-.5px;}
   .hd .lg b{color:var(--ciano);}
-  .statusPill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;}
-  .statusPill.aberto{background:rgba(46,204,113,.16);color:#57e39a;border:1px solid rgba(46,204,113,.4);}
-  .statusPill.fechado{background:rgba(255,120,120,.16);color:#ff9a9a;border:1px solid rgba(255,120,120,.4);}
-  .statusPill .bol{width:6px;height:6px;border-radius:50%;background:currentColor;}
-  /* Botão estrela dourada para avaliar (no balão flutuante) */
-  .mapBtn.star svg{color:#ffc340;}
-  .mapBtn.star:hover svg{color:#ffd700;}
-  /* Hero compacto - apenas nome do negócio */
-  .hero{padding:0 16px 4px;flex-shrink:0;}
-  .hero .nm{font-size:16px;font-weight:600;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .iconBtn{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;display:flex;border-radius:9px;}
+  .iconBtn:hover{color:var(--ciano);}
+  .iconBtn svg{width:21px;height:21px;}
+  /* Hero */
+  .hero{padding:0 16px 8px;flex-shrink:0;}
+  .hero .nm{font-size:19px;font-weight:600;line-height:1.15;}
+  .hero .rw{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;}
+  .pill.aberto{background:rgba(46,204,113,.16);color:#57e39a;border:1px solid rgba(46,204,113,.4);}
+  .pill.fechado{background:rgba(255,120,120,.16);color:#ff9a9a;border:1px solid rgba(255,120,120,.4);}
+  .pill.dist{background:rgba(0,212,255,.12);color:var(--ciano);border:1px solid rgba(0,212,255,.3);}
+  .pill .bol{width:8px;height:8px;border-radius:50%;background:currentColor;}
+  .recado{margin-top:9px;background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.25);border-radius:11px;padding:9px 12px;font-size:13.5px;line-height:1.4;}
+  .recado span{display:block;color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;}
   /* Palco central (telinha que troca) */
   .stage{position:relative;flex:1;min-height:220px;margin:8px 12px 0;border-radius:16px;overflow:hidden;border:1px solid var(--borda);background:#0b1a2e;box-shadow:0 0 30px rgba(0,102,255,.12) inset;}
   .pane{position:absolute;inset:0;display:none;}
@@ -60,55 +61,17 @@
   .lb.on{display:flex;}
   .lb img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 12px 44px rgba(0,0,0,.6);}
   .lb .lbX{position:absolute;top:14px;right:18px;color:#fff;font-size:32px;font-weight:700;line-height:1;background:none;border:none;cursor:pointer;}
-  .lb.story img{max-width:auto;max-height:88vh;height:88vh;width:auto;aspect-ratio:9/16;border-radius:10px;}
   .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
   @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
-  /* ===== MOLDURA BASE (promos, eventos, cardapio) ===== */
-.cardMoldura{background:var(--card);border:1px solid var(--borda);border-radius:14px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.25);margin-bottom:12px;}
-
-/* ===== PROMOCOES: imagem ESQUERDA 50% (altura total), texto DIREITA ===== */
-.promo{display:flex;min-height:140px;}
-.promoImg{width:50%;flex-shrink:0;object-fit:contain;cursor:pointer;background:#0a1622;display:block;}
-.promoInfo{width:50%;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;min-width:0;background:linear-gradient(180deg,rgba(0,212,255,.03),transparent);}
-.promo .t{color:var(--claro);font-weight:800;font-size:20px;line-height:1.2;margin-bottom:8px;word-break:break-word;letter-spacing:-0.3px;}
-.promo .d{color:#b9d6f0;font-size:15px;line-height:1.5;}
-
-/* ===== EVENTOS: texto ESQUERDA 50%, imagem DIREITA 50% (altura total) ===== */
-.evento{display:flex;min-height:140px;}
-.eventoInfo{width:50%;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;min-width:0;background:linear-gradient(180deg,rgba(0,212,255,.03),transparent);}
-.evento .t{color:var(--claro);font-weight:800;font-size:20px;line-height:1.2;margin-bottom:6px;word-break:break-word;letter-spacing:-0.3px;}
-.evento .q{color:var(--ciano);font-size:15px;font-weight:700;margin-bottom:8px;letter-spacing:-0.2px;}
-.evento .d{color:var(--muted);font-size:14px;line-height:1.5;}
-.eventoImg{width:50%;flex-shrink:0;object-fit:contain;cursor:pointer;background:#0a1622;display:block;}
-
-/* Mobile: empilha verticalmente - layout corrigido */
-@media (max-width: 520px){
-  .promo,.evento{flex-direction:column;min-height:auto;}
-  .promoImg,.eventoImg{width:100%;height:180px;aspect-ratio:auto;}
-  .promoInfo,.eventoInfo{width:100%;padding:14px 18px;}
-  .promo .t,.evento .t{font-size:17px;}
-  .promo .d{font-size:13.5px;}
-  .evento .q{font-size:13.5px;}
-  .evento .d{font-size:12.5px;}
-  /* Ordem HTML já está correta: Promos img primeiro (cima), Eventos info primeiro (baixo) */
-  /* Header mobile - mais compacto */
-  .hd{padding:5px 10px 3px;}
-  .hd .lg span{font-size:13px;}
-  .hd .lg svg{width:16px;height:16px;}
-  .statusPill{font-size:10px;padding:2px 7px;}
-  .pillDist{font-size:9.5px;padding:2px 6px;}
-  .hero .nm{font-size:15px;}
-  /* Balões flutuantes no mapa - mobile */
-  .mapOverlayBtns{top:105px;right:10px;gap:6px;}
-  .mapOverlayBtns .mapBtn{width:38px;height:38px;}
-  .mapOverlayBtns .mapBtn svg{width:18px;height:18px;}
-  /* CTA row mobile - botões menores */
-  .ctaRow{margin:9px 10px 0;gap:6px;}
-  .cta{font-size:14px;padding:11px;gap:6px;}
-  .cta svg{width:17px;height:17px;}
-}
+  .promo{background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
+  .promo .t{color:var(--claro);font-weight:600;font-size:15px;margin-bottom:3px;}
+  .promo .d{color:#a9c0dd;font-size:13px;}
+  .evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:13px;margin-bottom:10px;}
+  .evento .t{color:var(--claro);font-weight:600;font-size:15px;}
+  .evento .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
+  .evento .d{color:var(--muted);font-size:13px;}
   .catGrade{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:2px;}
-  .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:14px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;box-shadow:0 4px 18px rgba(0,0,0,.25);}
+  .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;}
   .catCardTop{padding:9px 11px 8px;}
   .catCardNome{display:block;color:#fff;font-weight:700;font-size:14px;line-height:1.2;}
   .catCardQtd{display:block;color:#9fb4cc;font-size:11.5px;margin-top:2px;}
@@ -122,12 +85,9 @@
   .btnLocal{position:absolute;right:12px;bottom:12px;z-index:600;width:44px;height:44px;border-radius:50%;background:rgba(19,38,61,.96);border:1px solid var(--borda);color:var(--ciano);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;}
   .btnLocal:hover{border-color:var(--ciano);}
   .btnLocal svg{width:22px;height:22px;}
-  /* CTA 50/50: WhatsApp + Chegar */
-  .ctaRow{flex-shrink:0;margin:11px 12px 0;display:flex;gap:8px;}
-  .cta{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:12px;box-shadow:0 8px 22px rgba(0,102,255,.35);}
+  /* CTA */
+  .cta{flex-shrink:0;margin:11px 12px 0;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:linear-gradient(135deg,var(--ciano),var(--azul));color:#04121f;font-weight:700;font-size:15px;padding:13px;border-radius:12px;box-shadow:0 8px 22px rgba(0,102,255,.35);}
   .cta svg{width:19px;height:19px;}
-  .ctaWpp{background:linear-gradient(135deg,#25D366,#128C4B)!important;box-shadow:0 8px 22px rgba(37,211,102,.35)!important;}
-  .ctaRota{background:linear-gradient(135deg,var(--ciano),var(--azul))!important;box-shadow:0 8px 22px rgba(0,102,255,.35)!important;}
   /* Crédito discreto */
   .credit{flex-shrink:0;text-align:center;font-size:10px;color:#54708f;margin:9px 0 8px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;}
   .credit svg{width:11px;height:11px;opacity:.7;}
@@ -140,12 +100,6 @@
   .leaflet-control-zoom{border:none!important;box-shadow:0 6px 18px rgba(0,0,0,.4);border-radius:12px!important;overflow:hidden;margin:12px!important;}
   .leaflet-control-zoom a{background:rgba(19,38,61,.96)!important;color:var(--ciano)!important;border-bottom:1px solid var(--borda)!important;width:40px;height:40px;line-height:38px;font-size:20px;font-weight:700;}
   .leaflet-control-zoom a:hover{background:#1b3253!important;}
-
-  /* Balões flutuantes no mapa (mesmo estilo dos controles de zoom) - ficam ABAIXO do zoom */
-  .mapOverlayBtns{position:absolute;top:110px;right:12px;z-index:600;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
-  .mapOverlayBtns .mapBtn{pointer-events:auto;width:40px;height:40px;border-radius:50%;background:rgba(19,38,61,.96);border:1px solid var(--borda);color:var(--ciano);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:background .15s,border-color .15s;}
-  .mapOverlayBtns .mapBtn:hover{background:#1b3253;border-color:var(--ciano);}
-  .mapOverlayBtns .mapBtn svg{width:20px;height:20px;}
   .pin{filter:drop-shadow(0 0 6px rgba(0,212,255,.7));}
   .plWrap{position:relative;width:46px;height:46px}
   .plImg{width:46px;height:46px;border-radius:50%;object-fit:cover;border:3px solid #00D4FF;background:#0A1524;box-shadow:0 0 6px rgba(0,212,255,.7);display:block}
@@ -158,6 +112,16 @@
   .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
   .escondido{display:none !important;}
 
+  .ratingChip{display:inline-flex;align-items:center;gap:5px;margin-top:7px;font-size:13px;color:#cfe0f5;}
+  .ratingChip .stars{display:inline-flex;gap:1px;color:#ffc340;}
+  .ratingChip .stars svg{width:13px;height:13px;flex-shrink:0;}
+  .ratingChip .stars svg.empty{color:#64748b;fill:none;stroke:currentColor;stroke-width:1.5;}
+  .ratingChip .stars svg.full{fill:currentColor;stroke:none;}
+  .ratingChip b{color:#fff;}
+  .acoes{display:flex;gap:8px;margin-top:11px;}
+  .acoes button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--card);border:1px solid var(--borda);color:#cfe0f5;font-family:inherit;font-weight:600;font-size:13px;padding:9px 6px;border-radius:11px;cursor:pointer;}
+  .acoes button:hover{border-color:var(--ciano);color:var(--ciano);}
+  .acoes button svg{width:15px;height:15px;flex:0 0 auto;}
   .ctaWpp{background:linear-gradient(135deg,#25D366,#128C4B)!important;color:#fff!important;box-shadow:0 8px 22px rgba(37,211,102,.35)!important;}
   .modalAv{position:fixed;inset:0;background:rgba(4,10,20,.72);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;}
   .mavBox{background:var(--card);border:1px solid var(--borda);border-radius:18px;padding:24px 20px;width:100%;max-width:360px;position:relative;}
@@ -175,34 +139,31 @@
 <div class="app">
 
   <div class="hd">
-    <div class="hdLeft"></div>
-    <div class="hdCenter">
-      <div class="lg">
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
-        <span>movi<b>ki</b></span>
-      </div>
+    <div class="lg">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
+      <span>movi<b>ki</b></span>
     </div>
-    <div class="hdRight">
-      <span class="statusPill" id="statusPill"></span>
-    </div>
+    <button class="iconBtn" id="btnShare" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+    </button>
   </div>
 
   <div class="hero">
     <div class="nm" id="nome">—</div>
+    <div class="rw" id="statusRow"></div>
+    <div class="ratingChip escondido" id="ratingChip"></div>
+    <div class="acoes" id="acoes">
+      <button type="button" onclick="abrirAvaliar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 22l-5.2-2.9 1-5.8L3.5 9.2l5.9-.9z"/></svg>Avaliar</button>
+      <button type="button" onclick="compartilhar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Compartilhar</button>
+      <button type="button" onclick="chegar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10"/></svg>Chegar</button>
+    </div>
+    <div class="recado escondido" id="recadoBox"><span>Recado do dia</span><div id="recado"></div></div>
   </div>
 
   <div class="stage" id="stage">
     <div class="pane on" id="pane-mapa">
       <div id="map"></div>
       <div class="maphint">use dois dedos pra aproximar</div>
-      <div class="mapOverlayBtns">
-        <button class="mapBtn" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
-        </button>
-        <button class="mapBtn star" onclick="abrirAvaliar()" title="Avaliar" aria-label="Avaliar">
-          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 22l-5.2-2.9 1-5.8L3.5 9.2l5.9-.9z"/></svg>
-        </button>
-      </div>
       <button class="btnLocal" onclick="localizarme()" title="Ver minha localização" aria-label="Ver minha localização">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
       </button>
@@ -213,16 +174,15 @@
     <div class="pane scroll" id="pane-fotos"></div>
   </div>
 
-  <div class="ctaRow">
-    <a class="cta ctaWpp escondido" id="btnWpp" href="#" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.24.68-1.4 1.3-1.94 1.35-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.15-.2-1.19-1.58-1.19-3.01s.75-2.14 1.02-2.43c.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.51-.1.2-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.02 1.12.99 2.06 1.3 2.35 1.45.29.14.46.12.63-.07.17-.2.72-.84.91-1.13.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
-      Chamar no WhatsApp
-    </a>
-    <a class="cta ctaRota escondido" id="btnRota" href="#" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10m0 0L9 5"/></svg>
-      Como chegar
-    </a>
-  </div>
+  <a class="cta escondido" id="btnRota" href="#" target="_blank" rel="noopener" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10m0 0L9 5"/></svg>
+    Como chegar
+  </a>
+
+  <a class="cta ctaWpp escondido" id="btnWpp" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.24.68-1.4 1.3-1.94 1.35-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.66-.61-2.92-1.26-4.83-4.2-4.98-4.4-.15-.2-1.19-1.58-1.19-3.01s.75-2.14 1.02-2.43c.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.51-.1.2-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.29.76 1.25 1.63 2.02 1.12.99 2.06 1.3 2.35 1.45.29.14.46.12.63-.07.17-.2.72-.84.91-1.13.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.14.48.22.55.34.07.12.07.68-.17 1.36z"/></svg>
+    Chamar no WhatsApp
+  </a>
 
   <a class="credit" href="https://moviki.com.br" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
@@ -244,7 +204,7 @@
     <button class="mavX" onclick="fecharAvaliar()" aria-label="Fechar">✕</button>
     <h3>Deixe sua avaliação</h3>
     <div class="estrelasPick" id="estrelasPick">
-      <span class="stp" onclick="pickNota(1)">★</span><span class="stp" onclick="pickNota(2)">★</span><span class="stp" onclick="pickNota(3)">★</span><span class="stp" onclick="pickNota(4)">★</span><span class="stp" onclick="pickNota(5)">★</span>
+      <span class="stp" onclick="pickNota(1)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg></span><span class="stp" onclick="pickNota(2)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg></span><span class="stp" onclick="pickNota(3)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg></span><span class="stp" onclick="pickNota(4)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg></span><span class="stp" onclick="pickNota(5)"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg></span>
     </div>
     <input id="avNome" type="text" placeholder="Seu nome (opcional)" maxlength="40" autocomplete="name">
     <textarea id="avComent" rows="3" placeholder="Conte como foi (opcional)" maxlength="300"></textarea>
@@ -327,12 +287,12 @@
   }
   function htmlPromos(promos){
     let h='';
-    promos.forEach(p=>{h+='<div class="cardMoldura promo">'+(fotoOk(p.imagem)?'<img class="promoImg" src="'+esc(p.imagem)+'" onclick="abrirStory(this.src)" alt="imagem da promoção" loading="lazy">':'')+'<div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';});
+    promos.forEach(p=>{h+='<div class="promo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div>';});
     return h||'<div class="vazioMod">Sem promoções agora.</div>';
   }
   function htmlEventos(evs){
     let h='';
-    evs.forEach(e=>{h+='<div class="cardMoldura evento"><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>'+(fotoOk(e.imagem)?'<img class="eventoImg" src="'+esc(e.imagem)+'" onclick="abrirStory(this.src)" alt="imagem do evento" loading="lazy">':'')+'</div>';});
+    evs.forEach(e=>{h+='<div class="evento"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>';});
     return h||'<div class="vazioMod">Sem eventos agora.</div>';
   }
 
@@ -394,17 +354,24 @@
     const url=window.location.href;
     const titulo=(el('nome').textContent||'Moviki');
     try{ if(navigator.share){await navigator.share({title:titulo,url});return;} }catch(e){return;}
-    try{ await navigator.clipboard.writeText(url); }catch(e){}
+    try{ await navigator.clipboard.writeText(url); const b=el('btnShare'); b.style.color='#57e39a'; setTimeout(()=>b.style.color='',1500); }catch(e){}
   };
 
-  /* ---- avaliações (estrelas públicas) - removido do header, mantido só o modal ---- */
+  /* ---- avaliações (estrelas públicas) ---- */
   async function carregarAvaliacoesPub(uid){
-    // Chip de avaliação removido do header - agora só abre o modal
+    const chip=el('ratingChip');
     try{
       const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
       let n=0,soma=0;qs.forEach(dd=>{const r=Number(dd.data().nota||0);if(r>=1&&r<=5){n++;soma+=r;}});
-      // Sem chip visual no header
-    }catch(e){}
+      if(n>0){const m=soma/n,c=Math.round(m);
+        const estrelaCheia='<svg class="full" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg>';
+        const estrelaVazia='<svg class="empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.26-.36L12 2z"/></svg>';
+        let starsHtml='';
+        for(let i=1;i<=5;i++) starsHtml+= (i<=c ? estrelaCheia : estrelaVazia);
+        chip.innerHTML='<span class="stars">'+starsHtml+'</span> <b>'+m.toFixed(1).replace('.',',')+'</b> · '+n+' avaliação'+(n>1?'ões':'');
+        chip.classList.remove('escondido');
+      }else{chip.classList.add('escondido');}
+    }catch(e){chip.classList.add('escondido');}
   }
   window.abrirAvaliar=function(){el('modalAv').classList.remove('escondido');};
   window.fecharAvaliar=function(){el('modalAv').classList.add('escondido');};
@@ -442,9 +409,8 @@
   function liberaFotos(){return planoAtual==='premium'||planoAtual==='enterprise'||periodoAtual==='trial';}
   function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
   window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;var capa=card.querySelector('.fotoCapa img');if(capa)capa.src=mini.src;card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
-  window.abrirFoto=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on');lb.classList.remove('story');};
+  window.abrirFoto=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on');};
   window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
-  window.abrirStory=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on','story');};
   function iconePara(d){
     if(liberaLogoPino() && d && d.markerLogo){
       return L.divIcon({className:'pin plPin',html:'<div class="plWrap"><img class="plImg" src="'+d.markerLogo+'" referrerpolicy="no-referrer" alt=""><span class="plTip"></span></div>',iconSize:[46,54],iconAnchor:[23,54],popupAnchor:[0,-50]});
@@ -464,7 +430,7 @@
     const km=distanciaKm(p,negocioPos);
     const txt=km<1?Math.round(km*1000)+' m de você':km.toFixed(1).replace('.',',')+' km de você';
     let pill=el('distPill');
-    if(!pill){pill=document.createElement('span');pill.id='distPill';pill.className='pillDist';el('hdRight').appendChild(pill);}
+    if(!pill){pill=document.createElement('span');pill.id='distPill';pill.className='pill dist';el('statusRow').appendChild(pill);}
     pill.innerHTML='<span class="bol" style="width:0"></span>a '+txt;
   }
 
@@ -487,10 +453,10 @@
       const d=snap.data();
       el('nome').textContent=d.nome||'Negócio';
       const aberto=d.status==='aberto';
-      el('statusPill').innerHTML='<span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento');
-      el('statusPill').className='statusPill '+(aberto?'aberto':'fechado');
+      el('statusRow').innerHTML='<span class="pill '+(aberto?'aberto':'fechado')+'"><span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
       const wpp=(d.whatsapp||'').replace(/\D/g,'');const bw=el('btnWpp');
       if(wpp){bw.href='https://wa.me/55'+wpp;bw.classList.remove('escondido');}else{bw.classList.add('escondido');}
+      if(d.recado&&d.recado.trim()){el('recado').textContent=d.recado;el('recadoBox').classList.remove('escondido');}else{el('recadoBox').classList.add('escondido');}
       montarNav(d);
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
         esconderTela();
