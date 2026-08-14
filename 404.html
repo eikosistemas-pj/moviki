@@ -63,13 +63,21 @@
   .lb .lbX{position:absolute;top:14px;right:18px;color:#fff;font-size:32px;font-weight:700;line-height:1;background:none;border:none;cursor:pointer;}
   .acabando{background:#ff3b3b;color:#fff;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;animation:pisca 1s infinite;white-space:nowrap;}
   @keyframes pisca{0%,100%{opacity:1;}50%{opacity:.25;}}
-  .promo{background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.35);border-radius:12px;padding:13px;margin-bottom:10px;}
-  .promo .t{color:var(--claro);font-weight:600;font-size:15px;margin-bottom:3px;}
-  .promo .d{color:#a9c0dd;font-size:13px;}
-  .evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:13px;margin-bottom:10px;}
-  .evento .t{color:var(--claro);font-weight:600;font-size:15px;}
-  .evento .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
-  .evento .d{color:var(--muted);font-size:13px;}
+  .promo{background:var(--card);border:1px solid var(--borda);border-radius:12px;overflow:hidden;margin-bottom:10px;}
+  .promoComCapa{display:flex;flex-direction:row;}
+  .promoCapa{width:48%;max-width:180px;aspect-ratio:16/9;background:#0a1622;overflow:hidden;flex-shrink:0;border-radius:12px 0 0 12px;}
+  .promoCapa img{width:100%;height:100%;object-fit:cover;display:block;}
+  .promoInfo{padding:13px;display:flex;flex-direction:column;justify-content:center;}
+  .promoInfo .t{color:var(--claro);font-weight:600;font-size:15px;margin-bottom:3px;}
+  .promoInfo .d{color:#a9c0dd;font-size:13px;}
+  .evento{background:var(--card);border:1px solid var(--borda);border-radius:12px;overflow:hidden;margin-bottom:10px;}
+  .eventoComCapa{display:flex;flex-direction:row-reverse;}
+  .eventoCapa{width:48%;max-width:180px;aspect-ratio:16/9;background:#0a1622;overflow:hidden;flex-shrink:0;border-radius:0 12px 12px 0;}
+  .eventoCapa img{width:100%;height:100%;object-fit:cover;display:block;}
+  .eventoInfo{padding:13px;display:flex;flex-direction:column;justify-content:center;}
+  .eventoInfo .t{color:var(--claro);font-weight:600;font-size:15px;}
+  .eventoInfo .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
+  .eventoInfo .d{color:var(--muted);font-size:13px;}
   .catGrade{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:2px;}
   .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;}
   .catCardTop{padding:9px 11px 8px;}
@@ -287,12 +295,26 @@
   }
   function htmlPromos(promos){
     let h='';
-    promos.forEach(p=>{h+='<div class="promo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div>';});
+    promos.forEach(p=>{
+      const temCapa=fotoOk(p.capa);
+      if(temCapa){
+        h+='<div class="promo promoComCapa"><div class="promoCapa"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo||'promo')+'" loading="lazy" decoding="async"></div><div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';
+      }else{
+        h+='<div class="promo"><div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';
+      }
+    });
     return h||'<div class="vazioMod">Sem promoções agora.</div>';
   }
   function htmlEventos(evs){
     let h='';
-    evs.forEach(e=>{h+='<div class="evento"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>';});
+    evs.forEach(e=>{
+      const temCapa=fotoOk(e.capa);
+      if(temCapa){
+        h+='<div class="evento eventoComCapa"><div class="eventoCapa"><img src="'+esc(e.capa)+'" alt="'+esc(e.titulo||'evento')+'" loading="lazy" decoding="async"></div><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div></div>';
+      }else{
+        h+='<div class="evento"><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div></div>';
+      }
+    });
     return h||'<div class="vazioMod">Sem eventos agora.</div>';
   }
 
