@@ -16,8 +16,11 @@
   html,body{height:100%;}
   body{background:#060f1c;color:var(--claro);}
   .app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:var(--escuro);position:relative;overflow:hidden;}
-  /* Cabeçalho minimalista - apenas marca centralizada + status */
-  .hd{display:flex;align-items:center;justify-content:center;padding:6px 12px 4px;flex-shrink:0;gap:8px;position:relative;}
+  /* Cabeçalho minimalista - marca centralizada + status à direita */
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 4px;flex-shrink:0;gap:8px;}
+  .hdLeft{width:40px;} /* espaço reservado para simetria */
+  .hdCenter{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;pointer-events:none;}
+  .hdRight{display:flex;align-items:center;gap:8px;min-width:40px;justify-content:flex-end;}
   .hd .lg{display:flex;align-items:center;gap:5px;}
   .hd .lg svg{width:18px;height:18px;filter:drop-shadow(0 0 5px rgba(0,212,255,.6));}
   .hd .lg span{font-size:14px;font-weight:700;letter-spacing:-.3px;}
@@ -26,6 +29,9 @@
   .statusPill.aberto{background:rgba(46,204,113,.16);color:#57e39a;border:1px solid rgba(46,204,113,.4);}
   .statusPill.fechado{background:rgba(255,120,120,.16);color:#ff9a9a;border:1px solid rgba(255,120,120,.4);}
   .statusPill .bol{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  /* Botão estrela dourada para avaliar (no balão flutuante) */
+  .mapBtn.star svg{color:#ffc340;}
+  .mapBtn.star:hover svg{color:#ffd700;}
   /* Hero compacto - apenas nome do negócio */
   .hero{padding:0 16px 4px;flex-shrink:0;}
   .hero .nm{font-size:16px;font-weight:600;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -84,6 +90,7 @@
   .promo .d{font-size:13.5px;}
   .evento .q{font-size:13.5px;}
   .evento .d{font-size:12.5px;}
+  /* Ordem HTML já está correta: Promos img primeiro (cima), Eventos info primeiro (baixo) */
   /* Header mobile - mais compacto */
   .hd{padding:5px 10px 3px;}
   .hd .lg span{font-size:13px;}
@@ -168,11 +175,16 @@
 <div class="app">
 
   <div class="hd">
-    <div class="lg">
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
-      <span>movi<b>ki</b></span>
+    <div class="hdLeft"></div>
+    <div class="hdCenter">
+      <div class="lg">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
+        <span>movi<b>ki</b></span>
+      </div>
     </div>
-    <span class="statusPill" id="statusPill"></span>
+    <div class="hdRight">
+      <span class="statusPill" id="statusPill"></span>
+    </div>
   </div>
 
   <div class="hero">
@@ -187,8 +199,8 @@
         <button class="mapBtn" onclick="compartilhar()" title="Compartilhar" aria-label="Compartilhar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
         </button>
-        <button class="mapBtn" onclick="chegar()" title="Como chegar" aria-label="Como chegar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.5 2.5v-15L9 5m0 15l6-2.5M9 20V5m6 12.5L20.5 20v-15L15 7.5m0 10v-10"/></svg>
+        <button class="mapBtn star" onclick="abrirAvaliar()" title="Avaliar" aria-label="Avaliar">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 22l-5.2-2.9 1-5.8L3.5 9.2l5.9-.9z"/></svg>
         </button>
       </div>
       <button class="btnLocal" onclick="localizarme()" title="Ver minha localização" aria-label="Ver minha localização">
@@ -452,7 +464,7 @@
     const km=distanciaKm(p,negocioPos);
     const txt=km<1?Math.round(km*1000)+' m de você':km.toFixed(1).replace('.',',')+' km de você';
     let pill=el('distPill');
-    if(!pill){pill=document.createElement('span');pill.id='distPill';pill.className='pillDist';el('hd').appendChild(pill);}
+    if(!pill){pill=document.createElement('span');pill.id='distPill';pill.className='pillDist';el('hdRight').appendChild(pill);}
     pill.innerHTML='<span class="bol" style="width:0"></span>a '+txt;
   }
 
