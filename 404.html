@@ -78,6 +78,11 @@
   .eventoInfo .t{color:var(--claro);font-weight:600;font-size:15px;}
   .eventoInfo .q{color:var(--ciano);font-size:13px;font-weight:600;margin:3px 0;}
   .eventoInfo .d{color:var(--muted);font-size:13px;}
+  .promoBox,.eventoBox{margin-bottom:12px;}
+  .promoBox .promo,.eventoBox .evento{margin-bottom:0;}
+  .promoCapa img,.eventoCapa img{cursor:zoom-in;}
+  .verMidia{display:block;width:100%;margin-top:7px;background:rgba(0,212,255,.1);border:1px solid var(--ciano);color:var(--ciano);border-radius:9px;padding:10px 12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .verMidia:hover{background:rgba(0,212,255,.2);}
   .catGrade{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:2px;}
   .catCard{display:flex;flex-direction:column;border:1px solid var(--borda);border-radius:12px;overflow:hidden;cursor:pointer;padding:0;background:var(--card);font-family:inherit;text-align:left;}
   .catCardTop{padding:9px 11px 8px;}
@@ -298,7 +303,7 @@
     promos.forEach(p=>{
       const temCapa=fotoOk(p.capa);
       if(temCapa){
-        h+='<div class="promo promoComCapa"><div class="promoCapa"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo||'promo')+'" loading="lazy" decoding="async"></div><div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';
+        h+='<div class="promoBox"><div class="promo promoComCapa"><div class="promoCapa"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo||'promo')+'" loading="lazy" decoding="async" onclick="abrirFoto(this.src)"></div><div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div><button class="verMidia" type="button" onclick="verMidia(this)">Ver promoção</button></div>';
       }else{
         h+='<div class="promo"><div class="promoInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div></div>';
       }
@@ -310,7 +315,7 @@
     evs.forEach(e=>{
       const temCapa=fotoOk(e.capa);
       if(temCapa){
-        h+='<div class="evento eventoComCapa"><div class="eventoCapa"><img src="'+esc(e.capa)+'" alt="'+esc(e.titulo||'evento')+'" loading="lazy" decoding="async"></div><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div></div>';
+        h+='<div class="eventoBox"><div class="evento eventoComCapa"><div class="eventoCapa"><img src="'+esc(e.capa)+'" alt="'+esc(e.titulo||'evento')+'" loading="lazy" decoding="async" onclick="abrirFoto(this.src)"></div><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div></div><button class="verMidia" type="button" onclick="verMidia(this)">Ver evento</button></div>';
       }else{
         h+='<div class="evento"><div class="eventoInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div></div>';
       }
@@ -432,6 +437,7 @@
   function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
   window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;var capa=card.querySelector('.fotoCapa img');if(capa)capa.src=mini.src;card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
   window.abrirFoto=function(src){var lb=el('lb');if(!lb)return;lb.querySelector('img').src=src;lb.classList.add('on');};
+  window.verMidia=function(btn){var box=btn.closest('.promoBox,.eventoBox');if(!box)return;var im=box.querySelector('.promoCapa img,.eventoCapa img');if(im)abrirFoto(im.src);};
   window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
   function iconePara(d){
     if(liberaLogoPino() && d && d.markerLogo){
