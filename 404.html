@@ -349,7 +349,7 @@
   /* ---- plano / gating ---- */
   let planoAtual='basico';
   let periodoAtual='';
-  function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium';}
+  function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium'||planoAtual==='enterprise';}
   async function carregarPlano(uid){
     try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;
       const ok=d&&d.ativo===true&&(!d.vence_em||d.vence_em.toMillis()>Date.now());
