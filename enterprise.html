@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Moviki Enterprise — vários pontos, um só painel</title>
+<meta name="description" content="Gerencie vários carrinhos, food trucks ou unidades no mapa, com um cadastro só. Relatórios consolidados e suporte prioritário.">
+<link rel="icon" href="/favicon512.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ciano:#00D4FF;--azul:#0066FF;--bg:#050b14;--card:#0b1728;--borda:#183149;--txt:#e6eefb;--sub:#93a9c7}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--txt);line-height:1.55;overflow-x:hidden}
+  a{text-decoration:none}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  .btn{display:inline-block;font-weight:700;border-radius:12px;padding:15px 28px;font-size:16px}
+  .btn-prim{background:linear-gradient(135deg,var(--azul),var(--ciano));color:#031018;box-shadow:0 10px 30px rgba(0,212,255,.25)}
+  .btn-ghost{border:1.5px solid var(--ciano);color:var(--ciano)}
+  header{padding:22px 0;position:relative;z-index:2}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  header img{height:30px}
+  .badge{font-size:12px;font-weight:700;color:var(--ciano);border:1px solid var(--ciano);border-radius:999px;padding:5px 12px;letter-spacing:.5px}
+  /* hero */
+  .hero{position:relative;padding:56px 0 40px;text-align:center;overflow:hidden}
+  .hero::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(0,102,255,.22),transparent 60%);z-index:0}
+  .hero .wrap{position:relative;z-index:1}
+  .hero h1{font-size:40px;font-weight:800;line-height:1.15;margin-bottom:16px}
+  .hero h1 span{background:linear-gradient(135deg,var(--ciano),var(--azul));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{font-size:18px;color:var(--sub);max-width:620px;margin:0 auto 30px}
+  .hero .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  /* seções */
+  section{padding:44px 0}
+  h2{font-size:28px;font-weight:700;text-align:center;margin-bottom:10px}
+  .lead{color:var(--sub);text-align:center;max-width:640px;margin:0 auto 34px;font-size:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:24px}
+  .card .ico{font-size:26px;margin-bottom:10px}
+  .card h3{font-size:17px;font-weight:700;margin-bottom:6px}
+  .card p{color:var(--sub);font-size:14.5px}
+  /* preço */
+  .preco{background:linear-gradient(135deg,#08172b,#0a2038);border:1px solid var(--borda);border-radius:22px;padding:38px 28px;text-align:center;max-width:560px;margin:0 auto}
+  .preco .val{font-size:46px;font-weight:800;color:var(--ciano);line-height:1}
+  .preco .val small{font-size:17px;color:var(--sub);font-weight:500}
+  .preco .inc{color:var(--txt);margin:12px 0 4px;font-weight:600}
+  .preco .extra{color:var(--sub);font-size:14.5px;margin-bottom:24px}
+  .preco .extra b{color:var(--txt)}
+  .listas{text-align:left;max-width:420px;margin:0 auto 26px}
+  .listas li{list-style:none;padding:8px 0 8px 30px;position:relative;color:var(--txt);font-size:15px;border-bottom:1px solid rgba(255,255,255,.05)}
+  .listas li::before{content:"✓";position:absolute;left:0;color:var(--ciano);font-weight:800}
+  /* pra quem */
+  .quem{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .quem div{background:var(--card);border:1px solid var(--borda);border-radius:14px;padding:18px;text-align:center}
+  .quem .e{font-size:28px;display:block;margin-bottom:6px}
+  .quem p{font-size:14px;color:var(--sub)}
+  /* cta final */
+  .final{text-align:center;background:linear-gradient(135deg,rgba(0,102,255,.12),rgba(0,212,255,.08));border:1px solid var(--borda);border-radius:22px;padding:44px 24px;margin:20px 0}
+  .final h2{margin-bottom:8px}
+  .final p{color:var(--sub);margin-bottom:24px}
+  .final .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  footer{padding:30px 0 44px;text-align:center;color:var(--sub);font-size:13px;border-top:1px solid var(--borda);margin-top:20px}
+  footer a{color:var(--ciano)}
+  @media(max-width:600px){.hero h1{font-size:31px}.hero p{font-size:16px}h2{font-size:24px}.preco .val{font-size:38px}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <img src="/logo.png" alt="Moviki" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'moviki',style:'font-weight:800;font-size:22px;color:#fff'}))">
+  <span class="badge">ENTERPRISE</span>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <h1>Vários pontos no mapa.<br><span>Um só painel.</span></h1>
+  <p>Tem mais de um carrinho, food truck ou unidade? Com o Moviki Enterprise você gerencia todos num cadastro só — cada um com sua localização e seu link próprios.</p>
+  <div class="ctas">
+    <a class="btn btn-prim" href="https://app.moviki.com.br">Assinar agora</a>
+    <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Moviki%20Enterprise%20(v%C3%A1rios%20pontos)." target="_blank" rel="noopener">Falar com a gente</a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Feito pra quem cresceu</h2>
+  <p class="lead">O Enterprise reúne tudo do Premium e adiciona o que uma operação com vários pontos precisa.</p>
+  <div class="grid">
+    <div class="card"><div class="ico">📍</div><h3>Vários pontos no mapa</h3><p>Cada carrinho ou unidade aparece na sua própria localização, com link exclusivo pra divulgar.</p></div>
+    <div class="card"><div class="ico">🎯</div><h3>Localização por endereço ou GPS</h3><p>Cadastre cada ponto digitando o endereço (com sugestões automáticas) ou usando o GPS na hora.</p></div>
+    <div class="card"><div class="ico">🏷️</div><h3>Sua marca no pino</h3><p>Sua logo aparece no marcador do mapa, dando destaque e identidade a cada ponto.</p></div>
+    <div class="card"><div class="ico">📊</div><h3>Relatórios consolidados</h3><p>Acompanhe seus pontos reunidos, com uma visão geral da sua operação.</p></div>
+    <div class="card"><div class="ico">⚡</div><h3>Suporte prioritário</h3><p>Atendimento direto com a gente pra resolver rápido o que você precisar.</p></div>
+    <div class="card"><div class="ico">🔗</div><h3>Um cadastro, tudo junto</h3><p>Cardápio, promoções e eventos ficam num lugar só e valem pra todos os seus pontos.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="preco">
+    <div class="val">R$ 99,90<small>/mês</small></div>
+    <div class="inc">Inclui até 3 pontos no mapa</div>
+    <div class="extra">Cada ponto a mais: <b>R$ 19,90/mês</b> — menos da metade de um plano avulso.</div>
+    <ul class="listas">
+      <li>Tudo do plano Premium</li>
+      <li>Até 3 pontos inclusos (cada um com link próprio)</li>
+      <li>Sua logo no pino do mapa</li>
+      <li>Relatórios consolidados da operação</li>
+      <li>Suporte prioritário no WhatsApp</li>
+    </ul>
+    <a class="btn btn-prim" href="https://app.moviki.com.br">Começar agora</a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Pra quem é</h2>
+  <p class="lead">Se você opera em mais de um lugar, o Enterprise foi feito pra você.</p>
+  <div class="quem">
+    <div><span class="e">🚚</span><p>Frotas de food trucks</p></div>
+    <div><span class="e">🛒</span><p>Vários carrinhos de rua</p></div>
+    <div><span class="e">🍧</span><p>Quiosques em pontos diferentes</p></div>
+    <div><span class="e">🏪</span><p>Pequenas redes e franquias</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="final">
+    <h2>Coloque toda a sua operação no mapa</h2>
+    <p>Assine em minutos ou fale com a gente pra tirar suas dúvidas.</p>
+    <div class="ctas">
+      <a class="btn btn-prim" href="https://app.moviki.com.br">Assinar o Enterprise</a>
+      <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Moviki%20Enterprise." target="_blank" rel="noopener">Falar no WhatsApp</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  Moviki · O mapa inteligente dos negócios em movimento.<br>
+  <a href="https://moviki.com.br">moviki.com.br</a> · <a href="/termos.html">Termos</a> · <a href="/privacidade.html">Privacidade</a>
+</div></footer>
+
+</body>
+</html>
