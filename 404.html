@@ -515,7 +515,7 @@
     el('btnRota').href='https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng;
     el('btnRota').classList.remove('escondido');
     if(!marcador){marcador=L.marker(negocioPos,{icon:iconePara(d)}).addTo(map);map.setView(negocioPos,16);setTimeout(()=>map.invalidateSize(),80);}else{marcador.setLatLng(negocioPos);marcador.setIcon(iconePara(d));}
-    marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>');
+    marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>'+(d&&d.horario?'<br><span style="font-size:12px;color:#555">\ud83d\udd50 '+esc(d.horario)+'</span>':''));
   }
   function semLocal(nome){
     el('btnRota').classList.add('escondido');
@@ -548,7 +548,7 @@
     onSnapshot(doc(db,'pontos',pid),(snap)=>{
       if(!snap.exists()||snap.data().ativo!==true){semLocal(el('nome').textContent);return;}
       const pt=snap.data();
-      if(typeof pt.lat==='number'&&typeof pt.lng==='number'){pintarLocal(pt.lat,pt.lng,{nome:pt.nome||el('nome').textContent,markerLogo:null});}
+      if(typeof pt.lat==='number'&&typeof pt.lng==='number'){pintarLocal(pt.lat,pt.lng,{nome:pt.nome||el('nome').textContent,markerLogo:null,horario:pt.horario||''});}
       else{semLocal(el('nome').textContent);}
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
@@ -560,7 +560,7 @@
     try{
       const qs=await getDocs(query(collection(db,'pontos'),where('ownerUid','==',uid),where('ativo','==',true)));
       const extras=[];
-      qs.forEach(dc=>{const x=dc.data();if(typeof x.lat==='number'&&typeof x.lng==='number')extras.push({nome:x.nome||'Ponto',lat:x.lat,lng:x.lng});});
+      qs.forEach(dc=>{const x=dc.data();if(typeof x.lat==='number'&&typeof x.lng==='number')extras.push({nome:x.nome||'Ponto',lat:x.lat,lng:x.lng,horario:x.horario||''});});
       if(!extras.length)return;
       locais=[{nome:nomePrincipal||'Aqui',lat:latP,lng:lngP}].concat(extras);
       localAtivo=0; renderSeletor();
@@ -575,8 +575,8 @@
   window.selecionarLocal=function(i){
     const l=locais[i]; if(!l||typeof l.lat!=='number'||typeof l.lng!=='number')return;
     localAtivo=i;
-    pintarLocal(l.lat,l.lng,{nome:l.nome,markerLogo:null});
-    if(marcador){marcador.bindPopup('<b>'+esc(l.nome)+'</b>').openPopup();}
+    pintarLocal(l.lat,l.lng,{nome:l.nome,markerLogo:null,horario:l.horario});
+    if(marcador){marcador.openPopup();}
     renderSeletor();
   };
 
