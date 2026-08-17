@@ -576,6 +576,7 @@
     const l=locais[i]; if(!l||typeof l.lat!=='number'||typeof l.lng!=='number')return;
     localAtivo=i;
     pintarLocal(l.lat,l.lng,{nome:l.nome,markerLogo:null,horario:l.horario});
+    map.setView([l.lat,l.lng],Math.max(map.getZoom(),16),{animate:true});
     if(marcador){marcador.openPopup();}
     renderSeletor();
   };
