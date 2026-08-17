@@ -382,7 +382,7 @@
   };
 
   function htmlGaleria(fotos){
-    const lista=(fotos||[]).filter(fotoOk).slice(0,10);
+    const lista=(fotos||[]).filter(fotoOk).slice(0,12);
     if(!lista.length)return '';
     return '<div class="galeria">'+lista.map(function(u){
       return '<div class="galItem"><img src="'+esc(u)+'" alt="foto do negócio" loading="lazy" decoding="async" onclick="abrirFoto(this.src)"></div>';
