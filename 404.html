@@ -514,17 +514,16 @@
     // WHITE-LABEL — só Enterprise, e só se tiver logo válida
     var logoT=document.querySelector('.logoTopo');
     var slog=document.querySelector('.hd .slogan');
-    var cred=document.querySelector('.credit');
+    // OBS: o crédito discreto "feito com moviki" NUNCA é escondido — é a isca de
+    // lojista novo (regra durável: crédito sempre presente na página pública, só discreto).
     if(logoT && !movikiLogoSrc) movikiLogoSrc=logoT.src; // guarda a logo moviki original 1x
     var wl = (planoAtual==='enterprise') && d && d.whiteLabel===true && d.markerLogo && fotoOk(d.markerLogo);
     if(wl){
       if(logoT){logoT.setAttribute('referrerpolicy','no-referrer');logoT.src=d.markerLogo;logoT.style.display='block';logoT.style.maxHeight='42px';logoT.style.width='auto';logoT.style.objectFit='contain';}
       if(slog)slog.style.display='none';
-      if(cred)cred.style.display='none';
     }else{
       if(logoT && movikiLogoSrc){logoT.src=movikiLogoSrc;logoT.style.maxHeight='';logoT.style.width='';logoT.style.objectFit='';} // restaura moviki
       if(slog)slog.style.display='';
-      if(cred)cred.style.display='';
     }
   }
   /* Desenha marca/cardápio (sem mexer na localização) */
