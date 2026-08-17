@@ -60,6 +60,10 @@
   .fotoCapa{width:100%;aspect-ratio:4/3;background:#0a1622;}
   .fotoCapa img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;}
   .itemInfo{display:flex;align-items:center;gap:10px;padding:11px 13px;}
+  .galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 13px 14px;}
+  .galItem{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:1px solid var(--borda);background:#0b1728;}
+  .galItem img{width:100%;height:100%;object-fit:cover;cursor:pointer;display:block;transition:transform .18s;}
+  .galItem img:hover{transform:scale(1.05);}
   .miniFotos{display:flex;gap:7px;padding:0 13px 12px;}
   .miniFotos img{width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--borda);cursor:pointer;opacity:.72;transition:opacity .12s,border-color .12s;}
   .miniFotos img:hover{opacity:1;}
@@ -377,6 +381,13 @@
     if(nome==='mapa'&&map){setTimeout(()=>map.invalidateSize(),60);}
   };
 
+  function htmlGaleria(fotos){
+    const lista=(fotos||[]).filter(fotoOk).slice(0,10);
+    if(!lista.length)return '';
+    return '<div class="galeria">'+lista.map(function(u){
+      return '<div class="galItem"><img src="'+esc(u)+'" alt="foto do negócio" loading="lazy" decoding="async" onclick="abrirFoto(this.src)"></div>';
+    }).join('')+'</div>';
+  }
   function montarNav(d){
     const cardapio=(d.cardapio||[]).filter(c=>c.produtos&&c.produtos.length);
     const promos=(d.promocoes||[]).filter(p=>p.titulo);
@@ -390,7 +401,7 @@
       if(cardapio.length){el('pane-cardapio').innerHTML=htmlCardapio(cardapio,liberaFotos());abas.push({k:'cardapio',lb:'Cardápio'});}
       if(promos.length){el('pane-promocoes').innerHTML=htmlPromos(promos);abas.push({k:'promocoes',lb:'Promoções'});}
       if(eventos.length){el('pane-eventos').innerHTML=htmlEventos(eventos);abas.push({k:'eventos',lb:'Eventos'});}
-      // fotos: reservado pra galeria (liga quando houver dados + storage); mantém pane pronto
+      if(fotos.length&&liberaFotos()){el('pane-fotos').innerHTML=htmlGaleria(fotos);abas.push({k:'fotos',lb:'Fotos'});}
     }
 
     const nav=el('nav');nav.innerHTML='';
