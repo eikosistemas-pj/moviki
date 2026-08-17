@@ -544,7 +544,7 @@
     el('btnRota').href='https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng;
     el('btnRota').classList.remove('escondido');
     if(!marcador){marcador=L.marker(negocioPos,{icon:iconePara(d)}).addTo(map);map.setView(negocioPos,16);setTimeout(()=>map.invalidateSize(),80);}else{marcador.setLatLng(negocioPos);marcador.setIcon(iconePara(d));}
-    marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>'+(d&&d.horario?'<br><span style="font-size:12px;color:#555">\ud83d\udd50 '+esc(d.horario)+'</span>':''));
+    marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>'+(d&&d.horario?'<br><span style="font-size:12px;color:#555">\ud83d\udd50 '+esc(d.horario)+'</span>':''),{autoPan:false});
   }
   function semLocal(nome){
     el('btnRota').classList.add('escondido');
