@@ -353,6 +353,8 @@
   /* ---- plano / gating ---- */
   let planoAtual='basico';
   let periodoAtual='';
+  let corMarca='#00D4FF';
+  let movikiLogoSrc='';
   function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium'||planoAtual==='enterprise';}
   async function carregarPlano(uid){
     try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;
@@ -470,7 +472,10 @@
     if(liberaLogoPino() && d && d.markerLogo){
       return L.divIcon({className:'pin plPin',html:'<div class="plWrap"><img class="plImg" src="'+d.markerLogo+'" referrerpolicy="no-referrer" alt=""><span class="plTip"></span></div>',iconSize:[46,54],iconAnchor:[23,54],popupAnchor:[0,-50]});
     }
-    return icone;
+    return iconePadrao();
+  }
+  function iconePadrao(){
+    return L.divIcon({className:'pin',html:'<svg width="40" height="40" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 60s20-18 20-32A20 20 0 1 0 12 28c0 14 20 32 20 32Z" fill="'+corMarca+'" stroke="#0A1524" stroke-width="2"/><circle cx="32" cy="28" r="7" fill="#0A1524"/></svg>',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-38]});
   }
   let marcador=null, viewerMarker=null, negocioPos=null;
 
@@ -499,8 +504,32 @@
     },(err)=>{alert(err.code===1?'Libere o acesso à sua localização nas permissões do navegador.':'Não consegui pegar sua localização.');},{enableHighAccuracy:true,timeout:10000});
   };
 
+  /* Aplica cor da marca (Premium+) e white-label (Enterprise) na página pública */
+  function aplicarPersonalizacao(d){
+    // COR — só Premium/Enterprise; senão volta ao padrão
+    var cor='#00D4FF';
+    if(liberaLogoPino() && d && typeof d.cor==='string' && /^#[0-9a-fA-F]{6}$/.test(d.cor)) cor=d.cor;
+    corMarca=cor;
+    try{document.documentElement.style.setProperty('--ciano',cor);}catch(_){}
+    // WHITE-LABEL — só Enterprise, e só se tiver logo válida
+    var logoT=document.querySelector('.logoTopo');
+    var slog=document.querySelector('.hd .slogan');
+    var cred=document.querySelector('.credit');
+    if(logoT && !movikiLogoSrc) movikiLogoSrc=logoT.src; // guarda a logo moviki original 1x
+    var wl = (planoAtual==='enterprise') && d && d.whiteLabel===true && d.markerLogo && fotoOk(d.markerLogo);
+    if(wl){
+      if(logoT){logoT.setAttribute('referrerpolicy','no-referrer');logoT.src=d.markerLogo;logoT.style.display='block';logoT.style.maxHeight='42px';logoT.style.width='auto';logoT.style.objectFit='contain';}
+      if(slog)slog.style.display='none';
+      if(cred)cred.style.display='none';
+    }else{
+      if(logoT && movikiLogoSrc){logoT.src=movikiLogoSrc;logoT.style.maxHeight='';logoT.style.width='';logoT.style.objectFit='';} // restaura moviki
+      if(slog)slog.style.display='';
+      if(cred)cred.style.display='';
+    }
+  }
   /* Desenha marca/cardápio (sem mexer na localização) */
   function pintarConteudo(d){
+    aplicarPersonalizacao(d);
     el('nome').textContent=d.nome||'Negócio';
     const aberto=d.status==='aberto';
     el('statusRow').innerHTML='<span class="pill '+(aberto?'aberto':'fechado')+'"><span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento')+'</span>';
