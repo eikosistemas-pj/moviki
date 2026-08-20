@@ -56,7 +56,8 @@
   .itemPub.comFoto{padding:0;overflow:hidden;}
   .fotoCapa{width:100%;aspect-ratio:4/3;background:#0a1622;}
   .fotoCapa img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;}
-  .itemInfo{display:flex;align-items:center;gap:10px;padding:11px 13px;}
+  .itemInfo{display:flex;align-items:center;gap:10px;padding:11px 13px;flex-wrap:wrap;}
+  .itemPub .desc{width:100%;color:#a9c0dd;font-size:12.5px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px;}
   .galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 13px 14px;}
   .galItem{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:1px solid var(--borda);background:#0b1728;}
   .galItem img{width:100%;height:100%;object-fit:cover;cursor:pointer;display:block;transition:transform .18s;}
@@ -281,15 +282,16 @@
   function produtoHtml(p,mostrarFotos){
     const preco=p.preco?('<span class="pr">'+esc(fmtPreco(p.preco))+'</span>'):'';
     const ac=p.acabando?'<span class="acabando">ACABANDO!</span>':'';
+    const desc=(p.descricao&&String(p.descricao).trim())?('<div class="desc">'+esc(String(p.descricao).trim())+'</div>'):'';
     let fotos=[];
     if(mostrarFotos&&Array.isArray(p.fotos))fotos=p.fotos.filter(fotoOk).slice(0,3);
     if(fotos.length){
       const capa='<div class="fotoCapa"><img src="'+esc(fotos[0])+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" decoding="async" onclick="abrirFoto(this.src)"></div>';
       let mini='';
       if(fotos.length>1){ mini='<div class="miniFotos">'+fotos.map((u,idx)=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" class="'+(idx===0?'ativa':'')+'" onclick="trocarCapa(this)">').join('')+'</div>'; }
-      return '<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+mini+'</div>';
+      return '<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+desc+'</div>'+mini+'</div>';
     }
-    return '<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div></div>';
+    return '<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+'</div>';
   }
   function categoriasValidas(){ return (cardapioAtual||[]).map((c,i)=>({c:c,i:i})).filter(o=>o.c&&(o.c.categoria||(o.c.produtos&&o.c.produtos.length))); }
   function gradeCategorias(){
