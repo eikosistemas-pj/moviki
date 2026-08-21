@@ -42,13 +42,25 @@ body::before {
     #050b14;
 }
 
-/* ---------- vidro fosco premium (reforço, não substitui) ---------- */
+/* ---------- vidro fosco premium — mais "leitoso", menos transparente ----------
+   Ajuste pedido em 21/08: com o fundo 3D animado atrás, os painéis no alpha
+   original (.66) deixavam a bolinha do fundo atravessar demais e atrapalhar
+   a leitura (principalmente no FAQ). Sobe a opacidade da MESMA variável que
+   cada página já usa pro fundo dos cards — atinge todos os quadros de uma
+   vez só, sem precisar caçar classe por classe, e mantém um padrão único
+   entre as 3 páginas. */
+:root {
+  --painel: rgba(8, 15, 27, .93) !important;
+  --painel2: rgba(6, 12, 22, .97) !important;
+  --card: rgba(8, 15, 27, .93) !important;
+}
 
 .mk-glass,
 .card, .qitem, .bizcard, .plano, .painel, .box, .step, .faq-item,
-.cardpin, .cardgan, .depo, .nivel {
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+.cardpin, .cardgan, .depo, .nivel,
+details, .ben, .cbox, .num, .mcard, .guard, .col, .pill, .passo, .ganho div {
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
 }
 
 /* ---------- palco do telefone: profundidade 3D real (CSS 3D) ---------- */
