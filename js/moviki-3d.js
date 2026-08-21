@@ -367,20 +367,40 @@
     function frame(now) {
       requestAnimationFrame(frame);
       if (paused) return;
+      try {
+        drawFrame(now);
+      } catch (e) {
+        // alguma extensão de privacidade/ad-blocker pode interferir no
+        // contexto WebGL em desktop; nunca deixamos isso travar o loop
+        // pro resto da sessão — só pula o frame e tenta de novo no próximo.
+        if (!frame._warned) { console.warn('MK3D frame error:', e); frame._warned = true; }
+      }
+    }
+
+    function drawFrame(now) {
       lastFrame = now - t0;
       var time = lastFrame / 1000;
 
-      // spring suave (física de mola crítica-aproximada) para o scroll
-      cam.progress = lerp(cam.progress, cam.progressTarget, 0.06);
-      cam.mouseXs = lerp(cam.mouseXs, cam.mouseX, 0.05);
-      cam.mouseYs = lerp(cam.mouseYs, cam.mouseY, 0.05);
+      var kf, eye;
+      if (reduceMotion) {
+        // acessibilidade: sem câmera viajando pelo scroll e sem paralaxe
+        // de mouse (movimento grande) — mas o brilho/cintilar continua,
+        // senão a página parece travada em vez de só mais discreta.
+        kf = cam.keys[0];
+        eye = kf.eye;
+      } else {
+        // spring suave (física de mola crítica-aproximada) para o scroll
+        cam.progress = lerp(cam.progress, cam.progressTarget, 0.06);
+        cam.mouseXs = lerp(cam.mouseXs, cam.mouseX, 0.05);
+        cam.mouseYs = lerp(cam.mouseYs, cam.mouseY, 0.05);
 
-      var kf = keyframe(cam.progress);
-      var eye = [
-        kf.eye[0] + cam.mouseXs * 0.6,
-        kf.eye[1] + cam.mouseYs * 0.3,
-        kf.eye[2]
-      ];
+        kf = keyframe(cam.progress);
+        eye = [
+          kf.eye[0] + cam.mouseXs * 0.6,
+          kf.eye[1] + cam.mouseYs * 0.3,
+          kf.eye[2]
+        ];
+      }
 
       mat4.perspective(proj, Math.PI / 4, canvas.width / canvas.height, 0.1, 100);
       mat4.lookAt(view, eye, kf.look, [0, 1, 0]);
@@ -425,33 +445,6 @@
       gl.vertexAttribPointer(locP.aKind, 1, gl.FLOAT, false, 0, 0);
 
       gl.drawArrays(gl.POINTS, 0, field.count);
-    }
-
-    if (reduceMotion) {
-      // um único frame estático, sem loop de animação
-      resize();
-      mat4.perspective(proj, Math.PI / 4, canvas.width / canvas.height, 0.1, 100);
-      mat4.lookAt(view, cam.keys[0].eye, cam.keys[0].look, [0, 1, 0]);
-      gl.useProgram(progP);
-      gl.uniformMatrix4fv(locP.uProj, false, proj);
-      gl.uniformMatrix4fv(locP.uView, false, view);
-      gl.uniform1f(locP.uTime, 0);
-      gl.uniform3fv(locP.uColorA, colorA);
-      gl.uniform3fv(locP.uColorB, colorB);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bPos);
-      gl.enableVertexAttribArray(locP.aPos);
-      gl.vertexAttribPointer(locP.aPos, 3, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bSize);
-      gl.enableVertexAttribArray(locP.aSize);
-      gl.vertexAttribPointer(locP.aSize, 1, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bPhase);
-      gl.enableVertexAttribArray(locP.aPhase);
-      gl.vertexAttribPointer(locP.aPhase, 1, gl.FLOAT, false, 0, 0);
-      gl.bindBuffer(gl.ARRAY_BUFFER, bKind);
-      gl.enableVertexAttribArray(locP.aKind);
-      gl.vertexAttribPointer(locP.aKind, 1, gl.FLOAT, false, 0, 0);
-      gl.drawArrays(gl.POINTS, 0, field.count);
-      return;
     }
 
     requestAnimationFrame(frame);
