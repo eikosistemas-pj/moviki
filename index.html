@@ -1672,9 +1672,14 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="css/moviki-3d.css">
+
 </head>
 
 <body>
+
+  <canvas id="mk3d-bg" aria-hidden="true"></canvas>
+  <canvas id="mk3d-grain" aria-hidden="true"></canvas>
 
   <!-- =======================================================
        HEADER
@@ -1784,11 +1789,33 @@
 
           <span class="halo"></span>
 
-          <img
-            class="phone-img"
-            src="app-mockup.png"
-            alt="Aplicativo Moviki mostrando negócios no mapa em tempo real"
-          >
+          <div class="mk-tilt">
+            <img
+              class="phone-img"
+              src="app-mockup.png"
+              alt="Aplicativo Moviki mostrando negócios no mapa em tempo real"
+            >
+          </div>
+
+          <!-- pinos holográficos decorativos (puramente visuais) -->
+          <div class="mk-pins" aria-hidden="true">
+            <span class="mk-pin" style="--x:14%; --y:28%; --z:70px; --d:0s">
+              <svg viewBox="0 0 24 24"><path fill="#00D4FF" d="M12 22s7-6.8 7-12a7 7 0 1 0-14 0c0 5.2 7 12 7 12z" opacity=".9"/><circle cx="12" cy="9.5" r="2.6" fill="#04121f"/></svg>
+              <span class="ring"></span>
+            </span>
+            <span class="mk-pin" style="--x:82%; --y:18%; --z:40px; --d:.6s">
+              <svg viewBox="0 0 24 24"><path fill="#00D4FF" d="M12 22s7-6.8 7-12a7 7 0 1 0-14 0c0 5.2 7 12 7 12z" opacity=".9"/><circle cx="12" cy="9.5" r="2.6" fill="#04121f"/></svg>
+              <span class="ring"></span>
+            </span>
+            <span class="mk-pin" style="--x:88%; --y:62%; --z:90px; --d:1.2s">
+              <svg viewBox="0 0 24 24"><path fill="#0066FF" d="M12 22s7-6.8 7-12a7 7 0 1 0-14 0c0 5.2 7 12 7 12z" opacity=".9"/><circle cx="12" cy="9.5" r="2.6" fill="#04121f"/></svg>
+              <span class="ring"></span>
+            </span>
+            <span class="mk-pin" style="--x:8%; --y:74%; --z:20px; --d:1.8s">
+              <svg viewBox="0 0 24 24"><path fill="#0066FF" d="M12 22s7-6.8 7-12a7 7 0 1 0-14 0c0 5.2 7 12 7 12z" opacity=".9"/><circle cx="12" cy="9.5" r="2.6" fill="#04121f"/></svg>
+              <span class="ring"></span>
+            </span>
+          </div>
 
         </div>
 
@@ -3010,6 +3037,8 @@
 
     })();
   </script>
+
+  <script src="js/moviki-3d.js" defer data-mk3d-mode="home"></script>
 
 </body>
 </html>
