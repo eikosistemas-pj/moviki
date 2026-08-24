@@ -33,6 +33,10 @@
     overflow-x:hidden;
   }
   a{color:inherit;text-decoration:none}
+
+  .ic3d{width:64px;height:64px;object-fit:contain;display:block;margin:0 auto 10px;filter:drop-shadow(0 7px 16px rgba(0,0,0,.5))}
+  .icoT{width:1.25em;height:1.25em;object-fit:contain;vertical-align:-.28em;margin-right:.32em;display:inline-block}
+  .icEmoji{font-size:30px;line-height:1;display:block;margin-bottom:8px}
   .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 
   /* ---------- topo ---------- */
@@ -255,7 +259,7 @@
     <p class="lead">Boa pergunta — e a resposta é não. A diferença é simples e importante. Veja lado a lado.</p>
     <div class="cmp">
       <div class="col bad">
-        <h3>⚠️ Esquema de pirâmide</h3>
+        <h3><img class="icoT" src="/icones-premium/alerta.png" alt="" loading="lazy" onerror="mvIco(this,'','⚠️')">Esquema de pirâmide</h3>
         <p class="mini">O que a lei proíbe</p>
         <ul>
           <li><span>Você <b>paga</b> pra entrar ou compra uma cota.</span></li>
@@ -265,7 +269,7 @@
         </ul>
       </div>
       <div class="col good">
-        <h3>✅ Programa Moviki</h3>
+        <h3><img class="icoT" src="/icones-premium/escudo.png" alt="" loading="lazy" onerror="mvIco(this,'','✅')">Programa Moviki</h3>
         <p class="mini">O que você está entrando</p>
         <ul>
           <li><span>Entrar é <b>grátis</b>. Você nunca paga nada pra participar.</span></li>
@@ -286,8 +290,8 @@
     <h2>As regras jogam a seu favor</h2>
     <div class="guards">
       <div class="guard"><div class="ic">🆓</div><h3>Começa grátis</h3><p>Zero custo pra entrar e pra continuar. Você só ganha, nunca paga.</p></div>
-      <div class="guard"><div class="ic">🚪</div><h3>Sai quando quiser</h3><p>É só avisar. O que você já ganhou até a saída continua seu e é pago.</p></div>
-      <div class="guard"><div class="ic">⚡</div><h3>Saca no Pix</h3><p>Acompanha tudo no painel e pede o saque a partir de R$ 20. Direto na sua chave.</p></div>
+      <div class="guard"><div class="ic"><img class="ic3d" src="/icones-premium/porta.png" alt="" loading="lazy" onerror="mvIco(this,'','🚪')"></div><h3>Sai quando quiser</h3><p>É só avisar. O que você já ganhou até a saída continua seu e é pago.</p></div>
+      <div class="guard"><div class="ic"><img class="ic3d" src="/icones-premium/pix.png" alt="" loading="lazy" onerror="mvIco(this,'','⚡')"></div><h3>Saca no Pix</h3><p>Acompanha tudo no painel e pede o saque a partir de R$ 20. Direto na sua chave.</p></div>
     </div>
   </div>
 </section>
@@ -315,5 +319,11 @@
 
 <script src="js/moviki-3d.js" defer data-mk3d-mode="network"></script>
 
+<script>
+function mvIco(img,alt2,emoji){
+  if(alt2 && !img.dataset.tentou2){ img.dataset.tentou2='1'; img.src='/icones-premium/'+alt2; return; }
+  var s=document.createElement('span'); s.className='icEmoji'; s.textContent=emoji; img.replaceWith(s);
+}
+</script>
 </body>
 </html>
