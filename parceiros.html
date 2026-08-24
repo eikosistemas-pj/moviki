@@ -89,10 +89,10 @@
   <section>
     <h2>Por que vale a pena</h2>
     <div class="cards">
-      <div class="card"><img class="ic3d" src="/icones-premium/recorrente.png" alt="Ganho recorrente" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🔁',className:'icEmoji'}))"><h3>Ganho recorrente</h3><p>Não é comissão de uma vez. Enquanto o lojista pagar, você ganha todo mês.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/loja.png" alt="Produto que se paga" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🤝',className:'icEmoji'}))"><h3>Produto que se paga</h3><p>Você indica algo que ajuda o comerciante a vender mais. É fácil de recomendar.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/crescimento.png" alt="Cresce sozinho" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌱',className:'icEmoji'}))"><h3>Cresce sozinho</h3><p>Indicou 10, 30, 50 lojistas? A renda vai somando mês após mês.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/indicar.png" alt="Feito pra divulgar" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'📱',className:'icEmoji'}))"><h3>Feito pra divulgar</h3><p>Perfeito pra quem tem audiência: um link seu, e cada cadastro conta pra você.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/recorrente.png" alt="Ganho recorrente" loading="lazy" onerror="mvIco(this,'','🔁')"><h3>Ganho recorrente</h3><p>Não é comissão de uma vez. Enquanto o lojista pagar, você ganha todo mês.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/loja.png" alt="Produto que se paga" loading="lazy" onerror="mvIco(this,'','🤝')"><h3>Produto que se paga</h3><p>Você indica algo que ajuda o comerciante a vender mais. É fácil de recomendar.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/crescimento.png" alt="Cresce sozinho" loading="lazy" onerror="mvIco(this,'','🌱')"><h3>Cresce sozinho</h3><p>Indicou 10, 30, 50 lojistas? A renda vai somando mês após mês.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/indicar.png" alt="Feito pra divulgar" loading="lazy" onerror="mvIco(this,'','📱')"><h3>Feito pra divulgar</h3><p>Perfeito pra quem tem audiência: um link seu, e cada cadastro conta pra você.</p></div>
     </div>
   </section>
 
@@ -175,4 +175,13 @@
   </div>
 </div>
 <script src="js/moviki-3d.js" defer data-mk3d-mode="network"></script>
+<script>
+/* Ícone com 2 tentativas de nome (com e sem hífen — o download do navegador às vezes
+   remove o hífen) e, se as duas falharem, cai no emoji. */
+function mvIco(img,alt2,emoji){
+  if(alt2 && !img.dataset.tentou2){ img.dataset.tentou2='1'; img.src='/icones-premium/'+alt2; return; }
+  var s=document.createElement('span'); s.className='icEmoji'; s.textContent=emoji;
+  img.replaceWith(s);
+}
+</script>
 </body></html>
