@@ -7,7 +7,7 @@
 <meta name="description" content="No Premium sua logo aparece no pino do mapa, sua página ganha a cor da sua marca, suas fotos vão pro ar e o cardápio, promoções e eventos ficam liberados. A partir de R$ 41,58/mês.">
 <meta property="og:title" content="Moviki Premium — sua marca no mapa">
 <meta property="og:description" content="Seu pino deixa de ser mais um ponto igual e passa a ser o seu negócio.">
-<link rel="icon" href="/favicon512.png">
+<link rel="icon" href="https://moviki.com.br/favicon512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -58,14 +58,16 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
   .card{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:24px;transition:.2s}
   .card:hover{border-color:rgba(0,212,255,.5);transform:translateY(-3px)}
-  .card .ico{font-size:27px;margin-bottom:10px}
+  .card .ico{margin-bottom:12px;line-height:0}
+  .card .ico img,.ic3d{width:68px;height:68px;object-fit:contain;display:block;filter:drop-shadow(0 7px 16px rgba(0,0,0,.5))}
+  .card .ico .icEmoji{font-size:34px;line-height:1;display:block}
   .card h3{font-size:17px;font-weight:700;margin-bottom:6px}
   .card p{color:var(--sub);font-size:14.5px}
   .card .tag{display:inline-block;margin-top:11px;font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--verde);border:1px solid rgba(37,227,155,.4);border-radius:999px;padding:3px 9px}
   /* DOR */
   .dor{background:linear-gradient(180deg,rgba(231,76,60,.07),transparent);border-top:1px solid rgba(231,76,60,.18);border-bottom:1px solid rgba(231,76,60,.18)}
   .dor .card{border-color:rgba(231,76,60,.28)}
-  .dor .ico{filter:grayscale(.2)}
+  
   /* ANTES x DEPOIS */
   .versus{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:0 auto}
   .vsBox{background:var(--card);border:1px solid var(--borda);border-radius:18px;padding:22px 16px;text-align:center}
@@ -115,7 +117,8 @@
   .ent h2{font-size:26px;margin-bottom:10px}
   .ent p{color:var(--sub);max-width:600px;margin:0 auto 20px;font-size:15.5px}
   .entLista{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
-  .entLista span{font-size:13px;color:var(--txt);background:rgba(255,255,255,.05);border:1px solid rgba(245,194,75,.3);border-radius:999px;padding:7px 14px}
+  .entLista span{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--txt);background:rgba(255,255,255,.05);border:1px solid rgba(245,194,75,.3);border-radius:999px;padding:6px 14px}
+  .entLista img{width:24px;height:24px;object-fit:contain}
   /* FINAL */
   .final{text-align:center;background:linear-gradient(135deg,rgba(0,102,255,.16),rgba(0,212,255,.07));border:1px solid var(--borda);border-radius:22px;padding:46px 24px;margin:20px 0}
   .final h2{margin-bottom:10px}
@@ -137,7 +140,7 @@
 <body>
 
 <header><div class="wrap">
-  <a href="https://moviki.com.br"><img src="/logo.png" alt="Moviki" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'moviki',style:'font-weight:800;font-size:21px;color:#fff'}))"></a>
+  <a href="https://moviki.com.br"><img src="https://moviki.com.br/logo.png" alt="Moviki" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'moviki',style:'font-weight:800;font-size:21px;color:#fff'}))"></a>
   <span class="badge">PREMIUM</span>
   <a class="hdCta" href="https://app.moviki.com.br?plano=premium&periodo=mensal">Assinar agora</a>
 </div></header>
@@ -207,9 +210,9 @@
   <h2>O que está acontecendo agora sem o Premium</h2>
   <p class="lead">Não é falta de cliente. É falta de motivo pra ele clicar em você e não no pino do lado.</p>
   <div class="grid">
-    <div class="card"><div class="ico">😐</div><h3>Você é um ponto azul</h3><p>Seu pino é idêntico ao de todo mundo. Quem abre o mapa não tem como saber que ali é você antes de clicar — e na maioria das vezes ele não clica.</p></div>
-    <div class="card"><div class="ico">🙈</div><h3>Seus produtos não aparecem</h3><p>Sem foto, o cliente lê "porção de camarão" e segue o dedo. Comida, roupa e serviço se vendem pelo olho: sem imagem, não dá vontade.</p></div>
-    <div class="card"><div class="ico">🌫️</div><h3>Sua marca some</h3><p>Você investiu em logo, cor, identidade — e na hora que mais importa, quando o cliente está decidindo onde ir, nada disso aparece.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/dor-pino.png" alt="Pino cinza sem identidade" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'😐',className:'icEmoji'}))"></div><h3>Você é um ponto azul</h3><p>Seu pino é idêntico ao de todo mundo. Quem abre o mapa não tem como saber que ali é você antes de clicar — e na maioria das vezes ele não clica.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/dor-foto.png" alt="Produto sem foto" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🙈',className:'icEmoji'}))"></div><h3>Seus produtos não aparecem</h3><p>Sem foto, o cliente lê "porção de camarão" e segue o dedo. Comida, roupa e serviço se vendem pelo olho: sem imagem, não dá vontade.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/dor-marca.png" alt="Marca apagada" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌫️',className:'icEmoji'}))"></div><h3>Sua marca some</h3><p>Você investiu em logo, cor, identidade — e na hora que mais importa, quando o cliente está decidindo onde ir, nada disso aparece.</p></div>
   </div>
 </div></section>
 
@@ -248,18 +251,18 @@
   <h2>Tudo o que você liga <span>hoje mesmo</span></h2>
   <p class="lead">O Premium inclui tudo do plano Pró e adiciona o pacote de marca e imagem — a parte que faz o cliente escolher você.</p>
   <div class="grid">
-    <div class="card"><div class="ico">🖼️</div><h3>Sua logo no pino do mapa</h3><p>Seu marcador deixa de ser genérico e passa a exibir a sua logo, redonda e destacada. Reconhecimento imediato, mesmo de longe.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
-    <div class="card"><div class="ico">🎨</div><h3>A cor da sua marca</h3><p>Escolha a cor do seu negócio: ela pinta os destaques da sua página pública e o seu pino. Sua identidade visual de ponta a ponta.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
-    <div class="card"><div class="ico">📸</div><h3>Fotos nos produtos</h3><p>Até 3 fotos por item do cardápio. O cliente vê o que vai comer ou comprar antes de decidir — e decide muito mais rápido.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
-    <div class="card"><div class="ico">🗂️</div><h3>Galeria do negócio</h3><p>Até 12 fotos numa aba <b>Fotos</b> na sua página: seu ponto, sua equipe, seu ambiente, seus pratos. Prova visual de que você existe e é bom.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
-    <div class="card"><div class="ico">📖</div><h3>Cardápio completo</h3><p>Categorias, produtos, descrições, preços e o aviso de "acabando". Tudo que você atualiza aparece na hora pro cliente.</p></div>
-    <div class="card"><div class="ico">🔥</div><h3>Promoções e eventos</h3><p>Anuncie a promoção do dia e avise onde você vai estar no fim de semana. Motivo novo pro cliente voltar a olhar seu link.</p></div>
-    <div class="card"><div class="ico">📍</div><h3>Localização em tempo real</h3><p>Mudou de ponto? Atualiza o GPS em um toque e todo mundo que abrir seu link já vê onde você está agora, com rota no Google Maps.</p></div>
-    <div class="card"><div class="ico">⭐</div><h3>Avaliações dos clientes</h3><p>Suas estrelas e comentários ficam na sua página. Reputação visível vira decisão de compra.</p></div>
-    <div class="card"><div class="ico">💬</div><h3>Botão do WhatsApp</h3><p>Um toque e o cliente já está falando com você. Menos passos entre o interesse e o pedido.</p></div>
-    <div class="card"><div class="ico">🔗</div><h3>Seu link próprio</h3><p>moviki.com.br/seunegocio — cabe na bio do Instagram, no status do WhatsApp, no adesivo do carrinho. É o seu endereço na internet.</p></div>
-    <div class="card"><div class="ico">🤝</div><h3>Indique e ganhe liberado</h3><p>Com plano ativo, o seu link de parceiro fica no ar e você passa a ganhar comissão por quem entrar pela sua indicação.</p></div>
-    <div class="card"><div class="ico">🔄</div><h3>Renovação automática</h3><p>Assinou, está no ar. Renova sozinho, sem você precisar lembrar de reassinar todo mês.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/logo-pino.png" alt="Logo no pino do mapa" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🖼️',className:'icEmoji'}))"></div><h3>Sua logo no pino do mapa</h3><p>Seu marcador deixa de ser genérico e passa a exibir a sua logo, redonda e destacada. Reconhecimento imediato, mesmo de longe.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/cor-marca.png" alt="Cor da marca" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎨',className:'icEmoji'}))"></div><h3>A cor da sua marca</h3><p>Escolha a cor do seu negócio: ela pinta os destaques da sua página pública e o seu pino. Sua identidade visual de ponta a ponta.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/foto-produto.png" alt="Fotos dos produtos" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'📸',className:'icEmoji'}))"></div><h3>Fotos nos produtos</h3><p>Até 3 fotos por item do cardápio. O cliente vê o que vai comer ou comprar antes de decidir — e decide muito mais rápido.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/galeria.png" alt="Galeria do negócio" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🗂️',className:'icEmoji'}))"></div><h3>Galeria do negócio</h3><p>Até 12 fotos numa aba <b>Fotos</b> na sua página: seu ponto, sua equipe, seu ambiente, seus pratos. Prova visual de que você existe e é bom.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/cardapio.png" alt="Cardápio completo" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'📖',className:'icEmoji'}))"></div><h3>Cardápio completo</h3><p>Categorias, produtos, descrições, preços e o aviso de "acabando". Tudo que você atualiza aparece na hora pro cliente.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/promocoes.png" alt="Promoções e eventos" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🔥',className:'icEmoji'}))"></div><h3>Promoções e eventos</h3><p>Anuncie a promoção do dia e avise onde você vai estar no fim de semana. Motivo novo pro cliente voltar a olhar seu link.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/localizacao.png" alt="Localização em tempo real" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'📍',className:'icEmoji'}))"></div><h3>Localização em tempo real</h3><p>Mudou de ponto? Atualiza o GPS em um toque e todo mundo que abrir seu link já vê onde você está agora, com rota no Google Maps.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/avaliacoes.png" alt="Avaliações" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'⭐',className:'icEmoji'}))"></div><h3>Avaliações dos clientes</h3><p>Suas estrelas e comentários ficam na sua página. Reputação visível vira decisão de compra.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/chat.png" alt="Botão de WhatsApp" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'💬',className:'icEmoji'}))"></div><h3>Botão do WhatsApp</h3><p>Um toque e o cliente já está falando com você. Menos passos entre o interesse e o pedido.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/link.png" alt="Link próprio" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🔗',className:'icEmoji'}))"></div><h3>Seu link próprio</h3><p>moviki.com.br/seunegocio — cabe na bio do Instagram, no status do WhatsApp, no adesivo do carrinho. É o seu endereço na internet.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/indicar.png" alt="Indique e ganhe" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🤝',className:'icEmoji'}))"></div><h3>Indique e ganhe liberado</h3><p>Com plano ativo, o seu link de parceiro fica no ar e você passa a ganhar comissão por quem entrar pela sua indicação.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/renovacao.png" alt="Renovação automática" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🔄',className:'icEmoji'}))"></div><h3>Renovação automática</h3><p>Assinou, está no ar. Renova sozinho, sem você precisar lembrar de reassinar todo mês.</p></div>
   </div>
 </div></section>
 
@@ -355,14 +358,14 @@
     <h2>Tem mais de um ponto? Você já passou do Premium.</h2>
     <p>Quem opera dois, três carrinhos ou unidades gasta o dobro do tempo e paga plano separado pra cada um. O <b>Enterprise</b> junta tudo num cadastro só — com a sua marca em todos os pinos.</p>
     <div class="entLista">
-      <span>📍 Até 3 pontos inclusos</span>
-      <span>🏷️ Sua logo em cada pino</span>
-      <span>📊 Relatórios consolidados</span>
-      <span>🎯 Página 100% sua (white-label)</span>
-      <span>⚡ Suporte prioritário</span>
+      <span><img src="/icones-premium/multipontos.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('📍'))">Até 3 pontos inclusos</span>
+      <span><img src="/icones-premium/logo-pino.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('🏷️'))">Sua logo em cada pino</span>
+      <span><img src="/icones-premium/relatorios.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('📊'))">Relatórios consolidados</span>
+      <span><img src="/icones-premium/cor-marca.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('🎯'))">Página 100% sua (white-label)</span>
+      <span><img src="/icones-premium/suporte.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('⚡'))">Suporte prioritário</span>
     </div>
     <div class="ctas">
-      <a class="btn btn-ouro pulsa-ouro" href="/enterprise.html">Conhecer o Enterprise →</a>
+      <a class="btn btn-ouro pulsa-ouro" href="https://moviki.com.br/enterprise.html">Conhecer o Enterprise →</a>
       <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Tenho%20mais%20de%20um%20ponto%20e%20quero%20entender%20o%20Moviki%20Enterprise." target="_blank" rel="noopener">Falar com a gente</a>
     </div>
     <p style="margin-top:18px;font-size:13.5px">R$ 99,90/mês · cada ponto extra R$ 19,90 — menos da metade de um plano avulso.</p>
@@ -383,7 +386,7 @@
 
 <footer><div class="wrap">
   Moviki · O mapa inteligente dos negócios em movimento · <a href="tel:+554120186848">(41) 2018-6848</a><br>
-  <a href="https://moviki.com.br">moviki.com.br</a> · <a href="/enterprise.html">Enterprise</a> · <a href="/termos.html">Termos</a> · <a href="/privacidade.html">Privacidade</a>
+  <a href="https://moviki.com.br">moviki.com.br</a> · <a href="https://moviki.com.br/enterprise.html">Enterprise</a> · <a href="https://moviki.com.br/termos.html">Termos</a> · <a href="https://moviki.com.br/privacidade.html">Privacidade</a>
 </div></footer>
 
 <div class="barra"><a class="btn btn-prim pulsa" href="https://app.moviki.com.br?plano=premium&periodo=anual">✨ Quero ser Premium</a></div>

@@ -35,6 +35,10 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
   .card{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:24px}
   .card .ico{font-size:26px;margin-bottom:10px}
+  .ic3d{width:68px;height:68px;object-fit:contain;display:block;margin:0 0 12px;filter:drop-shadow(0 7px 16px rgba(0,0,0,.5))}
+  .icEmoji{font-size:34px;line-height:1;display:block;margin-bottom:10px}
+  .quem .ic3d{width:74px;height:74px;margin:0 auto 8px}
+
   .card h3{font-size:17px;font-weight:700;margin-bottom:6px}
   .card p{color:var(--sub);font-size:14.5px}
   /* preço */
@@ -51,6 +55,7 @@
   .quem{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
   .quem div{background:var(--card);border:1px solid var(--borda);border-radius:14px;padding:18px;text-align:center}
   .quem .e{font-size:28px;display:block;margin-bottom:6px}
+  .quem img{margin-bottom:8px}
   .quem p{font-size:14px;color:var(--sub)}
   /* cta final */
   .final{text-align:center;background:linear-gradient(135deg,rgba(0,102,255,.12),rgba(0,212,255,.08));border:1px solid var(--borda);border-radius:22px;padding:44px 24px;margin:20px 0}
@@ -82,12 +87,12 @@
   <h2>Feito pra quem cresceu</h2>
   <p class="lead">O Enterprise reúne tudo do Premium e adiciona o que uma operação com vários pontos precisa.</p>
   <div class="grid">
-    <div class="card"><div class="ico">📍</div><h3>Vários pontos no mapa</h3><p>Cada carrinho ou unidade aparece na sua própria localização, com link exclusivo pra divulgar.</p></div>
-    <div class="card"><div class="ico">🎯</div><h3>Localização por endereço ou GPS</h3><p>Cadastre cada ponto digitando o endereço (com sugestões automáticas) ou usando o GPS na hora.</p></div>
-    <div class="card"><div class="ico">🏷️</div><h3>Sua marca no pino</h3><p>Sua logo aparece no marcador do mapa, dando destaque e identidade a cada ponto.</p></div>
-    <div class="card"><div class="ico">📊</div><h3>Relatórios consolidados</h3><p>Acompanhe seus pontos reunidos, com uma visão geral da sua operação.</p></div>
-    <div class="card"><div class="ico">⚡</div><h3>Suporte prioritário</h3><p>Atendimento direto com a gente pra resolver rápido o que você precisar.</p></div>
-    <div class="card"><div class="ico">🔗</div><h3>Um cadastro, tudo junto</h3><p>Cardápio, promoções e eventos ficam num lugar só e valem pra todos os seus pontos.</p></div>
+    <div class="card"><img class="ic3d" src="/icones-premium/multipontos.png" alt="Vários pontos no mapa" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'📍',className:'icEmoji'}))"><h3>Vários pontos no mapa</h3><p>Cada carrinho ou unidade aparece na sua própria localização, com link exclusivo pra divulgar.</p></div>
+    <div class="card"><img class="ic3d" src="/icones-premium/localizacao.png" alt="Localização por endereço ou GPS" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎯',className:'icEmoji'}))"><h3>Localização por endereço ou GPS</h3><p>Cadastre cada ponto digitando o endereço (com sugestões automáticas) ou usando o GPS na hora.</p></div>
+    <div class="card"><img class="ic3d" src="/icones-premium/logo-pino.png" alt="Sua marca no pino" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🏷️',className:'icEmoji'}))"><h3>Sua marca no pino</h3><p>Sua logo aparece no marcador do mapa, dando destaque e identidade a cada ponto.</p></div>
+    <div class="card"><img class="ic3d" src="/icones-premium/relatorios.png" alt="Relatórios consolidados" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'📊',className:'icEmoji'}))"><h3>Relatórios consolidados</h3><p>Acompanhe seus pontos reunidos, com uma visão geral da sua operação.</p></div>
+    <div class="card"><img class="ic3d" src="/icones-premium/suporte.png" alt="Suporte prioritário" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'⚡',className:'icEmoji'}))"><h3>Suporte prioritário</h3><p>Atendimento direto com a gente pra resolver rápido o que você precisar.</p></div>
+    <div class="card"><img class="ic3d" src="/icones-premium/link.png" alt="Um cadastro, tudo junto" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🔗',className:'icEmoji'}))"><h3>Um cadastro, tudo junto</h3><p>Cardápio, promoções e eventos ficam num lugar só e valem pra todos os seus pontos.</p></div>
   </div>
 </div></section>
 
@@ -111,10 +116,10 @@
   <h2>Pra quem é</h2>
   <p class="lead">Se você opera em mais de um lugar, o Enterprise foi feito pra você.</p>
   <div class="quem">
-    <div><span class="e">🚚</span><p>Frotas de food trucks</p></div>
-    <div><span class="e">🛒</span><p>Vários carrinhos de rua</p></div>
-    <div><span class="e">🍧</span><p>Quiosques em pontos diferentes</p></div>
-    <div><span class="e">🏪</span><p>Pequenas redes e franquias</p></div>
+    <div><img class="ic3d" src="/icones-premium/foodtruck.png" alt="Food truck" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🚚',className:'icEmoji'}))"><p>Frotas de food trucks</p></div>
+    <div><img class="ic3d" src="/icones-premium/carrinho.png" alt="Carrinho de rua" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🛒',className:'icEmoji'}))"><p>Vários carrinhos de rua</p></div>
+    <div><img class="ic3d" src="/icones-premium/quiosque.png" alt="Quiosque" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🍧',className:'icEmoji'}))"><p>Quiosques em pontos diferentes</p></div>
+    <div><img class="ic3d" src="/icones-premium/loja.png" alt="Pequenas redes" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🏪',className:'icEmoji'}))"><p>Pequenas redes e franquias</p></div>
   </div>
 </div></section>
 
