@@ -1,0 +1,271 @@
+/* ==========================================================================
+   MOVIKI UI 2.0 — Design System único (site + painéis + página pública)
+   Prefixo mv- para conviver com o CSS antigo sem quebrar nada.
+   Uso: <link rel="stylesheet" href="moviki-ui.css"> antes do <style> da página.
+   ========================================================================== */
+
+/* ---------- 1. TOKENS ---------- */
+:root{
+  /* marca */
+  --mv-ciano:#00D4FF;
+  --mv-azul:#0066FF;
+  --mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
+  --mv-grad-suave:linear-gradient(160deg,rgba(0,102,255,.16),rgba(0,212,255,.04));
+
+  /* fundos */
+  --mv-bg:#060d18;              /* fundo da página */
+  --mv-bg-2:#0a1424;            /* faixas alternadas */
+  --mv-surf:#0e1c30;            /* card */
+  --mv-surf-2:#13263d;          /* card interno / hover */
+  --mv-campo:#0b1728;           /* inputs */
+  --mv-linha:#1c3457;           /* borda padrão */
+  --mv-linha-forte:#284a78;
+
+  /* texto */
+  --mv-txt:#eaf6ff;
+  --mv-txt-2:#c6d8ee;
+  --mv-txt-3:#8fa6c4;           /* muted — nunca abaixo de 12.5px */
+
+  /* semânticos */
+  --mv-ok:#25e39b;
+  --mv-alerta:#ffb020;
+  --mv-erro:#ff6b6b;
+  --mv-roxo:#a855f7;
+  --mv-laranja:#ff8a00;
+  --mv-whats:#25D366;
+  --mv-ouro:linear-gradient(135deg,#ffd76a,#d99b12);
+
+  /* forma */
+  --mv-r-sm:10px; --mv-r:14px; --mv-r-lg:18px; --mv-r-xl:24px; --mv-r-pill:999px;
+  --mv-sp:16px;
+  --mv-sombra:0 10px 30px rgba(0,0,0,.35);
+  --mv-glow:0 0 18px rgba(0,212,255,.35),0 0 46px rgba(0,212,255,.14);
+  --mv-borda-glow:1px solid rgba(0,212,255,.28);
+
+  /* tipografia */
+  --mv-fonte:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+
+/* ---------- 2. BASE ---------- */
+.mv, .mv *{box-sizing:border-box}
+body.mv-body{
+  margin:0;font-family:var(--mv-fonte);background:var(--mv-bg);color:var(--mv-txt);
+  -webkit-font-smoothing:antialiased;
+}
+/* malha/grid decorativa de fundo (o "mapa" das artes) */
+.mv-bg-grid{
+  position:relative;
+  background:
+    radial-gradient(1100px 600px at 50% -8%,rgba(0,102,255,.20),transparent 62%),
+    linear-gradient(rgba(0,212,255,.045) 1px,transparent 1px) 0 0/56px 56px,
+    linear-gradient(90deg,rgba(0,212,255,.045) 1px,transparent 1px) 0 0/56px 56px,
+    var(--mv-bg);
+}
+.mv-container{width:min(1240px,100% - 32px);margin-inline:auto}
+.mv-h1{font-size:clamp(30px,5vw,54px);line-height:1.08;letter-spacing:-1.4px;font-weight:800;margin:0}
+.mv-h2{font-size:clamp(22px,3.4vw,34px);line-height:1.18;letter-spacing:-.8px;font-weight:800;margin:0}
+.mv-h3{font-size:19px;font-weight:700;letter-spacing:-.3px;margin:0}
+.mv-lead{font-size:16.5px;line-height:1.65;color:var(--mv-txt-2);margin:0}
+.mv-muted{font-size:13px;line-height:1.5;color:var(--mv-txt-3)}
+.mv-grad-txt{background:var(--mv-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- 3. CARD ---------- */
+.mv-card{
+  background:linear-gradient(180deg,rgba(19,38,61,.92),rgba(14,28,48,.92));
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);
+  padding:18px;box-shadow:var(--mv-sombra);
+}
+.mv-card-glow{border:var(--mv-borda-glow);box-shadow:var(--mv-sombra),0 0 0 1px rgba(0,212,255,.05) inset}
+.mv-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.mv-card-sub{font-size:13px;color:var(--mv-txt-3);margin:4px 0 0}
+.mv-sep{height:1px;background:var(--mv-linha);border:0;margin:16px 0}
+
+/* ---------- 4. BOTÕES ---------- */
+.mv-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;
+  padding:14px 20px;border-radius:var(--mv-r);border:1px solid transparent;
+  cursor:pointer;text-decoration:none;transition:.16s;white-space:nowrap;
+}
+.mv-btn:hover{filter:brightness(1.08)}
+.mv-btn:active{transform:translateY(1px)}
+.mv-btn:focus-visible{outline:2px solid var(--mv-ciano);outline-offset:2px}
+.mv-btn--primario{background:var(--mv-grad);color:#04121f;box-shadow:var(--mv-glow)}
+.mv-btn--sucesso{background:linear-gradient(135deg,#2ee6a8,#0fb87f);color:#04121f;box-shadow:0 0 18px rgba(37,227,155,.35)}
+.mv-btn--whats{background:var(--mv-whats);color:#04121f}
+.mv-btn--azul{background:var(--mv-azul);color:#fff}
+.mv-btn--fantasma{background:transparent;border-color:var(--mv-linha-forte);color:var(--mv-txt-2)}
+.mv-btn--fantasma:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.mv-btn--bloco{width:100%}
+.mv-btn--g{padding:17px 26px;font-size:16.5px}
+.mv-btn--p{padding:10px 14px;font-size:13.5px}
+.mv-pulsa{animation:mvPulsa 2.4s ease-in-out infinite}
+@keyframes mvPulsa{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+@media(prefers-reduced-motion:reduce){.mv-pulsa{animation:none}}
+
+/* ---------- 5. BADGES / CHIPS ---------- */
+.mv-badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  padding:5px 11px;border-radius:var(--mv-r-pill);border:1px solid}
+.mv-badge--ok{color:var(--mv-ok);border-color:rgba(37,227,155,.4);background:rgba(37,227,155,.1)}
+.mv-badge--alerta{color:var(--mv-alerta);border-color:rgba(255,176,32,.4);background:rgba(255,176,32,.1)}
+.mv-badge--info{color:var(--mv-ciano);border-color:rgba(0,212,255,.4);background:rgba(0,212,255,.1)}
+.mv-badge--neutro{color:var(--mv-txt-3);border-color:var(--mv-linha);background:rgba(255,255,255,.03)}
+.mv-badge--ouro{color:#2a1a00;background:var(--mv-ouro);border-color:transparent}
+.mv-ponto{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.mv-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--mv-ciano);border:1px solid rgba(0,212,255,.35);background:rgba(0,212,255,.07);
+  padding:7px 14px;border-radius:var(--mv-r-pill)}
+
+/* ---------- 6. KPI ---------- */
+.mv-kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.mv-kpi{background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-radius:var(--mv-r);
+  padding:16px;display:flex;gap:13px;align-items:flex-start}
+.mv-kpi__ico{width:42px;height:42px;flex:0 0 42px;border-radius:12px;display:grid;place-items:center;
+  font-size:20px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25)}
+.mv-kpi__val{font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.15}
+.mv-kpi__lbl{font-size:13px;color:var(--mv-txt-3);margin-top:2px}
+.mv-kpi__delta{font-size:12.5px;font-weight:700;margin-top:6px;color:var(--mv-ok)}
+.mv-kpi__delta--baixa{color:var(--mv-erro)}
+
+/* ---------- 7. LISTA / TABELA ---------- */
+.mv-linha-item{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--mv-linha)}
+.mv-linha-item:last-child{border-bottom:0}
+.mv-avatar{width:38px;height:38px;flex:0 0 38px;border-radius:10px;object-fit:cover;background:var(--mv-surf-2);border:1px solid var(--mv-linha)}
+.mv-linha-item__txt{flex:1;min-width:0}
+.mv-linha-item__tit{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv-linha-item__sub{font-size:12.5px;color:var(--mv-txt-3)}
+.mv-linha-item__dir{text-align:right;font-size:14px;font-weight:700}
+.mv-tabela{width:100%;border-collapse:collapse;font-size:14px}
+.mv-tabela th{text-align:left;font-size:12.5px;font-weight:600;color:var(--mv-txt-3);
+  padding:10px 12px;border-bottom:1px solid var(--mv-linha)}
+.mv-tabela td{padding:13px 12px;border-bottom:1px solid rgba(28,52,87,.55)}
+.mv-tabela tr:last-child td{border-bottom:0}
+.mv-tabela-wrap{overflow-x:auto}
+
+/* ---------- 8. FORM ---------- */
+.mv-campo{width:100%;font-family:inherit;font-size:15px;color:var(--mv-txt);
+  background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:14px 15px}
+.mv-campo::placeholder{color:#6d84a3}
+.mv-campo:focus{outline:none;border-color:var(--mv-ciano);box-shadow:0 0 0 3px rgba(0,212,255,.14)}
+.mv-rotulo{display:block;font-size:12.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--mv-txt-3);margin-bottom:8px}
+
+/* ---------- 9. SHELL DE PAINEL (sidebar + conteúdo + coluna direita) ---------- */
+.mv-shell{display:grid;grid-template-columns:248px minmax(0,1fr) 340px;gap:20px;
+  max-width:1560px;margin-inline:auto;padding:20px;align-items:start}
+.mv-side{position:sticky;top:20px;display:flex;flex-direction:column;gap:6px;
+  background:linear-gradient(180deg,rgba(19,38,61,.7),rgba(10,20,36,.7));
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:16px}
+.mv-aside{position:sticky;top:20px;display:flex;flex-direction:column;gap:16px}
+.mv-nav{display:flex;flex-direction:column;gap:4px}
+.mv-nav__item{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:12px;
+  font-size:14.5px;font-weight:600;color:var(--mv-txt-2);text-decoration:none;cursor:pointer;
+  background:transparent;border:1px solid transparent;font-family:inherit;text-align:left;width:100%}
+.mv-nav__item:hover{background:rgba(255,255,255,.04);color:var(--mv-txt)}
+.mv-nav__item.ativo{background:rgba(0,102,255,.16);border-color:rgba(0,212,255,.35);color:var(--mv-txt);
+  box-shadow:inset 0 0 0 1px rgba(0,212,255,.06)}
+.mv-nav__ico{width:22px;text-align:center;font-size:17px}
+.mv-nav__bolha{margin-left:auto;font-size:11.5px;font-weight:800;min-width:20px;height:20px;padding:0 6px;
+  border-radius:var(--mv-r-pill);display:grid;place-items:center;background:var(--mv-azul);color:#fff}
+
+/* ---------- 10. TAB BAR MOBILE ---------- */
+.mv-tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:rgba(8,17,30,.94);backdrop-filter:blur(12px);border-top:1px solid var(--mv-linha);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  grid-template-columns:repeat(5,1fr);align-items:end}
+.mv-tabbar__item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;
+  color:var(--mv-txt-3);background:none;border:0;font-family:inherit;cursor:pointer;padding:6px 2px;text-decoration:none}
+.mv-tabbar__item.ativo{color:var(--mv-ciano)}
+.mv-tabbar__ico{font-size:19px;line-height:1}
+.mv-tabbar__fab{width:52px;height:52px;border-radius:50%;background:var(--mv-grad);color:#04121f;
+  display:grid;place-items:center;font-size:26px;margin-top:-22px;box-shadow:var(--mv-glow)}
+
+/* ---------- 11. GRADE DE FERRAMENTAS ---------- */
+.mv-grade{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.mv-ferr{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:10px;
+  background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-radius:var(--mv-r);
+  padding:16px 14px;cursor:pointer;font-family:inherit;text-align:left;transition:.16s;color:var(--mv-txt)}
+.mv-ferr:hover{border-color:rgba(0,212,255,.5);transform:translateY(-2px)}
+.mv-ferr__ico{width:34px;height:34px;object-fit:contain;font-size:24px}
+.mv-ferr__tit{font-size:14.5px;font-weight:700}
+.mv-ferr__sub{font-size:12.5px;color:var(--mv-txt-3)}
+.mv-ferr__bolha{position:absolute;top:10px;right:10px;background:var(--mv-azul);color:#fff;
+  font-size:11px;font-weight:800;min-width:19px;height:19px;padding:0 6px;border-radius:var(--mv-r-pill);display:grid;place-items:center}
+.mv-ferr--destaque{border:2px solid var(--mv-laranja);background:linear-gradient(160deg,rgba(255,138,0,.16),rgba(255,138,0,.03));
+  box-shadow:0 0 18px rgba(255,138,0,.28)}
+
+/* ---------- 12. LANDING ---------- */
+.mv-secao{padding:clamp(48px,7vw,88px) 0}
+.mv-secao--faixa{background:var(--mv-bg-2)}
+.mv-recursos{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.mv-recurso{background:linear-gradient(180deg,rgba(19,38,61,.8),rgba(12,24,42,.8));
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:24px 20px;text-align:center;transition:.18s}
+.mv-recurso:hover{border-color:rgba(0,212,255,.45);transform:translateY(-3px)}
+.mv-recurso__ico{font-size:36px;margin-bottom:14px;display:block}
+.mv-passos{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));text-align:center}
+.mv-passo__n{width:34px;height:34px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:15px;background:var(--mv-azul);color:#fff;box-shadow:0 0 14px rgba(0,102,255,.5)}
+.mv-lista-check{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.mv-lista-check li{display:flex;align-items:center;gap:11px;font-size:15px;color:var(--mv-txt-2)}
+.mv-lista-check li::before{content:"\2713";width:26px;height:26px;flex:0 0 26px;border-radius:50%;
+  display:grid;place-items:center;font-size:13px;font-weight:800;color:var(--mv-ciano);
+  background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.4)}
+
+/* ---------- 13. UTILITÁRIOS ---------- */
+.mv-flex{display:flex;align-items:center;gap:12px}
+.mv-entre{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mv-col{display:flex;flex-direction:column}
+.mv-gap{gap:var(--mv-sp)}
+.mv-wrap{flex-wrap:wrap}
+.mv-mt{margin-top:var(--mv-sp)} .mv-mb{margin-bottom:var(--mv-sp)}
+.mv-oculto{display:none!important}
+.mv-scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.mv-progresso{height:8px;border-radius:var(--mv-r-pill);background:var(--mv-campo);overflow:hidden}
+.mv-progresso>i{display:block;height:100%;background:var(--mv-grad);border-radius:inherit}
+
+/* ---------- 14. RESPONSIVO ---------- */
+@media(max-width:1180px){
+  .mv-shell{grid-template-columns:230px minmax(0,1fr)}
+  .mv-aside{grid-column:1/-1;position:static;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+}
+@media(max-width:860px){
+  .mv-shell{grid-template-columns:1fr;padding:14px 14px 96px}
+  .mv-side{display:none}
+  .mv-tabbar{display:grid}
+  .mv-card{padding:15px;border-radius:var(--mv-r)}
+  .mv-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mv-kpi{flex-direction:column;gap:9px}
+}
+@media(max-width:640px){
+  /* mobile-first: botão nunca estoura a tela — o texto quebra em vez de empurrar o layout */
+  .mv-btn{white-space:normal;text-align:center;max-width:100%}
+}
+@media(max-width:400px){ .mv-kpis{grid-template-columns:1fr} }
+
+/* ---------- 15. MAPA DECORATIVO (hero / CTA) ---------- */
+.mv-mapa{position:relative;border-radius:var(--mv-r-xl);overflow:hidden;border:1px solid rgba(0,212,255,.22);
+  background:
+    radial-gradient(680px 380px at 50% 40%,rgba(0,102,255,.28),transparent 70%),
+    linear-gradient(rgba(0,212,255,.07) 1px,transparent 1px) 0 0/46px 46px,
+    linear-gradient(90deg,rgba(0,212,255,.07) 1px,transparent 1px) 0 0/46px 46px,
+    #071223;
+  box-shadow:inset 0 0 90px rgba(0,0,0,.55)}
+.mv-mapa::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,transparent 45%,rgba(6,13,24,.75) 100%)}
+.mv-pino{position:absolute;width:16px;height:16px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:var(--mv-grad);box-shadow:0 0 12px rgba(0,212,255,.8);animation:mvPino 3.4s ease-in-out infinite}
+.mv-pino::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#04101e}
+@keyframes mvPino{0%,100%{transform:rotate(-45deg) translateY(0)}50%{transform:rotate(-45deg) translateY(-6px)}}
+.mv-onda{position:absolute;width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(0,212,255,.55);
+  animation:mvOnda 3s ease-out infinite}
+@keyframes mvOnda{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+@media(prefers-reduced-motion:reduce){.mv-pino,.mv-onda{animation:none}}
+
+/* cartão flutuante de negócio sobre o mapa */
+.mv-negocio{display:flex;align-items:center;gap:11px;background:rgba(10,20,36,.94);border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r);padding:10px 13px;box-shadow:0 14px 34px rgba(0,0,0,.5);backdrop-filter:blur(6px)}
+.mv-negocio__img{width:44px;height:44px;flex:0 0 44px;border-radius:11px;display:grid;place-items:center;font-size:24px;
+  background:var(--mv-surf-2);border:1px solid var(--mv-linha)}
+.mv-negocio__nome{font-size:14px;font-weight:700;line-height:1.25}
+.mv-negocio__meta{font-size:12px;color:var(--mv-txt-3);margin-top:2px}
+.mv-negocio__nota{color:var(--mv-alerta);font-weight:700}
