@@ -27,7 +27,7 @@
   'use strict';
 
   // >>> TROQUE AQUI pelo ID real da propriedade GA4 (comeca com G-). <<<
-  var MV_GA_ID = 'G-XXXXXXXXXX';
+  var MV_GA_ID = 'G-GG5CSQZVGH';
 
   // Dominios do funil, pra atribuicao entre o site e o painel.
   var MV_DOMINIOS = ['moviki.com.br', 'app.moviki.com.br'];
