@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- MOVIKI 404.html | versao 2026-08-26-fase6 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+
 <meta charset="UTF-8">
 <title>Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; base-uri 'self'; object-src 'none'">
@@ -639,7 +641,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, getDoc, onSnapshot, collection, getDocs, query, where, addDoc, setDoc, increment, limit, serverTimestamp }
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, getDocs, query, where, limit, addDoc, increment, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -650,41 +652,51 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
+  window.MOVIKI_VERSAO='2026-08-26-fase6';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
   function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function ev(nome,par){try{if(window.mvEv)window.mvEv(nome,par||{});}catch(_){}}
 
-  /* ---------------------------------------------------------------------------
-     CONTADOR POR NEGÓCIO  (metricas/{uid}/dias/{AAAA-MM-DD})
-     O GA4 mede o site inteiro e não devolve dado por lojista. Este contador é
-     o que alimenta os números do painel: visualizações, contatos no WhatsApp,
-     cliques em "Como chegar" e aberturas do cardápio, mais 12 faixas de 2h
-     (b0..b11) pra sair o horário de pico. O dia da semana sai da data do
-     documento — não precisa de campo.
-     1 visita = 1 escrita. A regra do Firestore só aceita subir de 1 em 1 e no
-     máximo 2 campos por escrita, então ninguém consegue inflar em lote.
-     --------------------------------------------------------------------------- */
-  const MV_DIA=(function(){const d=new Date(),z=n=>(n<10?'0':'')+n;return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());})();
-  const mvTrava={};
-  async function mvContar(campo,comHora){
-    if(!negocioUid)return;
-    const ch=campo+'_'+negocioUid;
-    if(campo==='views'){
-      try{ if(sessionStorage.getItem('mv_'+ch+'_'+MV_DIA))return; sessionStorage.setItem('mv_'+ch+'_'+MV_DIA,'1'); }catch(_){}
-    }
-    if(mvTrava[ch])return;
-    const hoje=new Date();
-    mvTrava[ch]=1; setTimeout(function(){delete mvTrava[ch];},1500);
-    const dados={}; dados[campo]=increment(1);
-    if(comHora) dados['b'+Math.floor(new Date().getHours()/2)]=increment(1);
-    /* data de expiração para o TTL do Firestore apagar sozinho depois de 13 meses.
-       O valor é DETERMINÍSTICO (meia-noite, 13 meses depois do dia do documento):
-       assim toda escrita manda o mesmo valor, o campo não conta como alterado e a
-       regra que limita a 2 campos por escrita continua valendo. */
-    dados.expiraEm = new Date(hoje.getFullYear(), hoje.getMonth()+13, hoje.getDate(), 0, 0, 0, 0);
-    try{ await setDoc(doc(db,'metricas',negocioUid,'dias',MV_DIA),dados,{merge:true}); }catch(_){}
+  /* ============ contador de métricas por negócio (Fase 6) ============
+     Grava em metricas/{uid}/dias/{AAAA-MM-DD} com increment(1). O GA4 mede o
+     site inteiro e nao devolve dado por lojista; este contador e o que
+     alimenta o card "Seu desempenho" no painel.
+     As regras limitam: no maximo 3 campos na criacao, 2 alterados no update,
+     e cada contador sobe no maximo 1. Por isso expiraEm tem que ser SEMPRE o
+     mesmo valor para o mesmo dia — se mudasse, contaria como campo alterado
+     e a escrita seria recusada. Ele e derivado da PROPRIA data do documento
+     (em UTC), nunca do relogio local, senao visitantes em fusos diferentes
+     mandariam valores diferentes para o mesmo documento. */
+  const MV_TTL_MESES=13;
+  function mvDia(){const d=new Date();const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+  function mvFaixa(){return 'b'+Math.floor(new Date().getHours()/2);}
+  function mvExpiraEm(dia){
+    const a=dia.split('-');
+    return new Date(Date.UTC(Number(a[0]),Number(a[1])-1+MV_TTL_MESES,Number(a[2]),3,0,0,0));
+  }
+  const mvUltimo={};
+  async function mvContar(campo,extra){
+    try{
+      if(!negocioUid||!campo)return;
+      const agora=Date.now();
+      if(mvUltimo[campo]&&(agora-mvUltimo[campo])<1500)return;   /* anti duplo clique */
+      mvUltimo[campo]=agora;
+      const dia=mvDia();
+      const dados={expiraEm:mvExpiraEm(dia)};
+      dados[campo]=increment(1);
+      if(extra)dados[extra]=increment(1);
+      await setDoc(doc(db,'metricas',negocioUid,'dias',dia),dados,{merge:true});
+    }catch(_){}
+  }
+  function mvVisita(){
+    try{
+      const ch='mvv_'+negocioUid+'_'+mvDia();
+      if(sessionStorage.getItem(ch))return;                       /* F5 nao conta de novo */
+      sessionStorage.setItem(ch,'1');
+    }catch(_){}
+    mvContar('views',mvFaixa());
   }
 
   /* ============ ícones (SVG inline — emoji nunca faz papel de ícone) ============ */
@@ -716,7 +728,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   let donoMarkerLogo=null, negocioUid='', dadosNeg=null, notaEscolhida=0;
   let locais=[], localAtivo=0, seletorMontado=false, minhaPos=null;
   let cardapioAtual=[], mostrarFotosAtual=false;
-  let abaAtiva='fotos', avaliacoesCache=[], mediaCache=0;
+  let abaAtiva='fotos', avaliacoesCache=[], mediaCache=0, qtdCache=0, listaAvCarregada=false;
 
   const params=new URLSearchParams(window.location.search);
   const demoOn=params.get('demo')==='1';
@@ -913,7 +925,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     const eventos=liberaConteudo()?((d.eventos||[]).filter(e=>e&&e.titulo)):[];
     const abas=[];
     if(fotos.length||demoOn)abas.push({k:'fotos',lb:'Fotos',ic:IC.fotos,n:fotos.length});
-    abas.push({k:'avaliacoes',lb:'Avaliações',ic:IC.avaliacoes,n:qtdAval||avaliacoesCache.length});
+    abas.push({k:'avaliacoes',lb:'Avaliações',ic:IC.avaliacoes,n:qtdCache});
     if(promos.length)abas.push({k:'promocoes',lb:'Promoções',ic:IC.promocoes,n:promos.length});
     if(eventos.length)abas.push({k:'eventos',lb:'Eventos',ic:IC.eventos,n:eventos.length});
     abas.push({k:'info',lb:'Informações',ic:IC.info,n:0});
@@ -931,7 +943,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   }
   window.irParaAba=function(k){
     abaAtiva=k;
-    if(k==='avaliacoes'&&negocioUid)carregarListaAvaliacoes(negocioUid);
+    if(k==='avaliacoes')carregarListaAvaliacoes(negocioUid);
     document.querySelectorAll('#abas .aba').forEach(b=>b.classList.toggle('on',b.dataset.aba===k));
     if(dadosNeg)pintarAba(dadosNeg);
     const s=el('secAbas'); if(s)s.scrollIntoView({behavior:'smooth',block:'start'});
@@ -957,7 +969,10 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   };
   function htmlAvaliacoes(){
     let h='<button class="btnAvaliar" type="button" onclick="abrirAvaliar()">'+IC.avaliacoes+'Avaliar este negócio</button>';
-    if(!avaliacoesCache.length)return h+'<div class="vazioMod">Ainda não há avaliações. Seja o primeiro.</div>';
+    if(!avaliacoesCache.length){
+      if(qtdCache>0)return h+'<div class="vazioMod">Carregando avaliações…</div>';
+      return h+'<div class="vazioMod">Ainda não há avaliações. Seja o primeiro.</div>';
+    }
     h+='<div style="margin-top:12px">';
     avaliacoesCache.forEach(a=>{
       let st='';for(let i=1;i<=5;i++)st+=(i<=a.nota?estrelaCheia:estrelaVazia);
@@ -983,7 +998,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     if(locais.length>1)its.push({ic:IC.unidades,lb:'Unidades',vl:locais.map(l=>l.nome).join(' · ')});
     const wpp=(d.whatsapp||'').replace(/\D/g,'');
     if(wpp)its.push({ic:IC.whats,lb:'WhatsApp',vl:'Chame pelo botão no topo da página'});
-    if(mediaCache>0)its.push({ic:IC.avaliacoes,lb:'Nota média',vl:mediaCache.toFixed(1).replace('.',',')+' de 5 · '+avaliacoesCache.length+' avaliação'+(avaliacoesCache.length>1?'ões':'')});
+    if(mediaCache>0)its.push({ic:IC.avaliacoes,lb:'Nota média',vl:mediaCache.toFixed(1).replace('.',',')+' de 5 · '+qtdCache+' avaliação'+(qtdCache>1?'ões':'')});
     return '<div class="infoLista">'+its.map(i=>'<div class="infoIt'+(i.demo?' ehDemo demoBloco':'')+'"><div class="ico">'+i.ic+'</div><div><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('')+'</div>';
   }
   function htmlPromos(promos){
@@ -1053,8 +1068,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     el('folhaCardapio').querySelector('h2').textContent='Cardápio';
     el('corpoCardapio').innerHTML=gradeCategorias();
     abrirFolha('folhaCardapio');
-    ev('cardapio_aberto',{});
-    mvContar('cardapio',false);
+    ev('cardapio_aberto',{}); mvContar('cardapio');
   };
 
   /* ============ folhas ============ */
@@ -1210,75 +1224,68 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     if(ja){av.style.color='#25e39b';av.textContent='Você já avaliou este negócio. Obrigado!';return;}
     const btn=el('mavEnviar');btn.disabled=true;const t=btn.textContent;btn.textContent='Enviando...';
     try{
-      await addDoc(collection(db,'negocios',negocioUid,'avaliacoes'),{nota:notaEscolhida,nome:(el('avNome').value||'').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),criadoEm:serverTimestamp()});
+      const _nm=(el('avNome').value||'').trim();
+      await addDoc(collection(db,'negocios',negocioUid,'avaliacoes'),{nota:notaEscolhida,nome:(_nm.length>=2?_nm:'Cliente').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),criadoEm:serverTimestamp()});
+      /* soma no resumo: 1 escrita. E dele que sai a nota media da pagina. */
+      try{
+        await updateDoc(doc(db,'negocios',negocioUid,'resumo','avaliacoes'),{n:increment(1),soma:increment(notaEscolhida)});
+      }catch(_){
+        try{await setDoc(doc(db,'negocios',negocioUid,'resumo','avaliacoes'),{n:1,soma:notaEscolhida});}catch(__){}
+      }
       try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){}
       av.style.color='#25e39b';av.textContent='Obrigado pela sua avaliação!';
       ev('avaliacao_enviada',{nota:notaEscolhida});
-      try{ await setDoc(doc(db,'negocios',negocioUid,'resumo','avaliacoes'),{n:increment(1),soma:increment(notaEscolhida)},{merge:true}); }catch(_){}
-      aplicarNota(qtdAval+1,((mediaCache*qtdAval)+notaEscolhida)/(qtdAval+1));
-      setTimeout(()=>{fecharAvaliar();},1000);
+      setTimeout(()=>{fecharAvaliar();listaAvCarregada=false;avaliacoesCache=[];carregarAvaliacoesPub(negocioUid);if(abaAtiva==='avaliacoes')carregarListaAvaliacoes(negocioUid);},1000);
     }catch(e){av.textContent='Não deu pra enviar agora. Tente mais tarde.';}
     btn.disabled=false;btn.textContent=t;
   };
-  /* ---------------------------------------------------------------------------
-     AVALIAÇÕES — custo de leitura
-     Antes: toda visita lia TODAS as avaliações do negócio (1 leitura por
-     avaliação). Um negócio com 200 avaliações custava 200 leituras por visita —
-     quanto mais sucesso, mais caro. Agora a nota média e a quantidade vêm de
-     UM documento de resumo (negocios/{uid}/resumo/avaliacoes), e a lista só é
-     carregada quando o visitante abre a aba Avaliações — no máximo 20.
-     Negócio antigo, sem resumo: cai uma vez no caminho antigo e já grava o
-     resumo, então isso acontece no máximo uma vez por negócio.
-     --------------------------------------------------------------------------- */
-  let qtdAval=0, listaCarregada=false;
+  /* ============ resumo de avaliacoes (Fase 6) ============
+     A nota media e a quantidade vem de UM documento
+     (negocios/{uid}/resumo/avaliacoes). A LISTA so e lida quando o visitante
+     abre a aba Avaliacoes, e no maximo 20. Antes, cada visita lia TODAS as
+     avaliacoes do negocio: 200 avaliacoes = 200 leituras por visita, e a
+     conta crescia junto com o sucesso do lojista. */
+  function pintarChipNota(){
+    const chip=el('ratingChip'); if(!chip)return;
+    if(qtdCache>0){
+      const c=Math.round(mediaCache);let st='';
+      for(let i=1;i<=5;i++)st+=(i<=c?estrelaCheia:estrelaVazia);
+      chip.innerHTML='<span class="stars">'+st+'</span> <b>'+mediaCache.toFixed(1).replace('.',',')+'</b> <span style="color:var(--mv-txt-3)">('+qtdCache+' avaliaç'+(qtdCache>1?'ões':'ão')+')</span>';
+      chip.classList.remove('escondido');
+    }else{chip.classList.add('escondido');}
+    ajustarSeparador();
+    if(dadosNeg){montarAbas(dadosNeg);}
+  }
   async function carregarAvaliacoesPub(uid){
     try{
-      const r=await getDoc(doc(db,'negocios',uid,'resumo','avaliacoes'));
-      if(r.exists()){
-        const x=r.data()||{};
-        const n0=Number(x.n||0), sm=Number(x.soma||0);
-        aplicarNota(n0, n0?sm/n0:0);
-        return;
+      let n=0,soma=0,temResumo=false;
+      try{
+        const rs=await getDoc(doc(db,'negocios',uid,'resumo','avaliacoes'));
+        if(rs.exists()){const x=rs.data()||{};n=Number(x.n||0);soma=Number(x.soma||0);temResumo=true;}
+      }catch(_){}
+      if(!temResumo){
+        /* negocio antigo, sem resumo: cai UMA vez no caminho antigo e ja grava
+           o resumo. Da proxima visita em diante, nunca mais. */
+        const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
+        const lista=[];n=0;soma=0;
+        qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario});}});
+        avaliacoesCache=lista.slice(0,20); listaAvCarregada=true;
+        if(n>0){try{await setDoc(doc(db,'negocios',uid,'resumo','avaliacoes'),{n:n,soma:soma});}catch(_){}}
       }
-      await refazerResumo(uid,true);
+      qtdCache=n; mediaCache=n?soma/n:0;
+      pintarChipNota();
     }catch(e){}
   }
-  /* caminho antigo — só quando o resumo ainda não existe */
-  async function refazerResumo(uid,gravar){
-    try{
-      const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
-      let n=0,soma=0;const lista=[];
-      qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario});}});
-      avaliacoesCache=lista.slice(0,20); listaCarregada=true;
-      aplicarNota(n, n?soma/n:0);
-      if(gravar){ try{ await setDoc(doc(db,'negocios',uid,'resumo','avaliacoes'),{n:n,soma:soma},{merge:true}); }catch(_){} }
-    }catch(e){}
-  }
-  /* lista completa: só quando o visitante abre a aba */
   async function carregarListaAvaliacoes(uid){
-    if(listaCarregada)return;
-    listaCarregada=true;
+    if(listaAvCarregada||!uid)return;
+    listaAvCarregada=true;
     try{
       const qs=await getDocs(query(collection(db,'negocios',uid,'avaliacoes'),limit(20)));
       const lista=[];
       qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5)lista.push({nota:r,nome:x.nome,comentario:x.comentario});});
       avaliacoesCache=lista;
-      if(abaAtiva==='avaliacoes'&&dadosNeg)montarAbas(dadosNeg);
-    }catch(e){}
-  }
-  function aplicarNota(n,media){
-    qtdAval=n; mediaCache=media;
-    {
-      const chip=el('ratingChip');
-      if(n>0){
-        const c=Math.round(mediaCache);let st='';
-        for(let i=1;i<=5;i++)st+=(i<=c?estrelaCheia:estrelaVazia);
-        chip.innerHTML='<span class="stars">'+st+'</span> <b>'+mediaCache.toFixed(1).replace('.',',')+'</b> <span style="color:var(--mv-txt-3)">('+n+' avaliaç'+(n>1?'ões':'ão')+')</span>';
-        chip.classList.remove('escondido');
-      }else{chip.classList.add('escondido');}
-      ajustarSeparador();
-      if(dadosNeg){montarAbas(dadosNeg);montarRapidos(dadosNeg);}
-    }
+      if(dadosNeg&&abaAtiva==='avaliacoes')pintarAba(dadosNeg);
+    }catch(_){listaAvCarregada=false;}
   }
 
   /* ============ fotos ============ */
@@ -1363,6 +1370,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     negocioUid=uid;
     await carregarPlano(uid);
     carregarAvaliacoesPub(uid);
+    mvVisita();
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
       if(!snap.exists()){mostrarTela('Negócio não encontrado','Esse negócio não existe mais.',true);return;}
       const d=snap.data();
@@ -1377,13 +1385,13 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
         if(!seletorMontado){seletorMontado=true;carregarPontosDoDono(uid,d.nome,d.lat,d.lng);}
       }else{semLocal(d.nome);}
       ev('pagina_negocio',{plano:planoAtual});
-      mvContar('views',true);
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
   async function ouvirPonto(pid,ownerUid){
     negocioUid=ownerUid;
     await carregarPlano(ownerUid);
     carregarAvaliacoesPub(ownerUid);
+    mvVisita();
     onSnapshot(doc(db,'negocios',ownerUid),(snap)=>{
       if(!snap.exists()){mostrarTela('Negócio não encontrado','Esse negócio não existe mais.',true);return;}
       const dono=snap.data();
@@ -1423,12 +1431,11 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   /* mede os cliques marcados com data-ev (WhatsApp, Como chegar, crédito) */
   document.addEventListener('click',e=>{
     const alvo=e.target&&e.target.closest?e.target.closest('[data-ev]'):null;
-    if(alvo){
-      const acao=alvo.getAttribute('data-ev');
-      ev('clique_publico',{acao:acao,plano:planoAtual});
-      if(acao==='wpp'||acao==='wpp_unidade')mvContar('whats',false);
-      else if(acao==='rota'||acao==='rota_unidade')mvContar('rota',false);
-    }
+    if(!alvo)return;
+    const acao=alvo.getAttribute('data-ev');
+    ev('clique_publico',{acao:acao,plano:planoAtual});
+    if(acao==='wpp'||acao==='wpp_unidade')mvContar('whats');
+    else if(acao==='rota'||acao==='rota_unidade')mvContar('rota');
   },true);
 
   document.addEventListener('keydown',e=>{
