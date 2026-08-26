@@ -88,6 +88,8 @@
   .sim{color:var(--verde);font-weight:800}
   .nao{color:#557090}
   tbody tr:hover{background:rgba(255,255,255,.02)}
+  .thSm{display:none}
+  .miniNota{display:block;font-size:10px;font-weight:600;color:var(--sub);line-height:1.2;margin-top:2px}
   .precoLinha td{font-weight:800;font-size:15px;color:var(--txt);background:#08192b}
   /* PREÇOS */
   .planos{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;max-width:820px;margin:0 auto}
@@ -135,6 +137,27 @@
     .barra{display:block}
     body{padding-bottom:78px}
     .hdCta{display:none}
+
+    /* TABELA COMPARATIVA NO CELULAR — colunas estreitas, tudo cabe na tela */
+    .tabelaWrap{overflow:visible}
+    table{min-width:0;width:100%;table-layout:fixed}
+    th,td{padding:10px 1px;font-size:13px}
+    th:first-child,td:first-child{
+      min-width:0;width:auto;font-size:12px;line-height:1.28;
+      padding:10px 6px 10px 10px;font-weight:600;
+    }
+    thead th{top:74px;z-index:5}
+    thead th:not(:first-child){
+      width:47px;font-size:9px;letter-spacing:0;line-height:1.15;
+      padding:9px 1px;white-space:nowrap;
+    }
+    td:not(:first-child){width:47px}
+    .thLg{display:none}
+    .thSm{display:inline}
+    .tabelaWrap{scroll-margin-top:84px}
+    .sim{font-size:14px}
+    .precoLinha td{font-size:10.5px;padding:11px 1px}
+    .precoLinha td:first-child{font-size:12px;padding-left:10px}
   }
 </style>
 </head>
@@ -274,7 +297,7 @@
   <div class="tabelaWrap">
     <table>
       <thead>
-        <tr><th>Recurso</th><th>Básico</th><th>Pró</th><th class="dest">Premium</th><th>Enterprise</th></tr>
+        <tr><th>Recurso</th><th>Básico</th><th>Pró</th><th class="dest">Premium</th><th><span class="thLg">Enterprise</span><span class="thSm">Enterp.</span></th></tr>
       </thead>
       <tbody>
         <tr><td>Pino no mapa e página pública</td><td class="sim">✓</td><td class="sim">✓</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
@@ -289,7 +312,7 @@
         <tr><td><b>Cor da sua marca na página</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
         <tr><td><b>Fotos dos produtos (até 3 por item)</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
         <tr><td><b>Galeria do negócio (até 12 fotos)</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
-        <tr><td>Vários pontos num cadastro só</td><td class="nao">—</td><td class="nao">—</td><td class="nao">—</td><td class="sim">✓ até 3</td></tr>
+        <tr><td>Vários pontos num cadastro só</td><td class="nao">—</td><td class="nao">—</td><td class="nao">—</td><td class="sim">✓<span class="miniNota">até 3</span></td></tr>
         <tr><td>Página só com a sua marca (white-label)</td><td class="nao">—</td><td class="nao">—</td><td class="nao">—</td><td class="sim">✓</td></tr>
         <tr><td>Relatórios consolidados</td><td class="nao">—</td><td class="nao">—</td><td class="nao">—</td><td class="sim">✓</td></tr>
         <tr><td>Suporte prioritário no WhatsApp</td><td class="nao">—</td><td class="nao">—</td><td class="nao">—</td><td class="sim">✓</td></tr>
