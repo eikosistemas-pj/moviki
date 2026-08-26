@@ -84,6 +84,7 @@ a{color:inherit}
 .lp-menu__painel a.item:hover{background:rgba(255,255,255,.05);color:#fff}
 
 /* botão verde do CTA principal (igual à arte) */
+.mv-btn img{vertical-align:middle}
 .lp-btn-verde{background:linear-gradient(135deg,#2ee6a8,#0fb87f)!important;color:#04121f!important;
   box-shadow:0 0 20px rgba(37,227,155,.45)!important;border-color:transparent!important}
 
@@ -110,12 +111,14 @@ a{color:inherit}
 .lp-palco{position:relative;width:100%;max-width:100%;aspect-ratio:1/1;min-height:340px}
 .lp-iso{position:absolute;inset:0;overflow:hidden;border-radius:var(--mv-r-xl);
   background:radial-gradient(520px 340px at 50% 52%,rgba(0,102,255,.34),transparent 72%),#050e1c}
-.lp-iso__grade{position:absolute;inset:-40%;
+.lp-iso__grade{position:absolute;inset:-40%;filter:drop-shadow(0 0 12px rgba(0,190,255,.45));
   background:linear-gradient(rgba(0,190,255,.26) 1px,transparent 1px) 0 0/34px 34px,
              linear-gradient(90deg,rgba(0,190,255,.26) 1px,transparent 1px) 0 0/34px 34px;
   transform:perspective(760px) rotateX(58deg) rotateZ(-42deg);transform-origin:50% 50%;
   -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 32%,transparent 74%);
           mask-image:radial-gradient(circle at 50% 50%,#000 32%,transparent 74%)}
+.lp-iso__foto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.lp-iso__foto~.lp-iso__rota,.lp-iso__foto~.lp-pin,.lp-iso__foto~.lp-halo,.lp-iso__foto~.lp-nucleo{display:none}
 .lp-iso__rota{position:absolute;inset:0;width:100%;height:100%}
 .lp-iso__rota path{fill:none;stroke:var(--mv-ok);stroke-width:.7;stroke-dasharray:2.6 2.6;opacity:.75;
   animation:lpRota 3.2s linear infinite}
@@ -184,6 +187,7 @@ a{color:inherit}
   border-radius:var(--mv-r-lg);padding:26px 18px;text-align:center;transition:.18s}
 .lp-rec>div:hover{border-color:rgba(0,212,255,.5);transform:translateY(-3px)}
 .lp-rec--3{max-width:820px;margin-inline:auto;grid-template-columns:repeat(3,minmax(0,1fr))}
+.lp-rec--6{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1000px;margin-inline:auto}
 .lp-rec h3{font-size:16.5px;font-weight:700;margin:14px 0 8px}
 .lp-rec p{font-size:13.5px;line-height:1.58;color:var(--mv-txt-3);margin:0}
 
@@ -202,7 +206,11 @@ a{color:inherit}
 .lp-unid .u{display:flex;align-items:center;gap:12px;background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:14px 16px}
 .lp-unid .u.sel{border-color:rgba(0,212,255,.55);background:rgba(0,212,255,.08)}
 .lp-unid .u b{font-size:14.5px}
-.lp-unid .u span{font-size:12.5px;color:var(--mv-txt-3);display:block;margin-top:2px}
+.lp-unid .u span{font-size:12.5px;color:var(--mv-txt-3);display:flex;align-items:center;gap:7px;margin-top:3px}
+.lp-unid .u .ic3d{width:34px;height:34px}
+.lp-st{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.lp-st--on{background:var(--mv-ok);box-shadow:0 0 8px var(--mv-ok)}
+.lp-st--off{background:var(--mv-erro);box-shadow:0 0 8px var(--mv-erro)}
 
 /* planos */
 .lp-toggle{display:flex;justify-content:center;gap:6px;background:var(--mv-campo);border:1px solid var(--mv-linha);
@@ -243,6 +251,10 @@ a{color:inherit}
 .lp-final__pino{text-align:center;position:relative;padding-bottom:26px}
 .lp-final__pino::after{content:"";position:absolute;left:50%;bottom:6px;width:180px;height:34px;transform:translateX(-50%);
   border-radius:50%;background:radial-gradient(closest-side,rgba(0,212,255,.55),transparent 72%);filter:blur(2px)}
+.lp-pino3d{width:clamp(180px,17vw,250px);height:auto;border-radius:20px;display:block;margin-inline:auto;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 58%,transparent 84%);
+          mask-image:radial-gradient(circle at 50% 50%,#000 58%,transparent 84%)}
+.lp-pino3d~*,.lp-final__pino:has(.lp-pino3d)::after{display:none}
 .lp-final__pino img{filter:drop-shadow(0 14px 34px rgba(0,180,255,.6))}
 
 /* rodapé */
@@ -253,7 +265,10 @@ a{color:inherit}
 .lp-foot a{font-size:14px;color:var(--mv-txt-2);text-decoration:none}
 .lp-foot a:hover{color:var(--mv-ciano)}
 .lp-social{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.lp-social a{width:38px;height:38px;border-radius:11px;border:1px solid var(--mv-linha);background:var(--mv-surf-2);display:grid;place-items:center;font-size:16px;text-decoration:none}
+.lp-social a{width:40px;height:40px;border-radius:12px;border:1px solid var(--mv-linha);background:var(--mv-surf-2);
+  display:grid;place-items:center;text-decoration:none;color:var(--mv-txt-2);transition:.16s}
+.lp-social a:hover{border-color:var(--mv-ciano);color:var(--mv-ciano);background:rgba(0,212,255,.09);transform:translateY(-2px)}
+.lp-social svg{width:19px;height:19px;fill:currentColor;display:block}
 .lp-news{display:flex;gap:8px;margin-top:12px}
 .lp-news input{flex:1;min-width:0;font-family:inherit;font-size:14px;color:var(--mv-txt);background:var(--mv-campo);
   border:1px solid var(--mv-linha);border-radius:12px;padding:12px 14px}
@@ -295,8 +310,8 @@ a{color:inherit}
   .lp-ctas .mv-btn{width:100%}
   .lp-prova{width:100%}
 }
-@media(max-width:700px){ .lp-rec--3{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media(max-width:420px){ .lp-rec,.lp-rec--3{grid-template-columns:minmax(0,1fr)} }
+@media(max-width:700px){ .lp-rec--3,.lp-rec--6{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media(max-width:420px){ .lp-rec,.lp-rec--3,.lp-rec--6{grid-template-columns:minmax(0,1fr)} }
 /* palavras longas nunca empurram o layout */
 .lp-rec h3,.lp-passo h3,.mv-h3,.lp-plano h3{overflow-wrap:anywhere}
 </style>
@@ -359,7 +374,7 @@ a{color:inherit}
           <li><img class="ic3d ic3d--p" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Localização em tempo real</li>
           <li><img class="ic3d ic3d--p" src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'📋')">Cardápio digital personalizado</li>
           <li><img class="ic3d ic3d--p" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">Promoções e cupons exclusivos</li>
-          <li><img class="ic3d ic3d--p" src="icones-premium/chat.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Conexão direta via WhatsApp</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Conexão direta via WhatsApp</li>
         </ul>
 
         <div class="lp-ctas">
@@ -383,6 +398,7 @@ a{color:inherit}
       <div class="lp-palco" aria-hidden="true">
         <div class="lp-iso">
           <div class="lp-iso__grade"></div>
+          <img class="lp-iso__foto" src="img/mapa-3d.png" alt="" loading="eager" onerror="this.remove()">
           <svg class="lp-iso__rota" viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M26,20 C38,28 50,38 58,46"/>
             <path d="M58,46 C64,54 70,62 74,70"/>
@@ -446,11 +462,11 @@ a{color:inherit}
             <div class="lp-cel"><img src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'🍽️')">Cardápio</div>
             <div class="lp-cel"><img src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">Promoções</div>
             <div class="lp-cel"><img src="icones-premium/galeria.png" alt="" loading="lazy" onerror="lpIco(this,'📸')">Fotos</div>
-            <div class="lp-cel"><img src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'📅')">Eventos</div>
+            <div class="lp-cel"><img src="icones-premium/eventos.png" alt="" loading="lazy" onerror="lpIco(this,'📅')">Eventos</div>
             <div class="lp-cel"><span class="b">32</span><img src="icones-premium/avaliacoes.png" alt="" loading="lazy" onerror="lpIco(this,'⭐')">Avaliações</div>
             <div class="lp-cel"><img src="icones-premium/chat.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Mensagens</div>
             <div class="lp-cel"><img src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Localização</div>
-            <div class="lp-cel"><img src="icones-premium/chat.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">WhatsApp</div>
+            <div class="lp-cel"><img src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">WhatsApp</div>
             <div class="lp-cel"><img src="icones-premium/relatorios.png" alt="" loading="lazy" onerror="lpIco(this,'📊')">Meu plano</div>
           </div>
 
@@ -472,7 +488,7 @@ a{color:inherit}
           <h3>Cardápio digital</h3><p>Mostre seus produtos, preços e novidades de forma profissional.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">
           <h3>Promoções exclusivas</h3><p>Crie cupons e promoções para atrair mais clientes para o seu negócio.</p></div>
-        <div><img class="ic3d ic3d--g" src="icones-premium/chat.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">
+        <div><img class="ic3d ic3d--g" src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">
           <h3>Contato direto</h3><p>Clientes falam com você pelo WhatsApp com um clique.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/crescimento.png" alt="" loading="lazy" onerror="lpIco(this,'📈')">
           <h3>Mais visibilidade</h3><p>Aumente sua visibilidade, suas vendas e faça seu negócio crescer.</p></div>
@@ -502,15 +518,13 @@ a{color:inherit}
     <div class="mv-container">
       <div class="lp-tit"><h2>Feito para quem vive <em>em movimento</em></h2>
         <p>Do carrinho de lanche ao food truck, todo empreendedor merece ser encontrado.</p></div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🚚 Food trucks</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🌭 Carrinhos de lanche</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">⛱️ Barracas de praia</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🍧 Açaí &amp; sorvete</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🥞 Tapioca &amp; crepe</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🍰 Doceiras</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🛵 Delivery de bairro</span>
-        <span class="mv-badge mv-badge--neutro" style="font-size:14px;padding:10px 18px">🧺 Feirantes</span>
+      <div class="lp-rec lp-rec--6">
+        <div><img class="ic3d ic3d--g" src="icones-premium/foodtruck.png" alt="" loading="lazy" onerror="lpIco(this,'🚚')"><h3>Food trucks</h3><p>Você muda de ponto e o mapa acompanha.</p></div>
+        <div><img class="ic3d ic3d--g" src="icones-premium/carrinho.png" alt="" loading="lazy" onerror="lpIco(this,'🌭')"><h3>Carrinhos e trailers</h3><p>Lanche, açaí, tapioca, crepe, doces.</p></div>
+        <div><img class="ic3d ic3d--g" src="icones-premium/quiosque.png" alt="" loading="lazy" onerror="lpIco(this,'⛱️')"><h3>Barracas e quiosques</h3><p>Praia, praça, parque ou evento.</p></div>
+        <div><img class="ic3d ic3d--g" src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'🏪')"><h3>Lojas de bairro</h3><p>Quem tem ponto fixo e quer ser achado.</p></div>
+        <div><img class="ic3d ic3d--g" src="icones-premium/eventos.png" alt="" loading="lazy" onerror="lpIco(this,'🧺')"><h3>Feiras e eventos</h3><p>Feirantes e quem roda a agenda da cidade.</p></div>
+        <div><img class="ic3d ic3d--g" src="icones-premium/multipontos.png" alt="" loading="lazy" onerror="lpIco(this,'🏬')"><h3>Vários pontos</h3><p>Mais de uma unidade, cada uma no seu lugar.</p></div>
       </div>
     </div>
   </section>
@@ -532,9 +546,9 @@ a{color:inherit}
           <span class="mv-badge mv-badge--info">3 unidades</span>
         </div>
         <div class="lp-unid">
-          <div class="u sel"><span style="font-size:19px">📍</span><div style="flex:1"><b>Unidade Centro</b><span>🟢 Aberto agora · a 1,2 km</span></div><span style="color:var(--mv-ciano)">✓</span></div>
-          <div class="u"><span style="font-size:19px">📍</span><div style="flex:1"><b>Unidade da Praia</b><span>🟢 Aberto agora · a 1,8 km</span></div></div>
-          <div class="u"><span style="font-size:19px">📍</span><div style="flex:1"><b>Unidade Shopping</b><span>🔴 Fechado · a 3,4 km</span></div></div>
+          <div class="u sel"><img class="ic3d" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')"><div style="flex:1"><b>Unidade Centro</b><span><i class="lp-st lp-st--on"></i>Aberto agora · a 1,2 km</span></div><span style="color:var(--mv-ciano);font-size:18px">✓</span></div>
+          <div class="u"><img class="ic3d" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')"><div style="flex:1"><b>Unidade da Praia</b><span><i class="lp-st lp-st--on"></i>Aberto agora · a 1,8 km</span></div></div>
+          <div class="u"><img class="ic3d" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')"><div style="flex:1"><b>Unidade Shopping</b><span><i class="lp-st lp-st--off"></i>Fechado · a 3,4 km</span></div></div>
         </div>
         <p class="mv-muted" style="margin-top:14px">O cliente escolhe a unidade e a página inteira se ajusta: mapa, horário, WhatsApp e cardápio daquele ponto.</p>
       </div>
@@ -645,11 +659,11 @@ a{color:inherit}
         </div>
         <div class="mv-col" style="gap:12px">
           <a class="mv-btn mv-btn--g mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_final">Começar grátis agora &nbsp;→</a>
-          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://wa.me/554120186848" rel="noopener" data-ev="cta_whats">Falar com especialista 💬</a>
+          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://wa.me/554120186848" rel="noopener" data-ev="cta_whats"><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" style="width:24px;height:24px" onerror="lpIco(this,'💬')">Falar com especialista</a>
           <p class="mv-muted" style="text-align:center;margin:0">Teste grátis por 30 dias · Sem compromisso</p>
         </div>
         <div class="lp-final__pino">
-          <img class="ic3d ic3d--xg" src="icones-premium/logopino.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">
+          <img class="lp-pino3d" src="img/pino-mapa.png" alt="" loading="lazy" onerror="this.classList.remove('lp-pino3d');this.classList.add('ic3d','ic3d--xg');this.src='icones-premium/logopino.png'">
         </div>
       </div>
     </div>
@@ -663,10 +677,18 @@ a{color:inherit}
           <a class="lp-brand" href="/" style="margin-bottom:12px"><img src="logo.png" alt="Moviki" onerror="this.style.display='none'"></a>
           <p class="mv-muted" style="max-width:30ch">O mapa inteligente dos negócios em movimento.</p>
           <div class="lp-social">
-            <a href="https://instagram.com/moviki.oficial" rel="noopener" aria-label="Instagram">📷</a>
-            <a href="https://facebook.com/profile.php?id=61592924561303" rel="noopener" aria-label="Facebook">👍</a>
-            <a href="https://wa.me/554120186848" rel="noopener" aria-label="WhatsApp">💬</a>
-            <a href="https://youtube.com/@app.moviki" rel="noopener" aria-label="YouTube">▶️</a>
+            <a href="https://instagram.com/moviki.oficial" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.05 1.8.25 2.2.42.6.22 1 .48 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 1.8c-3.1 0-3.5 0-4.7.07-1.1.05-1.7.24-2.1.4-.5.2-.9.44-1.3.83-.4.4-.63.79-.83 1.3-.16.4-.35 1-.4 2.1C2.6 9.9 2.6 10.3 2.6 12s0 2.1.07 3.3c.05 1.1.24 1.7.4 2.1.2.5.44.9.83 1.3.4.4.79.63 1.3.83.4.16 1 .35 2.1.4 1.2.07 1.6.07 4.7.07s3.5 0 4.7-.07c1.1-.05 1.7-.24 2.1-.4.5-.2.9-.44 1.3-.83.4-.4.63-.79.83-1.3.16-.4.35-1 .4-2.1.07-1.2.07-1.6.07-3.3s0-2.1-.07-3.3c-.05-1.1-.24-1.7-.4-2.1-.2-.5-.44-.9-.83-1.3-.4-.4-.79-.63-1.3-.83-.4-.16-1-.35-2.1-.4C15.5 4 15.1 4 12 4Zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 8.08a3.18 3.18 0 1 0 0-6.36 3.18 3.18 0 0 0 0 6.36ZM18.4 6.9a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"/></svg>
+            </a>
+            <a href="https://facebook.com/profile.php?id=61592924561303" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.5-3.91 3.77-3.91 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>
+            </a>
+            <a href="https://wa.me/554120186848" rel="noopener" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.6 2 2.18 6.42 2.18 11.86c0 1.74.46 3.44 1.32 4.94L2.1 22l5.35-1.37a9.8 9.8 0 0 0 4.59 1.16h.01c5.43 0 9.85-4.42 9.85-9.86A9.79 9.79 0 0 0 12.04 2Zm0 17.94h-.01a8.2 8.2 0 0 1-4.15-1.13l-.3-.18-3.08.79.82-3.01-.2-.31a8.13 8.13 0 0 1-1.25-4.34c0-4.5 3.67-8.16 8.18-8.16a8.13 8.13 0 0 1 8.16 8.17c0 4.5-3.67 8.17-8.17 8.17Zm4.48-6.12c-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.25-.63.8-.77.97-.14.16-.28.18-.52.06-.25-.12-1.04-.38-1.97-1.22-.73-.65-1.22-1.45-1.36-1.7-.14-.24-.02-.37.11-.49.11-.11.25-.28.37-.42.12-.14.16-.25.24-.41.08-.17.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.43.06-.65.3-.22.25-.85.84-.85 2.04s.87 2.37 1 2.53c.12.17 1.72 2.62 4.16 3.68.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.45-.59 1.65-1.17.2-.57.2-1.06.14-1.16-.06-.11-.22-.17-.46-.29Z"/></svg>
+            </a>
+            <a href="https://youtube.com/@app.moviki" rel="noopener" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.58 7.19a2.5 2.5 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.5 2.5 0 0 0-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81a2.5 2.5 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.5 2.5 0 0 0 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81ZM10 15.02V8.98L15.2 12 10 15.02Z"/></svg>
+            </a>
           </div>
         </div>
         <div><h4>Produto</h4><ul>
