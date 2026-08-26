@@ -94,7 +94,9 @@ a{color:inherit}
 /* .lp-head NAO entra aqui: position:relative sobrescreveria o sticky do cabecalho */
 .lp-sec,.lp-foot{position:relative;z-index:1}
 .lp-hero-grid{display:grid;gap:clamp(16px,1.8vw,26px);grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) minmax(0,.96fr);align-items:center}
-.lp-tag{font-size:10.5px;letter-spacing:.9px}
+.lp-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.7px;line-height:1.45;
+  padding:9px 16px;text-align:left;max-width:100%}
+.lp-tag svg{width:14px;height:14px;flex:0 0 14px;fill:var(--mv-ciano);filter:drop-shadow(0 0 6px rgba(0,212,255,.7))}
 .lp-hero h1{font-size:clamp(33px,3.6vw,50px);line-height:1.04;letter-spacing:-2px;font-weight:800;margin:18px 0 16px}
 .lp-hero h1 em{font-style:normal;background:var(--mv-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lp-hero p.sub{font-size:15.5px;line-height:1.68;color:var(--mv-txt-2);margin:0 0 22px}
@@ -289,21 +291,49 @@ a{color:inherit}
   .lp-links,.lp-nav-cta{display:none}
   .lp-burger{display:flex}
   .lp-hero-grid{grid-template-columns:minmax(0,1fr)}
+  /* ---- no celular e no tablet o conteudo fica centralizado ---- */
+  .lp-hero-grid>div:first-child{text-align:center}
+  .lp-tag{text-align:center;justify-content:center}
+  .lp-hero p.sub{margin-inline:auto}
+  .lp-bul{display:inline-grid;text-align:left;justify-items:start}
+  .lp-ctas,.lp-selos{justify-content:center}
+  .lp-prova{display:inline-flex;text-align:left}
+  .lp-tit--esq{text-align:center;margin-inline:auto}
+  .lp-duplo>div:first-child,.lp-duplo>div:last-child{text-align:center}
+  .lp-duplo .mv-btn{margin-inline:auto}
+  .lp-duplo .mv-card,.lp-duplo .mv-tabela{text-align:left}
+  .lp-final{text-align:center}
+  .lp-final .mv-muted{margin-inline:auto}
   .lp-palco{aspect-ratio:1/.82}
   .lp-passos{grid-template-columns:repeat(2,minmax(0,1fr))}
   .lp-passo:not(:last-child)::after{display:none}
   .lp-duplo--inv>div:first-child{order:0}
 }
 @media(max-width:700px){
-  /* mapa compacto + cartoes empilhados: nada de sobreposicao no celular */
-  .lp-palco{aspect-ratio:auto;min-height:0;display:flex;flex-direction:column;gap:10px}
-  .lp-iso{position:relative;inset:auto;height:190px;border-radius:var(--mv-r-lg);flex:0 0 auto}
-  .lp-neg{position:static;width:100%;animation:none}
-  .lp-neg img{width:44px;height:44px;flex-basis:44px}
+  /* rodape em blocos: marca centralizada, links em 2 colunas, newsletter em caixa */
+  .lp-foot-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 18px}
+  .lp-foot-grid>div:first-child{grid-column:1/-1;text-align:center}
+  .lp-foot-grid>div:first-child .lp-brand{justify-content:center}
+  .lp-foot-grid>div:first-child p{margin-inline:auto}
+  .lp-social{justify-content:center}
+  .lp-foot-grid>div:last-child{grid-column:1/-1;background:rgba(19,38,61,.7);border:1px solid var(--mv-linha);
+    border-radius:var(--mv-r-lg);padding:18px;text-align:center}
+  .lp-foot-grid>div:last-child .mv-muted{margin-inline:auto}
+  .lp-legal{text-align:center}
+  /* mapa protagonista com os cartoes flutuando por cima, igual a arte */
+  .lp-palco{aspect-ratio:1/1.04;min-height:0;display:block}
+  .lp-iso{border-radius:var(--mv-r-xl)}
+  .lp-neg{position:absolute;width:min(236px,68%);padding:9px 11px;gap:9px}
+  .lp-neg img{width:42px;height:42px;flex-basis:42px}
+  .lp-neg__n{font-size:12.5px}
+  .lp-neg__e{font-size:11px}
+  .lp-neg__d{font-size:10.5px}
+  .lp-neg--a{top:1%;left:auto;right:0}
+  .lp-neg--b{top:38%;left:0;right:auto}
+  .lp-neg--c{bottom:3%;left:auto;right:1%}
   .lp-nav{height:64px}
   .lp-ctas .mv-btn{white-space:normal}
   .lp-rec{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .lp-foot-grid{grid-template-columns:minmax(0,1fr)}
   .lp-final{grid-template-columns:1fr}
   .lp-neg{width:min(240px,76%)}
   .lp-neg--b{left:0}
@@ -366,7 +396,9 @@ a{color:inherit}
 
       <!-- coluna 1: texto -->
       <div>
-        <span class="mv-tag lp-tag">📍 Plataforma completa para negócios em movimento</span>
+        <span class="mv-tag lp-tag">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2Z"/></svg>
+          Plataforma completa para negócios em movimento</span>
         <h1>Seu negócio<br>no mapa.<br><em>Sempre visível.</em></h1>
         <p class="sub">Conecte-se com clientes perto de você em tempo real. Divulgue seu cardápio, promoções e seja encontrado por quem realmente importa.</p>
 
