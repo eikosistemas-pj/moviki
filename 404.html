@@ -675,9 +675,15 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       try{ if(sessionStorage.getItem('mv_'+ch+'_'+MV_DIA))return; sessionStorage.setItem('mv_'+ch+'_'+MV_DIA,'1'); }catch(_){}
     }
     if(mvTrava[ch])return;
+    const hoje=new Date();
     mvTrava[ch]=1; setTimeout(function(){delete mvTrava[ch];},1500);
     const dados={}; dados[campo]=increment(1);
     if(comHora) dados['b'+Math.floor(new Date().getHours()/2)]=increment(1);
+    /* data de expiração para o TTL do Firestore apagar sozinho depois de 13 meses.
+       O valor é DETERMINÍSTICO (meia-noite, 13 meses depois do dia do documento):
+       assim toda escrita manda o mesmo valor, o campo não conta como alterado e a
+       regra que limita a 2 campos por escrita continua valendo. */
+    dados.expiraEm = new Date(hoje.getFullYear(), hoje.getMonth()+13, hoje.getDate(), 0, 0, 0, 0);
     try{ await setDoc(doc(db,'metricas',negocioUid,'dias',MV_DIA),dados,{merge:true}); }catch(_){}
   }
 
