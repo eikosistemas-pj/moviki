@@ -639,7 +639,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, getDoc, onSnapshot, collection, getDocs, query, where, addDoc, serverTimestamp }
+  import { getFirestore, doc, getDoc, onSnapshot, collection, getDocs, query, where, addDoc, setDoc, increment, limit, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -655,6 +655,31 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   const el=id=>document.getElementById(id);
   function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function ev(nome,par){try{if(window.mvEv)window.mvEv(nome,par||{});}catch(_){}}
+
+  /* ---------------------------------------------------------------------------
+     CONTADOR POR NEGÓCIO  (metricas/{uid}/dias/{AAAA-MM-DD})
+     O GA4 mede o site inteiro e não devolve dado por lojista. Este contador é
+     o que alimenta os números do painel: visualizações, contatos no WhatsApp,
+     cliques em "Como chegar" e aberturas do cardápio, mais 12 faixas de 2h
+     (b0..b11) pra sair o horário de pico. O dia da semana sai da data do
+     documento — não precisa de campo.
+     1 visita = 1 escrita. A regra do Firestore só aceita subir de 1 em 1 e no
+     máximo 2 campos por escrita, então ninguém consegue inflar em lote.
+     --------------------------------------------------------------------------- */
+  const MV_DIA=(function(){const d=new Date(),z=n=>(n<10?'0':'')+n;return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());})();
+  const mvTrava={};
+  async function mvContar(campo,comHora){
+    if(!negocioUid)return;
+    const ch=campo+'_'+negocioUid;
+    if(campo==='views'){
+      try{ if(sessionStorage.getItem('mv_'+ch+'_'+MV_DIA))return; sessionStorage.setItem('mv_'+ch+'_'+MV_DIA,'1'); }catch(_){}
+    }
+    if(mvTrava[ch])return;
+    mvTrava[ch]=1; setTimeout(function(){delete mvTrava[ch];},1500);
+    const dados={}; dados[campo]=increment(1);
+    if(comHora) dados['b'+Math.floor(new Date().getHours()/2)]=increment(1);
+    try{ await setDoc(doc(db,'metricas',negocioUid,'dias',MV_DIA),dados,{merge:true}); }catch(_){}
+  }
 
   /* ============ ícones (SVG inline — emoji nunca faz papel de ícone) ============ */
   const IC={
@@ -777,14 +802,23 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     const b=!el('distChip').classList.contains('escondido');
     el('metaSep').classList.toggle('escondido',!(a&&b));
   }
+  function fmtReal(v){ return 'R$ '+Number(v).toFixed(2).replace('.',','); }
   function montarRapidos(d){
     const box=el('rapidos'); const its=[];
     const aberto=d.status==='aberto';
     its.push({ico:IC.relogio,lb:'Agora',vl:aberto?'Aberto':'Fechado',verde:aberto});
+    /* --- Fase 2b: horário, entrega e preço médio. Campo vazio some; em ?demo=1 vira exemplo. --- */
+    const _hor=d.horario||(demoOn?'Seg a Sáb, 11h às 23h':'');
+    if(_hor) its.push({ico:IC.relogio,lb:'Horário',vl:_hor,demo:!d.horario});
     if(locais.length>1){ its.push({ico:IC.unidades,lb:'Unidades',vl:locais.length+' no mapa'}); }
     else if(minhaPos&&negocioPos){ its.push({ico:IC.pino,lb:'Distância',vl:fmtKm(distanciaKm(minhaPos,negocioPos))+' de você'}); }
-    if(mediaCache>0&&its.length<4){ its.push({ico:IC.avaliacoes,lb:'Avaliação',vl:mediaCache.toFixed(1).replace('.',',')+' de 5'}); }
-    box.innerHTML=its.map(i=>'<div class="rapido"><div class="ico'+(i.verde?' verde':'')+'">'+i.ico+'</div><div class="tx"><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('');
+    const _ent=d.entrega||(demoOn?'Entrega R$ 5,00':'');
+    if(_ent) its.push({ico:IC.moto,lb:'Entrega',vl:_ent,demo:!d.entrega});
+    const _pmReal=(typeof d.precoMedio==='number'&&d.precoMedio>0)?d.precoMedio:0;
+    const _pm=_pmReal||(demoOn?24.9:0);
+    if(_pm) its.push({ico:IC.moeda,lb:'Preço médio',vl:fmtReal(_pm)+' por pessoa',demo:!_pmReal});
+    if(mediaCache>0&&its.length<6){ its.push({ico:IC.avaliacoes,lb:'Avaliação',vl:mediaCache.toFixed(1).replace('.',',')+' de 5'}); }
+    box.innerHTML=its.slice(0,6).map(i=>'<div class="rapido'+(i.demo?' demoBloco':'')+'"><div class="ico'+(i.verde?' verde':'')+'">'+i.ico+'</div><div class="tx"><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('');
   }
 
   function montarUnidades(){
@@ -873,7 +907,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     const eventos=liberaConteudo()?((d.eventos||[]).filter(e=>e&&e.titulo)):[];
     const abas=[];
     if(fotos.length||demoOn)abas.push({k:'fotos',lb:'Fotos',ic:IC.fotos,n:fotos.length});
-    abas.push({k:'avaliacoes',lb:'Avaliações',ic:IC.avaliacoes,n:avaliacoesCache.length});
+    abas.push({k:'avaliacoes',lb:'Avaliações',ic:IC.avaliacoes,n:qtdAval||avaliacoesCache.length});
     if(promos.length)abas.push({k:'promocoes',lb:'Promoções',ic:IC.promocoes,n:promos.length});
     if(eventos.length)abas.push({k:'eventos',lb:'Eventos',ic:IC.eventos,n:eventos.length});
     abas.push({k:'info',lb:'Informações',ic:IC.info,n:0});
@@ -891,6 +925,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   }
   window.irParaAba=function(k){
     abaAtiva=k;
+    if(k==='avaliacoes'&&negocioUid)carregarListaAvaliacoes(negocioUid);
     document.querySelectorAll('#abas .aba').forEach(b=>b.classList.toggle('on',b.dataset.aba===k));
     if(dadosNeg)pintarAba(dadosNeg);
     const s=el('secAbas'); if(s)s.scrollIntoView({behavior:'smooth',block:'start'});
@@ -928,12 +963,22 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     const its=[];
     its.push({ic:IC.relogio,lb:'Situação',vl:d.status==='aberto'?'Aberto agora':'Fechado no momento'});
     if(d.recado)its.push({ic:IC.info,lb:'Recado do negócio',vl:d.recado});
+    /* --- Fase 2b --- */
+    const _iHor=d.horario||(demoOn?'Seg a Sáb, 11h às 23h':'');
+    if(_iHor)its.push({ic:IC.relogio,lb:'Horário de funcionamento',vl:_iHor,demo:!d.horario});
+    const _iEnd=d.endereco||(demoOn?'Rua das Flores, 120 · Centro':'');
+    if(_iEnd)its.push({ic:IC.pino,lb:'Endereço',vl:_iEnd,demo:!d.endereco});
+    const _iEnt=d.entrega||(demoOn?'Entrega R$ 5,00 · até 5 km':'');
+    if(_iEnt)its.push({ic:IC.moto,lb:'Entrega',vl:_iEnt,demo:!d.entrega});
+    const _iPmReal=(typeof d.precoMedio==='number'&&d.precoMedio>0)?d.precoMedio:0;
+    const _iPm=_iPmReal||(demoOn?24.9:0);
+    if(_iPm)its.push({ic:IC.moeda,lb:'Preço médio',vl:fmtReal(_iPm)+' por pessoa',demo:!_iPmReal});
     if(minhaPos&&negocioPos)its.push({ic:IC.pino,lb:'Distância',vl:fmtKm(distanciaKm(minhaPos,negocioPos))+' de você'});
     if(locais.length>1)its.push({ic:IC.unidades,lb:'Unidades',vl:locais.map(l=>l.nome).join(' · ')});
     const wpp=(d.whatsapp||'').replace(/\D/g,'');
     if(wpp)its.push({ic:IC.whats,lb:'WhatsApp',vl:'Chame pelo botão no topo da página'});
     if(mediaCache>0)its.push({ic:IC.avaliacoes,lb:'Nota média',vl:mediaCache.toFixed(1).replace('.',',')+' de 5 · '+avaliacoesCache.length+' avaliação'+(avaliacoesCache.length>1?'ões':'')});
-    return '<div class="infoLista">'+its.map(i=>'<div class="infoIt"><div class="ico">'+i.ic+'</div><div><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('')+'</div>';
+    return '<div class="infoLista">'+its.map(i=>'<div class="infoIt'+(i.demo?' ehDemo demoBloco':'')+'"><div class="ico">'+i.ic+'</div><div><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('')+'</div>';
   }
   function htmlPromos(promos){
     if(!promos.length)return '<div class="vazioMod">Sem promoções agora.</div>';
@@ -1003,6 +1048,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     el('corpoCardapio').innerHTML=gradeCategorias();
     abrirFolha('folhaCardapio');
     ev('cardapio_aberto',{});
+    mvContar('cardapio',false);
   };
 
   /* ============ folhas ============ */
@@ -1162,16 +1208,61 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){}
       av.style.color='#25e39b';av.textContent='Obrigado pela sua avaliação!';
       ev('avaliacao_enviada',{nota:notaEscolhida});
-      setTimeout(()=>{fecharAvaliar();carregarAvaliacoesPub(negocioUid);},1000);
+      try{ await setDoc(doc(db,'negocios',negocioUid,'resumo','avaliacoes'),{n:increment(1),soma:increment(notaEscolhida)},{merge:true}); }catch(_){}
+      aplicarNota(qtdAval+1,((mediaCache*qtdAval)+notaEscolhida)/(qtdAval+1));
+      setTimeout(()=>{fecharAvaliar();},1000);
     }catch(e){av.textContent='Não deu pra enviar agora. Tente mais tarde.';}
     btn.disabled=false;btn.textContent=t;
   };
+  /* ---------------------------------------------------------------------------
+     AVALIAÇÕES — custo de leitura
+     Antes: toda visita lia TODAS as avaliações do negócio (1 leitura por
+     avaliação). Um negócio com 200 avaliações custava 200 leituras por visita —
+     quanto mais sucesso, mais caro. Agora a nota média e a quantidade vêm de
+     UM documento de resumo (negocios/{uid}/resumo/avaliacoes), e a lista só é
+     carregada quando o visitante abre a aba Avaliações — no máximo 20.
+     Negócio antigo, sem resumo: cai uma vez no caminho antigo e já grava o
+     resumo, então isso acontece no máximo uma vez por negócio.
+     --------------------------------------------------------------------------- */
+  let qtdAval=0, listaCarregada=false;
   async function carregarAvaliacoesPub(uid){
+    try{
+      const r=await getDoc(doc(db,'negocios',uid,'resumo','avaliacoes'));
+      if(r.exists()){
+        const x=r.data()||{};
+        const n0=Number(x.n||0), sm=Number(x.soma||0);
+        aplicarNota(n0, n0?sm/n0:0);
+        return;
+      }
+      await refazerResumo(uid,true);
+    }catch(e){}
+  }
+  /* caminho antigo — só quando o resumo ainda não existe */
+  async function refazerResumo(uid,gravar){
     try{
       const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
       let n=0,soma=0;const lista=[];
       qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario});}});
-      avaliacoesCache=lista.slice(0,20); mediaCache=n?soma/n:0;
+      avaliacoesCache=lista.slice(0,20); listaCarregada=true;
+      aplicarNota(n, n?soma/n:0);
+      if(gravar){ try{ await setDoc(doc(db,'negocios',uid,'resumo','avaliacoes'),{n:n,soma:soma},{merge:true}); }catch(_){} }
+    }catch(e){}
+  }
+  /* lista completa: só quando o visitante abre a aba */
+  async function carregarListaAvaliacoes(uid){
+    if(listaCarregada)return;
+    listaCarregada=true;
+    try{
+      const qs=await getDocs(query(collection(db,'negocios',uid,'avaliacoes'),limit(20)));
+      const lista=[];
+      qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5)lista.push({nota:r,nome:x.nome,comentario:x.comentario});});
+      avaliacoesCache=lista;
+      if(abaAtiva==='avaliacoes'&&dadosNeg)montarAbas(dadosNeg);
+    }catch(e){}
+  }
+  function aplicarNota(n,media){
+    qtdAval=n; mediaCache=media;
+    {
       const chip=el('ratingChip');
       if(n>0){
         const c=Math.round(mediaCache);let st='';
@@ -1180,8 +1271,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
         chip.classList.remove('escondido');
       }else{chip.classList.add('escondido');}
       ajustarSeparador();
-      if(dadosNeg){montarAbas(dadosNeg);}
-    }catch(e){}
+      if(dadosNeg){montarAbas(dadosNeg);montarRapidos(dadosNeg);}
+    }
   }
 
   /* ============ fotos ============ */
@@ -1280,6 +1371,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
         if(!seletorMontado){seletorMontado=true;carregarPontosDoDono(uid,d.nome,d.lat,d.lng);}
       }else{semLocal(d.nome);}
       ev('pagina_negocio',{plano:planoAtual});
+      mvContar('views',true);
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
   async function ouvirPonto(pid,ownerUid){
@@ -1325,7 +1417,12 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   /* mede os cliques marcados com data-ev (WhatsApp, Como chegar, crédito) */
   document.addEventListener('click',e=>{
     const alvo=e.target&&e.target.closest?e.target.closest('[data-ev]'):null;
-    if(alvo)ev('clique_publico',{acao:alvo.getAttribute('data-ev'),plano:planoAtual});
+    if(alvo){
+      const acao=alvo.getAttribute('data-ev');
+      ev('clique_publico',{acao:acao,plano:planoAtual});
+      if(acao==='wpp'||acao==='wpp_unidade')mvContar('whats',false);
+      else if(acao==='rota'||acao==='rota_unidade')mvContar('rota',false);
+    }
   },true);
 
   document.addEventListener('keydown',e=>{
