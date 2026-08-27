@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-08-27-og2 | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-08-27-og3 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
@@ -64,6 +64,10 @@ function num(f) {
 function lista(f) {
   const v = f && f.arrayValue && f.arrayValue.values;
   return Array.isArray(v) ? v.map(txt).filter(Boolean) : [];
+}
+function qtd(f) {
+  const v = f && f.arrayValue && f.arrayValue.values;
+  return Array.isArray(v) ? v.length : 0;
 }
 function fotoOk(u) {
   return typeof u === 'string' &&
@@ -246,12 +250,15 @@ module.exports = async (req, res) => {
   /* PORTAO DE QUALIDADE (nao confundir com trava de plano).
      Preview SEMPRE funciona — e o que o lojista compartilha no WhatsApp.
      Indexacao no Google exige pagina com conteudo de verdade: nome, ponto no
-     mapa e pelo menos segmento ou endereco. Cadastro de teste e cadastro pela
+     mapa e ALGUM conteudo real — segmento, endereco, foto, cardapio ou promocao.
+     NAO exigir endereco: o produto e feito pra quem NAO tem endereco fixo. Cadastro de teste e cadastro pela
      metade viram noindex,follow — pagina magra em quantidade derruba a
      reputacao do dominio inteiro, e o dominio e um so pra todos os lojistas. */
+  const temConteudo = !!(segmento || endereco ||
+                         qtd(neg.fotos) || qtd(neg.cardapio) || qtd(neg.promocoes));
   const completo = !!(txt(neg.nome) &&
                       typeof lat === 'number' && typeof lng === 'number' &&
-                      (segmento || endereco));
+                      temConteudo);
 
   const bloco = tags({
     titulo: titulo,
