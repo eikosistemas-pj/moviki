@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-08-27-og1 | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-08-27-og2 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
@@ -32,6 +32,9 @@ const path = require('path');
 
 const PROJ = 'moviki-app';
 const API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw';
+/* Dominio canonico. O site responde TAMBEM em www.moviki.com.br, e a canonical
+   nao pode seguir o host da requisicao: dois hosts com canonical diferente e
+   exatamente o conteudo duplicado que a canonical existe pra evitar. Sempre BASE. */
 const BASE = 'https://moviki.com.br';
 const OG_PADRAO = BASE + '/ogmoviki.jpg';
 const SLOGAN = 'O mapa inteligente dos negócios em movimento.';
@@ -154,7 +157,7 @@ module.exports = async (req, res) => {
   const generico = {
     titulo: 'Moviki — ' + SLOGAN,
     descricao: 'Encontre negócios itinerantes no mapa, em tempo real: food trucks, carrinhos, feirantes e quiosques.',
-    url: 'https://' + host + '/' + slug,
+    url: BASE + '/' + slug,
     imagem: OG_PADRAO,
     imagemAlt: 'Moviki',
     indexar: false,
@@ -224,7 +227,7 @@ module.exports = async (req, res) => {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: pontoNome ? pontoNome + ' · ' + nome : nome,
-    url: 'https://' + host + '/' + slug,
+    url: BASE + '/' + slug,
     image: imagem
   };
   if (segmento) ld.description = segmento;
@@ -240,13 +243,23 @@ module.exports = async (req, res) => {
     };
   }
 
+  /* PORTAO DE QUALIDADE (nao confundir com trava de plano).
+     Preview SEMPRE funciona — e o que o lojista compartilha no WhatsApp.
+     Indexacao no Google exige pagina com conteudo de verdade: nome, ponto no
+     mapa e pelo menos segmento ou endereco. Cadastro de teste e cadastro pela
+     metade viram noindex,follow — pagina magra em quantidade derruba a
+     reputacao do dominio inteiro, e o dominio e um so pra todos os lojistas. */
+  const completo = !!(txt(neg.nome) &&
+                      typeof lat === 'number' && typeof lng === 'number' &&
+                      (segmento || endereco));
+
   const bloco = tags({
     titulo: titulo,
     descricao: descricao,
-    url: 'https://' + host + '/' + slug,
+    url: BASE + '/' + slug,
     imagem: imagem,
     imagemAlt: 'Foto de ' + nome,
-    indexar: true,
+    indexar: completo,
     negocio: true,
     jsonld: ld
   });
