@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-08-26-fase6 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-08-27-wppunidade | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -652,7 +652,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-26-fase6';
+  window.MOVIKI_VERSAO='2026-08-27-wppunidade';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -996,8 +996,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     if(_iPm)its.push({ic:IC.moeda,lb:'Preço médio',vl:fmtReal(_iPm)+' por pessoa',demo:!_iPmReal});
     if(minhaPos&&negocioPos)its.push({ic:IC.pino,lb:'Distância',vl:fmtKm(distanciaKm(minhaPos,negocioPos))+' de você'});
     if(locais.length>1)its.push({ic:IC.unidades,lb:'Unidades',vl:locais.map(l=>l.nome).join(' · ')});
-    const wpp=(d.whatsapp||'').replace(/\D/g,'');
-    if(wpp)its.push({ic:IC.whats,lb:'WhatsApp',vl:'Chame pelo botão no topo da página'});
+    const wpp=wppDaUnidade();
+    if(wpp)its.push({ic:IC.whats,lb:'WhatsApp',vl:locais.length>1?'Cada unidade tem seu número — escolha a unidade e chame pelo botão do topo':'Chame pelo botão no topo da página'});
     if(mediaCache>0)its.push({ic:IC.avaliacoes,lb:'Nota média',vl:mediaCache.toFixed(1).replace('.',',')+' de 5 · '+qtdCache+' avaliação'+(qtdCache>1?'ões':'')});
     return '<div class="infoLista">'+its.map(i=>'<div class="infoIt'+(i.demo?' ehDemo demoBloco':'')+'"><div class="ico">'+i.ic+'</div><div><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('')+'</div>';
   }
@@ -1125,7 +1125,6 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   window.filtrarUnidades=function(t){renderGaveta((t||'').trim().toLowerCase());};
   function renderGaveta(filtro){
     const aberto=dadosNeg&&dadosNeg.status==='aberto';
-    const wpp=((dadosNeg&&dadosNeg.whatsapp)||'').replace(/\D/g,'');
     let maisPerto=-1, menor=Infinity;
     locais.forEach((l,i)=>{if(l.km!=null&&l.km<menor){menor=l.km;maisPerto=i;}});
     const html=locais.map((l,i)=>({l:l,i:i}))
@@ -1136,7 +1135,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
         const km=(l.km!=null)?('<div class="linha">'+IC.pino+'<span>a '+fmtKm(l.km)+' de você</span></div>'):'';
         const hor=l.horario?('<div class="linha">'+IC.relogio+'<span>'+esc(l.horario)+'</span></div>'):'';
         const perto=(i===maisPerto&&locais.length>1)?'<span class="maisPerto">mais perto</span>':'';
-        const btnW=wpp?('<a class="acao wpp" href="https://wa.me/55'+wpp+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
+        const wppU=wppDaUnidade(i);
+        const btnW=wppU?('<a class="acao wpp" href="https://wa.me/55'+wppU+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
         const btnR='<a class="acao rota" href="https://www.google.com/maps/dir/?api=1&destination='+l.lat+','+l.lng+'" target="_blank" rel="noopener" data-ev="rota_unidade">'+IC.seta+'Como chegar</a>';
         return '<div class="uBig'+(i===localAtivo?' ativa':'')+'" onclick="selecionarLocal('+i+')">'+
           '<div class="uTopo"><div class="uTxt">'+
@@ -1156,6 +1156,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     montarUnidades(); renderGaveta('');
     el('ondeNome').textContent=l.nome;
     el('ondeDist').textContent=(l.km!=null)?('a '+fmtKm(l.km)+' de você'):'';
+    atualizarBtnWpp();
     ev('unidade_trocada',{indice:i});
   };
   function localActivoSet(i){localAtivo=i;}
@@ -1341,12 +1342,24 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     const seg=[d.segmento,d.segmentoMacro].filter(x=>typeof x==='string'&&x.trim());
     if(seg.length){el('subNeg').textContent=seg[0];el('subNeg').classList.remove('escondido');}
     else el('subNeg').classList.add('escondido');
-    const wpp=(d.whatsapp||'').replace(/\D/g,'');
-    const bw=el('btnWpp');
-    if(wpp){bw.href='https://wa.me/55'+wpp;bw.classList.remove('escondido');}else{bw.classList.add('escondido');}
+    atualizarBtnWpp();
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
     montarRapidos(d); montarUnidades(); montarPromo(d); montarDestaques(d); montarAbas(d); montarTabbar(d); pintarFav();
     if(demoOn)el('demoAviso').classList.remove('escondido');
+  }
+  /* WhatsApp por unidade (27/08/2026). Cada ponto Enterprise pode ter o proprio
+     numero; quem nao tiver cai no numero do negocio principal. */
+  function wppDaUnidade(i){
+    const l=locais[(typeof i==='number')?i:localAtivo];
+    const doPonto=(l&&l.whatsapp||'').replace(/\D/g,'');
+    if(doPonto)return doPonto;
+    return ((dadosNeg&&dadosNeg.whatsapp)||'').replace(/\D/g,'');
+  }
+  function atualizarBtnWpp(){
+    const bw=el('btnWpp'); if(!bw)return;
+    const w=wppDaUnidade();
+    if(w){bw.href='https://wa.me/55'+w;bw.classList.remove('escondido');}
+    else{bw.classList.add('escondido');}
   }
   function pintarLocal(lat,lng,d){
     esconderTela();
@@ -1376,8 +1389,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       const d=snap.data();
       donoMarkerLogo=d.markerLogo||null;
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
-        if(!locais.length)locais=[{nome:d.nome||'Aqui',lat:d.lat,lng:d.lng,foto:null,horario:''}];
-        else locais[0]={nome:d.nome||'Aqui',lat:d.lat,lng:d.lng,foto:locais[0].foto||null,horario:locais[0].horario||'',km:locais[0].km};
+        if(!locais.length)locais=[{nome:d.nome||'Aqui',lat:d.lat,lng:d.lng,foto:null,horario:'',whatsapp:d.whatsapp||''}];
+        else locais[0]={nome:d.nome||'Aqui',lat:d.lat,lng:d.lng,foto:locais[0].foto||null,horario:locais[0].horario||'',whatsapp:d.whatsapp||'',km:locais[0].km};
       }
       pintarConteudo(d);
       if(typeof d.lat==='number'&&typeof d.lng==='number'){
@@ -1403,9 +1416,10 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       if(!snap.exists()||snap.data().ativo!==true){semLocal(el('nome').textContent);return;}
       const pt=snap.data();
       if(typeof pt.lat==='number'&&typeof pt.lng==='number'){
-        locais=[{nome:pt.nome||el('nome').textContent,lat:pt.lat,lng:pt.lng,foto:null,horario:pt.horario||''}];
+        locais=[{nome:pt.nome||el('nome').textContent,lat:pt.lat,lng:pt.lng,foto:null,horario:pt.horario||'',whatsapp:pt.whatsapp||''}];
         el('ondeNome').textContent=pt.nome||el('nome').textContent;
         pintarLocal(pt.lat,pt.lng,{nome:pt.nome||el('nome').textContent,markerLogo:donoMarkerLogo,horario:pt.horario||''});
+        atualizarBtnWpp();
       }else{semLocal(el('nome').textContent);}
     },()=>{mostrarTela('Erro ao carregar','Tente de novo em instantes.');});
   }
@@ -1413,12 +1427,13 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     try{
       const qs=await getDocs(query(collection(db,'pontos'),where('ownerUid','==',uid),where('ativo','==',true)));
       const extras=[];
-      qs.forEach(dc=>{const x=dc.data();if(typeof x.lat==='number'&&typeof x.lng==='number')extras.push({nome:x.nome||'Ponto',lat:x.lat,lng:x.lng,horario:x.horario||'',foto:fotoOk(x.foto)?x.foto:null});});
+      qs.forEach(dc=>{const x=dc.data();if(typeof x.lat==='number'&&typeof x.lng==='number')extras.push({nome:x.nome||'Ponto',lat:x.lat,lng:x.lng,horario:x.horario||'',whatsapp:x.whatsapp||'',foto:fotoOk(x.foto)?x.foto:null});});
       if(!extras.length){montarUnidades();return;}
-      locais=[{nome:nomePrincipal||'Aqui',lat:latP,lng:lngP,horario:'',foto:null}].concat(extras);
+      locais=[{nome:nomePrincipal||'Aqui',lat:latP,lng:lngP,horario:'',whatsapp:(dadosNeg&&dadosNeg.whatsapp)||'',foto:null}].concat(extras);
       if(minhaPos)locais.forEach(l=>{l.km=distanciaKm(minhaPos,[l.lat,l.lng]);});
       localAtivo=0;
       montarUnidades();
+      atualizarBtnWpp();
       if(dadosNeg){montarRapidos(dadosNeg);montarTabbar(dadosNeg);}
     }catch(e){}
   }
