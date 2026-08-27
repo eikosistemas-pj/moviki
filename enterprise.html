@@ -6,6 +6,7 @@
 <title>Moviki Enterprise — vários pontos, um só painel</title>
 <meta name="description" content="Gerencie vários carrinhos, food trucks ou unidades no mapa, com um cadastro só. Relatórios consolidados e suporte prioritário.">
 <link rel="icon" href="/favicon512.png">
+<script src="/mvmetrica.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{--ciano:#00D4FF;--azul:#0066FF;--bg:#050b14;--card:#0b1728;--borda:#183149;--txt:#e6eefb;--sub:#93a9c7}
@@ -78,8 +79,8 @@
   <h1>Vários pontos no mapa.<br><span>Um só painel.</span></h1>
   <p>Tem mais de um carrinho, food truck ou unidade? Com o Moviki Enterprise você gerencia todos num cadastro só — cada um com sua localização e seu link próprios.</p>
   <div class="ctas">
-    <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise">Assinar agora</a>
-    <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Moviki%20Enterprise%20(v%C3%A1rios%20pontos)." target="_blank" rel="noopener">Falar com a gente</a>
+    <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise" data-ev="assinar_hero">Assinar agora</a>
+    <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Moviki%20Enterprise%20(v%C3%A1rios%20pontos)." target="_blank" rel="noopener" data-ev="whatsapp_hero">Falar com a gente</a>
   </div>
 </div></section>
 
@@ -108,7 +109,7 @@
       <li>Relatórios consolidados da operação</li>
       <li>Suporte prioritário no WhatsApp</li>
     </ul>
-    <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise">Começar agora</a>
+    <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise" data-ev="assinar_preco">Começar agora</a>
   </div>
 </div></section>
 
@@ -128,15 +129,15 @@
     <h2>Coloque toda a sua operação no mapa</h2>
     <p>Assine em minutos ou fale com a gente pra tirar suas dúvidas.</p>
     <div class="ctas">
-      <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise">Assinar o Enterprise</a>
-      <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Moviki%20Enterprise." target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise" data-ev="assinar_final">Assinar o Enterprise</a>
+      <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Moviki%20Enterprise." target="_blank" rel="noopener" data-ev="whatsapp_final">Falar no WhatsApp</a>
     </div>
   </div>
 </div></section>
 
 <footer><div class="wrap">
-  Moviki · O mapa inteligente dos negócios em movimento · <a href="tel:+554120186848">(41) 2018-6848</a><br>
-  <a href="https://moviki.com.br">moviki.com.br</a> · <a href="/termos.html">Termos</a> · <a href="/privacidade.html">Privacidade</a>
+  Moviki · O mapa inteligente dos negócios em movimento · <a href="tel:+554120186848" data-ev="telefone_rodape">(41) 2018-6848</a><br>
+  <a href="https://moviki.com.br">moviki.com.br</a> · <a href="/termos.html" data-ev="termos">Termos</a> · <a href="/privacidade.html" data-ev="privacidade">Privacidade</a>
 </div></footer>
 
 <script>
@@ -147,6 +148,20 @@ function mvIco(img,alt2,emoji){
   var s=document.createElement('span'); s.className='icEmoji'; s.textContent=emoji;
   img.replaceWith(s);
 }
+</script>
+
+<script>
+/* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
+   page_view e cta_painel saem sozinhos do mvmetrica.js.
+   Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
+window.MOVIKI_VERSAO = '2026-08-27-ga4l2';
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+    if (!a) return;
+    try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'enterprise' }); } catch(err){}
+  }, true);
+})();
 </script>
 </body>
 </html>

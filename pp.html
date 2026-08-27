@@ -6,11 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moviki</title>
 <script>
+/* MOVIKI pp.html | versao 2026-08-27-ga4l2 | redirecionador do link de upline /pp/apelido
+   NAO carrega Google Analytics de proposito: a pagina redireciona na hora e o GA nao
+   teria tempo de enviar nada. Em vez disso, ela CARIMBA o destino com UTM — assim o
+   seja-parceiro.html (moviki-app) mede a visita sabendo que veio de indicacao, e de quem. */
 (function(){
   var m=location.pathname.match(/\/pp\/([^\/?#]+)/);
   var ref=(m?decodeURIComponent(m[1]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
   var base='https://app.moviki.com.br/seja-parceiro.html';
-  location.replace(base+(ref.length>=3?('?ref='+encodeURIComponent(ref)):''));
+  var q='utm_source=parceiro&utm_medium=indicacao&utm_campaign=upline_parceiros'
+      +'&utm_content='+encodeURIComponent(ref.length>=3?ref:'sem_ref');
+  if(ref.length>=3) q+='&ref='+encodeURIComponent(ref);
+  location.replace(base+'?'+q);
 })();
 </script>
 </head>

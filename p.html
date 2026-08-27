@@ -6,11 +6,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moviki</title>
 <script>
+/* MOVIKI p.html | versao 2026-08-27-ga4l2 | redirecionador do link de parceiro /p/apelido
+   NAO carrega Google Analytics de proposito: a pagina redireciona na hora e o GA nao
+   teria tempo de enviar nada. Em vez disso, ela CARIMBA o destino com UTM — assim o
+   comerciantes.html mede a visita ja sabendo que ela veio de indicacao, e de quem. */
 (function(){
   var m=location.pathname.match(/\/p\/([^\/?#]+)/);
   var ref=(m?decodeURIComponent(m[1]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
-  var dest='/comerciantes.html'+(ref.length>=3?('?ref='+encodeURIComponent(ref)):'');
-  location.replace(dest);
+  var q='utm_source=parceiro&utm_medium=indicacao&utm_campaign=programa_parceiros'
+      +'&utm_content='+encodeURIComponent(ref.length>=3?ref:'sem_ref');
+  if(ref.length>=3) q+='&ref='+encodeURIComponent(ref);
+  location.replace('/comerciantes.html?'+q);
 })();
 </script>
 </head>

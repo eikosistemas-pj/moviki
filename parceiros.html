@@ -1,8 +1,9 @@
 <!DOCTYPE html><html lang="pt-BR"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moviki · Programa de Parceiros</title>
-<meta name="description" content="Ganhe renda recorrente indicando o Moviki. 15% todo mês por cada lojista que você trouxer.">
+<meta name="description" content="Programa de indicação do Moviki: 15% da mensalidade de cada comerciante que assinar pelo seu link, enquanto ele for cliente pagante. Grátis pra participar.">
 <link rel="icon" href="favicon512.png">
+<script src="/mvmetrica.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -65,6 +66,23 @@
   .final{text-align:center;background:linear-gradient(160deg,rgba(0,212,255,.10),rgba(0,102,255,.06));border:1px solid var(--linha);border-radius:22px;padding:34px 22px;margin:20px 0}
   .rodape{text-align:center;color:var(--suave);font-size:13px;padding:24px 0 40px;border-top:1px solid var(--linha);margin-top:10px}
   .rodape a{color:var(--ciano)}
+
+  /* ===== Conformidade: niveis de comissao, conta da comissao e aviso ===== */
+  .niveis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}
+  .nv{background:var(--card,rgba(15,28,44,.66));border:1px solid var(--linha,rgba(0,212,255,.16));border-radius:14px;padding:16px}
+  .nvTop{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .nvTag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--suave,#9fb2c6)}
+  .nvPct{font-size:26px;font-weight:800;color:var(--ciano,#00D4FF);line-height:1}
+  .nv p{font-size:13.5px;color:#c2cfdd;line-height:1.5}
+  .calc{display:grid;gap:8px;max-width:520px;margin:16px auto 0}
+  .calc>div{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card,rgba(15,28,44,.66));border:1px solid var(--linha,rgba(0,212,255,.16));border-radius:12px;padding:12px 15px}
+  .calc span{font-size:14px;color:#c2cfdd}
+  .calc span i{color:var(--suave,#9fb2c6);font-style:normal}
+  .calc b{font-size:16px;font-weight:800;color:var(--ciano,#00D4FF);white-space:nowrap}
+  .calcNota{max-width:520px;margin:10px auto 0;text-align:center;font-size:12.5px;color:var(--suave,#9fb2c6)}
+  .aviso{max-width:680px;margin:0 auto;background:rgba(255,255,255,.03);border:1px solid var(--linha,rgba(0,212,255,.16));border-left:3px solid var(--ciano,#00D4FF);border-radius:12px;padding:16px 18px;font-size:13px;line-height:1.6;color:#b9c8da}
+  .aviso b{color:#e6eefb}
+  .aviso a{color:var(--ciano,#00D4FF);text-decoration:underline}
   @media(max-width:560px){h1{font-size:30px}.cards{grid-template-columns:1fr}.planos{grid-template-columns:1fr 1fr}}
   @media print{body{background:#050b14 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.cta{box-shadow:none}section{padding:18px 0}.final{margin:12px 0}}
 
@@ -80,78 +98,64 @@
 <div class="wrap">
   <div class="hero">
     <span class="pill"><span class="dot"></span> Programa de Parceiros</span>
-    <h1>Indique o Moviki e ganhe <span class="g">todo mês</span>.</h1>
-    <p class="sub">Cada comerciante que você trouxer paga uma mensalidade — e você recebe uma parte dela <b>enquanto ele for cliente</b>. Renda recorrente de verdade.</p>
-    <div class="ctas"><a class="cta wpp" href="https://app.moviki.com.br/seja-parceiro.html">Quero ser parceiro</a></div>
+    <h1>Indique o Moviki e <span class="g">receba comissão</span> por quem assinar.</h1>
+    <p class="sub">Você recebe <b>15% da mensalidade</b> de cada comerciante que assinar pelo seu link — a cada mês em que ele pagar, enquanto continuar cliente. Sem custo pra participar.</p>
+    <div class="ctas"><a class="cta wpp" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="ser_parceiro_hero">Quero ser parceiro</a></div>
     <div class="selo">Sem custo pra começar · você recebe no Pix</div>
   </div>
 
   <section>
     <h2>Por que vale a pena</h2>
     <div class="cards">
-      <div class="card"><img class="ic3d" src="/icones-premium/recorrente.png" alt="Ganho recorrente" loading="lazy" onerror="mvIco(this,'','🔁')"><h3>Ganho recorrente</h3><p>Não é comissão de uma vez. Enquanto o lojista pagar, você ganha todo mês.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/recorrente.png" alt="Ganho recorrente" loading="lazy" onerror="mvIco(this,'','🔁')"><h3>Comissão recorrente</h3><p>A comissão de nível 1 não é de uma vez só: ela volta a cada mensalidade que o lojista pagar. Se ele cancelar, ela para.</p></div>
       <div class="card"><img class="ic3d" src="/icones-premium/loja.png" alt="Produto que se paga" loading="lazy" onerror="mvIco(this,'','🤝')"><h3>Produto que se paga</h3><p>Você indica algo que ajuda o comerciante a vender mais. É fácil de recomendar.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/crescimento.png" alt="Cresce sozinho" loading="lazy" onerror="mvIco(this,'','🌱')"><h3>Cresce sozinho</h3><p>Indicou 10, 30, 50 lojistas? A renda vai somando mês após mês.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/indicar.png" alt="Feito pra divulgar" loading="lazy" onerror="mvIco(this,'','📱')"><h3>Feito pra divulgar</h3><p>Perfeito pra quem tem audiência: um link seu, e cada cadastro conta pra você.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/crescimento.png" alt="Cresce sozinho" loading="lazy" onerror="mvIco(this,'','🌱')"><h3>Sem teto de indicações</h3><p>Não existe limite de quantos comerciantes você pode indicar. Quanto você recebe depende de quantos assinarem e continuarem pagando.</p></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/indicar.png" alt="Feito pra divulgar" loading="lazy" onerror="mvIco(this,'','📱')"><h3>Feito pra divulgar</h3><p>Perfeito pra quem tem audiência: um link seu, e cada comerciante que assinar por ele fica vinculado a você.</p></div>
     </div>
   </section>
 
   <section>
     <h2>Como funciona a comissão</h2>
-    <p class="lead">Três níveis. O nível 1 é o forte — recorrente, todo mês.</p>
-    <div class="svgBand"><svg viewBox="0 0 600 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comissao em 3 niveis">
-  <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00D4FF"/><stop offset="1" stop-color="#0066FF"/></linearGradient></defs>
-  <rect x="235" y="14" width="130" height="54" rx="15" fill="url(#cg)"/>
-  <text x="300" y="47" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="700" font-size="20" fill="#04121f">VOCÊ</text>
-  <path d="M300 68 V100" stroke="#25e39b" stroke-width="2.5" fill="none"/>
-  <rect x="110" y="100" width="380" height="70" rx="16" fill="rgba(37,227,155,0.12)" stroke="#25e39b" stroke-width="1.5"/>
-  <text x="300" y="128" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="600" font-size="14" fill="#dbe7f5">Comerciante que VOCÊ indicou</text>
-  <text x="300" y="152" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="17" fill="#25e39b">15% da mensalidade · TODO MÊS</text>
-  <path d="M300 170 V196 M185 196 H415 M185 196 V214 M415 196 V214" stroke="#3a5578" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
-  <rect x="92" y="214" width="186" height="92" rx="14" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.35)"/>
-  <text x="185" y="240" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="600" font-size="12" fill="#8fa6c4">NÍVEL 2</text>
-  <text x="185" y="270" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="24" fill="#00D4FF">7,5%</text>
-  <text x="185" y="292" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="11" fill="#8fa6c4">bônus no 1º mês</text>
-  <rect x="322" y="214" width="186" height="92" rx="14" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.35)"/>
-  <text x="415" y="240" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="600" font-size="12" fill="#8fa6c4">NÍVEL 3</text>
-  <text x="415" y="270" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="24" fill="#00D4FF">5%</text>
-  <text x="415" y="292" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="11" fill="#8fa6c4">bônus no 1º mês</text>
-</svg></div>
-    <div class="passos">
-      <div class="passo"><div><b>Nível 1 — sua indicação direta: 15% TODO MÊS</b><span>Enquanto o lojista que você trouxe continuar pagando, você recebe 15% da mensalidade dele, mês após mês.</span></div></div>
-      <div class="passo"><div><b>Nível 2 — 7,5% (bônus no 1º mês)</b><span>Quando alguém que você indicou também traz um lojista, você ganha um bônus no primeiro mês.</span></div></div>
-      <div class="passo"><div><b>Nível 3 — 5% (bônus no 1º mês)</b><span>Mais um nível de bônus único, pra premiar quem monta uma rede.</span></div></div>
+    <p class="lead">A comissão sai de dentro da mensalidade que o comerciante paga. O preço dele não muda por causa dela.</p>
+    <div class="niveis">
+      <div class="nv">
+        <div class="nvTop"><span class="nvTag">Nível 1</span><span class="nvPct">15%</span></div>
+        <p><b>Recorrente.</b> Comerciante que <b>você</b> indicou. Vale a cada mensalidade que ele pagar, enquanto continuar cliente.</p>
+      </div>
+      <div class="nv">
+        <div class="nvTop"><span class="nvTag">Nível 2</span><span class="nvPct">7,5%</span></div>
+        <p><b>Bônus único.</b> Comerciante indicado por alguém que você trouxe pro programa. Pago só no 1º mês pago dele.</p>
+      </div>
+      <div class="nv">
+        <div class="nvTop"><span class="nvTag">Nível 3</span><span class="nvPct">5%</span></div>
+        <p><b>Bônus único.</b> Um nível abaixo do nível 2. Também só no 1º mês pago.</p>
+      </div>
     </div>
+    <p class="lead" style="margin-top:14px"><b>Em todos os níveis, a comissão só existe sobre assinatura efetivamente paga.</b> Não há pagamento por cadastrar pessoas nem por montar equipe.</p>
   </section>
 
   <section>
-    <h2>Quanto dá pra ganhar</h2>
-    <p class="lead">Só com indicações diretas (nível 1), em lojistas no plano Pró — recorrente, todo mês:</p>
-    <div class="svgBand" style="margin-bottom:18px"><svg viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ganho por mes">
-  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00D4FF"/><stop offset="1" stop-color="#0066FF"/></linearGradient></defs>
-  <line x1="60" y1="200" x2="560" y2="200" stroke="#24344a" stroke-width="2"/>
-  <rect x="105" y="160" width="90" height="40" rx="8" fill="url(#bg)"/>
-  <text x="150" y="150" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="20" fill="#25e39b">R$57</text>
-  <text x="150" y="224" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="13" fill="#8fa6c4">10 lojistas</text>
-  <rect x="255" y="100" width="90" height="100" rx="8" fill="url(#bg)"/>
-  <text x="300" y="90" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="20" fill="#25e39b">R$171</text>
-  <text x="300" y="224" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="13" fill="#8fa6c4">30 lojistas</text>
-  <rect x="405" y="44" width="90" height="156" rx="8" fill="url(#bg)"/>
-  <text x="450" y="34" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="800" font-size="20" fill="#25e39b">R$284</text>
-  <text x="450" y="224" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="13" fill="#8fa6c4">50 lojistas</text>
-</svg></div>
-    <div class="ganho">
-      <div><div class="n">R$57</div><div class="l">10 lojistas / mês</div></div>
-      <div><div class="n">R$171</div><div class="l">30 lojistas / mês</div></div>
-      <div><div class="n">R$284</div><div class="l">50 lojistas / mês</div></div>
+    <h2>Como a conta é feita</h2>
+    <p class="lead">São 15% do que o comerciante paga na mensalidade. Sem cálculo escondido.</p>
+    <div class="calc">
+      <div><span>Plano Básico <i>(grátis)</i></span><b>R$ 0,00</b></div>
+      <div><span>Plano Pró — R$ 37,90</span><b>R$ 5,69</b></div>
+      <div><span>Plano Premium — R$ 49,90</span><b>R$ 7,49</b></div>
+      <div><span>Plano Enterprise — R$ 99,90</span><b>R$ 14,99</b></div>
     </div>
-    <p class="lead" style="margin-top:14px;font-size:13px">Valores de exemplo (15% de R$37,90 por lojista Pró). Planos maiores rendem mais.</p>
+    <p class="calcNota">Comissão de nível 1 por comerciante, a cada mensalidade paga. Plano grátis não gera comissão.</p>
   </section>
 
   <section>
     <div class="box">
-      <h2>É seguro e legítimo ✅</h2>
-      <p style="color:#c2cfdd;font-size:14px;margin-top:6px">Você só ganha sobre lojista <b>pagante</b> — ou seja, sobre venda real, não sobre "recrutar gente". A mensalidade do comerciante <b>não muda</b>: sua comissão sai de dentro da empresa. Nada de pirâmide.</p>
+      <h2>É seguro e legítimo</h2>
+      <p style="color:#c2cfdd;font-size:14px;margin-top:6px">Você só recebe sobre lojista <b>pagante</b> — ou seja, sobre a venda real de um serviço, não sobre "recrutar gente". Entrar é grátis: você nunca paga nada, nunca compra cota e não tem meta. A mensalidade do comerciante <b>não muda</b> por causa da comissão — ela é custeada pela Moviki, a partir da própria receita da assinatura. Se o comerciante cancelar, a comissão dele para.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="aviso">
+      <b>Sobre os valores desta página.</b> Os percentuais e exemplos acima são a <b>regra de cálculo</b> da comissão — não são previsão nem promessa de quanto você vai receber. A comissão só existe sobre assinatura efetivamente paga por um comerciante ativo: não há pagamento por cadastrar pessoas e não existe valor mínimo garantido. Quantos comerciantes vão assinar pelo seu link, e por quanto tempo vão continuar pagando, depende de cada caso e <b>pode ser zero</b>. As regras completas estão no <a href="/regulamento.html" data-ev="regulamento">Regulamento do Programa de Parceiros</a>.
     </div>
   </section>
 
@@ -160,18 +164,18 @@
     <div class="passos">
       <div class="passo"><div><b>Fale com a gente</b><span>Toque no botão e chame no WhatsApp.</span></div></div>
       <div class="passo"><div><b>Receba seu link de indicação</b><span>É só seu — todo cadastro por ele conta pra você.</span></div></div>
-      <div class="passo"><div><b>Divulgue e acompanhe</b><span>Compartilhe com comerciantes e veja sua renda crescer.</span></div></div>
+      <div class="passo"><div><b>Divulgue e acompanhe</b><span>Compartilhe com comerciantes e acompanhe as indicações e comissões no seu painel.</span></div></div>
     </div>
   </section>
 
   <div class="final">
     <h2>Vamos crescer juntos?</h2>
     <p class="lead">Seja um dos primeiros parceiros do Moviki na sua região.</p>
-    <div class="ctas"><a class="cta wpp" href="https://app.moviki.com.br/seja-parceiro.html">Quero ser parceiro</a></div>
+    <div class="ctas"><a class="cta wpp" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="ser_parceiro_final">Quero ser parceiro</a></div>
   </div>
 
   <div class="rodape">
-    Instagram <a href="https://instagram.com/moviki.app">@moviki.app</a> · <a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a><br>moviki.com.br
+    Instagram <a href="https://instagram.com/moviki.app" data-ev="instagram">@moviki.app</a> · <a href="mailto:suporte@moviki.com.br" data-ev="email_suporte">suporte@moviki.com.br</a><br>moviki.com.br
   </div>
 </div>
 <script>
@@ -182,5 +186,24 @@ function mvIco(img,alt2,emoji){
   var s=document.createElement('span'); s.className='icEmoji'; s.textContent=emoji;
   img.replaceWith(s);
 }
+</script>
+
+<script>
+/* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
+   page_view e cta_painel saem sozinhos do mvmetrica.js.
+   Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
+window.MOVIKI_VERSAO = '2026-08-27-conformidade';
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+    if (!a) return;
+    try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'parceiros' }); } catch(err){}
+  }, true);
+  /* Veio de um link de parceiro (/pp/apelido)? Registra a origem uma vez. */
+  try {
+    var ref = (new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    if (ref.length >= 3 && window.mvEv) window.mvEv('chegou_por_indicacao', { ref: ref, destino: 'parceiro' });
+  } catch(err){}
+})();
 </script>
 </body></html>
