@@ -1,6 +1,12 @@
 {
   "rewrites": [
     { "source": "/pp/:slug", "destination": "/pp.html" },
-    { "source": "/p/:slug", "destination": "/p.html" }
-  ]
+    { "source": "/p/:slug", "destination": "/p.html" },
+    { "source": "/:slug([A-Za-z0-9_-]{3,40})", "destination": "/api/og?slug=:slug" }
+  ],
+  "functions": {
+    "api/og.js": {
+      "includeFiles": "404.html"
+    }
+  }
 }

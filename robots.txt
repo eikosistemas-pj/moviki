@@ -1,0 +1,13 @@
+# moviki.com.br
+User-agent: *
+Allow: /
+
+# redirecionadores de indicacao (ja sao noindex no HTML)
+Disallow: /p/
+Disallow: /pp/
+
+# paginas de conta e de saida, sem valor de busca
+Disallow: /descadastro.html
+Disallow: /excluir-conta.html
+
+Sitemap: https://moviki.com.br/sitemap.xml
