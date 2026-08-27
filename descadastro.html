@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex, nofollow">
+<title>Sair da lista de e-mails · Moviki</title>
+<link rel="icon" href="/favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
+    --painel:rgba(13,27,42,.78); --linha:rgba(0,212,255,.18); --suave:#9fb2c6;
+    --ok:#2ecc71; --erro:#ff6b6b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',system-ui,sans-serif; color:var(--claro);
+    background:var(--escuro); line-height:1.7; min-height:100vh;
+    background-image:linear-gradient(rgba(6,14,24,.86),rgba(6,14,24,.92)),url('/fundo.jpg');
+    background-size:cover; background-position:center; background-attachment:fixed;
+  }
+  .top{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px; border-bottom:1px solid var(--linha);
+    background:rgba(6,14,24,.7); backdrop-filter:blur(8px);
+  }
+  .top .marca{font-weight:700; font-size:18px; letter-spacing:.5px}
+  .top .marca b{color:var(--ciano)}
+  .voltar{
+    color:var(--claro); text-decoration:none; font-size:14px; font-weight:500;
+    border:1px solid var(--linha); padding:8px 16px; border-radius:999px;
+    transition:.2s; white-space:nowrap;
+  }
+  .voltar:hover{border-color:var(--ciano); color:var(--ciano)}
+  main{max-width:620px; margin:0 auto; padding:56px 22px 80px}
+  .eyebrow{
+    color:var(--ciano); font-weight:600; font-size:13px; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:10px;
+  }
+  h1{font-size:clamp(26px,5.4vw,36px); font-weight:700; line-height:1.2; margin-bottom:14px}
+  .card{
+    background:var(--painel); border:1px solid var(--linha); border-radius:16px;
+    padding:26px; backdrop-filter:blur(4px);
+  }
+  p{margin-bottom:14px; color:#d6e2ee}
+  p:last-child{margin-bottom:0}
+  a{color:var(--ciano)}
+  .oemail{
+    display:block; word-break:break-all; background:rgba(0,102,255,.14);
+    border:1px solid var(--linha); border-radius:10px;
+    padding:10px 14px; margin:0 0 18px; color:#fff; font-weight:600;
+  }
+  .btn{
+    display:inline-block; width:100%; text-align:center; cursor:pointer;
+    border:none; border-radius:12px; padding:15px 20px;
+    font-family:inherit; font-size:15.5px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg,var(--ciano),var(--azul));
+    transition:.2s;
+  }
+  .btn:hover{filter:brightness(1.08)}
+  .btn:disabled{opacity:.55; cursor:not-allowed}
+  .btn.saida{background:none; border:1px solid var(--linha); color:var(--claro); font-weight:600; margin-top:10px}
+  .btn.saida:hover{border-color:var(--ciano); color:var(--ciano)}
+  .msg{margin-top:14px; font-size:14.5px; min-height:22px}
+  .msg.ok{color:var(--ok)}
+  .msg.erro{color:var(--erro)}
+  .selo{
+    display:flex; align-items:center; justify-content:center;
+    width:60px; height:60px; border-radius:50%; margin:0 auto 18px;
+    background:rgba(46,204,113,.14); border:1px solid rgba(46,204,113,.4);
+  }
+  .selo svg{width:30px; height:30px; stroke:var(--ok); fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round}
+  .centro{text-align:center}
+  .rodape{
+    text-align:center; color:var(--suave); font-size:13px;
+    margin-top:26px; line-height:1.6;
+  }
+  .rodape b{color:var(--claro)}
+  .hide{display:none !important}
+</style>
+</head>
+<body>
+  <header class="top">
+    <span class="marca">mo<b>viki</b></span>
+    <a class="voltar" href="/">← Voltar ao site</a>
+  </header>
+
+  <main>
+    <div class="eyebrow">LGPD · Comunicações</div>
+
+    <!-- 1) tem link válido: pede a confirmação -->
+    <section id="secPergunta" class="hide">
+      <h1>Quer parar de receber nossos e-mails?</h1>
+      <div class="card">
+        <p>Se você confirmar, tiramos este endereço da lista de e-mails do Moviki:</p>
+        <span class="oemail" id="oEmail">o endereço deste convite</span>
+        <p>Isso vale só para os e-mails de novidades. Se você tem uma conta no Moviki, ela continua igual, e os avisos importantes sobre o seu plano continuam chegando.</p>
+        <button type="button" class="btn" id="btnSair">Sim, quero sair da lista</button>
+        <a class="btn saida" href="/">Não, continuar recebendo</a>
+        <div class="msg" id="msg"></div>
+      </div>
+    </section>
+
+    <!-- 2) deu certo -->
+    <section id="secPronto" class="hide">
+      <div class="card centro">
+        <div class="selo"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h1>Pronto, você saiu da lista</h1>
+        <p>Não vamos mais mandar e-mails de novidades para este endereço. Pode levar alguns minutos para um envio que já estava a caminho parar.</p>
+        <p>Mudou de ideia? É só assinar de novo lá no rodapé do site.</p>
+        <a class="btn" href="/">Ir para o site</a>
+      </div>
+    </section>
+
+    <!-- 3) link sem identificação ou inválido -->
+    <section id="secSemLink" class="hide">
+      <h1>Não consegui identificar o seu cadastro</h1>
+      <div class="card">
+        <p id="txtSemLink">Este link está incompleto ou já foi usado. Isso costuma acontecer quando o endereço é copiado pela metade.</p>
+        <p>Abra o link direto do e-mail que você recebeu, ou peça a remoção para a gente — a saída é feita no mesmo dia.</p>
+        <a class="btn" id="linkSuporte" href="mailto:suporte@moviki.com.br?subject=Sair%20da%20lista%20de%20e-mails">Pedir remoção por e-mail</a>
+        <a class="btn saida" href="/">Voltar ao site</a>
+      </div>
+    </section>
+
+    <p class="rodape">
+      <b>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA</b> · CNPJ 68.289.841/0001-02<br>
+      <a href="/privacidade.html">Política de Privacidade</a> · suporte@moviki.com.br
+    </p>
+  </main>
+
+<script type="module">
+  /* Marca de versão: digitar MOVIKI_VERSAO no console do navegador diz na hora
+     qual arquivo está no ar. */
+  window.MOVIKI_VERSAO = '2026-08-27-descadastro';
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+    authDomain: "moviki-app.firebaseapp.com",
+    projectId: "moviki-app",
+    storageBucket: "moviki-app.firebasestorage.app",
+    messagingSenderId: "451920150738",
+    appId: "1:451920150738:web:be458392064c964c792d0b"
+  };
+
+  const el = id => document.getElementById(id);
+  const mostrar = id => {
+    ['secPergunta','secPronto','secSemLink'].forEach(s => el(s).classList.add('hide'));
+    el(id).classList.remove('hide');
+  };
+
+  /* O link do e-mail vem como /descadastro.html?id=<id do cadastro>&e=<e-mail>.
+     O "e" é só para a pessoa ver de qual endereço se trata — quem manda é o id.
+     A lista não pode ser lida por ninguém além do dono, então a página nunca
+     consulta o e-mail no banco: ela só desliga o cadastro daquele id. */
+  const par = new URLSearchParams(location.search);
+  const id  = (par.get('id') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+  const eml = (par.get('e') || '').trim().slice(0, 120);
+
+  if (!id) {
+    mostrar('secSemLink');
+  } else {
+    if (eml) el('oEmail').textContent = eml;
+    mostrar('secPergunta');
+  }
+
+  let saindo = false;
+
+  el('btnSair').addEventListener('click', async () => {
+    if (saindo || !id) return;
+    saindo = true;
+    const b = el('btnSair'), m = el('msg');
+    b.disabled = true; b.textContent = 'Saindo…';
+    m.className = 'msg'; m.textContent = '';
+    try {
+      const app = initializeApp(firebaseConfig, 'descadastro');
+      const db  = getFirestore(app);
+      // A regra do Firestore só deixa mexer no campo "ativo", e só para false.
+      await updateDoc(doc(db, 'newsletter', id), { ativo: false });
+      mostrar('secPronto');
+    } catch (e) {
+      saindo = false;
+      b.disabled = false; b.textContent = 'Sim, quero sair da lista';
+      const cod = String((e && e.code) || '');
+      if (cod.indexOf('not-found') > -1) {
+        el('txtSemLink').textContent =
+          'Este cadastro não existe mais na nossa lista — pode ser que você já tenha saído antes.';
+        mostrar('secSemLink');
+        return;
+      }
+      m.className = 'msg erro';
+      m.textContent = 'Não consegui completar agora. Tente de novo em instantes ou escreva para suporte@moviki.com.br.';
+    }
+  });
+</script>
+</body>
+</html>
