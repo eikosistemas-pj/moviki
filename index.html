@@ -354,6 +354,16 @@ a{color:inherit}
 /* palavras longas nunca empurram o layout */
 .lp-rec h3,.lp-passo h3,.mv-h3,.lp-plano h3{overflow-wrap:anywhere}
 </style>
+<style>
+/* Vik no FAQ - 2026-08-28-vikfaq. So a partir de 820px: no celular ele empurraria
+   as perguntas para baixo da dobra. Ele aponta para a esquerda, entao fica a
+   direita do titulo; nunca espelhar, o logo do peito inverte. */
+.lpFaqTopo{display:flex;align-items:flex-end;justify-content:center;gap:20px}
+.lpFaqTopo .lp-tit{margin:0}
+.lpVik{display:none}
+@media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
+</style>
+<script>window.MOVIKI_VERSAO='2026-08-28-vikfaq';</script>
 </head>
 
 <body class="mv">
@@ -677,7 +687,10 @@ a{color:inherit}
   <!-- ================= FAQ ================= -->
   <section class="lp-sec" id="faq">
     <div class="mv-container">
-      <div class="lp-tit"><h2>Perguntas <em>frequentes</em></h2></div>
+      <div class="lpFaqTopo">
+        <div class="lp-tit"><h2>Perguntas <em>frequentes</em></h2></div>
+        <img class="lpVik" src="/icones-premium/vik-apontando.webp" alt="" loading="lazy" decoding="async">
+      </div>
       <div class="lp-faq">
         <details><summary>Preciso instalar algum aplicativo?</summary><p>Não. O Moviki funciona pelo navegador do celular. Você monta seu perfil e seus clientes abrem seu link — sem baixar nada.</p></details>
         <details><summary>Como meus clientes me encontram?</summary><p>Você recebe um link só seu (moviki.com.br/seunome) pra compartilhar no WhatsApp, no Instagram, onde quiser. Ao abrir, o cliente vê sua localização ao vivo, seu cardápio e como chegar até você.</p></details>

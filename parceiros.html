@@ -64,6 +64,11 @@
   .ganho .n{font-size:22px;font-weight:800;color:var(--ciano)}
   .ganho .l{font-size:12px;color:var(--suave)}
   .final{text-align:center;background:linear-gradient(160deg,rgba(0,212,255,.10),rgba(0,102,255,.06));border:1px solid var(--linha);border-radius:22px;padding:34px 22px;margin:20px 0}
+  /* Vik so no convite final - 2026-08-28-vikparceiros. Nao entra perto dos
+     percentuais nem da tabela de valores: mascote ao lado de numero de ganho
+     bate na trava de compliance (ganho facil lido como piramide). */
+  .finalVik{height:132px;width:auto;display:block;margin:-8px auto 4px}
+  @media(max-width:560px){.finalVik{height:104px}}
   .rodape{text-align:center;color:var(--suave);font-size:13px;padding:24px 0 40px;border-top:1px solid var(--linha);margin-top:10px}
   .rodape a{color:var(--ciano)}
 
@@ -169,6 +174,7 @@
   </section>
 
   <div class="final">
+    <img class="finalVik" src="/icones-premium/vik-acenando.webp" alt="" loading="lazy" decoding="async">
     <h2>Vamos crescer juntos?</h2>
     <p class="lead">Seja um dos primeiros parceiros do Moviki na sua região.</p>
     <div class="ctas"><a class="cta wpp" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="ser_parceiro_final">Quero ser parceiro</a></div>
@@ -192,7 +198,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-08-27-conformidade';
+window.MOVIKI_VERSAO = '2026-08-28-vikparceiros';
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
