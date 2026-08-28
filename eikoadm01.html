@@ -1,0 +1,3228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://unpkg.com https://*.tile.openstreetmap.org; connect-src 'self' https://*.googleapis.com https://www.google.com https://moviki-robo.vercel.app https://moviki-ai.vercel.app; frame-src https://www.google.com; base-uri 'self'; object-src 'none'; form-action 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(self!==top){try{top.location=self.location}catch(e){document.documentElement.style.display='none'}}</script>
+<meta name="robots" content="noindex,nofollow">
+<title>Moviki — Painel do Dono</title>
+<link rel="icon" href="favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="movikiui.css">
+<style>
+/* ==========================================================================
+   MOVIKI · PAINEL DO DONO — Redesign Visual 2.0, Fase 5 (26/08/2026)
+   Mesma casca da Fase 4 (painel do parceiro): lateral no desktop, coluna de
+   apoio e barra inferior de 5 lugares no celular. Tema escuro.
+   REGRA: nenhum numero inventado. Tudo sai de 'negocios', 'assinaturas',
+   'parceiros', 'comissoes', 'saques', 'pontos', 'newsletter', 'metricas',
+   'configuracoes' e do endpoint de exclusoes do robo.
+   Bloco :root abaixo = rede de seguranca se o movikiui.css nao carregar.
+   ========================================================================== */
+:root{
+  --mv-ciano:#00D4FF; --mv-azul:#0066FF;
+  --mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
+  --mv-bg:#060d18; --mv-bg-2:#0a1424; --mv-surf:#0e1c30; --mv-surf-2:#13263d;
+  --mv-campo:#0b1728; --mv-linha:#1c3457; --mv-linha-forte:#284a78;
+  --mv-txt:#eaf6ff; --mv-txt-2:#c6d8ee; --mv-txt-3:#8fa6c4;
+  --mv-ok:#25e39b; --mv-alerta:#ffb020; --mv-erro:#ff6b6b; --mv-roxo:#a855f7;
+  --mv-laranja:#ff8a00; --mv-whats:#25D366;
+  --mv-r-sm:10px; --mv-r:14px; --mv-r-lg:18px; --mv-r-xl:24px; --mv-r-pill:999px;
+  --mv-sombra:0 10px 30px rgba(0,0,0,.35);
+  --mv-fonte:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --gut:14px;
+}
+@media(min-width:560px){:root{--gut:22px}}
+@media(min-width:900px){:root{--gut:28px}}
+@media(min-width:1280px){:root{--gut:40px}}
+@media(min-width:1700px){:root{--gut:56px}}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--mv-fonte);background:var(--mv-bg);color:var(--mv-txt);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hide{display:none!important}
+img{max-width:100%}
+button{font-family:inherit}
+
+/* ---------- telas de acesso ---------- */
+.telaCentro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 16px}
+.caixa{width:100%;max-width:420px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-xl);padding:26px 22px;box-shadow:var(--mv-sombra)}
+.marca{text-align:center;margin-bottom:16px}
+.marca img{height:34px}
+h1{font-size:22px;font-weight:800;text-align:center;letter-spacing:-.4px}
+.sub{font-size:13.5px;color:var(--mv-txt-3);text-align:center;margin:6px 0 18px;line-height:1.55}
+label{display:block;font-size:13px;font-weight:600;color:var(--mv-txt-2);margin:14px 0 6px}
+input{width:100%;background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r-sm);padding:12px 14px;color:var(--mv-txt);font-family:inherit;font-size:14px}
+input:focus{outline:none;border-color:var(--mv-ciano)}
+input::placeholder{color:#6b7f96}
+.btn{width:100%;background:var(--mv-grad);color:#02131f;border:none;border-radius:var(--mv-r);padding:13px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;margin-top:16px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.sec{background:transparent;border:1px solid var(--mv-linha-forte);color:var(--mv-txt-2);font-weight:600}
+.btn.wpp{background:linear-gradient(135deg,#25e39b,#0fb87f);color:#02131f}
+.aviso{text-align:center;font-size:13px;color:var(--mv-erro);margin-top:12px;min-height:16px;line-height:1.45}
+.aviso.ok{color:var(--mv-ok)}
+.link-min{text-align:center;font-size:13px;margin-top:14px}
+.link-min a{color:var(--mv-ciano)}
+
+/* ---------- cabeçalho do app ---------- */
+.mvTopo{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px var(--gut);background:rgba(6,13,24,.90);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--mv-linha)}
+.mvTopo .logo{height:26px;flex:0 0 auto}
+.mvTopoDir{display:flex;align-items:center;gap:10px}
+.mvSinoWrap{position:relative;display:inline-flex;padding:4px;flex:0 0 auto}
+.mvSino{width:38px;height:38px;border-radius:50%;border:1px solid var(--mv-linha);background:var(--mv-campo);
+  color:var(--mv-txt-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mvSino svg{width:19px;height:19px}
+.mvSino:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.mvSinoPt{position:absolute;top:0;right:0;min-width:17px;height:17px;border-radius:var(--mv-r-pill);background:var(--mv-azul);
+  color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--mv-bg);
+  padding:0 4px;pointer-events:none}
+.mvAvatar{width:38px;height:38px;border-radius:50%;background:var(--mv-grad);color:#02131f;font-weight:800;font-size:15px;
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;cursor:pointer;border:none}
+@media(min-width:1120px){.mvTopo{display:none}}
+
+/* ---------- casca ---------- */
+.mvWrap{width:100%;max-width:1560px;margin:0 auto;padding:14px var(--gut) 96px}
+@media(min-width:1120px){.mvWrap{padding:20px var(--gut) 32px}}
+.mvShell{display:block}
+@media(min-width:900px){.mvShell{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}}
+@media(min-width:1120px){.mvShell{grid-template-columns:250px minmax(0,1fr) 330px}}
+.mvMain{min-width:0}
+
+/* ---------- lateral (desktop) ---------- */
+.mvSide{display:none}
+@media(min-width:1120px){.mvSide{display:block;position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto}}
+.mvSideLogo{padding:2px 4px 16px}
+.mvSideLogo img{height:30px}
+.mvNav{display:flex;flex-direction:column;gap:2px}
+.mvNavIt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:1px solid transparent;
+  border-radius:var(--mv-r);color:var(--mv-txt-2);font-size:14px;font-weight:600;padding:10px 11px;cursor:pointer;transition:.15s}
+.mvNavIt:hover{background:var(--mv-surf);border-color:var(--mv-linha);color:var(--mv-txt)}
+.mvNavIt.ativo{background:rgba(0,212,255,.10);border-color:rgba(0,212,255,.40);color:var(--mv-ciano)}
+.mvNavIco{width:22px;height:22px;flex:0 0 auto;object-fit:contain}
+.mvSideCta{margin-top:14px;background:linear-gradient(160deg,rgba(0,102,255,.20),rgba(0,212,255,.05));
+  border:1px solid rgba(0,212,255,.34);border-radius:var(--mv-r-lg);padding:14px}
+.mvSideCtaTit{font-size:14.5px;font-weight:700;margin-bottom:5px}
+.mvSideCta p{font-size:12.5px;color:var(--mv-txt-2);line-height:1.5;margin-bottom:11px}
+.mvSideCta button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:var(--mv-r);
+  background:var(--mv-grad);color:#02131f;font-weight:700;font-size:13.5px;padding:11px;cursor:pointer}
+.mvSideSair{display:flex;align-items:center;gap:10px;width:100%;margin-top:14px;background:transparent;border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r);color:var(--mv-txt-3);font-size:13.5px;font-weight:600;padding:10px 11px;cursor:pointer}
+.mvSideSair:hover{border-color:var(--mv-erro);color:var(--mv-erro)}
+
+/* ---------- saudação ---------- */
+.mvOla{margin:2px 2px 16px}
+.mvOla h1{text-align:left;font-size:clamp(21px,5.2vw,29px);font-weight:800;letter-spacing:-.7px;line-height:1.2;overflow-wrap:anywhere}
+.mvOla p{font-size:13.5px;color:var(--mv-txt-3);margin-top:5px;line-height:1.55;max-width:640px}
+.mvOlaTopo{display:block}
+.mvOlaAcoes{display:none}
+@media(min-width:1120px){
+  .mvOlaTopo{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .mvOlaAcoes{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+}
+
+/* ---------- cartões ---------- */
+.cd{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:16px;margin-bottom:14px}
+.cdTopo{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+.cdTit{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.cdSub{font-size:12.5px;color:var(--mv-txt-3);line-height:1.55;margin-top:4px}
+.cdLink{background:none;border:none;color:var(--mv-ciano);font-size:13px;font-weight:700;cursor:pointer;padding:0}
+.cdChip{display:inline-flex;align-items:center;gap:6px;background:var(--mv-campo);border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r-sm);color:var(--mv-txt-2);font-size:12.5px;font-weight:600;padding:7px 11px}
+.vazio{font-size:13px;color:var(--mv-txt-3);line-height:1.6;padding:6px 0}
+
+/* ---------- tiles de resumo ---------- */
+.kGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kGrid.k3{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+@media(min-width:1120px){.kGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kTile{background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:13px;min-width:0}
+.kIco{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.kIco svg{width:19px;height:19px}
+.kIco.azul{background:rgba(0,102,255,.16);color:#63b3ff}
+.kIco.roxo{background:rgba(168,85,247,.16);color:#c99bff}
+.kIco.verde{background:rgba(37,227,155,.14);color:var(--mv-ok)}
+.kIco.ciano{background:rgba(0,212,255,.14);color:var(--mv-ciano)}
+.kV{font-size:clamp(17px,4.4vw,21px);font-weight:800;letter-spacing:-.5px;line-height:1.2;overflow-wrap:anywhere}
+.kR{font-size:12.5px;color:var(--mv-txt-2);margin-top:3px;line-height:1.4}
+.kN{font-size:12px;color:var(--mv-txt-3);margin-top:6px;line-height:1.4}
+.kN.up{color:var(--mv-ok)}
+.kN.down{color:var(--mv-erro)}
+
+/* ---------- saldo ---------- */
+.sdLinha{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--mv-campo);
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:13px;margin-bottom:9px}
+.sdV{font-size:20px;font-weight:800;letter-spacing:-.5px;overflow-wrap:anywhere}
+.sdR{font-size:12.5px;color:var(--mv-txt-3);margin-top:2px}
+.sdBolha{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  border:1px solid rgba(37,227,155,.4);background:rgba(37,227,155,.12);color:var(--mv-ok)}
+.sdBolha.cinza{border-color:var(--mv-linha-forte);background:var(--mv-surf-2);color:var(--mv-txt-3)}
+.sdBolha svg{width:18px;height:18px}
+.btnSaque{width:100%;border:none;border-radius:var(--mv-r);background:var(--mv-azul);color:#fff;font-weight:700;font-size:14.5px;
+  padding:13px;cursor:pointer;margin-top:4px}
+.btnSaque:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- gráfico ---------- */
+.gLeg{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.gLeg span{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mv-txt-2)}
+.gLeg i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.gBox{position:relative;width:100%}
+.gBox svg{display:block;width:100%;height:auto}
+.gTip{position:absolute;z-index:5;pointer-events:none;background:var(--mv-surf-2);border:1px solid var(--mv-linha-forte);
+  border-radius:var(--mv-r-sm);padding:9px 11px;font-size:12px;box-shadow:var(--mv-sombra);min-width:150px;opacity:0;transition:opacity .12s}
+.gTip.on{opacity:1}
+.gTipT{font-size:12px;color:var(--mv-txt-3);margin-bottom:6px}
+.gTipL{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:3px}
+.gTipL b{font-weight:700}
+
+/* ---------- listas ---------- */
+.lCab{display:none}
+.lRow{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:11px;align-items:center;
+  padding:11px 0;border-bottom:1px solid var(--mv-linha)}
+.lRow:last-child{border-bottom:none}
+.lAv{display:flex;width:38px;height:38px;border-radius:11px;background:var(--mv-campo);border:1px solid var(--mv-linha);display:flex;
+  align-items:center;justify-content:center;font-weight:800;color:var(--mv-ciano);font-size:14px;flex:0 0 auto;overflow:hidden}
+.lAv img{width:100%;height:100%;object-fit:cover}
+.lTxt{display:block;min-width:0}
+.lNome{display:block;font-size:14px;font-weight:700;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lSub{display:block;font-size:12.5px;color:var(--mv-txt-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lDir{display:block;text-align:right;min-width:0}
+.lVal{display:block;font-size:14px;font-weight:700;white-space:nowrap}
+.lData{display:block;font-size:12.5px;color:var(--mv-txt-3);margin-top:2px;white-space:nowrap}
+.lCel{display:none;min-width:0;font-size:13px;color:var(--mv-txt-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:var(--mv-r-pill);font-size:11.5px;font-weight:700;padding:3px 10px;white-space:nowrap}
+.pill.ok{color:var(--mv-ok);background:rgba(37,227,155,.13);border:1px solid rgba(37,227,155,.34)}
+.pill.warn{color:var(--mv-alerta);background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.34)}
+.pill.perigo{color:var(--mv-erro);background:rgba(255,92,92,.12);border:1px solid rgba(255,92,92,.34)}
+.pill.off{color:var(--mv-txt-3);background:var(--mv-campo);border:1px solid var(--mv-linha)}
+.pill.info{color:var(--mv-ciano);background:rgba(0,212,255,.10);border:1px solid rgba(0,212,255,.32)}
+@media(min-width:1340px){
+  .lCab{display:grid;grid-template-columns:38px minmax(0,1.6fr) 104px 96px 106px 118px;gap:11px;align-items:center;
+    padding:0 0 9px;border-bottom:1px solid var(--mv-linha);font-size:12px;font-weight:700;color:var(--mv-txt-3);
+    text-transform:uppercase;letter-spacing:.4px}
+  .lLista.tab .lRow{grid-template-columns:38px minmax(0,1.6fr) 104px 96px 106px 118px}
+  .lLista.tab .lCel{display:block}
+  .lLista.tab .lSub{display:none}
+  .lLista.tab .lData{display:none}
+}
+
+/* ---------- coluna de apoio ---------- */
+.mvRight{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+@media(min-width:900px){.mvRight{margin-top:0;position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto}}
+@media(min-width:1120px){.mvRight{top:20px;max-height:calc(100vh - 40px)}}
+.rc{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:14px}
+.rcTit{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14.5px;font-weight:700;margin-bottom:11px}
+.rcPerfil{display:flex;align-items:center;gap:11px}
+.rcPerfil .lAv{width:42px;height:42px;border-radius:12px;font-size:16px}
+.rcPerfilNome{font-size:14.5px;font-weight:700;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcPerfilSub{font-size:12.5px;color:var(--mv-txt-3);margin-top:2px}
+.rcBarra{height:8px;border-radius:var(--mv-r-pill);background:var(--mv-campo);overflow:hidden;border:1px solid var(--mv-linha)}
+.rcBarra i{display:block;height:100%;width:0;background:var(--mv-grad);transition:width .45s}
+.rcBarraNota{font-size:12.5px;color:var(--mv-txt-3);margin-top:9px;line-height:1.5}
+.rcLista{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.rcLista li{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--mv-txt-2);line-height:1.5}
+.rcLista li b{color:var(--mv-ciano);flex:0 0 auto;font-weight:800}
+.rcLink{display:block;background:var(--mv-campo);border:1px dashed rgba(0,212,255,.45);border-radius:var(--mv-r-sm);
+  padding:11px;color:#eaffff;font-size:13px;font-weight:700;word-break:break-all;margin-bottom:10px;text-align:center}
+.rcAcoes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rcAcao{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--mv-campo);border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r-sm);color:var(--mv-txt-2);font-size:11px;font-weight:600;padding:9px 4px;cursor:pointer;min-width:0}
+.rcAcao svg{width:18px;height:18px}
+.rcAcao:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.rcAcao span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.rcBtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none;border:1px solid var(--mv-linha-forte);
+  background:var(--mv-campo);color:var(--mv-txt);font-family:inherit;font-weight:600;font-size:13.5px;border-radius:var(--mv-r);padding:11px;cursor:pointer}
+.rcBtn:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.rcBtn.wpp{border-color:rgba(37,211,102,.45);color:#6ff0a6}
+.rcBtn.wpp:hover{border-color:var(--mv-whats);color:var(--mv-whats)}
+.rc p.rcTxt{font-size:12.5px;color:var(--mv-txt-2);line-height:1.55;margin-bottom:11px}
+
+/* ---------- selo de status do cadastro ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:var(--mv-r-pill)}
+.badge.pendente{background:rgba(255,176,32,.14);color:var(--mv-alerta);border:1px solid rgba(255,176,32,.4)}
+.badge.aprovado{background:rgba(37,227,155,.14);color:var(--mv-ok);border:1px solid rgba(37,227,155,.4)}
+.badge.recusado,.badge.suspenso{background:rgba(255,107,107,.12);color:var(--mv-erro);border:1px solid rgba(255,107,107,.4)}
+
+/* ---------- barra inferior (celular) ---------- */
+.mvBar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;
+  background:rgba(8,17,30,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--mv-linha);
+  padding-bottom:env(safe-area-inset-bottom)}
+@media(min-width:1120px){.mvBar{display:none}}
+.mvBar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;
+  color:var(--mv-txt-3);font-size:10.5px;font-weight:600;padding:9px 2px;cursor:pointer;min-height:58px;min-width:0}
+.mvBar button svg{width:21px;height:21px}
+.mvBar button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mvBar button.on{color:var(--mv-ciano)}
+.mvBar button.on svg{filter:drop-shadow(0 0 7px rgba(0,212,255,.55))}
+.mvBarFab{position:relative;color:var(--mv-ciano)!important}
+.mvFabCirc{display:flex;align-items:center;justify-content:center;width:50px;height:50px;margin-top:-22px;border-radius:50%;
+  background:var(--mv-grad);color:#02131f;box-shadow:0 10px 26px rgba(0,102,255,.5);border:3px solid var(--mv-bg)}
+.mvFabCirc svg{width:22px;height:22px}
+
+/* ---------- folha que sobe (celular) e modal ---------- */
+.ov{position:fixed;inset:0;z-index:90;background:rgba(2,7,14,.62);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center}
+.ov.centro{align-items:center;padding:16px}
+.folha{width:100%;max-width:560px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-xl) var(--mv-r-xl) 0 0;
+  padding:14px 16px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;position:relative}
+.ov.centro .folha{border-radius:var(--mv-r-xl);max-height:90vh}
+.folhaAlca{width:44px;height:4px;border-radius:var(--mv-r-pill);background:var(--mv-linha-forte);margin:0 auto 14px}
+.folhaX{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid var(--mv-linha);
+  background:var(--mv-campo);color:var(--mv-txt-2);cursor:pointer;font-size:16px}
+.folhaTit{font-size:16px;font-weight:700;margin-bottom:12px}
+.folhaGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.folhaGrid button{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--mv-campo);border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r-lg);padding:16px 10px;color:var(--mv-txt);font-weight:600;font-size:13.5px;cursor:pointer}
+.folhaGrid button:hover{border-color:var(--mv-ciano)}
+.folhaGrid svg{width:26px;height:26px;color:var(--mv-ciano)}
+.menuLista{display:flex;flex-direction:column;gap:2px}
+.menuLista button,.menuLista a{display:flex;align-items:center;gap:11px;width:100%;text-align:left;text-decoration:none;background:transparent;
+  border:1px solid transparent;border-radius:var(--mv-r);color:var(--mv-txt-2);font-family:inherit;font-size:14.5px;font-weight:500;padding:12px;cursor:pointer}
+.menuLista button:hover,.menuLista a:hover{background:var(--mv-campo);border-color:var(--mv-linha);color:var(--mv-txt)}
+.menuLista img{width:22px;height:22px;object-fit:contain;flex:0 0 auto}
+.menuSec{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mv-txt-3);margin:14px 4px 6px}
+
+/* ---------- rótulos que não podem sair cortados (lição das fases anteriores) ---------- */
+@media(max-width:399px){
+  .mvBar button{font-size:9.5px;letter-spacing:-.2px}
+  .mvBar button span{max-width:100%}
+}
+.rcAcao{font-size:10.5px;letter-spacing:-.2px}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+/* ---------- extras do painel do dono ---------- */
+.mvNavIt .bad{margin-left:auto;font-size:10.5px;font-weight:800;color:#02131f;background:var(--mv-alerta);
+  border-radius:var(--mv-r-pill);padding:1px 7px;flex:0 0 auto}
+.mvNavIt.ativo .bad{background:var(--mv-ciano)}
+.mvNavIt span:not(.bad){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.menuLista .bad{margin-left:auto;font-size:10.5px;font-weight:800;color:#02131f;background:var(--mv-alerta);
+  border-radius:var(--mv-r-pill);padding:1px 7px}
+
+/* barra de ferramentas de uma seção (busca + filtros + exportar) */
+.ferr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.ferr input[type=search],.ferr input[type=text]{flex:1 1 200px;min-width:0;width:auto;padding:10px 12px;font-size:13.5px}
+.ferr select{flex:0 0 auto;background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r-sm);
+  color:var(--mv-txt);font-family:inherit;font-size:13.5px;padding:10px 12px;max-width:100%}
+.btnMini{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:0 0 auto;background:var(--mv-campo);
+  border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r-sm);color:var(--mv-txt);font-family:inherit;
+  font-size:13px;font-weight:600;padding:10px 13px;cursor:pointer;white-space:nowrap}
+.btnMini:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.btnMini:disabled{opacity:.5;cursor:not-allowed}
+.btnMini.ok{border-color:rgba(37,227,155,.5);color:var(--mv-ok)}
+.btnMini.perigo{border-color:rgba(255,107,107,.45);color:var(--mv-erro)}
+.btnMini.largo{white-space:normal;text-align:left;justify-content:flex-start;line-height:1.4}
+.btnMini svg{width:16px;height:16px;flex:0 0 auto}
+.contaLinhas{font-size:12.5px;color:var(--mv-txt-3);flex:0 0 auto}
+
+/* tabela que rola sozinha, nunca a página */
+.tabRola{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.mvTab{width:100%;border-collapse:collapse;min-width:520px}
+table.mvTab th{text-align:left;font-size:11.5px;font-weight:700;color:var(--mv-txt-3);text-transform:uppercase;
+  letter-spacing:.4px;padding:0 10px 9px 0;border-bottom:1px solid var(--mv-linha);white-space:nowrap}
+table.mvTab td{font-size:13.5px;padding:11px 10px 11px 0;border-bottom:1px solid var(--mv-linha);vertical-align:middle}
+table.mvTab tr:last-child td{border-bottom:none}
+table.mvTab td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.mvTab th.num{text-align:right}
+table.mvTab td b{font-weight:700}
+.celNome{display:block;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.celQuebra{display:block;overflow-wrap:anywhere;min-width:0}
+.mvTab a{color:var(--mv-ciano);text-decoration:none}
+
+/* cartão de item (parceiro, saque, exclusão) */
+.icard{background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:13px;margin-bottom:10px}
+.icTopo{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.icNome{font-size:14.5px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.icData{font-size:12px;color:var(--mv-txt-3);flex:0 0 auto}
+.icInfo{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;margin-bottom:11px}
+.icInfo>div{min-width:0}
+.icK{display:block;font-size:11px;font-weight:700;color:var(--mv-txt-3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.icV{display:block;font-size:13.5px;color:var(--mv-txt-2);overflow-wrap:anywhere}
+.icV .pill{white-space:normal}
+.icV code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:var(--mv-surf-2);
+  border:1px solid var(--mv-linha);border-radius:6px;padding:2px 6px;display:inline-block;overflow-wrap:anywhere}
+.icAcoes{display:flex;flex-wrap:wrap;gap:8px}
+.icMsg{font-size:12.5px;margin-top:9px;line-height:1.5}
+.chipCanal{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:3px 9px;border-radius:var(--mv-r-pill);
+  margin:2px 6px 2px 0;border:1px solid var(--mv-linha);background:var(--mv-surf-2);color:var(--mv-txt-3)}
+.chipCanal.on{border-color:rgba(37,227,155,.4);background:rgba(37,227,155,.12);color:var(--mv-ok)}
+
+/* switch da configuração */
+.cfgLinha{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:14px}
+.cfgTxt{flex:1 1 260px;min-width:0}
+.cfgTxt b{display:block;font-size:14.5px;margin-bottom:4px}
+.cfgTxt span{display:block;font-size:12.5px;color:var(--mv-txt-3);line-height:1.55}
+.cfgStatus{font-size:12px;font-weight:700;margin-top:8px;min-height:14px;color:var(--mv-txt-3)}
+.sw{position:relative;display:inline-block;width:54px;height:30px;flex:0 0 auto}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.swT{position:absolute;inset:0;background:var(--mv-surf-2);border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r-pill);cursor:pointer;transition:.25s}
+.swB{position:absolute;left:3px;top:3px;width:22px;height:22px;background:#c6d8ee;border-radius:50%;transition:.25s}
+.sw input:checked + .swT{background:var(--mv-grad);border-color:rgba(0,212,255,.6);box-shadow:0 0 14px rgba(0,212,255,.35)}
+.sw input:checked + .swT .swB{transform:translateX(24px);background:#02131f}
+.sw input:disabled + .swT{opacity:.5;cursor:not-allowed}
+.sw input:focus-visible + .swT{outline:2px solid var(--mv-ciano);outline-offset:2px}
+
+/* ---------- caixa de mensagens (27/08/2026) ---------- */
+.cvGrade{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+/* minmax(0,1fr) e nao 1fr: item de grid nasce com min-width:auto e a coluna
+   fica do tamanho do conteudo mais largo, estourando a tela no celular. */
+@media(min-width:1000px){.cvGrade{grid-template-columns:320px minmax(0,1fr);align-items:start}}
+.cvGrade > div{min-width:0}
+#cvBusca{min-width:0;flex:1 1 120px}
+.cvPick{border:1px solid var(--mv-ciano);background:rgba(0,212,255,.06);border-radius:12px;padding:12px;margin-bottom:10px}
+.cvPickTopo{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px}
+.cvPickTopo > div{flex:1;min-width:0}
+.cvPickTopo b{display:block;font-size:14px}
+.cvPickTopo span{display:block;font-size:12.5px;color:var(--mv-txt-3);margin-top:2px;line-height:1.45}
+.cvPickCampo{width:100%;box-sizing:border-box;padding:10px 11px;border-radius:10px;border:1px solid var(--mv-linha);
+  background:var(--mv-surf-2);color:var(--mv-txt);font-family:inherit;font-size:14px}
+.cvPickFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.cvPickFiltros .btnMini.on{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+#cvPickLista{max-height:44vh}
+.cvTag{flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;
+  padding:2px 7px;border-radius:var(--mv-r-pill);border:1px solid var(--mv-linha);color:var(--mv-txt-3)}
+.cvTag.loj{border-color:rgba(0,212,255,.5);color:#7fe3ff}
+.cvTag.par{border-color:rgba(126,230,160,.5);color:#7ee6a0}
+.cvBarra{margin-top:8px;height:6px;border-radius:99px;background:var(--mv-surf-2);overflow:hidden;border:1px solid var(--mv-linha)}
+.cvBarra i{display:block;height:100%;width:0;background:var(--mv-grad);transition:width .18s}
+.cvSubindo{display:flex;align-items:center;gap:9px;margin-top:8px;font-size:12.5px;color:var(--mv-txt-2)}
+.cvSubindo b{font-weight:700}
+.cvMini{display:block;max-width:220px;max-height:170px;border-radius:10px;margin-top:7px;border:1px solid var(--mv-linha)}
+.cvApagar{margin-top:6px;background:none;border:none;padding:0;font:inherit;font-size:11.5px;
+  color:var(--mv-txt-3);cursor:pointer;text-decoration:underline}
+.cvApagar:hover{color:var(--mv-erro)}
+.mvToast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom));z-index:400;
+  max-width:min(460px,calc(100vw - 28px));display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:14px;
+  background:var(--mv-surf);border:1px solid var(--mv-ciano);box-shadow:0 18px 46px rgba(0,0,0,.55);cursor:pointer;
+  animation:toastEntra .22s ease-out}
+@media(min-width:1000px){.mvToast{bottom:24px;left:auto;right:24px;transform:none}}
+@keyframes toastEntra{from{opacity:0;transform:translateY(14px)}to{opacity:1}}
+@media(min-width:1000px){@keyframes toastEntra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}}
+.mvToast .tsIco{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,212,255,.14);color:var(--mv-ciano)}
+.mvToast .tsIco svg{width:17px;height:17px}
+.mvToast .tsTxt{flex:1;min-width:0}
+.mvToast .tsQuem{font-size:13.5px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mvToast .tsMsg{font-size:12.5px;color:var(--mv-txt-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cvLista{max-height:60vh;overflow:auto;display:flex;flex-direction:column;gap:7px}
+.cvIt{display:block;width:100%;text-align:left;background:var(--mv-surf-2);border:1px solid var(--mv-linha);
+  border-radius:12px;padding:11px 12px;cursor:pointer;font-family:inherit;color:var(--mv-txt);transition:.15s}
+.cvIt:hover{border-color:var(--mv-ciano)}
+.cvIt.on{border-color:var(--mv-ciano);background:rgba(0,212,255,.10)}
+.cvItTopo{display:flex;align-items:center;gap:8px}
+.cvItNome{flex:1;min-width:0;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cvItData{font-size:11px;color:var(--mv-txt-3);flex:0 0 auto}
+.cvItPrev{font-size:12.5px;color:var(--mv-txt-3);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cvPt{width:9px;height:9px;border-radius:50%;background:#ff5a5a;flex:0 0 auto}
+.cvThread{max-height:46vh;overflow:auto;min-width:0;display:flex;flex-direction:column;gap:9px;padding:4px 2px;margin:10px 0}
+.cvBolha{max-width:86%;min-width:0;padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.5;word-break:break-word}
+.cvBolha .cvQuando{display:block;font-size:11px;margin-top:5px;opacity:.62}
+.cvEu{align-self:flex-end;background:rgba(0,212,255,.14);border:1px solid rgba(0,212,255,.34);border-bottom-right-radius:5px}
+.cvEle{align-self:flex-start;background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-bottom-left-radius:5px}
+/* Bolha do assistente de IA. Voce PRECISA distinguir de relance o que o robo
+   respondeu do que voce respondeu — e por isso que a resposta dele nasce como
+   de:'bot' e nao como 'admin'. */
+.cvBot{align-self:flex-start;background:rgba(139,110,255,.13);border:1px solid rgba(139,110,255,.42);border-bottom-left-radius:5px}
+.cvAnexo{display:flex;align-items:center;gap:9px;margin-top:7px;padding:9px 10px;border-radius:10px;
+  background:rgba(255,255,255,.05);border:1px solid var(--mv-linha);text-decoration:none;color:var(--mv-txt)}
+.cvAnexo svg{width:19px;height:19px;flex:0 0 auto;color:var(--mv-ciano)}
+.cvEnviar{display:flex;gap:8px;align-items:flex-end;min-width:0}
+.cvEnviar textarea{flex:1;min-width:0;min-height:46px;max-height:130px;resize:vertical;padding:12px;border-radius:12px;
+  border:1px solid var(--mv-linha);background:var(--mv-surf-2);color:var(--mv-txt);font-family:inherit;font-size:14.5px}
+.cvIco{flex:0 0 auto;width:46px;height:46px;border-radius:12px;border:1px solid var(--mv-linha);
+  background:var(--mv-surf-2);color:var(--mv-txt-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cvIco:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.cvIco svg{width:19px;height:19px}
+.cvIco[disabled]{opacity:.45;cursor:not-allowed}
+.cvVazio{text-align:center;font-size:13.5px;color:var(--mv-txt-3);padding:28px 10px}
+.cvDocs{border:1px solid rgba(255,159,64,.55);background:rgba(255,159,64,.09);border-radius:12px;padding:12px 13px;margin-bottom:12px}
+.cvDocsLinha{display:flex;align-items:center;gap:12px}
+.cvDocsTxt{flex:1;min-width:0}
+.cvDocsTxt b{display:block;font-size:13.5px;margin-bottom:3px}
+.cvDocsTxt span{font-size:12.5px;color:var(--mv-txt-3);line-height:1.5}
+.cvPedido{width:100%;box-sizing:border-box;margin-top:10px;padding:10px 11px;border-radius:10px;
+  border:1px solid var(--mv-linha);background:var(--mv-surf-2);color:var(--mv-txt);font-family:inherit;font-size:13.5px}
+
+/* mapa */
+.mapaCaixa{height:340px;border-radius:var(--mv-r);overflow:hidden;border:1px solid var(--mv-linha);background:var(--mv-surf-2)}
+.leaflet-container{background:#0a1424}
+
+/* barras horizontais (ranking / horários) */
+.bLinha{display:grid;grid-template-columns:minmax(0,1fr) 62px;gap:10px;align-items:center;padding:8px 0}
+.bNome{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.bVal{display:block;text-align:right;font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.bTrilho{grid-column:1/-1;height:7px;border-radius:var(--mv-r-pill);background:var(--mv-campo);border:1px solid var(--mv-linha);overflow:hidden}
+.bTrilho i{display:block;height:100%;background:var(--mv-grad)}
+
+/* aviso de bloco que depende de regra nova */
+.avisoRegra{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.35);border-radius:var(--mv-r);
+  padding:13px;font-size:13px;color:#ffd79a;line-height:1.6}
+.avisoRegra b{color:var(--mv-alerta)}
+.avisoOk{background:rgba(37,227,155,.08);border:1px solid rgba(37,227,155,.32);border-radius:var(--mv-r);
+  padding:13px;font-size:13px;color:#9df3cf;line-height:1.6}
+
+/* convites */
+.convLinha{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.convLinha input{flex:1 1 220px;min-width:0;width:auto}
+.gridAcoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px}
+.gridAcoes:has(.linkFora){grid-template-columns:repeat(auto-fit,minmax(216px,1fr))}
+.gridAcoes .btnMini{width:100%}
+.linkFora{display:flex;align-items:center;gap:10px;background:var(--mv-campo);border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r);padding:12px;color:var(--mv-txt-2);text-decoration:none;font-size:13.5px;font-weight:600;min-width:0}
+.linkFora:hover{border-color:var(--mv-ciano);color:var(--mv-ciano)}
+.linkFora span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.linkFora img{width:22px;height:22px;object-fit:contain;flex:0 0 auto}
+
+/* rótulos curtos nas telas estreitas (lição das fases 2a/4) */
+@media(max-width:399px){
+  .mvBar button{font-size:9.5px;letter-spacing:-.2px}
+  .btnMini{font-size:12.5px;padding:9px 11px}
+}
+</style>
+</head>
+<body>
+
+<!-- ======= carregando ======= -->
+<div id="carregando" class="telaCentro">
+  <div class="marca"><img src="logo.png" alt="Moviki" onerror="this.style.display='none'"></div>
+  <div class="caixa" style="text-align:center;color:var(--mv-txt-3)">Carregando…</div>
+</div>
+
+<!-- ======= login ======= -->
+<div id="login" class="telaCentro hide">
+  <div class="marca"><img src="logo.png" alt="Moviki" onerror="this.style.display='none'"></div>
+  <div class="caixa">
+    <h1>Painel do Dono</h1>
+    <p class="sub">Acesso exclusivo do dono do Moviki.</p>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" placeholder="voce@email.com" autocomplete="username">
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" placeholder="sua senha" autocomplete="current-password">
+    <button class="btn" id="btnEntrar">Entrar</button>
+    <div class="aviso" id="avisoLogin"></div>
+  </div>
+</div>
+
+<!-- ======= acesso restrito ======= -->
+<div id="restrito" class="telaCentro hide">
+  <div class="marca"><img src="logo.png" alt="Moviki" onerror="this.style.display='none'"></div>
+  <div class="caixa" style="text-align:center">
+    <h1>Acesso restrito</h1>
+    <p class="sub">Este painel é do dono do Moviki.</p>
+    <p style="font-size:13px;color:var(--mv-txt-2)">Você entrou como:<br><b id="restritoEmail"></b></p>
+    <button class="btn sec" id="sair2">Sair</button>
+  </div>
+</div>
+
+<!-- ======= painel ======= -->
+<div id="painel" class="hide">
+
+  <!-- cabeçalho do celular -->
+  <header class="mvTopo">
+    <img class="logo" src="logo.png" alt="Moviki" onerror="this.outerHTML='<span style=&quot;font-weight:800;font-size:19px&quot;>movi<span style=&quot;color:#00D4FF&quot;>ki</span></span>'">
+    <div class="mvTopoDir">
+      <span class="mvSinoWrap">
+        <button type="button" class="mvSino" id="btnSino" aria-label="Pendências">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        </button>
+        <span class="mvSinoPt hide" id="sinoPt">0</span>
+      </span>
+      <button type="button" class="mvAvatar" id="avatarTopo" aria-label="Configurações">D</button>
+    </div>
+  </header>
+
+  <div class="mvWrap">
+    <div class="mvShell">
+
+      <!-- ---------- lateral ---------- -->
+      <aside class="mvSide" aria-label="Navegação">
+        <div class="mvSideLogo"><img src="logo.png" alt="Moviki" onerror="this.outerHTML='<span style=&quot;font-weight:800;font-size:21px&quot;>movi<span style=&quot;color:#00D4FF&quot;>ki</span></span>'"></div>
+        <nav class="mvNav" id="mvNav">
+          <button type="button" class="mvNavIt ativo" data-nav="visao"><img class="mvNavIco" src="icones/inicio.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Visão geral</span></button>
+          <button type="button" class="mvNavIt" data-nav="negocios"><img class="mvNavIco" src="icones/usuarios.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Negócios</span></button>
+          <button type="button" class="mvNavIt" data-nav="parceiros"><img class="mvNavIco" src="icones/parceiros.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Parceiros</span><span class="bad hide" id="badParc">0</span></button>
+          <button type="button" class="mvNavIt" data-nav="comissoes"><img class="mvNavIco" src="icones/comissoes.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Comissões e saques</span><span class="bad hide" id="badCom">0</span></button>
+          <button type="button" class="mvNavIt" data-nav="mensagens"><img class="mvNavIco" src="icones/sobre.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Mensagens</span><span class="bad hide" id="badMsg">0</span></button>
+          <button type="button" class="mvNavIt" data-nav="metricas"><img class="mvNavIco" src="icones/alvo.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Métricas</span></button>
+          <button type="button" class="mvNavIt" data-nav="newsletter"><img class="mvNavIco" src="icones/recorrente.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Newsletter</span></button>
+          <button type="button" class="mvNavIt" data-nav="relatorios"><img class="mvNavIco" src="icones/relatorios.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Relatórios</span></button>
+          <button type="button" class="mvNavIt" data-nav="convCom"><img class="mvNavIco" src="icones/convidar-comerciante.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Convidar comerciante</span></button>
+          <button type="button" class="mvNavIt" data-nav="convPar"><img class="mvNavIco" src="icones/convidar-parceiro.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Convidar parceiro</span></button>
+          <button type="button" class="mvNavIt" data-nav="exclusoes"><img class="mvNavIco" src="icones/exclusoes.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Exclusões de conta</span><span class="bad hide" id="badExc">0</span></button>
+          <button type="button" class="mvNavIt" data-nav="atalhos"><img class="mvNavIco" src="icones/foguete.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Atalhos do dono</span></button>
+          <button type="button" class="mvNavIt" data-nav="config"><img class="mvNavIco" src="icones/escudo.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Configurações</span></button>
+          <a class="mvNavIt" href="https://moviki.com.br" target="_blank" rel="noopener" style="text-decoration:none"><img class="mvNavIco" src="icones/ver-site.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Ver o site</span></a>
+        </nav>
+        <div class="mvSideCta">
+          <div class="mvSideCtaTit">Trazer gente nova</div>
+          <p>O link de comerciante e o de parceiro já saem com a mensagem pronta pra WhatsApp e Direct.</p>
+          <button type="button" data-ir="convCom"><img class="mvNavIco" src="icones/convidar-comerciante.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'">Convidar agora</button>
+        </div>
+        <button type="button" class="mvSideSair" id="sairLado"><img class="mvNavIco" src="icones/sair.png" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>Sair da conta</span></button>
+      </aside>
+
+      <!-- ---------- centro ---------- -->
+      <div class="mvMain">
+
+        <div class="mvOla">
+          <div class="mvOlaTopo">
+            <div>
+              <h1>Olá, dono 👑</h1>
+              <p id="olaSub">Tudo o que aparece aqui vem do banco. Nada é estimado sem estar escrito.</p>
+            </div>
+            <div class="mvOlaAcoes">
+              <button type="button" class="btnMini" id="btnRecarregar">Atualizar dados</button>
+              <span class="mvSinoWrap">
+                <button type="button" class="mvSino" id="btnSino2" aria-label="Pendências">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+                </button>
+                <span class="mvSinoPt hide" id="sinoPt2">0</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ SEÇÃO: VISÃO GERAL ============ -->
+        <section data-sec="visao">
+
+          <div class="cd hide" id="cardPend">
+            <div class="cdTopo"><div class="cdTit">Precisa da sua atenção</div><span class="cdChip" id="pendChip">0</span></div>
+            <div class="gridAcoes" id="pendAcoes"></div>
+          </div>
+
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Números do Moviki</div><div class="cdSub">Contados na hora, direto do banco.</div></div></div>
+            <div class="kGrid">
+              <div class="kTile">
+                <div class="kIco azul"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 8.8V21h14V8.8"/><path d="M9 21v-6h6v6"/></svg></div>
+                <div class="kV" id="kLojistas">—</div><div class="kR">Negócios cadastrados</div>
+              </div>
+              <div class="kTile">
+                <div class="kIco ciano"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.4l6.1-.8L12 3Z"/></svg></div>
+                <div class="kV" id="kPro">—</div><div class="kR">Pró ou superior</div>
+              </div>
+              <div class="kTile">
+                <div class="kIco verde"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3 1.6"/></svg></div>
+                <div class="kV" id="kAbertos">—</div><div class="kR">Abertos agora</div>
+              </div>
+              <div class="kTile">
+                <div class="kIco roxo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M14.6 9.4c-.6-.7-1.6-1-2.6-1-1.5 0-2.4.7-2.4 1.7 0 2.6 5.2 1.3 5.2 3.9 0 1.1-1 1.9-2.8 1.9-1.3 0-2.3-.4-2.9-1.2"/></svg></div>
+                <div class="kV" id="kReceita">—</div><div class="kR">Receita estimada/mês</div>
+              </div>
+            </div>
+            <div class="kGrid" style="margin-top:10px">
+              <div class="kTile">
+                <div class="kIco ciano"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="8" r="3.4"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3"/></svg></div>
+                <div class="kV" id="kParceiros">—</div><div class="kR">Parceiros aprovados</div>
+              </div>
+              <div class="kTile">
+                <div class="kIco verde"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/></svg></div>
+                <div class="kV" id="kAPagar">—</div><div class="kR">A pagar em comissões</div>
+              </div>
+              <div class="kTile">
+                <div class="kIco azul"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></div>
+                <div class="kV" id="kNews">—</div><div class="kR">Inscritos na newsletter</div>
+              </div>
+              <div class="kTile">
+                <div class="kIco roxo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+                <div class="kV" id="kPontos">—</div><div class="kR">Pontos no mapa (Enterprise)</div>
+              </div>
+            </div>
+            <div class="cdSub" style="margin-top:11px">A <b>receita estimada</b> conta todo mundo em plano pago, inclusive quem ainda está nos 30 dias grátis e não paga nada. <b>A pagar em comissões</b> é o que os parceiros já têm direito a sacar.</div>
+          </div>
+
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Quem está no mapa agora</div><span class="cdChip" id="mapaCont">—</span></div>
+            <div class="mapaCaixa" id="admMapa"></div>
+            <div class="cdSub" style="margin-top:10px">Ponto aceso = negócio com o status “aberto” e localização preenchida, mais os pontos extras dos planos Enterprise.</div>
+          </div>
+
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Como este painel funciona</div></div>
+            <p class="cdSub">Todo número aqui é contado no momento em que a tela abre. Não há série histórica guardada do painel: o que existe de histórico é o contador por negócio da seção <b>Métricas</b>, que grava um documento por dia. Quando um bloco não conseguir ler alguma coleção, ele diz isso na cara em vez de mostrar zero.</p>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: NEGÓCIOS ============ -->
+        <section data-sec="negocios" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Negócios cadastrados</div><div class="cdSub">Lista completa, do mais recente pro mais antigo.</div></div></div>
+            <div class="ferr">
+              <input type="search" id="buscaNeg" placeholder="Buscar por nome, e-mail do link ou apelido…" autocomplete="off">
+              <select id="filtroPlano"><option value="">Todos os planos</option><option value="basico">Básico</option><option value="pro">Pró</option><option value="premium">Premium</option><option value="enterprise">Enterprise</option></select>
+              <select id="filtroStatus"><option value="">Aberto e fechado</option><option value="aberto">Só abertos</option><option value="fechado">Só fechados</option></select>
+              <button type="button" class="btnMini" id="btnCsvNeg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 20h16"/></svg>Exportar CSV</button>
+              <span class="contaLinhas" id="contaNeg"></span>
+            </div>
+            <div class="tabRola">
+              <table class="mvTab">
+                <thead><tr><th>Negócio</th><th>Plano</th><th>Status</th><th>Link</th><th>Segmento</th><th>Atualizado</th><th>Conversa</th></tr></thead>
+                <tbody id="negBody"><tr><td colspan="7" class="vazio">Carregando…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: PARCEIROS ============ -->
+        <section data-sec="parceiros" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Aprovação automática</div></div>
+            <div class="cfgLinha">
+              <div class="cfgTxt">
+                <b>Aprovar parceiro na hora</b>
+                <span>Ligado: todo pedido já entra <b>aprovado</b> sozinho (o Telegram avisa mesmo assim). Desligado: cada pedido fica <b>pendente</b> até você aprovar aqui embaixo.</span>
+                <div class="cfgStatus" id="cfgStatus">Carregando…</div>
+              </div>
+              <label class="sw"><input type="checkbox" id="swAuto" disabled><span class="swT"><span class="swB"></span></span></label>
+            </div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Cadastros de parceiro</div><span class="cdChip" id="parcChip">—</span></div>
+            <div class="ferr">
+              <input type="search" id="buscaParc" placeholder="Buscar por nome, e-mail ou apelido…" autocomplete="off">
+              <select id="filtroParc"><option value="">Todos os estados</option><option value="pendente">Pendentes</option><option value="aprovado">Aprovados</option><option value="suspenso">Suspensos</option><option value="recusado">Recusados</option></select>
+              <button type="button" class="btnMini" id="btnCsvParc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 20h16"/></svg>Exportar CSV</button>
+            </div>
+            <div id="parcBox"><div class="vazio">Carregando…</div></div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: COMISSÕES E SAQUES ============ -->
+        <section data-sec="comissoes" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Pedidos de saque</div><span class="cdChip" id="saqueChip">—</span></div>
+            <p class="cdSub">O parceiro vê "Pix em até 1 dia útil (24h)". <b>Pagar via Pix agora</b> manda o dinheiro pelo Asaas na hora (você confere o titular antes). Acima de R$ 500 o envio automático é bloqueado: pague pelo banco e use <b>Já paguei na mão</b>.</p>
+            <div id="saqueBox"><div class="vazio">Carregando…</div></div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Comissões por parceiro</div><div class="cdSub">Comissões estornadas ficam de fora da conta. Dá para pagar cada parceiro direto aqui, sem esperar ele pedir saque.</div></div>
+              <button type="button" class="btnMini" id="btnCsvCom">Exportar CSV</button></div>
+            <div id="comBox"><div class="vazio">Carregando…</div></div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Ensaio de pagamento</div><div class="cdSub">Cria uma comissão de mentira (até R$ 10,00) para um parceiro, só para você testar o Pix de ponta a ponta. Ela nasce marcada como teste e já liberada para saque.</div></div></div>
+            <div class="ferr">
+              <select id="tsParc"><option value="">Escolha o parceiro…</option></select>
+              <input type="number" id="tsValor" value="5" min="0.01" max="10" step="0.01" style="max-width:120px" placeholder="Valor">
+              <button type="button" class="btnMini ok" id="btnComTeste">Criar comissão de teste</button>
+            </div>
+            <div class="icMsg" id="tsMsg"></div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: MENSAGENS ============ -->
+        <section data-sec="mensagens" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Mensagens</div><div class="cdSub">Canal direto com cada lojista. Quem escreveu primeiro aparece no topo.</div></div><span class="cdChip" id="cvChip">—</span></div>
+            <div class="cvDocs cvPadraoVik" style="margin-bottom:12px">
+              <div class="cvDocsLinha">
+                <div class="cvDocsTxt">
+                  <b>Vik ligado por padrão nas conversas</b>
+                  <span id="cvPadraoEstado">Carregando…</span>
+                </div>
+                <label class="sw"><input type="checkbox" id="swPadraoVik" disabled><span class="swT"><span class="swB"></span></span></label>
+              </div>
+              <div class="cdSub" style="margin-top:8px;line-height:1.5">Vale para toda conversa que você ainda não tocou. <b>O interruptor de cada conversa continua mandando</b> — o que você ligar ou desligar lá dentro ganha deste aqui, sempre. Conversa que você desligou por ser de dinheiro continua desligada.</div>
+            </div>
+
+            <div class="cvGrade">
+
+              <div>
+                <div class="ferr" style="margin-bottom:10px">
+                  <input type="search" id="cvBusca" placeholder="Buscar por nome, apelido ou e-mail…" autocomplete="off">
+                  <button type="button" class="btnMini" id="btnCvNova">Nova conversa</button>
+                </div>
+
+                <div class="cvPick hide" id="cvPicker">
+                  <div class="cvPickTopo">
+                    <div>
+                      <b>Falar com quem?</b>
+                      <span>Busque por nome do negócio, apelido do link ou e-mail.</span>
+                    </div>
+                    <button type="button" class="btnMini" id="btnCvPickFechar">Cancelar</button>
+                  </div>
+                  <input type="search" id="cvPickBusca" class="cvPickCampo" placeholder="nome, apelido ou e-mail…" autocomplete="off">
+                  <div class="cvPickFiltros">
+                    <button type="button" class="btnMini on" data-pick="todos">Todos</button>
+                    <button type="button" class="btnMini" data-pick="lojista">Lojistas</button>
+                    <button type="button" class="btnMini" data-pick="parceiro">Parceiros</button>
+                  </div>
+                  <div class="cvLista" id="cvPickLista"></div>
+                </div>
+
+                <div class="cvLista" id="cvLista"><div class="cvVazio">Carregando…</div></div>
+              </div>
+
+              <div>
+                <div id="cvSemSelecao" class="cvVazio">Escolha uma conversa à esquerda — ou toque em <b>Nova conversa</b> para falar com um lojista que nunca escreveu.</div>
+
+                <div id="cvAberta" class="hide">
+                  <div class="cdTopo" style="margin-bottom:10px">
+                    <div><div class="cdTit" id="cvNome">—</div><div class="cdSub" id="cvSub">—</div></div>
+                    <button type="button" class="btnMini" id="btnCvFechar">Fechar</button>
+                  </div>
+
+                  <div class="cvDocs">
+                    <div class="cvDocsLinha">
+                      <div class="cvDocsTxt">
+                        <b>Mensagens do admin — envio de documentos</b>
+                        <span id="cvDocsEstado">Desligado: o lojista não vê o bloco de anexo. Ligue para pedir um documento a ele.</span>
+                      </div>
+                      <label class="sw"><input type="checkbox" id="swDocs" disabled><span class="swT"><span class="swB"></span></span></label>
+                    </div>
+                    <input type="text" class="cvPedido hide" id="cvPedido" maxlength="300" placeholder="O que você está pedindo? (ex: contrato social e comprovante de endereço)">
+                    <button type="button" class="btnMini hide" id="btnCvPedido" style="margin-top:8px">Salvar o pedido</button>
+                  </div>
+
+                  <div class="cvDocs" style="margin-top:10px">
+                    <div class="cvDocsLinha">
+                      <div class="cvDocsTxt">
+                        <b>Vik — assistente de IA nesta conversa</b>
+                        <span id="cvBotEstado">Desligado: o Vik não responde aqui.</span>
+                      </div>
+                      <label class="sw"><input type="checkbox" id="swBot" disabled><span class="swT"><span class="swB"></span></span></label>
+                    </div>
+                    <div class="cdSub" style="margin-top:8px;line-height:1.5">Ligado, o Vik responde dúvida de produto, plano e comissão com os dados reais desta conta. Ele cala sozinho por 30 minutos toda vez que você escreve. <b>Deixe desligado em conversa de dinheiro, saque ou documento.</b></div>
+                    <button type="button" class="btnMini hide" id="btnCvBotPadrao" style="margin-top:8px">Voltar ao padrão geral</button>
+                  </div>
+
+                  <!-- MEMORIA DO VIK — o que ele aprendeu desta pessoa.
+                       Existe para o dono poder AUDITAR e APAGAR: IA erra ao
+                       extrair fato, e memoria errada envenena todas as
+                       conversas seguintes daquela conta. -->
+                  <div class="cvDocs" style="margin-top:10px">
+                    <div class="cvDocsLinha">
+                      <div class="cvDocsTxt">
+                        <b>O que o Vik aprendeu desta pessoa</b>
+                        <span id="cvMemEstado">—</span>
+                      </div>
+                      <button type="button" class="btnMini" id="btnCvMemApagar" style="display:none">Apagar memória</button>
+                    </div>
+                    <div id="cvMemLista" style="margin-top:9px;font-size:12.5px;line-height:1.6;color:var(--mv-txt-2)"></div>
+                  </div>
+
+                  <div class="cvThread" id="cvThread"></div>
+
+                  <div class="cvEnviar">
+                    <textarea id="cvTexto" maxlength="2000" rows="1" placeholder="Escreva para o lojista…"></textarea>
+                    <button type="button" class="cvIco" id="btnCvClipe" aria-label="Anexar documento" title="Anexar documento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.4 11.05 12.25 20.2a5.5 5.5 0 0 1-7.78-7.78l9.2-9.2a3.67 3.67 0 1 1 5.18 5.19l-9.2 9.19a1.83 1.83 0 1 1-2.6-2.59l8.5-8.49"/></svg></button>
+                    <button type="button" class="cvIco" id="btnCvEnviar" aria-label="Enviar" title="Enviar" style="background:var(--mv-ciano);border-color:var(--mv-ciano);color:#02131f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 16-8L4 4l3 8z"/><path d="M7 12h13"/></svg></button>
+                  </div>
+                  <input type="file" id="cvArquivo" style="display:none" accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx,.csv,.txt,application/pdf,image/jpeg,image/png,image/webp,image/gif">
+                  <div class="cvSubindo hide" id="cvSubindo">
+                    <div style="flex:1;min-width:0">
+                      <div><b id="cvSubNome">arquivo</b> <span id="cvSubPct">0%</span></div>
+                      <div class="cvBarra"><i id="cvSubBarra"></i></div>
+                    </div>
+                    <button type="button" class="btnMini" id="btnCvCancelarUp">Cancelar</button>
+                  </div>
+                  <div id="cvAviso" style="font-size:12.5px;min-height:16px;margin:6px 2px 0"></div>
+                </div>
+              </div>
+
+            </div>
+            <div class="avisoRegra hide" id="cvErroRegra">Não consegui ler as conversas. A coleção <b>conversas</b> só abre para quem tem documento em <b>admins</b> — e as regras <b>v13</b> precisam estar publicadas no Console.</div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: MÉTRICAS ============ -->
+        <section data-sec="metricas" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Métricas de todos os negócios</div><div class="cdSub">Soma do contador próprio da Fase 6 (<code>metricas/{negócio}/dias</code>). O GA4 mede o site inteiro; isto aqui é por lojista.</div></div></div>
+            <div class="ferr">
+              <select id="mtDias"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select>
+              <button type="button" class="btnMini" id="btnMetricas">Carregar métricas</button>
+              <button type="button" class="btnMini hide" id="btnCsvMet">Exportar CSV</button>
+              <span class="contaLinhas" id="mtCusto"></span>
+            </div>
+            <div id="mtAviso" class="cdSub">Este bloco só lê quando você manda, porque custa uma leitura por dia e por negócio. O custo estimado aparece ao lado do botão.</div>
+            <div id="mtResumo" class="hide" style="margin-top:14px">
+              <div class="kGrid">
+                <div class="kTile"><div class="kV" id="mtViews">—</div><div class="kR">Visitas às páginas</div></div>
+                <div class="kTile"><div class="kV" id="mtWhats">—</div><div class="kR">Cliques no WhatsApp</div></div>
+                <div class="kTile"><div class="kV" id="mtRota">—</div><div class="kR">Pediram rota</div></div>
+                <div class="kTile"><div class="kV" id="mtCardapio">—</div><div class="kR">Abriram o cardápio</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="cd hide" id="cdMtGraf">
+            <div class="cdTopo"><div class="cdTit">Visitas por dia</div></div>
+            <div class="gBox"><div id="mtGraf"></div></div>
+          </div>
+          <div class="cd hide" id="cdMtRank">
+            <div class="cdTopo"><div class="cdTit">Negócios com mais visitas</div></div>
+            <div id="mtRank"></div>
+          </div>
+          <div class="cd hide" id="cdMtHora">
+            <div class="cdTopo"><div><div class="cdTit">Horários de maior movimento</div><div class="cdSub">Faixas de 2 horas, somando todos os negócios.</div></div></div>
+            <div id="mtHora"></div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: NEWSLETTER ============ -->
+        <section data-sec="newsletter" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Inscritos na newsletter</div><div class="cdSub">Quem deixou o e-mail no rodapé do site. Só o dono lê esta lista.</div></div></div>
+            <div class="kGrid k3" style="margin-bottom:13px">
+              <div class="kTile"><div class="kV" id="nlTotal">—</div><div class="kR">Total de inscritos</div></div>
+              <div class="kTile"><div class="kV" id="nlAtivos">—</div><div class="kR">Ativos (podem receber)</div></div>
+              <div class="kTile"><div class="kV" id="nlSaiu">—</div><div class="kR">Descadastrados</div></div>
+            </div>
+            <div class="ferr">
+              <input type="search" id="buscaNl" placeholder="Buscar por e-mail ou origem…" autocomplete="off">
+              <select id="filtroNl"><option value="">Todos</option><option value="ativos">Só ativos</option><option value="saiu">Só descadastrados</option></select>
+              <button type="button" class="btnMini ok" id="btnCsvNl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4 20h16"/></svg>Exportar CSV</button>
+              <span class="contaLinhas" id="contaNl"></span>
+            </div>
+            <div class="tabRola">
+              <table class="mvTab">
+                <thead><tr><th>E-mail</th><th>Origem</th><th>Situação</th><th>Entrou em</th><th class="num">Ação</th></tr></thead>
+                <tbody id="nlBody"><tr><td colspan="5" class="vazio">Carregando…</td></tr></tbody>
+              </table>
+            </div>
+            <div class="cdSub" style="margin-top:12px">A página <b>descadastro.html</b> está no ar e a regra de <code>ativo:false</code> publicada — pode disparar campanha. O CSV traz uma coluna <b>Link de descadastro</b> com o link individual de cada pessoa: é esse link que tem que ir em todo e-mail enviado. Dispare só para quem está como <b>ativo</b>.</div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: RELATÓRIOS ============ -->
+        <section data-sec="relatorios" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Negócios por plano</div></div>
+            <div id="relPlanos"><div class="vazio">Carregando…</div></div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Preenchimento do cadastro</div></div>
+            <div id="relPreench"><div class="vazio">Carregando…</div></div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Segmentos mais comuns</div></div>
+            <div id="relSeg"><div class="vazio">Carregando…</div></div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Receita estimada por mês</div></div>
+            <div id="relReceita"><div class="vazio">Carregando…</div></div>
+            <div class="cdSub" style="margin-top:11px">É uma estimativa: conta todo mundo em Pró, Premium ou Enterprise, inclusive quem ainda está nos 30 dias grátis e não paga nada. O valor de caixa de verdade vem do provedor de pagamento.</div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: CONVIDAR COMERCIANTE ============ -->
+        <section data-sec="convCom" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Link do comerciante</div><div class="cdSub">Dono de negócio que vai usar o Moviki.</div></div></div>
+            <div class="convLinha"><input id="linkCom" type="text" readonly value="https://moviki.com.br/comerciantes.html"><button type="button" class="btnMini" data-copiarcampo="linkCom">Copiar link</button></div>
+            <div class="gridAcoes">
+              <button type="button" class="btnMini" data-wpp="com">Enviar pelo WhatsApp</button>
+              <button type="button" class="btnMini" data-insta="com">Copiar texto p/ Instagram</button>
+              <a class="btnMini" href="https://instagram.com/" target="_blank" rel="noopener">Abrir o Instagram</a>
+              <a class="btnMini" href="https://moviki.com.br/comerciantes.html" target="_blank" rel="noopener">Ver a página</a>
+            </div>
+            <div class="avisoOk" style="margin-top:13px">No Instagram não dá pra abrir a conversa já com o texto escrito. O botão <b>copia a mensagem pronta</b> — é só abrir o Direct e colar.</div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: CONVIDAR PARCEIRO ============ -->
+        <section data-sec="convPar" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Link do parceiro</div><div class="cdSub">Influenciador ou afiliado que indica e ganha 15% recorrente.</div></div></div>
+            <div class="convLinha"><input id="linkPar" type="text" readonly value="https://moviki.com.br/parceiros.html"><button type="button" class="btnMini" data-copiarcampo="linkPar">Copiar link</button></div>
+            <div class="gridAcoes">
+              <button type="button" class="btnMini" data-wpp="par">Enviar pelo WhatsApp</button>
+              <button type="button" class="btnMini" data-insta="par">Copiar texto p/ Instagram</button>
+              <a class="btnMini" href="https://instagram.com/" target="_blank" rel="noopener">Abrir o Instagram</a>
+              <a class="btnMini" href="https://moviki.com.br/parceiros-ganhos.html" target="_blank" rel="noopener">Ver a página de ganhos</a>
+            </div>
+            <div class="avisoOk" style="margin-top:13px">Mesma coisa aqui: pro Instagram o botão copia a mensagem pronta e você cola no Direct.</div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: EXCLUSÕES ============ -->
+        <section data-sec="exclusoes" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Pedidos de exclusão de conta</div><div class="cdSub">Feitos pelo lojista dentro do app. Ao confirmar, a conta, os dados e a assinatura somem <b>definitivamente</b>.</div></div><span class="cdChip" id="excChip">—</span></div>
+            <div id="excBox"><div class="vazio">Carregando…</div></div>
+          </div>
+
+          <!-- Excluir por iniciativa do dono: cadastro de teste, duplicata,
+               abandono. O robo (api/exclusoes) sempre aceitou qualquer uid —
+               o que faltava era um lugar aqui pra escolher a conta. -->
+          <div class="cd" style="margin-top:14px">
+            <div class="cdTopo">
+              <div>
+                <div class="cdTit">Excluir uma conta agora</div>
+                <div class="cdSub">Sem esperar pedido do lojista. Some o negócio, as unidades, o desempenho, as mensagens, os arquivos e o apelido do link — e a assinatura é cancelada no Asaas. <b>Não dá pra desfazer.</b></div>
+              </div>
+              <span class="cdChip" id="excDelChip">—</span>
+            </div>
+            <div class="ferr">
+              <input type="search" id="excBusca" placeholder="Buscar por nome, apelido do link, e-mail ou segmento…" autocomplete="off">
+            </div>
+            <div id="excDelBox"><div class="vazio">Digite pelo menos 2 letras para achar a conta.</div></div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: ATALHOS DO DONO ============ -->
+        <section data-sec="atalhos" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Páginas do Moviki</div><div class="cdSub">Abre em outra aba.</div></div></div>
+            <div class="gridAcoes">
+              <a class="linkFora" href="https://moviki.com.br" target="_blank" rel="noopener"><img src="icones/ver-site.png" alt="" onerror="this.style.display='none'"><span>Site (mapa)</span></a>
+              <a class="linkFora" href="https://moviki.com.br/premium.html" target="_blank" rel="noopener"><img src="icones/plano.png" alt="" onerror="this.style.display='none'"><span>Landing Premium</span></a>
+              <a class="linkFora" href="https://moviki.com.br/enterprise.html" target="_blank" rel="noopener"><img src="icones/multipontos.png" alt="" onerror="this.style.display='none'"><span>Landing Enterprise</span></a>
+              <a class="linkFora" href="https://moviki.com.br/comerciantes.html" target="_blank" rel="noopener"><img src="icones/convidar-comerciante.png" alt="" onerror="this.style.display='none'"><span>Landing comerciantes</span></a>
+              <a class="linkFora" href="https://moviki.com.br/parceiros.html" target="_blank" rel="noopener"><img src="icones/convidar-parceiro.png" alt="" onerror="this.style.display='none'"><span>Landing parceiros</span></a>
+              <a class="linkFora" href="https://moviki.com.br/parceiros-ganhos.html" target="_blank" rel="noopener"><img src="icones/comissoes.png" alt="" onerror="this.style.display='none'"><span>Parceiros — ganhos</span></a>
+              <a class="linkFora" href="index.html"><img src="icones/pagina.png" alt="" onerror="this.style.display='none'"><span>Painel do lojista</span></a>
+              <a class="linkFora" href="parceiro.html"><img src="icones/parceiros.png" alt="" onerror="this.style.display='none'"><span>Painel do parceiro</span></a>
+              <a class="linkFora" href="regulamento.html"><img src="icones/termos.png" alt="" onerror="this.style.display='none'"><span>Regulamento</span></a>
+            </div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div><div class="cdTit">Ver a página de um negócio</div><div class="cdSub">Digite o apelido (o que vem depois da barra) e abra a página pública. Em modo demonstração os blocos vazios aparecem como exemplo.</div></div></div>
+            <div class="convLinha"><input id="apelidoVer" type="text" placeholder="ex.: karina" autocomplete="off"><button type="button" class="btnMini" id="btnVerApelido">Abrir</button><button type="button" class="btnMini" id="btnVerDemo">Abrir em demonstração</button></div>
+          </div>
+        </section>
+
+        <!-- ============ SEÇÃO: CONFIGURAÇÕES ============ -->
+        <section data-sec="config" class="hide">
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Sua conta</div></div>
+            <div class="icInfo">
+              <div><span class="icK">E-mail</span><span class="icV" id="cfEmail">—</span></div>
+              <div><span class="icK">Identificador (uid)</span><span class="icV"><code id="cfUid">—</code></span></div>
+              <div><span class="icK">Admin no banco</span><span class="icV" id="cfAdmin">—</span></div>
+            </div>
+            <div class="cdSub" style="margin-top:6px">O <b>Admin no banco</b> é o que vale para as regras do Firestore: sem um documento seu em <code>admins</code>, a Newsletter e as Comissões não abrem, mesmo com o e-mail certo.</div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Aprovação automática de parceiros</div></div>
+            <div class="cfgLinha">
+              <div class="cfgTxt">
+                <b>Aprovar parceiro na hora</b>
+                <span>É a mesma chave da tela de Parceiros.</span>
+                <div class="cfgStatus" id="cfgStatus2">Carregando…</div>
+              </div>
+              <label class="sw"><input type="checkbox" id="swAuto2" disabled><span class="swT"><span class="swB"></span></span></label>
+            </div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">O que este painel conseguiu ler</div></div>
+            <div id="saudeBox"><div class="vazio">Verificando…</div></div>
+            <div class="cdSub" style="margin-top:11px">Se alguma linha estiver em vermelho, o problema é regra do Firestore ou falta do documento em <code>admins</code> — não é o arquivo.</div>
+          </div>
+          <div class="cd">
+            <div class="cdTopo"><div class="cdTit">Versão do arquivo</div></div>
+            <div class="icInfo">
+              <div><span class="icK">Marca de versão</span><span class="icV"><code id="cfVersao">—</code></span></div>
+              <div><span class="icK">Projeto no Firebase</span><span class="icV"><code>moviki-app</code></span></div>
+            </div>
+            <div class="cdSub" style="margin-top:6px">Digitar <code>MOVIKI_VERSAO</code> no console do navegador diz na hora qual arquivo está no ar.</div>
+          </div>
+        </section>
+
+      </div><!-- /mvMain -->
+
+      <!-- ---------- coluna de apoio ---------- -->
+      <aside class="mvRight" id="mvRight">
+        <div class="rc">
+          <div class="rcPerfil">
+            <span class="lAv" id="avatarLado">D</span>
+            <div style="min-width:0">
+              <div class="rcPerfilNome">Dono do Moviki</div>
+              <div class="rcPerfilSub" id="rcEmail">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rc" id="rcPend">
+          <div class="rcTit">Precisa de você <span class="cdChip" id="rcPendN">0</span></div>
+          <div id="rcPendLista"><p class="rcTxt">Nada pendente no momento.</p></div>
+        </div>
+
+        <div class="rc">
+          <div class="rcTit">Resumo de hoje</div>
+          <ul class="rcLista">
+            <li><b id="rcNeg">—</b><span>negócios cadastrados</span></li>
+            <li><b id="rcPago">—</b><span>em plano pago</span></li>
+            <li><b id="rcRec">—</b><span>de receita estimada por mês</span></li>
+            <li><b id="rcNl">—</b><span>inscritos na newsletter</span></li>
+          </ul>
+        </div>
+
+        <div class="rc">
+          <div class="rcTit">Atalhos</div>
+          <div class="rcAcoes">
+            <button type="button" class="rcAcao" data-ir="convCom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="8" r="3.4"/><path d="M19 8v6M22 11h-6"/></svg><span>Convidar</span></button>
+            <button type="button" class="rcAcao" data-ir="newsletter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><span>Newsletter</span></button>
+            <button type="button" class="rcAcao" data-ir="metricas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 3.5-4 3 2.5L20 7"/></svg><span>Métricas</span></button>
+            <a class="rcAcao" href="https://moviki.com.br" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg><span>Ver site</span></a>
+          </div>
+        </div>
+
+        <div class="rc">
+          <div class="rcTit">Este arquivo</div>
+          <p class="rcTxt">Marca de versão: <b id="rcVersao">—</b>. Se a tela parecer antiga, é o navegador guardando o arquivo velho — recarregue segurando Shift.</p>
+          <button type="button" class="rcBtn" id="sairApoio">Sair da conta</button>
+        </div>
+      </aside>
+
+    </div><!-- /mvShell -->
+  </div><!-- /mvWrap -->
+
+  <!-- barra inferior (celular) — 5 lugares, o do meio é convidar -->
+  <nav class="mvBar" id="mvBar" aria-label="Atalhos">
+    <button type="button" data-bar="visao" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/></svg><span>Início</span></button>
+    <button type="button" data-bar="negocios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="8" r="3.4"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3"/></svg><span>Negócios</span></button>
+    <button type="button" class="mvBarFab" id="btnFab" aria-label="Convidar"><span class="mvFabCirc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><span>Convidar</span></button>
+    <button type="button" data-bar="parceiros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg><span>Parceiros</span></button>
+    <button type="button" id="btnMais"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Mais</span></button>
+  </nav>
+</div><!-- /painel -->
+
+<!-- ======= folha: convidar ======= -->
+<div class="ov hide" id="ovConvidar"><div class="folha">
+  <div class="folhaAlca"></div>
+  <div class="folhaTit">Quem você quer convidar?</div>
+  <div class="folhaGrid">
+    <button type="button" data-ir="convCom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 8.8V21h14V8.8"/></svg>Comerciante</button>
+    <button type="button" data-ir="convPar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="8" r="3.4"/><path d="M19 8v6M22 11h-6"/></svg>Parceiro</button>
+    <button type="button" data-wpp="com"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.4-.2-2.6.7.7-2.5-.2-.4A8 8 0 0 1 12 4z"/></svg>WhatsApp — comerciante</button>
+    <button type="button" data-wpp="par"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.4-.2-2.6.7.7-2.5-.2-.4A8 8 0 0 1 12 4z"/></svg>WhatsApp — parceiro</button>
+  </div>
+  <button type="button" class="btn sec" data-fechar="ovConvidar">Fechar</button>
+</div></div>
+
+<!-- ======= folha: menu ======= -->
+<div class="ov hide" id="ovMais"><div class="folha">
+  <div class="folhaAlca"></div>
+  <div class="folhaTit">Menu</div>
+  <div class="menuLista">
+    <div class="menuSec">Painel</div>
+    <button type="button" data-ir="visao"><img src="icones/inicio.png" alt="" onerror="this.style.display='none'">Visão geral</button>
+    <button type="button" data-ir="negocios"><img src="icones/usuarios.png" alt="" onerror="this.style.display='none'">Negócios</button>
+    <button type="button" data-ir="parceiros"><img src="icones/parceiros.png" alt="" onerror="this.style.display='none'">Parceiros<span class="bad hide" id="badParcM">0</span></button>
+    <button type="button" data-ir="comissoes"><img src="icones/comissoes.png" alt="" onerror="this.style.display='none'">Comissões e saques<span class="bad hide" id="badComM">0</span></button>
+    <button type="button" data-ir="mensagens"><img src="icones/sobre.png" alt="" onerror="this.style.display='none'">Mensagens<span class="bad hide" id="badMsgM">0</span></button>
+    <button type="button" data-ir="metricas"><img src="icones/alvo.png" alt="" onerror="this.style.display='none'">Métricas</button>
+    <button type="button" data-ir="newsletter"><img src="icones/recorrente.png" alt="" onerror="this.style.display='none'">Newsletter</button>
+    <button type="button" data-ir="relatorios"><img src="icones/relatorios.png" alt="" onerror="this.style.display='none'">Relatórios</button>
+    <div class="menuSec">Crescimento</div>
+    <button type="button" data-ir="convCom"><img src="icones/convidar-comerciante.png" alt="" onerror="this.style.display='none'">Convidar comerciante</button>
+    <button type="button" data-ir="convPar"><img src="icones/convidar-parceiro.png" alt="" onerror="this.style.display='none'">Convidar parceiro</button>
+    <button type="button" data-ir="atalhos"><img src="icones/foguete.png" alt="" onerror="this.style.display='none'">Atalhos do dono</button>
+    <div class="menuSec">Administração</div>
+    <button type="button" data-ir="exclusoes"><img src="icones/exclusoes.png" alt="" onerror="this.style.display='none'">Exclusões de conta<span class="bad hide" id="badExcM">0</span></button>
+    <button type="button" data-ir="config"><img src="icones/escudo.png" alt="" onerror="this.style.display='none'">Configurações</button>
+    <a href="https://moviki.com.br" target="_blank" rel="noopener"><img src="icones/ver-site.png" alt="" onerror="this.style.display='none'">Ver o site</a>
+    <div class="menuSec">Conta</div>
+    <button type="button" id="sair3"><img src="icones/sair.png" alt="" onerror="this.style.display='none'">Sair da conta</button>
+  </div>
+  <button type="button" class="btn sec" data-fechar="ovMais">Fechar</button>
+</div></div>
+
+<!-- ======= folha: pendências ======= -->
+<div class="ov centro hide" id="ovPend"><div class="folha">
+  <button type="button" class="folhaX" data-fechar="ovPend" aria-label="Fechar">✕</button>
+  <div class="folhaTit">Precisa da sua atenção</div>
+  <div id="ovPendLista"><p class="rcTxt">Nada pendente no momento.</p></div>
+  <button type="button" class="btn sec" data-fechar="ovPend">Fechar</button>
+</div></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc, deleteField, onSnapshot, serverTimestamp, query, orderBy, limit, documentId } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getStorage, ref as stRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  /* Marca de versão: digitar MOVIKI_VERSAO no console do navegador diz na hora
+     qual arquivo está no ar. */
+  window.MOVIKI_VERSAO = '2026-08-28-vikpadrao';
+
+  const ADMIN_EMAILS = ["paulorico2030@gmail.com"];
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+    authDomain: "moviki-app.firebaseapp.com",
+    projectId: "moviki-app",
+    storageBucket: "moviki-app.firebasestorage.app",
+    messagingSenderId: "451920150738",
+    appId: "1:451920150738:web:be458392064c964c792d0b"
+  };
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  const storage = getStorage(app);
+
+  /* ---------- utilitários ---------- */
+  const el   = id => document.getElementById(id);
+  const show = id => { const n = el(id); if(n) n.classList.remove('hide'); };
+  const hide = id => { const n = el(id); if(n) n.classList.add('hide'); };
+  const txt  = (id,v) => { const n = el(id); if(n) n.textContent = v; };
+  const esc  = s => (s==null?'':String(s)).replace(/[<>&"]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const brl  = n => 'R$ ' + (Number(n)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const num  = n => (Number(n)||0).toLocaleString('pt-BR');
+
+  const PLANOS = {
+    basico:{n:'Básico',p:0},
+    pro:{n:'Pró',p:37.90},
+    premium:{n:'Premium',p:49.90},
+    enterprise:{n:'Enterprise',p:99.90}
+  };
+  const normPlano = v => { v=(v||'').toString().toLowerCase().trim(); return PLANOS[v]?v:'basico'; };
+
+  function ms(ts){
+    if(!ts) return 0;
+    if(typeof ts.toMillis === 'function') return ts.toMillis();
+    if(ts.seconds) return ts.seconds*1000;
+    if(typeof ts === 'number') return ts;
+    return 0;
+  }
+  function dataBR(m){
+    if(!m) return '—';
+    const d = new Date(m);
+    if(isNaN(d.getTime())) return '—';
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+  }
+
+  /* ---------- estado ---------- */
+  let USER = null, EH_ADMIN_BANCO = false;
+  let NEG = [], PLANO_DE = {}, PARC = [], COMIS = [], SAQ = [], NL = [], EXC = [], PONTOS = 0;
+  let MET = null;
+  let saquePix = {};
+  let SAUDE = {};
+  let autoAprovAtual = false, autoAprovSalvando = false;
+
+  /* ---------- navegação entre seções ---------- */
+  const SEC_BARRA = ['visao','negocios','parceiros'];
+  function irSec(nome){
+    document.querySelectorAll('section[data-sec]').forEach(s=>{
+      s.classList.toggle('hide', s.getAttribute('data-sec') !== nome);
+    });
+    document.querySelectorAll('#mvNav .mvNavIt[data-nav]').forEach(b=>{
+      b.classList.toggle('ativo', b.getAttribute('data-nav') === nome);
+    });
+    document.querySelectorAll('#mvBar button[data-bar]').forEach(b=>{
+      b.classList.toggle('on', b.getAttribute('data-bar') === nome);
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(nome === 'visao') setTimeout(()=>{ try{ if(_map) _map.invalidateSize(); }catch(e){} }, 120);
+    if(nome === 'exclusoes'){ carregarExclusoes(); excDelRender(); }
+    if(nome === 'newsletter' && SAUDE.newsletter === undefined) carregarNewsletter();
+    if(nome === 'mensagens') ouvirConversas();
+  }
+  window.mvIrSec = irSec;
+
+  /* ---------- overlays ---------- */
+  function abrirOv(id){ show(id); document.body.style.overflow='hidden'; }
+  function fecharOv(id){ hide(id); document.body.style.overflow=''; }
+  function fecharTodos(){ ['ovConvidar','ovMais','ovPend'].forEach(fecharOv); }
+
+  document.addEventListener('click', ev=>{
+    const alvo = ev.target;
+    if(alvo.classList && alvo.classList.contains('ov')){ fecharOv(alvo.id); return; }
+    const f = alvo.closest ? alvo.closest('[data-fechar]') : null;
+    if(f){ fecharOv(f.getAttribute('data-fechar')); return; }
+    const ir = alvo.closest ? alvo.closest('[data-ir]') : null;
+    if(ir){ fecharTodos(); irSec(ir.getAttribute('data-ir')); return; }
+    const cc = alvo.closest ? alvo.closest('[data-copiarcampo]') : null;
+    if(cc){ const c = el(cc.getAttribute('data-copiarcampo')); if(c){ copiar(c.value); feedback(cc,'Copiado!'); } return; }
+    const wp = alvo.closest ? alvo.closest('[data-wpp]') : null;
+    if(wp){ const t = wp.getAttribute('data-wpp'); fecharTodos(); window.open('https://wa.me/?text='+encodeURIComponent(MSG_WPP[t]+LINK[t]),'_blank'); return; }
+    const ig = alvo.closest ? alvo.closest('[data-insta]') : null;
+    if(ig){ const t = ig.getAttribute('data-insta'); copiar(MSG_IG[t]+LINK[t]); feedback(ig,'Mensagem copiada!'); return; }
+  });
+  document.addEventListener('keydown', ev=>{ if(ev.key === 'Escape') fecharTodos(); });
+
+  document.querySelectorAll('#mvNav .mvNavIt[data-nav]').forEach(b=>{
+    b.addEventListener('click', ()=> irSec(b.getAttribute('data-nav')));
+  });
+  document.querySelectorAll('#mvBar button[data-bar]').forEach(b=>{
+    b.addEventListener('click', ()=> irSec(b.getAttribute('data-bar')));
+  });
+  el('btnFab').addEventListener('click', ()=> abrirOv('ovConvidar'));
+  el('btnMais').addEventListener('click', ()=> abrirOv('ovMais'));
+  el('btnSino').addEventListener('click', ()=> abrirOv('ovPend'));
+  el('btnSino2').addEventListener('click', ()=> abrirOv('ovPend'));
+  el('avatarTopo').addEventListener('click', ()=> irSec('config'));
+
+  /* ---------- copiar / feedback ---------- */
+  function copiar(t){
+    try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); return; } }catch(e){}
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  function feedback(btn,t){
+    if(!btn) return;
+    const o = btn.textContent;
+    btn.textContent = t; btn.disabled = true;
+    setTimeout(()=>{ btn.textContent = o; btn.disabled = false; }, 1600);
+  }
+
+  /* ---------- baixar CSV ---------- */
+  function baixarCSV(nome, cabecalho, linhas){
+    const sep = ';';
+    const campo = v => {
+      const s = (v==null?'':String(v)).replace(/"/g,'""').replace(/\r?\n/g,' ');
+      return '"' + s + '"';
+    };
+    const corpo = [cabecalho].concat(linhas).map(l => l.map(campo).join(sep)).join('\r\n');
+    // BOM na frente: sem ele o Excel em português come os acentos.
+    const blob = new Blob(['﻿' + corpo], {type:'text/csv;charset=utf-8;'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const hoje = new Date();
+    const carimbo = hoje.getFullYear()+'-'+String(hoje.getMonth()+1).padStart(2,'0')+'-'+String(hoje.getDate()).padStart(2,'0');
+    a.href = url; a.download = nome + '-' + carimbo + '.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  }
+
+  /* ---------- telas ---------- */
+  function telas(qual){ ['carregando','login','restrito','painel'].forEach(t => t===qual ? show(t) : hide(t)); }
+
+  el('btnEntrar').addEventListener('click', async ()=>{
+    const b = el('btnEntrar'), av = el('avisoLogin');
+    av.textContent = ''; b.disabled = true;
+    const t = b.textContent; b.textContent = 'Entrando…';
+    try{ await signInWithEmailAndPassword(auth, el('email').value.trim(), el('senha').value); }
+    catch(e){ av.textContent = 'E-mail ou senha incorretos.'; }
+    b.disabled = false; b.textContent = t;
+  });
+  el('senha').addEventListener('keydown', ev=>{ if(ev.key === 'Enter') el('btnEntrar').click(); });
+  ['sair2','sair3','sairLado','sairApoio'].forEach(id=>{ const n = el(id); if(n) n.addEventListener('click', ()=>signOut(auth)); });
+  el('btnRecarregar').addEventListener('click', ()=>{ carregarTudo(true); });
+
+  /* ---------- entrada ---------- */
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){ telas('login'); return; }
+    const email = (user.email||'').toLowerCase();
+    // Duas portas: o e-mail na lista (como sempre foi) OU o documento em admins,
+    // que é o que as REGRAS do Firestore olham. Basta uma para o painel abrir;
+    // a tela de Configurações diz qual das duas está valendo.
+    EH_ADMIN_BANCO = false;
+    try{ const s = await getDoc(doc(db,'admins',user.uid)); EH_ADMIN_BANCO = s.exists(); }catch(e){ EH_ADMIN_BANCO = false; }
+    const naLista = ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email);
+    if(!naLista && !EH_ADMIN_BANCO){ txt('restritoEmail', user.email||''); telas('restrito'); return; }
+
+    USER = user;
+    txt('rcEmail', user.email||'');
+    txt('cfEmail', user.email||'');
+    txt('cfUid', user.uid);
+    txt('cfVersao', window.MOVIKI_VERSAO);
+    txt('rcVersao', window.MOVIKI_VERSAO);
+    const ini = (user.email||'D').trim().charAt(0).toUpperCase();
+    txt('avatarTopo', ini); txt('avatarLado', ini);
+    el('cfAdmin').innerHTML = EH_ADMIN_BANCO
+      ? '<span class="pill ok">Sim, achei em admins</span>'
+      : '<span class="pill warn">Não achei em admins</span>';
+
+    telas('painel');
+    irSec('visao');
+    carregarTudo(false);
+    // A caixa de mensagens liga sozinha no login: sem isso o número vermelho de
+    // "não lidas" só apareceria depois de entrar na seção — que é justamente o
+    // que ele existe pra evitar.
+    ouvirConversas();
+  });
+
+  async function carregarTudo(recarregando){
+    if(recarregando) feedback(el('btnRecarregar'),'Atualizando…');
+    await Promise.all([
+      carregarNegocios(),
+      carregarParceiros(),
+      carregarComissoes(),
+      carregarNewsletter(),
+      carregarPontos()
+    ]);
+    carregarConfigSistema();
+    carregarMapa();
+    // as exclusões vêm do robô, não do Firestore: só depois delas o contador de
+    // pendências pode ser pintado, senão ele nasce com um número menor.
+    await carregarExclusoes();
+    pintarSaude();
+    pintarPendencias();
+  }
+
+  /* ==========================================================
+     NEGÓCIOS + KPIs + RELATÓRIOS
+     ========================================================== */
+  async function carregarNegocios(){
+    NEG = []; PLANO_DE = {};
+    let okNeg = true, okAss = true;
+    try{
+      const s = await getDocs(collection(db,'negocios'));
+      s.forEach(d => NEG.push(Object.assign({uid:d.id}, d.data())));
+    }catch(e){ okNeg = false; }
+    try{
+      const s = await getDocs(collection(db,'assinaturas'));
+      s.forEach(d => { PLANO_DE[d.id] = normPlano((d.data()||{}).plano); });
+    }catch(e){ okAss = false; }
+    SAUDE.negocios = okNeg; SAUDE.assinaturas = okAss;
+
+    if(!okNeg){
+      ['kLojistas','kPro','kAbertos','kReceita'].forEach(id => txt(id,'—'));
+      el('negBody').innerHTML = '<tr><td colspan="7" class="vazio">Não consegui ler os negócios agora.</td></tr>';
+      el('relPlanos').innerHTML = '<div class="vazio">Não consegui ler os negócios agora.</div>';
+      return;
+    }
+
+    NEG.sort((a,b) => ms(b.atualizadoEm) - ms(a.atualizadoEm));
+
+    const cont = {basico:0,pro:0,premium:0,enterprise:0};
+    let pagos = 0, abertos = 0, receita = 0;
+    let comWpp = 0, comLink = 0, comLocal = 0, comFoto = 0, comCardapio = 0, comPromo = 0, comHorario = 0, comEndereco = 0, divulga = 0;
+    const seg = {};
+    NEG.forEach(n=>{
+      const pl = PLANO_DE[n.uid] || 'basico';
+      cont[pl]++;
+      if(pl !== 'basico'){ pagos++; receita += PLANOS[pl].p; }
+      if((n.status||'') === 'aberto') abertos++;
+      if((n.whatsapp||'').toString().replace(/\D/g,'').length >= 10) comWpp++;
+      if(n.slug) comLink++;
+      if(typeof n.lat === 'number' && typeof n.lng === 'number') comLocal++;
+      if(Array.isArray(n.fotos) && n.fotos.length) comFoto++;
+      if(Array.isArray(n.cardapio) && n.cardapio.length) comCardapio++;
+      if(Array.isArray(n.promocoes) && n.promocoes.length) comPromo++;
+      if((n.horario||'').toString().trim()) comHorario++;
+      if((n.endereco||'').toString().trim()) comEndereco++;
+      if(n.autorizaDivulgacao === true) divulga++;
+      const sg = (n.segmento||'').toString().trim();
+      if(sg) seg[sg] = (seg[sg]||0)+1;
+    });
+
+    txt('kLojistas', num(NEG.length));
+    txt('kPro', num(pagos));
+    txt('kAbertos', num(abertos));
+    txt('kReceita', brl(receita));
+    txt('rcNeg', num(NEG.length));
+    txt('rcPago', num(pagos));
+    txt('rcRec', brl(receita));
+
+    pintarNegocios();
+
+    const total = NEG.length || 1;
+    const barra = (rot, v) => '<div class="bLinha"><span class="bNome">'+esc(rot)+'</span><span class="bVal">'+num(v)+'</span>'+
+      '<span class="bTrilho"><i style="width:'+Math.round((v/total)*100)+'%"></i></span></div>';
+
+    el('relPlanos').innerHTML =
+      barra('Básico (grátis)', cont.basico) + barra('Pró', cont.pro) +
+      barra('Premium', cont.premium) + barra('Enterprise', cont.enterprise);
+
+    el('relPreench').innerHTML =
+      barra('Com link no ar', comLink) + barra('Com WhatsApp', comWpp) +
+      barra('Com localização no mapa', comLocal) + barra('Com pelo menos 1 foto', comFoto) +
+      barra('Com cardápio', comCardapio) + barra('Com promoção', comPromo) +
+      barra('Com horário (Fase 2b)', comHorario) + barra('Com endereço escrito (Fase 2b)', comEndereco) +
+      barra('Autorizam divulgação nas redes', divulga) +
+      '<div class="cdSub" style="margin-top:10px">De '+num(NEG.length)+' negócios cadastrados. Quem autoriza divulgação é quem o robô social pode publicar.</div>';
+
+    const segLista = Object.keys(seg).map(k=>({k:k,v:seg[k]})).sort((a,b)=>b.v-a.v).slice(0,12);
+    el('relSeg').innerHTML = segLista.length
+      ? segLista.map(x=>barra(x.k, x.v)).join('') +
+        '<div class="cdSub" style="margin-top:10px">O segmento vem do quiz de cadastro; contas antigas não têm o campo.</div>'
+      : '<div class="vazio">Nenhum negócio tem segmento preenchido ainda.</div>';
+
+    el('relReceita').innerHTML =
+      '<div class="sdLinha"><div><div class="sdV" style="color:var(--mv-ok)">'+brl(receita)+'</div><div class="sdR">Somando os planos pagos</div></div></div>' +
+      '<div class="sdLinha"><div><div class="sdV">'+num(pagos)+'</div><div class="sdR">Negócios em plano pago</div></div></div>' +
+      '<div class="sdLinha"><div><div class="sdV">'+(NEG.length ? Math.round((pagos/NEG.length)*100) : 0)+'%</div><div class="sdR">Dos cadastrados estão em plano pago</div></div></div>';
+  }
+
+  function pintarNegocios(){
+    const busca = (el('buscaNeg').value||'').toLowerCase().trim();
+    const fp = el('filtroPlano').value, fs = el('filtroStatus').value;
+    const lista = NEG.filter(n=>{
+      const pl = PLANO_DE[n.uid] || 'basico';
+      if(fp && pl !== fp) return false;
+      if(fs && (n.status||'') !== fs) return false;
+      if(busca){
+        const alvo = ((n.nome||'')+' '+(n.slug||'')+' '+(n.segmento||'')+' '+(n.endereco||'')).toLowerCase();
+        if(alvo.indexOf(busca) === -1) return false;
+      }
+      return true;
+    });
+    txt('contaNeg', lista.length + (lista.length === 1 ? ' negócio' : ' negócios'));
+    if(!lista.length){
+      el('negBody').innerHTML = '<tr><td colspan="7" class="vazio">Nenhum negócio com esse filtro.</td></tr>';
+      return;
+    }
+    el('negBody').innerHTML = lista.map(n=>{
+      const pl = PLANO_DE[n.uid] || 'basico';
+      const aberto = (n.status||'') === 'aberto';
+      const link = n.slug
+        ? '<a href="https://moviki.com.br/'+encodeURIComponent(n.slug)+'" target="_blank" rel="noopener">/'+esc(n.slug)+'</a>'
+        : '<span style="color:var(--mv-txt-3)">—</span>';
+      return '<tr>'+
+        '<td><span class="celNome">'+esc(n.nome||'(sem nome)')+'</span></td>'+
+        '<td><span class="pill '+(pl==='basico'?'off':'info')+'">'+PLANOS[pl].n+'</span></td>'+
+        '<td><span class="pill '+(aberto?'ok':'off')+'">'+(aberto?'Aberto':'Fechado')+'</span></td>'+
+        '<td>'+link+'</td>'+
+        '<td><span class="celNome" style="max-width:150px">'+esc(n.segmento||'—')+'</span></td>'+
+        '<td class="num">'+dataBR(ms(n.atualizadoEm))+'</td>'+
+        '<td><button type="button" class="btnMini" data-cv="'+esc(n.uid)+'">Mensagem</button></td>'+
+      '</tr>';
+    }).join('');
+  }
+  el('buscaNeg').addEventListener('input', pintarNegocios);
+  el('filtroPlano').addEventListener('change', pintarNegocios);
+  el('filtroStatus').addEventListener('change', pintarNegocios);
+  el('btnCsvNeg').addEventListener('click', ()=>{
+    baixarCSV('moviki-negocios',
+      ['Nome','Plano','Status','Apelido do link','Segmento','Segmento macro','WhatsApp','Endereço','Horário','Autoriza divulgação','Atualizado em'],
+      NEG.map(n=>{
+        const pl = PLANO_DE[n.uid] || 'basico';
+        return [n.nome||'', PLANOS[pl].n, n.status||'', n.slug||'', n.segmento||'', n.segmentoMacro||'',
+                n.whatsapp||'', n.endereco||'', n.horario||'', n.autorizaDivulgacao===true?'sim':'não', dataBR(ms(n.atualizadoEm))];
+      }));
+  });
+
+  /* ==========================================================
+     PONTOS (Enterprise)
+     ========================================================== */
+  async function carregarPontos(){
+    try{
+      const s = await getDocs(collection(db,'pontos'));
+      PONTOS = s.size;
+      SAUDE.pontos = true;
+    }catch(e){ PONTOS = 0; SAUDE.pontos = false; }
+    txt('kPontos', SAUDE.pontos ? num(PONTOS) : '—');
+  }
+
+  /* ==========================================================
+     MAPA
+     ========================================================== */
+  let _map = null, _camada = null;
+  function carregarMapa(){
+    const box = el('admMapa');
+    if(!box || typeof L === 'undefined') return;
+    try{
+      if(!_map){
+        _map = L.map('admMapa',{scrollWheelZoom:false}).setView([-8.05,-34.9],11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(_map);
+      }
+      if(_camada) _camada.remove();
+      _camada = L.layerGroup().addTo(_map);
+      const pts = [];
+      NEG.forEach(n=>{
+        if((n.status||'') === 'aberto' && typeof n.lat === 'number' && typeof n.lng === 'number') pts.push([n.lat,n.lng]);
+      });
+      getDocs(collection(db,'pontos')).then(s=>{
+        s.forEach(d=>{ const p = d.data()||{}; if(p.ativo === true && typeof p.lat === 'number' && typeof p.lng === 'number') pts.push([p.lat,p.lng]); });
+        desenhar();
+      }).catch(()=>desenhar());
+      function desenhar(){
+        pts.forEach(c=>{ L.circleMarker(c,{radius:7,color:'#00D4FF',weight:2,fillColor:'#0066FF',fillOpacity:.85}).addTo(_camada); });
+        txt('mapaCont', pts.length + (pts.length === 1 ? ' ponto aceso' : ' pontos acesos'));
+        if(pts.length){ try{ _map.fitBounds(L.latLngBounds(pts).pad(0.2)); }catch(e){} }
+        setTimeout(()=>{ try{ _map.invalidateSize(); }catch(e){} }, 200);
+      }
+    }catch(e){}
+  }
+
+  /* ==========================================================
+     PARCEIROS
+     ========================================================== */
+  const EST = {
+    pendente:{n:'Pendente',c:'warn'}, aprovado:{n:'Aprovado',c:'ok'},
+    recusado:{n:'Recusado',c:'off'},  suspenso:{n:'Suspenso',c:'off'}
+  };
+  const CANAL = {instagram:'Instagram/TikTok', whatsapp:'WhatsApp', associacoes:'Associações'};
+
+  async function carregarParceiros(){
+    PARC = [];
+    try{
+      const s = await getDocs(collection(db,'parceiros'));
+      s.forEach(d => PARC.push(Object.assign({uid:d.id}, d.data())));
+      SAUDE.parceiros = true;
+    }catch(e){
+      SAUDE.parceiros = false;
+      el('parcBox').innerHTML = '<div class="avisoRegra">Não consegui ler os parceiros. Isso é regra do Firestore: a coleção <b>parceiros</b> só abre para quem tem documento em <b>admins</b>.</div>';
+      txt('kParceiros','—');
+      return;
+    }
+    const ordem = {pendente:0, aprovado:1, suspenso:2, recusado:3};
+    PARC.sort((a,b)=>(((ordem[a.status]==null?9:ordem[a.status]) - (ordem[b.status]==null?9:ordem[b.status])) || (ms(b.criadoEm) - ms(a.criadoEm))));
+    const pend = PARC.filter(p=>p.status === 'pendente').length;
+    const aprov = PARC.filter(p=>p.status === 'aprovado').length;
+    txt('kParceiros', num(aprov));
+    badge('badParc', pend); badge('badParcM', pend);
+    txt('parcChip', PARC.length + (PARC.length === 1 ? ' cadastro' : ' cadastros'));
+    pintarParceiros();
+  }
+
+  function badge(id, n){
+    const b = el(id); if(!b) return;
+    if(n > 0){ b.textContent = n; b.classList.remove('hide'); } else b.classList.add('hide');
+  }
+
+  function pintarParceiros(){
+    const busca = (el('buscaParc').value||'').toLowerCase().trim();
+    const f = el('filtroParc').value;
+    const lista = PARC.filter(p=>{
+      if(f && (p.status||'') !== f) return false;
+      if(busca){
+        const alvo = ((p.nome||'')+' '+(p.email||'')+' '+(p.slug||'')+' '+(p.arroba||'')).toLowerCase();
+        if(alvo.indexOf(busca) === -1) return false;
+      }
+      return true;
+    });
+    if(!lista.length){ el('parcBox').innerHTML = '<div class="vazio">Nenhum parceiro com esse filtro.</div>'; return; }
+    el('parcBox').innerHTML = lista.map(p=>{
+      const st = EST[p.status] || {n:(p.status||'—'), c:'off'};
+      let acoes = '';
+      if(p.status === 'pendente'){
+        acoes = '<button type="button" class="btnMini ok" data-acao="aprovar" data-uid="'+esc(p.uid)+'">Aprovar</button>'+
+                '<button type="button" class="btnMini perigo" data-acao="recusar" data-uid="'+esc(p.uid)+'">Recusar</button>';
+      } else if(p.status === 'aprovado'){
+        acoes = '<button type="button" class="btnMini" data-acao="reenviar" data-uid="'+esc(p.uid)+'">Reenviar boas-vindas</button>'+
+                '<button type="button" class="btnMini perigo" data-acao="suspender" data-uid="'+esc(p.uid)+'">Suspender</button>';
+      } else {
+        acoes = '<button type="button" class="btnMini ok" data-acao="aprovar" data-uid="'+esc(p.uid)+'">Reativar</button>';
+      }
+      const sel = Array.isArray(p.canais) ? p.canais : [];
+      const chips = (sel.length || p.arroba)
+        ? '<div style="margin-top:2px"><span class="icK">Onde divulga</span>'+
+          ['instagram','whatsapp','associacoes'].map(c=>'<span class="chipCanal'+(sel.indexOf(c)!==-1?' on':'')+'">'+CANAL[c]+'</span>').join('')+'</div>'
+        : '';
+      return '<div class="icard">'+
+        '<div class="icTopo"><div class="icNome">'+esc(p.nome||'(sem nome)')+' <span class="pill '+st.c+'">'+st.n+'</span></div>'+
+        '<span class="icData">'+dataBR(ms(p.criadoEm))+'</span></div>'+
+        '<div class="icInfo">'+
+          '<div><span class="icK">E-mail</span><span class="icV">'+esc(p.email||'—')+'</span></div>'+
+          (p.arroba ? '<div><span class="icK">@ dele</span><span class="icV">'+esc(p.arroba)+'</span></div>' : '')+
+          '<div><span class="icK">Link</span><span class="icV"><a href="https://moviki.com.br/p/'+encodeURIComponent(p.slug||'')+'" target="_blank" rel="noopener">/p/'+esc(p.slug||'')+'</a></span></div>'+
+          '<div><span class="icK">Pix</span><span class="icV"><code>'+esc(p.pix||'—')+'</code> <button type="button" class="btnMini" data-acao="pix" data-uid="'+esc(p.uid)+'">copiar</button></span></div>'+
+          '<div><span class="icK">Identificador (uid)</span><span class="icV"><code>'+esc(p.uid||'—')+'</code> <button type="button" class="btnMini" data-acao="uid" data-uid="'+esc(p.uid)+'">copiar</button></span></div>'+
+        '</div>'+ chips +
+        '<div class="icAcoes">'+acoes+'</div>'+
+        '<div class="icMsg" id="pmsg_'+esc(p.uid)+'"></div>'+
+      '</div>';
+    }).join('');
+  }
+  el('buscaParc').addEventListener('input', pintarParceiros);
+  el('filtroParc').addEventListener('change', pintarParceiros);
+  el('btnCsvParc').addEventListener('click', ()=>{
+    baixarCSV('moviki-parceiros',
+      ['Nome','E-mail','Estado','Apelido do link','Arroba','Pix','Canais','Indicado por','Criado em'],
+      PARC.map(p=>[p.nome||'', p.email||'', p.status||'', p.slug||'', p.arroba||'', p.pix||'',
+                   (Array.isArray(p.canais)?p.canais.join(' / '):''), p.indicadoPor||'', dataBR(ms(p.criadoEm))]));
+  });
+
+  el('parcBox').addEventListener('click', async ev=>{
+    const b = ev.target.closest ? ev.target.closest('[data-acao]') : null;
+    if(!b) return;
+    const acao = b.getAttribute('data-acao'), uid = b.getAttribute('data-uid');
+    const p = PARC.filter(x=>x.uid === uid)[0] || {};
+    const msg = el('pmsg_'+uid);
+    if(acao === 'pix'){ copiar(p.pix||''); feedback(b,'copiado'); return; }
+    if(acao === 'uid'){ copiar(uid||''); feedback(b,'copiado'); return; }
+    if(acao === 'recusar' && !confirm('Recusar este parceiro?')) return;
+    if(acao === 'suspender' && !confirm('Suspender este parceiro?')) return;
+    if(acao === 'reenviar'){ await reenviarBoasVindas(uid, b, msg); return; }
+    const novo = acao === 'aprovar' ? 'aprovado' : (acao === 'recusar' ? 'recusado' : 'suspenso');
+    const antes = p.status || '';
+    b.disabled = true;
+    try{
+      await updateDoc(doc(db,'parceiros',uid), {status:novo});
+      if(novo === 'aprovado' && antes === 'pendente') avisarAprovado(uid);
+      await carregarParceiros();
+      pintarPendencias();
+    }catch(e){
+      b.disabled = false;
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Não consegui salvar agora. Tente de novo.'; }
+    }
+  });
+
+  async function avisarAprovado(uid){
+    try{
+      const idToken = await auth.currentUser.getIdToken();
+      await fetch('https://moviki-robo.vercel.app/api/parceiro-aprovado', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({idToken, uid})
+      });
+    }catch(e){ /* o e-mail é secundário: a aprovação já foi feita */ }
+  }
+
+  async function reenviarBoasVindas(uid, btn, msg){
+    btn.disabled = true; const t = btn.textContent; btn.textContent = 'Enviando…';
+    if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Enviando…'; }
+    try{
+      const idToken = await auth.currentUser.getIdToken();
+      const r = await fetch('https://moviki-robo.vercel.app/api/parceiro-aprovado', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({idToken, uid, forcar:true})
+      });
+      const j = await r.json().catch(()=>({}));
+      if(r.ok && j.ok){
+        if(msg){ msg.style.color = 'var(--mv-ok)'; msg.textContent = 'E-mail de boas-vindas enviado.'; }
+      } else {
+        let m = 'Não deu certo. Tente de novo.';
+        if(j.motivo === 'sem_config') m = 'Falta a chave do provedor de e-mail (RESEND_API_KEY) nas variáveis do Vercel, projeto moviki-robo.';
+        else if(r.status === 404)     m = 'Endpoint não encontrado — confira se parceiro-aprovado.js está na pasta api do repo moviki-robo.';
+        else if(r.status === 502)     m = 'O provedor de e-mail recusou o envio — provável domínio ainda não verificado.';
+        else if(r.status === 403)     m = 'Sem permissão: seu usuário não está na coleção admins do banco.';
+        else if(r.status === 401)     m = 'Sessão expirada — saia e entre de novo.';
+        else if(j.erro)               m = 'Erro: ' + j.erro + '.';
+        if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = m; }
+      }
+    }catch(e){
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Não consegui falar com o servidor.'; }
+    }
+    btn.disabled = false; btn.textContent = t;
+  }
+
+  /* ==========================================================
+     COMISSÕES E SAQUES
+     ========================================================== */
+  async function carregarComissoes(){
+    COMIS = []; SAQ = []; saquePix = {};
+    let ok = true;
+    try{
+      const r = await Promise.all([getDocs(collection(db,'comissoes')), getDocs(collection(db,'saques'))]);
+      r[0].forEach(d => COMIS.push(d.data()));
+      r[1].forEach(d => SAQ.push(Object.assign({id:d.id}, d.data())));
+    }catch(e){ ok = false; }
+    SAUDE.comissoes = ok;
+    if(!ok){
+      el('saqueBox').innerHTML = '<div class="avisoRegra">Não consegui ler as comissões e os saques. As duas coleções só abrem para quem tem documento em <b>admins</b>.</div>';
+      el('comBox').innerHTML = '<div class="vazio">—</div>';
+      txt('kAPagar','—');
+      return;
+    }
+    pintarComissoes();
+  }
+
+  function resumoPorParceiro(){
+    const r = {};
+    COMIS.forEach(c=>{
+      if(c.estornada) return;
+      const u = c.parceiroUid; if(!u) return;
+      const x = r[u] || (r[u] = {receber:0, pago:0, total:0});
+      const v = Number(c.valor) || 0;
+      x.total += v;
+      if(c.pago) x.pago += v; else x.receber += v;
+    });
+    return r;
+  }
+
+  function nomeParceiro(uid){
+    const p = PARC.filter(x=>x.uid === uid)[0];
+    return (p && p.nome) || '(parceiro)';
+  }
+  function pixParceiro(uid){
+    const p = PARC.filter(x=>x.uid === uid)[0];
+    return (p && p.pix) || '';
+  }
+
+  function pintarComissoes(){
+    const pend = SAQ.filter(s=>s.status === 'solicitado' || s.status === 'falhou').sort((a,b)=>ms(a.pedidoEm) - ms(b.pedidoEm));
+    badge('badCom', pend.length); badge('badComM', pend.length);
+    txt('saqueChip', pend.length + (pend.length === 1 ? ' pedido' : ' pedidos'));
+
+    el('saqueBox').innerHTML = pend.length ? pend.map(s=>{
+      saquePix[s.id] = pixParceiro(s.parceiroUid);
+      return '<div class="icard">'+
+        '<div class="icTopo"><div class="icNome">'+esc(nomeParceiro(s.parceiroUid))+
+          (s.status === 'falhou' ? ' <span class="pill perigo">Pix não saiu</span>' : ' <span class="pill warn">Saque pedido</span>')+'</div>'+
+        '<span class="icData">'+dataBR(ms(s.pedidoEm))+'</span></div>'+
+        '<div class="icInfo">'+
+          '<div><span class="icK">Valor</span><span class="icV"><b>'+brl(s.valorSolicitado)+'</b></span></div>'+
+          '<div><span class="icK">Pix</span><span class="icV"><code>'+esc(saquePix[s.id]||'—')+'</code> <button type="button" class="btnMini" data-saque="pix" data-id="'+esc(s.id)+'">copiar</button></span></div>'+
+        '</div>'+
+        (s.ultimoErroPagamento ? '<div class="avisoRegra" style="margin-bottom:10px">Última tentativa falhou: '+esc(s.ultimoErroPagamento)+'</div>' : '')+
+        '<div style="margin-bottom:11px"><span class="icK">Comprovante (só para pagamento na mão)</span>'+
+          '<input type="text" id="comp_'+esc(s.id)+'" placeholder="ID ou observação do Pix" style="margin-top:5px"></div>'+
+        '<div class="icAcoes">'+
+          '<button type="button" class="btnMini ok" data-saque="auto" data-id="'+esc(s.id)+'">Pagar via Pix agora</button>'+
+          '<button type="button" class="btnMini" data-saque="pagar" data-id="'+esc(s.id)+'">Já paguei na mão</button>'+
+        '</div>'+
+        '<div class="icMsg" id="smsg_'+esc(s.id)+'"></div>'+
+      '</div>';
+    }).join('') : '<div class="vazio">Nenhum saque solicitado no momento.</div>';
+
+    const r = resumoPorParceiro();
+    const linhas = Object.keys(r).map(u=>({uid:u, nome:nomeParceiro(u), r:r[u]}))
+      .filter(x=>x.r.total > 0).sort((a,b)=>b.r.receber - a.r.receber);
+    const aPagar = linhas.reduce((s,x)=>s + x.r.receber, 0);
+    txt('kAPagar', brl(aPagar));
+
+    // quem já tem pedido de saque aberto paga pelo card de cima, não pela linha
+    const comPedido = {};
+    pend.forEach(s => { comPedido[s.parceiroUid] = true; });
+
+    el('comBox').innerHTML = linhas.length
+      ? '<div class="tabRola"><table class="mvTab"><thead><tr><th>Parceiro</th><th>Chave Pix</th><th class="num">A receber</th><th class="num">Já pago</th><th class="num">Total</th><th>Pagar</th></tr></thead><tbody>'+
+        linhas.map(x=>{
+          const pix = pixParceiro(x.uid);
+          let acao;
+          if(comPedido[x.uid])      acao = '<span class="pill warn">Saque pedido</span>';
+          else if(x.r.receber <= 0) acao = '<span class="icK">nada a pagar</span>';
+          else if(!pix)             acao = '<span class="icK">sem Pix</span>';
+          else acao = '<button type="button" class="btnMini ok" data-com="auto" data-uid="'+esc(x.uid)+'">Pagar via Pix</button>'+
+                      ' <button type="button" class="btnMini" data-com="manual" data-uid="'+esc(x.uid)+'">na mão</button>';
+          return '<tr><td><span class="celNome">'+esc(x.nome)+'</span></td>'+
+          '<td><code>'+esc(pix||'— sem Pix —')+'</code></td>'+
+          '<td class="num"><b style="color:var(--mv-ok)">'+brl(x.r.receber)+'</b></td>'+
+          '<td class="num">'+brl(x.r.pago)+'</td>'+
+          '<td class="num">'+brl(x.r.total)+'</td>'+
+          '<td>'+acao+'<div class="icMsg" id="cmsg_'+esc(x.uid)+'"></div></td></tr>';
+        }).join('')+
+        '</tbody></table></div>'
+      : '<div class="vazio">Nenhuma comissão ainda. Aparece aqui quando um indicado pagar.</div>';
+
+    // lista de parceiros do "Ensaio de pagamento"
+    const sel = el('tsParc');
+    if(sel){
+      const antes = sel.value;
+      const aptos = PARC.filter(p=>p.status === 'aprovado');
+      sel.innerHTML = '<option value="">Escolha o parceiro…</option>' +
+        aptos.map(p=>'<option value="'+esc(p.uid)+'">'+esc(p.nome||'(sem nome)')+(p.pix?'':' — SEM PIX')+'</option>').join('');
+      if(antes) sel.value = antes;
+    }
+  }
+
+  /* Chama o robô (api/pagar-saque). etapa: 'conferir' | 'pagar' | 'manual'. */
+  async function chamarSaque(id, etapa, comprovante){
+    const idToken = await auth.currentUser.getIdToken();
+    const r = await fetch('https://moviki-robo.vercel.app/api/pagar-saque', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({idToken, saqueId:id, etapa:etapa, comprovante:comprovante||''})
+    });
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok || !j.ok) throw new Error(j.mensagem || j.erro || 'falhou');
+    return j;
+  }
+
+  el('saqueBox').addEventListener('click', async ev=>{
+    const b = ev.target.closest ? ev.target.closest('[data-saque]') : null;
+    if(!b) return;
+    const acao = b.getAttribute('data-saque');
+    const id   = b.getAttribute('data-id');
+
+    if(acao === 'pix'){ copiar(saquePix[id]||''); feedback(b,'copiado'); return; }
+
+    const msg = el('smsg_'+id);
+    const campo = el('comp_'+id);
+    const comp = ((campo && campo.value) || '').trim();
+    const t = b.textContent;
+    const erro = e => {
+      b.disabled = false; b.textContent = t;
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Não deu certo: ' + (e.message || 'tente de novo'); }
+    };
+
+    /* ---------- PIX AUTOMÁTICO: confere o titular, depois manda ---------- */
+    if(acao === 'auto'){
+      b.disabled = true; b.textContent = 'Conferindo…';
+      if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Consultando a chave Pix no Asaas…'; }
+      let d;
+      try{ d = await chamarSaque(id, 'conferir'); }
+      catch(e){ erro(e); return; }
+
+      const linhas = [
+        'Confirme antes de enviar o dinheiro:',
+        '',
+        'Valor: ' + brl(d.valor),
+        'Chave: ' + d.chave + '  (' + d.tipoChave + ')',
+        'Titular: ' + (d.titular || '(o banco não informou)'),
+        (d.documento ? 'Documento: ' + d.documento : ''),
+        (d.banco ? 'Banco: ' + d.banco : ''),
+        '',
+        'Enviar o Pix agora?'
+      ].filter(Boolean).join('\n');
+
+      if(!confirm(linhas)){
+        b.disabled = false; b.textContent = t;
+        if(msg){ msg.textContent = ''; }
+        return;
+      }
+
+      b.disabled = true; b.textContent = 'Enviando Pix…';
+      if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Enviando o Pix…'; }
+      try{
+        const j = await chamarSaque(id, 'pagar', comp);
+        if(msg){
+          msg.style.color = 'var(--mv-ok)';
+          msg.textContent = j.jaPago ? 'Este saque já estava pago.'
+            : 'Pix enviado! ' + brl(j.valorPago) + ' para ' + (j.titular || 'o parceiro') + '.';
+        }
+        setTimeout(()=>{ carregarComissoes().then(pintarPendencias); }, 1200);
+      }catch(e){ erro(e); }
+      return;
+    }
+
+    /* ---------- PAGAMENTO NA MÃO: só registra ---------- */
+    if(!confirm('Confirmar que você JÁ fez o Pix para este parceiro pelo banco?\n\nIsso apenas registra o pagamento aqui — nenhum dinheiro sai agora.')) return;
+    b.disabled = true; b.textContent = 'Registrando…';
+    if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Registrando…'; }
+    try{
+      const j = await chamarSaque(id, 'manual', comp);
+      if(msg){ msg.style.color = 'var(--mv-ok)'; msg.textContent = 'Registrado! ' + brl(j.valorPago) + ' quitado.'; }
+      setTimeout(()=>{ carregarComissoes().then(pintarPendencias); }, 900);
+    }catch(e){ erro(e); }
+  });
+
+  /* Mesmo pagamento, mas disparado direto da LINHA do parceiro na tabela de
+     comissões — sem ele ter pedido saque. O robô abre o registro sozinho. */
+  async function chamarParceiro(uid, etapa){
+    const idToken = await auth.currentUser.getIdToken();
+    const r = await fetch('https://moviki-robo.vercel.app/api/pagar-saque', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({idToken, parceiroUid:uid, etapa:etapa})
+    });
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok || !j.ok) throw new Error(j.mensagem || j.erro || 'falhou');
+    return j;
+  }
+
+  el('comBox').addEventListener('click', async ev=>{
+    const b = ev.target.closest ? ev.target.closest('[data-com]') : null;
+    if(!b) return;
+    const acao = b.getAttribute('data-com');
+    const uid  = b.getAttribute('data-uid');
+    const msg  = el('cmsg_'+uid);
+    const t    = b.textContent;
+    const erro = e => {
+      b.disabled = false; b.textContent = t;
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Não deu certo: ' + (e.message || 'tente de novo'); }
+    };
+
+    if(acao === 'manual'){
+      if(!confirm('Confirmar que você JÁ fez o Pix para ' + nomeParceiro(uid) + ' pelo banco?\n\nIsso apenas registra aqui — nenhum dinheiro sai agora.')) return;
+      b.disabled = true; b.textContent = 'Registrando…';
+      try{
+        const j = await chamarParceiro(uid, 'manual');
+        if(msg){ msg.style.color = 'var(--mv-ok)'; msg.textContent = 'Registrado! ' + brl(j.valorPago) + '.'; }
+        setTimeout(()=>{ carregarComissoes().then(pintarPendencias); }, 900);
+      }catch(e){ erro(e); }
+      return;
+    }
+
+    b.disabled = true; b.textContent = 'Conferindo…';
+    if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Consultando a chave no Asaas…'; }
+    let d;
+    try{ d = await chamarParceiro(uid, 'conferir'); }
+    catch(e){ erro(e); return; }
+
+    const linhas = [
+      'Confirme antes de enviar o dinheiro:',
+      '',
+      'Parceiro: ' + nomeParceiro(uid),
+      'Valor: ' + brl(d.valor),
+      'Chave: ' + d.chave + '  (' + d.tipoChave + ')',
+      'Titular: ' + (d.titular || '(o banco não informou)'),
+      (d.documento ? 'Documento: ' + d.documento : ''),
+      (d.banco ? 'Banco: ' + d.banco : ''),
+      '',
+      'Enviar o Pix agora?'
+    ].filter(Boolean).join('\n');
+
+    if(!confirm(linhas)){
+      b.disabled = false; b.textContent = t;
+      if(msg) msg.textContent = '';
+      return;
+    }
+
+    b.disabled = true; b.textContent = 'Enviando…';
+    if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Enviando o Pix…'; }
+    try{
+      const j = await chamarParceiro(uid, 'pagar');
+      if(msg){ msg.style.color = 'var(--mv-ok)'; msg.textContent = 'Pix enviado! ' + brl(j.valorPago) + '.'; }
+      setTimeout(()=>{ carregarComissoes().then(pintarPendencias); }, 1200);
+    }catch(e){ erro(e); }
+  });
+
+  el('btnCsvCom').addEventListener('click', ()=>{
+    const r = resumoPorParceiro();
+    baixarCSV('moviki-comissoes',
+      ['Parceiro','Chave Pix','A receber','Já pago','Total'],
+      Object.keys(r)
+        .sort((a,b)=>r[b].receber - r[a].receber)
+        .map(u=>[nomeParceiro(u), pixParceiro(u) || 'SEM PIX CADASTRADO',
+                 r[u].receber.toFixed(2).replace('.',','),
+                 r[u].pago.toFixed(2).replace('.',','),
+                 r[u].total.toFixed(2).replace('.',',')]));
+  });
+
+  /* ---------- ensaio de pagamento: cria uma comissão de teste ---------- */
+  el('btnComTeste').addEventListener('click', async ()=>{
+    const b = el('btnComTeste'), msg = el('tsMsg');
+    const uid = el('tsParc').value;
+    const valor = Number(el('tsValor').value);
+    msg.textContent = '';
+    if(!uid){ msg.style.color='var(--mv-erro)'; msg.textContent='Escolha o parceiro primeiro.'; return; }
+    if(!(valor > 0) || valor > 10){ msg.style.color='var(--mv-erro)'; msg.textContent='Use um valor entre R$ 0,01 e R$ 10,00.'; return; }
+    if(!confirm('Criar uma comissão de teste de ' + brl(valor) + ' para ' + nomeParceiro(uid) + '?\n\nDepois é só clicar em "Pagar via Pix" na linha dele.')) return;
+    const t = b.textContent; b.disabled = true; b.textContent = 'Criando…';
+    try{
+      const idToken = await auth.currentUser.getIdToken();
+      const r = await fetch('https://moviki-robo.vercel.app/api/pagar-saque', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({idToken, parceiroUid:uid, etapa:'teste', valor:valor})
+      });
+      const j = await r.json().catch(()=>({}));
+      if(!r.ok || !j.ok) throw new Error(j.mensagem || j.erro || 'falhou');
+      msg.style.color = 'var(--mv-ok)';
+      msg.textContent = 'Pronto! ' + brl(j.valor) + ' na conta de ' + (j.parceiro || 'parceiro') + '. Agora use "Pagar via Pix" na linha dele, aqui em cima.';
+      b.disabled = false; b.textContent = t;
+      carregarComissoes().then(pintarPendencias);
+    }catch(e){
+      b.disabled = false; b.textContent = t;
+      msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Não deu certo: ' + (e.message || 'tente de novo');
+    }
+  });
+
+  /* ==========================================================
+     NEWSLETTER
+     ========================================================== */
+  async function carregarNewsletter(){
+    NL = [];
+    try{
+      const s = await getDocs(collection(db,'newsletter'));
+      s.forEach(d => NL.push(Object.assign({id:d.id}, d.data())));
+      SAUDE.newsletter = true;
+    }catch(e){
+      SAUDE.newsletter = false;
+      el('nlBody').innerHTML = '<tr><td colspan="5" class="vazio">—</td></tr>';
+      const c = el('nlErro') ? null : el('nlBody').closest('.tabRola');
+      if(c) c.insertAdjacentHTML('beforebegin',
+        '<div class="avisoRegra" id="nlErro">Não consegui ler a lista. A coleção <b>newsletter</b> só abre para quem tem documento em <b>admins</b> no Firestore (regra <code>allow read: if isAdmin()</code>).</div>');
+      ['nlTotal','nlAtivos','nlSaiu'].forEach(id=>txt(id,'—'));
+      txt('kNews','—'); txt('rcNl','—');
+      return;
+    }
+    NL.sort((a,b)=>ms(b.criadoEm) - ms(a.criadoEm));
+    const ativos = NL.filter(x=>x.ativo !== false).length;
+    txt('nlTotal', num(NL.length));
+    txt('nlAtivos', num(ativos));
+    txt('nlSaiu', num(NL.length - ativos));
+    txt('kNews', num(ativos));
+    txt('rcNl', num(ativos));
+    pintarNewsletter();
+  }
+
+  function pintarNewsletter(){
+    const busca = (el('buscaNl').value||'').toLowerCase().trim();
+    const f = el('filtroNl').value;
+    const lista = NL.filter(x=>{
+      const ativo = x.ativo !== false;
+      if(f === 'ativos' && !ativo) return false;
+      if(f === 'saiu' && ativo) return false;
+      if(busca){
+        const alvo = ((x.email||'')+' '+(x.origem||'')).toLowerCase();
+        if(alvo.indexOf(busca) === -1) return false;
+      }
+      return true;
+    });
+    txt('contaNl', lista.length + (lista.length === 1 ? ' inscrito' : ' inscritos'));
+    if(!lista.length){
+      el('nlBody').innerHTML = '<tr><td colspan="5" class="vazio">Nenhum inscrito com esse filtro.</td></tr>';
+      return;
+    }
+    el('nlBody').innerHTML = lista.map(x=>{
+      const ativo = x.ativo !== false;
+      return '<tr>'+
+        '<td><span class="celQuebra">'+esc(x.email||'—')+'</span></td>'+
+        '<td>'+esc(x.origem||'—')+'</td>'+
+        '<td><span class="pill '+(ativo?'ok':'off')+'">'+(ativo?'Ativo':'Saiu')+'</span></td>'+
+        '<td class="num">'+dataBR(ms(x.criadoEm))+'</td>'+
+        '<td class="num">'+(ativo
+          ? '<button type="button" class="btnMini perigo" data-nl="sair" data-id="'+esc(x.id)+'">Descadastrar</button>'
+          : '<span style="color:var(--mv-txt-3)">—</span>')+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+  el('buscaNl').addEventListener('input', pintarNewsletter);
+  el('filtroNl').addEventListener('change', pintarNewsletter);
+  el('btnCsvNl').addEventListener('click', ()=>{
+    if(!NL.length){ feedback(el('btnCsvNl'),'Lista vazia'); return; }
+    baixarCSV('moviki-newsletter',
+      ['E-mail','Origem','Situação','Consentimento','Texto do consentimento','Entrou em','Link de descadastro'],
+      NL.map(x=>[x.email||'', x.origem||'', (x.ativo !== false ? 'ativo' : 'descadastrado'),
+                 (x.consentimento === true ? 'sim' : 'não'), x.consentimentoTexto||'', dataBR(ms(x.criadoEm)),
+                 'https://moviki.com.br/descadastro.html?id=' + encodeURIComponent(x.id||'') +
+                 '&e=' + encodeURIComponent(x.email||'')]));
+  });
+  el('nlBody').addEventListener('click', async ev=>{
+    const b = ev.target.closest ? ev.target.closest('[data-nl]') : null;
+    if(!b) return;
+    if(!confirm('Marcar este e-mail como descadastrado? Ele deixa de receber campanhas.')) return;
+    const id = b.getAttribute('data-id');
+    b.disabled = true; b.textContent = 'Salvando…';
+    try{
+      await updateDoc(doc(db,'newsletter',id), {ativo:false});
+      const alvo = NL.filter(x=>x.id === id)[0];
+      if(alvo) alvo.ativo = false;
+      const ativos = NL.filter(x=>x.ativo !== false).length;
+      txt('nlAtivos', num(ativos)); txt('nlSaiu', num(NL.length - ativos));
+      txt('kNews', num(ativos)); txt('rcNl', num(ativos));
+      pintarNewsletter();
+    }catch(e){ b.disabled = false; b.textContent = 'Não deu'; }
+  });
+
+  /* ==========================================================
+     MÉTRICAS (Fase 6, somadas)
+     ========================================================== */
+  const FAIXAS = ['00h–02h','02h–04h','04h–06h','06h–08h','08h–10h','10h–12h','12h–14h','14h–16h','16h–18h','18h–20h','20h–22h','22h–00h'];
+
+  function atualizarCusto(){
+    const d = Number(el('mtDias').value) || 30;
+    const n = NEG.length;
+    txt('mtCusto', n ? ('≈ ' + num(n*d) + ' leituras (' + num(n) + ' negócios × ' + d + ' dias)') : '');
+  }
+  el('mtDias').addEventListener('change', atualizarCusto);
+
+  el('btnMetricas').addEventListener('click', async ()=>{
+    const b = el('btnMetricas');
+    const dias = Number(el('mtDias').value) || 30;
+    if(!NEG.length){ el('mtAviso').innerHTML = '<div class="vazio">Não há negócios carregados.</div>'; return; }
+    b.disabled = true; const t = b.textContent; b.textContent = 'Lendo…';
+    el('mtAviso').innerHTML = '<div class="vazio">Lendo ' + num(NEG.length) + ' negócios…</div>';
+
+    const total = {views:0, whats:0, rota:0, cardapio:0};
+    const porDia = {}, porNeg = {}, porHora = new Array(12).fill(0);
+    let negados = 0, lidos = 0;
+
+    const fila = NEG.slice();
+    async function trabalhador(){
+      while(fila.length){
+        const n = fila.shift();
+        try{
+          const q = query(collection(db,'metricas',n.uid,'dias'), orderBy(documentId(),'desc'), limit(dias));
+          const s = await getDocs(q);
+          lidos++;
+          let v = 0;
+          s.forEach(d=>{
+            const x = d.data() || {};
+            total.views    += Number(x.views)||0;
+            total.whats    += Number(x.whats)||0;
+            total.rota     += Number(x.rota)||0;
+            total.cardapio += Number(x.cardapio)||0;
+            v += Number(x.views)||0;
+            porDia[d.id] = (porDia[d.id]||0) + (Number(x.views)||0);
+            for(let i=0;i<12;i++) porHora[i] += Number(x['b'+i])||0;
+          });
+          if(v > 0) porNeg[n.uid] = {nome:n.nome||'(sem nome)', v:v};
+        }catch(e){
+          if(e && (e.code === 'permission-denied' || String(e).indexOf('permission') !== -1)) negados++;
+        }
+      }
+    }
+    await Promise.all([trabalhador(),trabalhador(),trabalhador(),trabalhador(),trabalhador(),trabalhador()]);
+
+    b.disabled = false; b.textContent = t;
+
+    if(negados && !lidos){
+      el('mtAviso').innerHTML = '<div class="avisoRegra">A leitura foi <b>recusada em todos os negócios</b>. Hoje a regra do Firestore diz que <code>metricas/{negócio}/dias</code> só pode ser lida <b>pelo próprio dono do negócio</b> — o painel do dono não entra. Para este bloco funcionar é preciso publicar as <b>regras v12</b>, que acrescentam <code>|| isAdmin()</code> nessa linha. O arquivo das regras vai junto com esta entrega.</div>';
+      ['mtResumo'].forEach(hide);
+      ['cdMtGraf','cdMtRank','cdMtHora'].forEach(hide);
+      return;
+    }
+
+    MET = {total:total, porDia:porDia, porNeg:porNeg, porHora:porHora, dias:dias, lidos:lidos, negados:negados};
+
+    el('mtAviso').innerHTML = negados
+      ? '<div class="avisoRegra">Li ' + num(lidos) + ' negócios; <b>' + num(negados) + '</b> foram recusados pela regra do Firestore. Os números abaixo são só do que abriu.</div>'
+      : '<div class="avisoOk">Somados ' + num(lidos) + ' negócios nos últimos ' + dias + ' dias.</div>';
+
+    txt('mtViews', num(total.views));
+    txt('mtWhats', num(total.whats));
+    txt('mtRota', num(total.rota));
+    txt('mtCardapio', num(total.cardapio));
+    show('mtResumo'); show('btnCsvMet');
+
+    // gráfico de visitas por dia
+    const chaves = Object.keys(porDia).sort();
+    if(chaves.length){
+      el('mtGraf').innerHTML = grafico(chaves.map(k=>({rot:k.slice(8)+'/'+k.slice(5,7), v:porDia[k]})));
+      show('cdMtGraf');
+    } else hide('cdMtGraf');
+
+    // ranking
+    const rank = Object.keys(porNeg).map(u=>porNeg[u]).sort((a,b)=>b.v-a.v).slice(0,15);
+    if(rank.length){
+      const topo = rank[0].v || 1;
+      el('mtRank').innerHTML = rank.map(x=>'<div class="bLinha"><span class="bNome">'+esc(x.nome)+'</span><span class="bVal">'+num(x.v)+'</span>'+
+        '<span class="bTrilho"><i style="width:'+Math.round((x.v/topo)*100)+'%"></i></span></div>').join('');
+      show('cdMtRank');
+    } else hide('cdMtRank');
+
+    // horários
+    const topoH = Math.max.apply(null, porHora) || 1;
+    if(porHora.some(v=>v>0)){
+      el('mtHora').innerHTML = porHora.map((v,i)=>'<div class="bLinha"><span class="bNome">'+FAIXAS[i]+'</span><span class="bVal">'+num(v)+'</span>'+
+        '<span class="bTrilho"><i style="width:'+Math.round((v/topoH)*100)+'%"></i></span></div>').join('');
+      show('cdMtHora');
+    } else hide('cdMtHora');
+  });
+
+  el('btnCsvMet').addEventListener('click', ()=>{
+    if(!MET) return;
+    const chaves = Object.keys(MET.porDia).sort();
+    baixarCSV('moviki-metricas',
+      ['Dia','Visitas'],
+      chaves.map(k=>[k, MET.porDia[k]]));
+  });
+
+  /* gráfico de linha simples, sem biblioteca */
+  function grafico(pontos){
+    const W = 720, H = 210, ml = 40, mr = 12, mt = 14, mb = 26;
+    const maxV = Math.max.apply(null, pontos.map(p=>p.v).concat([1]));
+    const larg = W - ml - mr, alt = H - mt - mb;
+    const x = i => ml + (pontos.length === 1 ? larg/2 : (i/(pontos.length-1))*larg);
+    const y = v => mt + alt - (v/maxV)*alt;
+    const linha = pontos.map((p,i)=>(i?'L':'M') + x(i).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
+    const area  = linha + ' L ' + x(pontos.length-1).toFixed(1) + ' ' + (mt+alt) + ' L ' + x(0).toFixed(1) + ' ' + (mt+alt) + ' Z';
+    const passo = Math.max(1, Math.ceil(pontos.length/7));
+    const rotulos = pontos.map((p,i)=> (i % passo === 0 || i === pontos.length-1)
+      ? '<text x="'+x(i).toFixed(1)+'" y="'+(H-7)+'" fill="#8fa6c4" font-size="10" text-anchor="middle">'+p.rot+'</text>' : '').join('');
+    const grade = [0,.25,.5,.75,1].map(f=>{
+      const yy = (mt + alt - f*alt).toFixed(1);
+      return '<line x1="'+ml+'" y1="'+yy+'" x2="'+(W-mr)+'" y2="'+yy+'" stroke="#1c3457" stroke-width="1"/>'+
+             '<text x="'+(ml-6)+'" y="'+(Number(yy)+3.5)+'" fill="#8fa6c4" font-size="10" text-anchor="end">'+Math.round(maxV*f)+'</text>';
+    }).join('');
+    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Visitas por dia">'+
+      '<defs><linearGradient id="gMt" x1="0" y1="0" x2="0" y2="1">'+
+      '<stop offset="0%" stop-color="#00D4FF" stop-opacity=".38"/><stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>'+
+      '</linearGradient></defs>'+ grade +
+      '<path d="'+area+'" fill="url(#gMt)"/>'+
+      '<path d="'+linha+'" fill="none" stroke="#00D4FF" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>'+
+      rotulos + '</svg>';
+  }
+
+  /* ==========================================================
+     EXCLUSÕES DE CONTA
+     ========================================================== */
+  async function carregarExclusoes(){
+    const box = el('excBox');
+    EXC = [];
+    try{
+      const idToken = await auth.currentUser.getIdToken();
+      const r = await fetch('https://moviki-robo.vercel.app/api/exclusoes', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({idToken, action:'listar'})
+      });
+      const j = await r.json().catch(()=>({}));
+      if(r.ok && j.ok){ EXC = j.itens || []; SAUDE.exclusoes = true; }
+      else throw new Error('falhou');
+    }catch(e){
+      SAUDE.exclusoes = false;
+      if(box) box.innerHTML = '<div class="vazio">Não consegui falar com o robô agora. Isso não afeta o resto do painel.</div>';
+      badge('badExc',0); badge('badExcM',0); txt('excChip','—');
+      return;
+    }
+    badge('badExc', EXC.length); badge('badExcM', EXC.length);
+    txt('excChip', EXC.length + (EXC.length === 1 ? ' pedido' : ' pedidos'));
+    if(!box) return;
+    box.innerHTML = EXC.length ? EXC.map(x=>{
+      let dt = '—';
+      try{ if(x.solicitadoEm) dt = dataBR(new Date(x.solicitadoEm).getTime()); }catch(e){}
+      return '<div class="icard">'+
+        '<div class="icTopo"><div class="icNome">'+esc(x.nome||'(sem nome)')+' <span class="pill warn">Exclusão pedida</span></div>'+
+        '<span class="icData">'+dt+'</span></div>'+
+        '<div class="icInfo"><div><span class="icK">E-mail</span><span class="icV">'+esc(x.email||'—')+'</span></div></div>'+
+        '<div class="icAcoes"><button type="button" class="btnMini perigo" data-exc="'+esc(x.uid)+'">Confirmar exclusão</button></div>'+
+        '<div class="icMsg" id="emsg_'+esc(x.uid)+'"></div>'+
+      '</div>';
+    }).join('') : '<div class="vazio">Nenhum pedido de exclusão no momento.</div>';
+  }
+
+  el('excBox').addEventListener('click', async ev=>{
+    const b = ev.target.closest ? ev.target.closest('[data-exc]') : null;
+    if(!b) return;
+    const uid = b.getAttribute('data-exc');
+    if(!confirm('EXCLUIR esta conta definitivamente?\n\nIsto apaga o negócio, os dados e cancela a assinatura. Não dá pra desfazer.')) return;
+    const msg = el('emsg_'+uid);
+    if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Excluindo…'; }
+    b.disabled = true; const t = b.textContent; b.textContent = 'Excluindo…';
+    try{
+      const idToken = await auth.currentUser.getIdToken();
+      const r = await fetch('https://moviki-robo.vercel.app/api/exclusoes', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({idToken, action:'excluir', uid})
+      });
+      const j = await r.json().catch(()=>({}));
+      if(r.ok && j.ok){
+        const rz = j.resumo || {};
+        if(msg){ msg.style.color = 'var(--mv-ok)'; msg.textContent = 'Conta excluída' + (rz.assinaturaCancelada ? ' · assinatura cancelada' : '') + '.'; }
+        setTimeout(()=>{ carregarExclusoes(); pintarPendencias(); }, 1000);
+      } else {
+        b.disabled = false; b.textContent = t;
+        let m = 'Não consegui excluir agora.';
+        if(r.status === 403) m = 'Sem permissão (seu e-mail precisa estar em admins).';
+        if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = m; }
+      }
+    }catch(e){
+      b.disabled = false; b.textContent = t;
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Erro de conexão. Tente de novo.'; }
+    }
+  });
+
+  /* ==========================================================
+     EXCLUIR CONTA POR INICIATIVA DO DONO
+     O robô (api/exclusoes, action 'excluir') sempre aceitou qualquer uid; o
+     painel só oferecia a exclusão para quem tinha PEDIDO. Cadastro de teste,
+     duplicata e conta abandonada ficavam presos na lista pra sempre.
+     Busca por nome, apelido do link, e-mail e segmento — porque na cabeça de
+     quem usa o negócio "é" o apelido, não o nome (mesma lição do seletor de
+     mensagens). A confirmação é DIGITADA de propósito: um confirm() do
+     navegador é um Enter distraído de distância, e isto não tem volta.
+     ========================================================== */
+  let EXC_ALVO = '';
+
+  function excDelRender(){
+    const box = el('excDelBox'); if(!box) return;
+    const f = (el('excBusca').value||'').trim().toLowerCase();
+    txt('excDelChip', NEG.length ? (NEG.length + (NEG.length === 1 ? ' conta' : ' contas')) : '—');
+    if(f.length < 2){
+      EXC_ALVO = '';
+      box.innerHTML = '<div class="vazio">Digite pelo menos 2 letras para achar a conta.</div>';
+      return;
+    }
+    if(!NEG.length && !PARC.length){
+      box.innerHTML = '<div class="vazio">As listas ainda não carregaram. Toque em "Atualizar dados".</div>';
+      return;
+    }
+    const porUid = new Map();
+    NEG.forEach(n => porUid.set(n.uid, true));
+    PARC.forEach(p => porUid.set(p.uid, true));
+    let lista = [...porUid.keys()].map(cvQuemE).filter(q => cvAlvoBusca(q.uid).includes(f));
+    lista.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'));
+
+    if(!lista.length){
+      box.innerHTML = '<div class="vazio">Ninguém com esse nome, apelido ou e-mail.</div>';
+      return;
+    }
+    const teto = 20;
+    box.innerHTML = lista.slice(0, teto).map(q => {
+      const tipo = q.tipos.length === 2 ? 'lojista + parceiro'
+                 : (q.tipos[0] === 'parceiro' ? 'parceiro' : 'lojista');
+      const plano = q.tipos.includes('lojista') ? PLANOS[PLANO_DE[q.uid]||'basico'].n : '—';
+      const aberto = EXC_ALVO === q.uid;
+      return '<div class="icard">'+
+        '<div class="icTopo"><div class="icNome">'+esc(q.nome||'(sem nome)')+' <span class="pill">'+esc(tipo)+'</span></div>'+
+        '<span class="icData">'+esc(plano)+'</span></div>'+
+        '<div class="icInfo">'+
+          '<div><span class="icK">Link</span><span class="icV">'+(q.apelido ? '/'+esc(q.apelido) : '—')+'</span></div>'+
+          '<div><span class="icK">E-mail</span><span class="icV">'+esc(q.email||'—')+'</span></div>'+
+        '</div>'+
+        (aberto
+          ? '<div class="icInfo" style="display:block;margin-top:8px">'+
+              '<div class="cdSub" style="margin-bottom:6px">Para confirmar, digite <b>EXCLUIR</b> abaixo:</div>'+
+              '<div class="ferr" style="margin:0">'+
+                '<input type="text" id="excPalavra" placeholder="EXCLUIR" autocomplete="off" spellcheck="false">'+
+                '<button type="button" class="btnMini perigo" data-excdel="'+esc(q.uid)+'">Excluir definitivamente</button>'+
+                '<button type="button" class="btnMini" data-exccancel="1">Cancelar</button>'+
+              '</div>'+
+            '</div>'
+          : '<div class="icAcoes"><button type="button" class="btnMini perigo" data-excalvo="'+esc(q.uid)+'">Excluir esta conta</button></div>')+
+        '<div class="icMsg" id="edmsg_'+esc(q.uid)+'"></div>'+
+      '</div>';
+    }).join('') + (lista.length > teto
+      ? '<div class="vazio" style="padding:10px">Mostrando '+teto+' de '+lista.length+'. Digite mais letras para afinar.</div>'
+      : '');
+    if(EXC_ALVO){ try{ el('excPalavra').focus(); }catch(e){} }
+  }
+
+  el('excBusca').addEventListener('input', ()=>{ EXC_ALVO = ''; excDelRender(); });
+
+  el('excDelBox').addEventListener('click', async ev=>{
+    const alvo = ev.target.closest ? ev.target.closest('[data-excalvo]') : null;
+    if(alvo){ EXC_ALVO = alvo.getAttribute('data-excalvo'); excDelRender(); return; }
+    if(ev.target.closest && ev.target.closest('[data-exccancel]')){ EXC_ALVO = ''; excDelRender(); return; }
+
+    const b = ev.target.closest ? ev.target.closest('[data-excdel]') : null;
+    if(!b) return;
+    const uid = b.getAttribute('data-excdel');
+    const msg = el('edmsg_'+uid);
+    const palavra = ((el('excPalavra')||{}).value||'').trim().toUpperCase();
+    if(palavra !== 'EXCLUIR'){
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Digite EXCLUIR para confirmar.'; }
+      return;
+    }
+    b.disabled = true; const t = b.textContent; b.textContent = 'Excluindo…';
+    if(msg){ msg.style.color = 'var(--mv-txt-3)'; msg.textContent = 'Excluindo…'; }
+    try{
+      const idToken = await auth.currentUser.getIdToken();
+      const r = await fetch('https://moviki-robo.vercel.app/api/exclusoes', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({idToken, action:'excluir', uid})
+      });
+      const j = await r.json().catch(()=>({}));
+      if(r.ok && j.ok){
+        const rz = j.resumo || {};
+        const partes = ['Conta excluída'];
+        if(rz.assinaturaCancelada) partes.push('assinatura cancelada');
+        if(rz.apelidoLiberado) partes.push('apelido /'+rz.apelidoLiberado+' liberado');
+        if(rz.pontos) partes.push(rz.pontos + (rz.pontos === 1 ? ' unidade' : ' unidades'));
+        if(rz.arquivos) partes.push('arquivos apagados');
+        if(msg){ msg.style.color = 'var(--mv-ok)'; msg.textContent = partes.join(' · ') + '.'; }
+        EXC_ALVO = '';
+        setTimeout(()=>{ carregarTudo(); }, 1200);
+      } else {
+        b.disabled = false; b.textContent = t;
+        let m = (j && j.erro) ? j.erro : 'Não consegui excluir agora.';
+        if(r.status === 403) m = 'Sem permissão (seu e-mail precisa estar em admins).';
+        if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = m; }
+      }
+    }catch(e){
+      b.disabled = false; b.textContent = t;
+      if(msg){ msg.style.color = 'var(--mv-erro)'; msg.textContent = 'Erro de conexão. Tente de novo.'; }
+    }
+  });
+
+  /* ==========================================================
+     CONFIGURAÇÃO: aprovação automática
+     ========================================================== */
+  async function carregarConfigSistema(){
+    const marcar = (v, texto, cor) => {
+      [['swAuto','cfgStatus'],['swAuto2','cfgStatus2']].forEach(par=>{
+        const c = el(par[0]), s = el(par[1]);
+        if(c){ c.checked = v; c.disabled = false; }
+        if(s){ s.style.color = cor; s.textContent = texto; }
+      });
+    };
+    try{
+      const snap = await getDoc(doc(db,'configuracoes','sistema'));
+      autoAprovAtual = snap.exists() ? ((snap.data()||{}).aprovacaoAutomaticaParceiros === true) : false;
+      SAUDE.configuracoes = true;
+      marcar(autoAprovAtual, autoAprovAtual ? 'Automático está ligado.' : 'Aprovação manual (padrão).', 'var(--mv-txt-3)');
+    }catch(e){
+      SAUDE.configuracoes = false;
+      [['swAuto','cfgStatus'],['swAuto2','cfgStatus2']].forEach(par=>{
+        const c = el(par[0]), s = el(par[1]);
+        if(c) c.disabled = true;
+        if(s){ s.style.color = 'var(--mv-erro)'; s.textContent = 'Não consegui ler esta configuração (regra do Firestore).'; }
+      });
+    }
+  }
+
+  ['swAuto','swAuto2'].forEach(id=>{
+    const c = el(id); if(!c) return;
+    c.addEventListener('change', async ()=>{
+      if(autoAprovSalvando){ c.checked = autoAprovAtual; return; }
+      const novo = c.checked;
+      autoAprovSalvando = true;
+      ['swAuto','swAuto2'].forEach(i=>{ const x = el(i); if(x) x.disabled = true; });
+      ['cfgStatus','cfgStatus2'].forEach(i=>{ const s = el(i); if(s){ s.style.color = 'var(--mv-txt-3)'; s.textContent = 'Salvando…'; } });
+      try{
+        await setDoc(doc(db,'configuracoes','sistema'), {aprovacaoAutomaticaParceiros: novo}, {merge:true});
+        autoAprovAtual = novo;
+        ['swAuto','swAuto2'].forEach(i=>{ const x = el(i); if(x) x.checked = novo; });
+        ['cfgStatus','cfgStatus2'].forEach(i=>{ const s = el(i); if(s){ s.style.color = 'var(--mv-ok)';
+          s.textContent = novo ? 'Ligado — novos pedidos já entram aprovados.' : 'Desligado — você aprova cada pedido.'; } });
+      }catch(e){
+        ['swAuto','swAuto2'].forEach(i=>{ const x = el(i); if(x) x.checked = autoAprovAtual; });
+        ['cfgStatus','cfgStatus2'].forEach(i=>{ const s = el(i); if(s){ s.style.color = 'var(--mv-erro)';
+          s.textContent = 'Não salvou: sem permissão ou a regra do Firestore não libera este campo.'; } });
+      }
+      ['swAuto','swAuto2'].forEach(i=>{ const x = el(i); if(x) x.disabled = false; });
+      autoAprovSalvando = false;
+    });
+  });
+
+  /* ==========================================================
+     SAÚDE (o que o painel conseguiu ler)
+     ========================================================== */
+  function pintarSaude(){
+    const linhas = [
+      ['negocios','Negócios','público'],
+      ['assinaturas','Planos (assinaturas)','público'],
+      ['pontos','Pontos do Enterprise','público'],
+      ['parceiros','Parceiros','só admin'],
+      ['comissoes','Comissões e saques','só admin'],
+      ['newsletter','Newsletter','só admin'],
+      ['configuracoes','Configurações do sistema','só admin'],
+      ['exclusoes','Robô de exclusões','endpoint']
+    ];
+    el('saudeBox').innerHTML = linhas.map(l=>{
+      const ok = SAUDE[l[0]];
+      const pill = ok === undefined ? '<span class="pill off">não testado</span>'
+                 : (ok ? '<span class="pill ok">abriu</span>' : '<span class="pill warn">recusado</span>');
+      return '<div class="lRow" style="grid-template-columns:minmax(0,1fr) auto"><span class="lTxt"><span class="lNome">'+l[1]+'</span>'+
+             '<span class="lSub">'+l[2]+'</span></span><span class="lDir">'+pill+'</span></div>';
+    }).join('');
+  }
+
+  /* ==========================================================
+     PENDÊNCIAS
+     ========================================================== */
+  function pintarPendencias(){
+    const itens = [];
+    const pp = PARC.filter(p=>p.status === 'pendente').length;
+    const ps = SAQ.filter(s=>s.status === 'solicitado').length;
+    const pe = EXC.length;
+    const pm = CONVS.filter(cvNaoLida).length;
+    if(pm) itens.push({n:pm, t:(pm === 1 ? '1 mensagem nova de lojista' : pm + ' mensagens novas de lojistas'), ir:'mensagens'});
+    if(pp) itens.push({n:pp, t:(pp === 1 ? '1 parceiro esperando aprovação' : pp + ' parceiros esperando aprovação'), ir:'parceiros'});
+    if(ps) itens.push({n:ps, t:(ps === 1 ? '1 saque pedido' : ps + ' saques pedidos'), ir:'comissoes'});
+    if(pe) itens.push({n:pe, t:(pe === 1 ? '1 pedido de exclusão de conta' : pe + ' pedidos de exclusão de conta'), ir:'exclusoes'});
+
+    const total = itens.reduce((s,x)=>s + x.n, 0);
+    ['sinoPt','sinoPt2'].forEach(id=>{
+      const n = el(id); if(!n) return;
+      n.textContent = total;
+      n.classList.toggle('hide', total === 0);
+    });
+    txt('rcPendN', total);
+    txt('pendChip', total + (total === 1 ? ' item' : ' itens'));
+
+    if(!itens.length){
+      el('rcPendLista').innerHTML = '<p class="rcTxt">Nada pendente no momento.</p>';
+      el('ovPendLista').innerHTML = '<p class="rcTxt">Nada pendente no momento.</p>';
+      hide('cardPend');
+      return;
+    }
+    const botoes = itens.map(x=>'<button type="button" class="btnMini largo" data-ir="'+x.ir+'">'+esc(x.t)+'</button>').join('');
+    el('pendAcoes').innerHTML = botoes;
+    el('rcPendLista').innerHTML = '<div class="gridAcoes" style="grid-template-columns:1fr">'+botoes+'</div>';
+    el('ovPendLista').innerHTML = '<div class="gridAcoes" style="grid-template-columns:1fr">'+botoes+'</div>';
+    show('cardPend');
+  }
+
+  /* ==========================================================
+     CONVITES
+     ========================================================== */
+  const LINK = {
+    com:'https://moviki.com.br/comerciantes.html',
+    par:'https://moviki.com.br/parceiros.html'
+  };
+  const MSG_WPP = {
+    com:'Olá! Tudo bem? 😊 Acredito que isso possa ajudar o seu negócio: o *Moviki* coloca a sua empresa no mapa em tempo real, com um link só seu (cardápio, promoções e WhatsApp) e *sem cobrar comissão por venda*. Você pode experimentar *30 dias grátis*, sem cartão e sem compromisso. Se quiser conhecer, é só acessar: ',
+    par:'Olá! Tudo bem? 😊 Queria te apresentar o programa de parceiros do *Moviki*. Ao indicar o Moviki para comerciantes, você recebe *15% da mensalidade* de cada um que assinar pelo seu link, a cada mês em que ele continuar pagando — e sem nenhum custo para participar. Se tiver interesse, veja como funciona neste link: '
+  };
+  const MSG_IG = {
+    com:'Olá! Tudo bem? 😊 Acompanhamos o trabalho de vocês por aqui e gostamos muito do que a marca vem construindo. Aqui é o Moviki, e gostaríamos de convidar o seu negócio para o nosso mapa — um espaço onde os clientes encontram vocês em tempo real, com link próprio, cardápio e promoções, e sem comissão sobre as vendas. Vocês podem experimentar 30 dias por nossa conta. Se quiserem conhecer, é só acessar: ',
+    par:'Olá! Tudo bem? 😊 Acompanhamos o seu trabalho e admiramos o conteúdo e a conexão que você construiu com o seu público. Aqui é o Moviki, e estamos convidando alguns criadores para o nosso Programa de Parceiros: você indica o Moviki para comerciantes e recebe 15% da mensalidade de cada um que assinar pelo seu link, a cada mês em que ele continuar pagando. Participar é gratuito, sem meta e sem custo. Se tiver interesse, será um prazer te explicar tudo — veja aqui: '
+  };
+
+  /* ---------- ver a página de um negócio ---------- */
+  function abrirApelido(demo){
+    const v = (el('apelidoVer').value||'').trim().replace(/^\/+/,'');
+    if(!v){ el('apelidoVer').focus(); return; }
+    window.open('https://moviki.com.br/' + encodeURIComponent(v) + (demo ? '?demo=1' : ''), '_blank');
+  }
+  el('btnVerApelido').addEventListener('click', ()=>abrirApelido(false));
+  el('btnVerDemo').addEventListener('click', ()=>abrirApelido(true));
+  el('apelidoVer').addEventListener('keydown', ev=>{ if(ev.key === 'Enter') abrirApelido(false); });
+
+
+  /* ==========================================================
+     CAIXA DE MENSAGENS DO DONO — 27/08/2026
+     conversas/{uid} (o id É o uid do lojista) + subcoleção mensagens.
+     O switch "envio de documentos" é POR LOJISTA: só o admin liga, e é
+     ele que faz o bloco "Mensagens do admin" aparecer no painel dele.
+     ========================================================== */
+  let CONVS = [], CONV_ABERTA = '', CONV_MSGS = [], CONV_ENVIANDO = false;
+  let PARA_CONVS = null, PARA_MSGS = null;
+  const CV_TETO = 10*1024*1024;
+  const CV_TIPOS = ['application/pdf','text/plain','text/csv','application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+  // O iPhone manda foto em HEIC/HEIF por padrão. O arquivo SOBE, mas nem o
+  // Chrome nem o Windows abrem — vira anexo morto. Recusa na entrada e explica.
+  const CV_IMG_RUIM = ['image/heic','image/heif','image/heic-sequence','image/heif-sequence'];
+  function cvImagem(t){ return String(t||'').indexOf('image/') === 0 && !CV_IMG_RUIM.includes(t); }
+  let CV_UPLOAD = null;   // tarefa de upload em andamento (para cancelar)
+
+  function cvQuando(t){
+    const m = ms(t); if(!m) return '—';
+    const d = new Date(m), hoje = new Date();
+    const hh = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    if(d.toDateString() === hoje.toDateString()) return hh;
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');
+  }
+  function cvTam(n){
+    n = Number(n)||0;
+    if(n < 1024) return n+' B';
+    if(n < 1024*1024) return (n/1024).toFixed(0)+' KB';
+    return (n/1024/1024).toFixed(1).replace('.',',')+' MB';
+  }
+  function cvNaoLida(c){
+    if(!c || c.ultimoDe !== 'lojista') return false;
+    return ms(c.ultimaEm) > ms(c.vistoDonoEm);
+  }
+  // O nome do negócio muda depois que a conversa nasce, então a lista mostra
+  // sempre o nome ATUAL de negocios/{uid}; o campo 'nome' da conversa é só o
+  // último recurso (negócio apagado, ou lista de negócios que não carregou).
+  // Uma pessoa pode ser lojista, parceiro, ou os dois na MESMA conta (mesmo uid)
+  // — e aí é uma conversa só, vista dos dois painéis. Por isso o destinatário é
+  // sempre procurado nas duas listas.
+  function cvQuemE(uid){
+    const n = NEG.find(x => x.uid === uid);
+    const p = PARC.find(x => x.uid === uid);
+    const tipos = [];
+    if(n) tipos.push('lojista');
+    if(p) tipos.push('parceiro');
+    return {
+      uid, negocio:n||null, parceiro:p||null,
+      nome: (n && n.nome) || (p && p.nome) || '',
+      tipos,
+      email: (p && p.email) || '',
+      apelido: (n && n.slug) || (p && p.slug) || ''
+    };
+  }
+  function cvNome(c){
+    const q = cvQuemE(c.uid);
+    return q.nome || c.nome || '(sem nome)';
+  }
+  function cvRotuloTipo(q){
+    if(q.tipos.length === 2) return 'Lojista e parceiro';
+    if(q.tipos[0] === 'parceiro') return 'Parceiro';
+    if(q.tipos[0] === 'lojista') return PLANOS[PLANO_DE[q.uid]||'basico'].n;
+    return 'Conta';
+  }
+  // Um texto só com tudo que dá pra buscar: nome, apelido do link, e-mail,
+  // arroba do parceiro, segmento e endereço do negócio.
+  function cvAlvoBusca(uid, extra){
+    const q = cvQuemE(uid);
+    return [q.nome, q.apelido, q.email, (q.parceiro && q.parceiro.arroba) || '',
+            (q.negocio && q.negocio.segmento) || '', (q.negocio && q.negocio.endereco) || '',
+            extra || ''].join(' ').toLowerCase();
+  }
+  /* ==========================================================
+     AVISO DE MENSAGEM NOVA — "chat central"
+     O painel do dono fica aberto o dia todo. Antes, mensagem nova só aparecia
+     como um número pequeno na lateral: quem estava em outra seção não via.
+     Agora: título da aba, item no sino, aviso flutuante e um bipe curto.
+     ========================================================== */
+  const TITULO_BASE = document.title;
+  let CV_MARCAS = null;          // uid -> carimbo da última mensagem já vista na tela
+  let CV_PRIMEIRA_CARGA = true;  // a 1ª leitura não avisa nada (senão apita ao abrir)
+  let CV_TOAST_TIMER = null;
+
+  function cvBipe(){
+    try{
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      const ctx = new AC();
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.09, ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.28);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(); o.stop(ctx.currentTime + 0.3);
+      setTimeout(()=>{ try{ ctx.close(); }catch(e){} }, 600);
+    }catch(e){}
+  }
+
+  function cvToast(quem, previa, uid){
+    const velho = el('mvToast'); if(velho) velho.remove();
+    if(CV_TOAST_TIMER) clearTimeout(CV_TOAST_TIMER);
+    const d = document.createElement('div');
+    d.className = 'mvToast'; d.id = 'mvToast';
+    d.innerHTML = '<span class="tsIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-2.9-.4L3 21l1.6-4.5a8.2 8.2 0 0 1-1-4A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4Z"/></svg></span>'+
+      '<span class="tsTxt"><span class="tsQuem">'+esc(quem)+'</span><span class="tsMsg">'+esc(previa || 'mandou um arquivo')+'</span></span>';
+    d.addEventListener('click', ()=>{ d.remove(); irSec('mensagens'); abrirConversa(uid); });
+    document.body.appendChild(d);
+    CV_TOAST_TIMER = setTimeout(()=>{ try{ d.remove(); }catch(e){} }, 9000);
+  }
+
+  function cvPintarTitulo(q){
+    document.title = q > 0 ? '(' + q + ') ' + TITULO_BASE : TITULO_BASE;
+  }
+
+  // Roda a cada chegada do onSnapshot de conversas. Só avisa quando o carimbo
+  // da conversa ANDOU desde a última vez e quem falou foi o lojista.
+  function cvConferirNovidade(){
+    const marcasNovas = new Map();
+    const avisar = [];
+    CONVS.forEach(c => {
+      const carimbo = ms(c.ultimaEm);
+      marcasNovas.set(c.uid, carimbo);
+      if(CV_PRIMEIRA_CARGA || !CV_MARCAS) return;
+      const antes = CV_MARCAS.get(c.uid) || 0;
+      if(c.ultimoDe === 'lojista' && carimbo > antes) avisar.push(c);
+    });
+    CV_MARCAS = marcasNovas;
+    if(CV_PRIMEIRA_CARGA){ CV_PRIMEIRA_CARGA = false; return; }
+    if(!avisar.length) return;
+
+    // Conversa aberta na tela, e a seção Mensagens visível: não precisa gritar.
+    const secVisivel = !document.querySelector('section[data-sec="mensagens"]').classList.contains('hide');
+    const so = avisar.filter(c => !(secVisivel && c.uid === CONV_ABERTA));
+    if(!so.length) return;
+    const c = so[so.length - 1];
+    cvToast(cvNome(c), c.ultimaMsg, c.uid);
+    cvBipe();
+  }
+
+  function cvPintarBadge(){
+    const q = CONVS.filter(cvNaoLida).length;
+    ['badMsg','badMsgM'].forEach(id=>{
+      const n = el(id); if(!n) return;
+      n.textContent = q;
+      n.classList.toggle('hide', q === 0);
+    });
+    cvPintarTitulo(q);
+    try{ pintarPendencias(); }catch(e){}
+  }
+
+  function ouvirConversas(){
+    if(PARA_CONVS) return;
+    try{
+      PARA_CONVS = onSnapshot(
+        query(collection(db,'conversas'), orderBy('ultimaEm','desc'), limit(200)),
+        qs => {
+          CONVS = []; qs.forEach(d => CONVS.push(Object.assign({uid:d.id}, d.data())));
+          hide('cvErroRegra');
+          cvConferirNovidade();
+          cvPintarBadge(); pintarConversas();
+        },
+        () => { show('cvErroRegra'); el('cvLista').innerHTML = '<div class="cvVazio">Não consegui ler as conversas.</div>'; }
+      );
+    }catch(e){ show('cvErroRegra'); }
+  }
+
+  function pintarConversas(){
+    const box = el('cvLista'); if(!box) return;
+    const filtro = ((el('cvBusca')||{}).value||'').trim().toLowerCase();
+    const lista = CONVS.filter(c => !filtro || cvAlvoBusca(c.uid, (c.nome||'')+' '+(c.email||'')).includes(filtro));
+    txt('cvChip', CONVS.length + (CONVS.length === 1 ? ' conversa' : ' conversas'));
+    if(!lista.length){
+      box.innerHTML = '<div class="cvVazio">'+(CONVS.length ? 'Nenhuma conversa com esse nome.' : 'Ninguém escreveu ainda. Use <b>Nova conversa</b> para começar.')+'</div>';
+      return;
+    }
+    box.innerHTML = lista.map(c => {
+      const nova = cvNaoLida(c);
+      const quem = c.ultimoDe === 'admin' ? 'você: ' : (c.ultimoDe === 'bot' ? 'Vik: ' : '');
+      return '<button type="button" class="cvIt'+(c.uid === CONV_ABERTA ? ' on' : '')+'" data-conv="'+esc(c.uid)+'">'+
+        '<div class="cvItTopo">'+(nova ? '<span class="cvPt"></span>' : '')+
+          '<span class="cvItNome">'+esc(cvNome(c))+'</span>'+
+          '<span class="cvItData">'+cvQuando(c.ultimaEm)+'</span></div>'+
+        '<div class="cvItPrev">'+esc(quem + (c.ultimaMsg||'—'))+'</div>'+
+        (c.docsLiberado === true ? '<div class="cvItPrev" style="color:#ffcf9a">documentos liberados</div>' : '')+
+      '</button>';
+    }).join('');
+  }
+
+  /* ---- MEMORIA DO VIK (colecao vik_memoria/{uid}) ----
+     Leitura so de admin, e ninguem escreve pelo app: quem grava e o Admin
+     SDK do moviki-ai. Aqui o dono so VE e APAGA. */
+  async function cvCarregarMemoria(uid){
+    const box = el('cvMemLista'), bt = el('btnCvMemApagar');
+    if(!box) return;
+    box.innerHTML = ''; txt('cvMemEstado','Carregando…');
+    if(bt) bt.style.display = 'none';
+    try{
+      const sn = await getDoc(doc(db,'vik_memoria',uid));
+      if(!sn.exists()){
+        txt('cvMemEstado','Nada aprendido ainda — o Vik guarda conforme conversa.');
+        return;
+      }
+      const m = sn.data() || {};
+      const partes = [];
+      const lista = (titulo, arr, cor) => {
+        if(!Array.isArray(arr) || !arr.length) return;
+        partes.push('<div style="margin-bottom:7px"><b style="color:'+cor+'">'+titulo+'</b><br>'+
+          arr.map(x => '• '+esc(x)).join('<br>')+'</div>');
+      };
+      lista('Sobre o negócio', m.fatos, 'var(--mv-ciano)');
+      lista('Já perguntou sobre', m.temas, 'var(--mv-txt-2)');
+      lista('Objeções que deu', m.objecoes, '#ffcf9a');
+      lista('Ofertas que recusou', m.recusadas, '#ff9b9b');
+      lista('Ofertas que aceitou', m.aceitas, '#8fd8a0');
+      box.innerHTML = partes.length ? partes.join('') : '<span style="color:var(--mv-txt-3)">Registro vazio.</span>';
+      txt('cvMemEstado', (Number(m.conversas)||0) + ' conversa(s) com o Vik' +
+        (m.ultimaOferta ? ' · última oferta na mesa: '+m.ultimaOferta : ''));
+      if(bt) bt.style.display = '';
+    }catch(e){
+      txt('cvMemEstado','Não consegui ler. As regras v15 precisam estar publicadas.');
+    }
+  }
+
+  async function cvApagarMemoria(){
+    if(!CONV_ABERTA) return;
+    if(!confirm('Apagar tudo o que o Vik aprendeu desta pessoa?\n\nAs mensagens da conversa NÃO são apagadas — só o resumo que o Vik usa para lembrar dela. Ele começa do zero na próxima conversa.')) return;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Apagando…';
+    try{
+      await deleteDoc(doc(db,'vik_memoria',CONV_ABERTA));
+      av.textContent = 'Memória apagada. O Vik recomeça do zero com esta pessoa.';
+      cvCarregarMemoria(CONV_ABERTA);
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = 'Não consegui apagar. Só o dono pode, e as regras v15 precisam estar publicadas.';
+    }
+  }
+
+  async function abrirConversa(uid){
+    if(!uid) return;
+    CONV_ABERTA = uid; CONV_MSGS = [];
+    hide('cvSemSelecao'); show('cvAberta');
+    const c = CONVS.find(x => x.uid === uid) || {uid};
+    txt('cvNome', cvNome(c));
+    const q = cvQuemE(uid);
+    txt('cvSub', [cvRotuloTipo(q), q.apelido ? '/'+q.apelido : '', q.email || c.email || ''].filter(Boolean).join(' · '));
+    el('cvThread').innerHTML = '<div class="cvVazio">Carregando…</div>';
+    el('cvAviso').textContent = '';
+    cvPintarDocs(c);
+    cvCarregarMemoria(uid);
+    pintarConversas();
+
+    try{ if(PARA_MSGS) PARA_MSGS(); }catch(e){}
+    PARA_MSGS = onSnapshot(
+      query(collection(db,'conversas',uid,'mensagens'), orderBy('criadoEm','asc'), limit(200)),
+      qs => { CONV_MSGS = []; qs.forEach(d => CONV_MSGS.push(Object.assign({id:d.id}, d.data()))); pintarThread(); },
+      () => { el('cvThread').innerHTML = '<div class="cvVazio">Não consegui ler as mensagens.</div>'; }
+    );
+    marcarVistoDono(uid);
+  }
+  function fecharConversa(){
+    CONV_ABERTA = ''; CONV_MSGS = [];
+    try{ if(PARA_MSGS) PARA_MSGS(); }catch(e){}
+    PARA_MSGS = null;
+    hide('cvAberta'); show('cvSemSelecao'); pintarConversas();
+  }
+
+  function pintarThread(){
+    const box = el('cvThread'); if(!box) return;
+    if(!CONV_MSGS.length){ box.innerHTML = '<div class="cvVazio">Nenhuma mensagem nesta conversa ainda.</div>'; return; }
+    box.innerHTML = CONV_MSGS.map(m => {
+      const eu = (m.de === 'admin'), ehBot = (m.de === 'bot');
+      let anexo = '';
+      if(m.arquivoUrl){
+        // Imagem vira miniatura clicável; o resto vira cartão de documento.
+        // Antes tudo era cartão, e três fotos seguidas ficavam indistinguíveis.
+        const ehImg = cvImagem(m.arquivoTipo);
+        anexo = ehImg
+          ? '<a href="'+esc(m.arquivoUrl)+'" target="_blank" rel="noopener">'+
+            '<img class="cvMini" src="'+esc(m.arquivoUrl)+'" alt="'+esc(m.arquivoNome||'imagem')+'" loading="lazy">'+
+            '</a><div style="font-size:11px;color:var(--mv-txt-3);margin-top:4px">'+esc(m.arquivoNome||'imagem')+' · '+cvTam(m.arquivoTam)+'</div>'
+          : '<a class="cvAnexo" href="'+esc(m.arquivoUrl)+'" target="_blank" rel="noopener">'+
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/></svg>'+
+            '<span style="min-width:0"><span style="display:block;font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.arquivoNome||'documento')+'</span>'+
+            '<span style="font-size:11px;color:var(--mv-txt-3)">'+cvTam(m.arquivoTam)+' · abrir</span></span></a>';
+        if(m.id){
+          anexo += '<button type="button" class="cvApagar" onclick="cvApagarMsg(\''+esc(m.id)+'\',\''+esc(m.arquivoUrl)+'\',\''+esc((m.arquivoNome||'').replace(/'/g,''))+'\')">apagar este anexo</button>';
+        }
+      }
+      const t = m.texto ? esc(m.texto).replace(/\n/g,'<br>') : '';
+      const classe = eu ? 'cvEu' : (ehBot ? 'cvBot' : 'cvEle');
+      const quem = eu ? 'você' : (ehBot ? 'Vik (IA)' : 'lojista');
+      return '<div class="cvBolha '+classe+'">'+t+anexo+
+        '<span class="cvQuando">'+quem+' · '+dataBR(ms(m.criadoEm))+' '+cvQuando(m.criadoEm)+'</span></div>';
+    }).join('');
+    setTimeout(()=>{ try{ box.scrollTop = box.scrollHeight; }catch(e){} }, 30);
+  }
+
+  function cvPintarDocs(c){
+    const on = (c && c.docsLiberado === true);
+    const sw = el('swDocs');
+    if(sw){ sw.checked = on; sw.disabled = false; }
+    txt('cvDocsEstado', on
+      ? 'Ligado: o lojista vê o bloco “Mensagens do admin” e pode anexar documento (até 10 MB por arquivo).'
+      : 'Desligado: o lojista não vê o bloco de anexo. Ligue para pedir um documento a ele.');
+    el('cvPedido').classList.toggle('hide', !on);
+    el('btnCvPedido').classList.toggle('hide', !on);
+    el('cvPedido').value = (c && c.docsPedido) || '';
+    el('btnCvClipe').style.display = '';
+    cvPintarBot(c);
+  }
+
+  /* Tres estados, nao dois. O campo botLigado pode estar ausente — e e assim
+     que nasce toda conversa. Ausente NAO e "desligado": e "segue o padrao
+     geral". Se a tela mostrasse so ligado/desligado, o dono acharia que
+     desligou conversas que na verdade estao seguindo o padrao, e ligaria uma
+     por uma sem precisar. */
+  function cvPintarBot(c){
+    const temOverride = !!(c && typeof c.botLigado === 'boolean');
+    const on = temOverride ? (c.botLigado === true) : VIK_PADRAO;
+    const sw = el('swBot');
+    if(sw){ sw.checked = on; sw.disabled = false; }
+    const bt = el('btnCvBotPadrao');
+    if(bt) bt.classList.toggle('hide', !temOverride);
+    txt('cvBotEstado', temOverride
+      ? (on ? 'Ligado só nesta conversa (você decidiu aqui).'
+            : 'Desligado só nesta conversa (você decidiu aqui).')
+      : (VIK_PADRAO ? 'Seguindo o padrão geral: ligado.'
+                    : 'Seguindo o padrão geral: desligado.'));
+  }
+
+  /* ---------- PADRAO GERAL DO VIK (28/08/2026) ----------
+     Vale para toda conversa sem interruptor proprio. Fica em
+     configuracoes/sistema.vikPadraoLigado.
+     A LEITURA e direta (a regra ja permite isAdmin ler esse documento), mas a
+     ESCRITA vai pelo endpoint do moviki-ai: a regra desse documento tem um
+     hasOnly de UM campo, e acrescentar campo ali exigiria republicar as
+     regras. Pelo Admin SDK, nada precisa ser republicado. */
+  let VIK_PADRAO = false;
+
+  async function cvCarregarPadrao(){
+    try{
+      const d = await getDoc(doc(db,'configuracoes','sistema'));
+      VIK_PADRAO = !!(d.exists() && d.data() && d.data().vikPadraoLigado === true);
+    }catch(e){ VIK_PADRAO = false; console.error('[vik] padrao geral:', e); }
+    cvPintarPadrao();
+  }
+
+  function cvPintarPadrao(){
+    const sw = el('swPadraoVik');
+    if(sw){ sw.checked = VIK_PADRAO; sw.disabled = false; }
+    txt('cvPadraoEstado', VIK_PADRAO
+      ? 'Ligado: conversa nova já nasce com o Vik respondendo.'
+      : 'Desligado: conversa nova nasce sem o Vik, como hoje.');
+  }
+
+  async function cvTrocarPadrao(ligado){
+    const sw = el('swPadraoVik'); if(sw) sw.disabled = true;
+    txt('cvPadraoEstado', 'Salvando…');
+    try{
+      const u = auth.currentUser;
+      if(!u) throw new Error('sem sessao');
+      const tk = await u.getIdToken();
+      const r = await fetch('https://moviki-ai.vercel.app/api/chat', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},
+        body: JSON.stringify({acao:'vik_padrao', ligado: !!ligado})
+      });
+      const j = await r.json();
+      if(!j || j.ok !== true) throw new Error(j && j.erro || 'falhou');
+      VIK_PADRAO = j.vikPadraoLigado === true;
+      cvPintarPadrao();
+      // A conversa aberta pode estar herdando o padrao — o texto dela tem que
+      // virar junto, senao a tela mente.
+      if(CONV_ABERTA){ cvPintarBot(CONVS.find(x => x.uid === CONV_ABERTA) || {uid:CONV_ABERTA}); }
+    }catch(e){
+      // Erro aqui aparece NO CONSOLE de proposito: foi um catch mudo que
+      // escondeu a CSP bloqueando este mesmo dominio em 27/08.
+      console.error('[vik] nao consegui salvar o padrao geral:', e);
+      if(sw){ sw.checked = !ligado; sw.disabled = false; }
+      txt('cvPadraoEstado', 'Não consegui salvar. Veja o Console (F12).');
+    }
+  }
+
+  /* Apaga o override e devolve a conversa ao padrao geral. Sem isto, uma vez
+     que o dono encosta no interruptor a conversa fica FORA do padrao para
+     sempre, e nao ha jeito de voltar pela tela. */
+  async function cvVoltarAoPadrao(){
+    if(!CONV_ABERTA) return;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Salvando…';
+    try{
+      await updateDoc(doc(db,'conversas',CONV_ABERTA), {botLigado: deleteField()});
+      const c = CONVS.find(x => x.uid === CONV_ABERTA);
+      if(c) delete c.botLigado;
+      cvPintarBot(c || {uid:CONV_ABERTA});
+      av.textContent = VIK_PADRAO
+        ? 'Esta conversa voltou ao padrão geral: o Vik responde.'
+        : 'Esta conversa voltou ao padrão geral: o Vik não responde.';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = 'Não consegui voltar ao padrão.';
+      console.error('[vik] voltar ao padrao:', e);
+    }
+  }
+
+  async function marcarVistoDono(uid){
+    const c = CONVS.find(x => x.uid === uid);
+    if(!c || !cvNaoLida(c)) return;
+    try{ await updateDoc(doc(db,'conversas',uid), {vistoDonoEm: serverTimestamp()}); }catch(e){}
+  }
+
+  // O admin escreve a conversa inteira (a regra deixa), então aqui um setDoc com
+  // merge resolve tanto o "conversa nova" quanto o "conversa que já existia".
+  async function cvGravarResumo(uid, resumo){
+    const c = CONVS.find(x => x.uid === uid);
+    const n = NEG.find(x => x.uid === uid);
+    const base = {
+      uid,
+      ultimaMsg: String(resumo||'').slice(0,200),
+      ultimaEm: serverTimestamp(),
+      ultimoDe: 'admin',
+      vistoDonoEm: serverTimestamp()
+    };
+    if(!c){
+      base.nome = String((n && n.nome) || '').slice(0,80);
+      base.docsLiberado = false;
+      base.criadoEm = serverTimestamp();
+    }
+    await setDoc(doc(db,'conversas',uid), base, {merge:true});
+  }
+
+  async function cvEnviar(){
+    if(CONV_ENVIANDO || !CONV_ABERTA) return;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-erro)';
+    const t = el('cvTexto').value.trim();
+    if(!t){ av.textContent = 'Escreva alguma coisa antes de enviar.'; return; }
+    cvTravar(true);
+    av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Enviando…';
+    try{
+      await cvGravarResumo(CONV_ABERTA, t);
+      await addDoc(collection(db,'conversas',CONV_ABERTA,'mensagens'), {de:'admin', texto:t.slice(0,2000), criadoEm: serverTimestamp()});
+      el('cvTexto').value = ''; av.textContent = '';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = 'Não consegui enviar. Confira se as regras v13 estão publicadas.';
+    }
+    cvTravar(false);
+  }
+
+  // Caminho do arquivo dentro do Storage, extraído da própria URL de download.
+  // Guardar o caminho num campo novo obrigaria a mexer no hasOnly da regra v13 —
+  // e a URL já carrega a informação.
+  function cvCaminhoDoArquivo(url){
+    try{
+      const dep = String(url).split('/o/')[1];
+      if(!dep) return '';
+      return decodeURIComponent(dep.split('?')[0]);
+    }catch(e){ return ''; }
+  }
+
+  function cvMostrarProgresso(nome, pct){
+    show('cvSubindo');
+    txt('cvSubNome', nome);
+    txt('cvSubPct', Math.round(pct) + '%');
+    const b = el('cvSubBarra'); if(b) b.style.width = Math.round(pct) + '%';
+  }
+  function cvEsconderProgresso(){
+    hide('cvSubindo');
+    const b = el('cvSubBarra'); if(b) b.style.width = '0%';
+    CV_UPLOAD = null;
+  }
+  function cvTravar(travado){
+    CONV_ENVIANDO = travado;
+    ['btnCvEnviar','btnCvClipe'].forEach(id => { const n = el(id); if(n) n.disabled = travado; });
+  }
+
+  async function cvAnexar(inp){
+    const av = el('cvAviso'); av.style.color = 'var(--mv-erro)';
+    const f = inp && inp.files && inp.files[0];
+    if(!f || !CONV_ABERTA){ try{ inp.value=''; }catch(_){} return; }
+
+    // Trava de clique repetido: sem isso, tocar de novo no anexo enquanto o
+    // primeiro ainda sobe cria uma cópia do MESMO arquivo. Foi o que encheu a
+    // primeira conversa de teste de duplicatas.
+    if(CONV_ENVIANDO){
+      av.textContent = 'Calma — já tem um arquivo subindo. Espere a barra terminar.';
+      try{ inp.value=''; }catch(_){}
+      return;
+    }
+
+    const tipo = f.type || 'application/octet-stream';
+    if(CV_IMG_RUIM.includes(tipo) || /\.(heic|heif)$/i.test(f.name||'')){
+      av.textContent = 'Foto em HEIC/HEIF (formato do iPhone) não abre no navegador. No iPhone: Ajustes › Câmera › Formatos › "Mais compatível" — ou mande como PDF.';
+      try{ inp.value=''; }catch(_){}
+      return;
+    }
+    if(f.size > CV_TETO){ av.textContent = 'Arquivo muito grande. O limite é 10 MB.'; try{ inp.value=''; }catch(_){} return; }
+    if(!cvImagem(tipo) && !CV_TIPOS.includes(tipo)){
+      av.textContent = 'Tipo não aceito. Envie PDF, imagem (JPG/PNG), Word, Excel ou texto.';
+      try{ inp.value=''; }catch(_){} return;
+    }
+
+    // Mesmo arquivo (nome + tamanho) já nesta conversa: pergunta antes.
+    const repetido = CONV_MSGS.some(m => m.arquivoNome === f.name && Number(m.arquivoTam) === f.size);
+    if(repetido && !confirm('"'+f.name+'" já está nesta conversa. Enviar de novo mesmo assim?')){
+      try{ inp.value=''; }catch(_){} return;
+    }
+
+    cvTravar(true);
+    av.style.color = 'var(--mv-txt-3)'; av.textContent = '';
+    const nome = String(f.name||'documento').slice(-80).replace(/[^\w.\- ]+/g,'_');
+    cvMostrarProgresso(nome, 0);
+    try{
+      const r = stRef(storage, 'documentos/'+CONV_ABERTA+'/'+Date.now()+'_'+nome);
+      const tarefa = uploadBytesResumable(r, f, {contentType: tipo});
+      CV_UPLOAD = tarefa;
+      await new Promise((ok, erro) => {
+        tarefa.on('state_changed',
+          snap => cvMostrarProgresso(nome, snap.totalBytes ? (snap.bytesTransferred/snap.totalBytes)*100 : 0),
+          erro, ok);
+      });
+      const url = await getDownloadURL(r);
+      const legenda = el('cvTexto').value.trim();
+      await cvGravarResumo(CONV_ABERTA, legenda || ('Documento: '+nome));
+      const payload = {de:'admin', criadoEm: serverTimestamp(), arquivoUrl:url, arquivoNome:nome, arquivoTipo:tipo, arquivoTam:f.size};
+      if(legenda) payload.texto = legenda.slice(0,2000);
+      await addDoc(collection(db,'conversas',CONV_ABERTA,'mensagens'), payload);
+      el('cvTexto').value = ''; av.textContent = '';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = (e && e.code === 'storage/canceled')
+        ? 'Envio cancelado.'
+        : 'Não consegui enviar o documento. Confira as regras do Storage.';
+    }
+    cvEsconderProgresso();
+    cvTravar(false);
+    try{ inp.value = ''; }catch(_){}
+  }
+
+  // Apagar anexo: só o admin, e apaga NOS DOIS lugares — a mensagem no Firestore
+  // e o arquivo no Storage. Apagar só a mensagem deixaria o arquivo pagando
+  // armazenamento para sempre, invisível.
+  async function cvApagarMsg(mid, url, nome){
+    if(!CONV_ABERTA || !mid) return;
+    if(!confirm('Apagar "'+(nome||'este anexo')+'" da conversa? O arquivo some do Storage também. Não dá pra desfazer.')) return;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Apagando…';
+    try{
+      await deleteDoc(doc(db,'conversas',CONV_ABERTA,'mensagens',mid));
+      const caminho = cvCaminhoDoArquivo(url);
+      if(caminho){ try{ await deleteObject(stRef(storage, caminho)); }catch(_){} }
+      av.textContent = 'Anexo apagado.';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = 'Não consegui apagar. Só o dono pode, e as regras v13 precisam estar publicadas.';
+    }
+  }
+  window.cvApagarMsg = cvApagarMsg;
+
+  async function cvTrocarDocs(ligado){
+    if(!CONV_ABERTA) return;
+    const sw = el('swDocs'); if(sw) sw.disabled = true;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Salvando…';
+    try{
+      const c = CONVS.find(x => x.uid === CONV_ABERTA);
+      const base = {uid: CONV_ABERTA, docsLiberado: !!ligado};
+      if(!c){ base.criadoEm = serverTimestamp(); base.ultimaEm = serverTimestamp(); base.ultimoDe = 'admin'; base.ultimaMsg = ''; }
+      await setDoc(doc(db,'conversas',CONV_ABERTA), base, {merge:true});
+      // O texto ao lado do interruptor tem que virar junto. Antes ele ficava
+      // preso em "Desligado:" mesmo com o botão azul — e a tela mentia.
+      cvPintarDocs(Object.assign({}, c || {uid:CONV_ABERTA}, {docsLiberado: !!ligado}));
+      av.textContent = ligado
+        ? 'Liberado. O lojista já vê o bloco “Mensagens do admin”.'
+        : 'Desligado. O bloco de anexo sumiu do painel dele.';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = 'Não consegui salvar. Confira se as regras v13 estão publicadas.';
+      if(sw) sw.checked = !ligado;
+    }
+    if(sw) sw.disabled = false;
+  }
+
+  async function cvTrocarBot(ligado){
+    if(!CONV_ABERTA) return;
+    const sw = el('swBot'); if(sw) sw.disabled = true;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Salvando…';
+    try{
+      const c = CONVS.find(x => x.uid === CONV_ABERTA);
+      const base = {uid: CONV_ABERTA, botLigado: !!ligado};
+      if(!c){ base.criadoEm = serverTimestamp(); base.ultimaEm = serverTimestamp(); base.ultimoDe = 'admin'; base.ultimaMsg = ''; base.docsLiberado = false; }
+      await setDoc(doc(db,'conversas',CONV_ABERTA), base, {merge:true});
+      cvPintarBot(Object.assign({}, c || {uid:CONV_ABERTA}, {botLigado: !!ligado}));
+      av.textContent = ligado
+        ? 'Vik ligado nesta conversa. A próxima mensagem dela já vai ser respondida por ele.'
+        : 'Vik desligado. Só gente responde aqui agora.';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)';
+      av.textContent = 'Não consegui salvar. Confira se as regras v14 estão publicadas.';
+      if(sw) sw.checked = !ligado;
+    }
+    if(sw) sw.disabled = false;
+  }
+
+  async function cvSalvarPedido(){
+    if(!CONV_ABERTA) return;
+    const av = el('cvAviso'); av.style.color = 'var(--mv-txt-3)'; av.textContent = 'Salvando o pedido…';
+    try{
+      await setDoc(doc(db,'conversas',CONV_ABERTA), {uid: CONV_ABERTA, docsPedido: el('cvPedido').value.trim().slice(0,300)}, {merge:true});
+      av.textContent = 'Pedido salvo. Ele aparece dentro do bloco no painel do lojista.';
+    }catch(e){
+      av.style.color = 'var(--mv-erro)'; av.textContent = 'Não consegui salvar o pedido.';
+    }
+  }
+
+  /* ---- seletor de destinatário ----
+     Trocou o prompt() do navegador por uma lista de verdade. O prompt só achava
+     pelo NOME do negócio, e o que o dono tem na cabeça normalmente é o APELIDO
+     do link (moviki.com.br/karina) ou o E-MAIL. Agora busca nos dois, mais
+     arroba do parceiro, segmento e endereço — e mostra lojistas E parceiros. */
+  let CV_PICK_FILTRO = 'todos';
+
+  function cvAbrirPicker(){
+    if(!NEG.length && !PARC.length){
+      alert('As listas ainda não carregaram. Toque em "Atualizar dados" e tente de novo.');
+      return;
+    }
+    show('cvPicker');
+    el('cvPickBusca').value = '';
+    CV_PICK_FILTRO = 'todos';
+    document.querySelectorAll('.cvPickFiltros [data-pick]').forEach(b =>
+      b.classList.toggle('on', b.getAttribute('data-pick') === 'todos'));
+    cvPickRender();
+    setTimeout(()=>{ try{ el('cvPickBusca').focus(); }catch(e){} }, 80);
+  }
+  function cvFecharPicker(){ hide('cvPicker'); }
+
+  function cvPickRender(){
+    const box = el('cvPickLista'); if(!box) return;
+    const filtro = (el('cvPickBusca').value||'').trim().toLowerCase();
+
+    // Junta lojistas e parceiros por uid: quem é os dois aparece UMA vez só,
+    // porque a conversa também é uma só.
+    const porUid = new Map();
+    NEG.forEach(n => porUid.set(n.uid, true));
+    PARC.forEach(p => porUid.set(p.uid, true));
+
+    let lista = [...porUid.keys()].map(cvQuemE).filter(q => q.nome || q.email || q.apelido);
+    if(CV_PICK_FILTRO !== 'todos') lista = lista.filter(q => q.tipos.includes(CV_PICK_FILTRO));
+    if(filtro) lista = lista.filter(q => cvAlvoBusca(q.uid).includes(filtro));
+    lista.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'));
+
+    if(!lista.length){
+      box.innerHTML = '<div class="cvVazio">Ninguém com esse nome, apelido ou e-mail.</div>';
+      return;
+    }
+    const teto = 60;
+    box.innerHTML = lista.slice(0, teto).map(q => {
+      const tag = q.tipos.length === 2
+        ? '<span class="cvTag loj">lojista+parceiro</span>'
+        : (q.tipos[0] === 'parceiro' ? '<span class="cvTag par">parceiro</span>' : '<span class="cvTag loj">lojista</span>');
+      const linha2 = [q.apelido ? '/'+q.apelido : '', q.email || ''].filter(Boolean).join(' · ');
+      const jaTem = CONVS.some(c => c.uid === q.uid) ? ' <span style="color:var(--mv-txt-3);font-size:11px">(já tem conversa)</span>' : '';
+      return '<button type="button" class="cvIt" data-conv="'+esc(q.uid)+'">'+
+        '<div class="cvItTopo"><span class="cvItNome">'+esc(q.nome || '(sem nome)')+'</span>'+tag+'</div>'+
+        '<div class="cvItPrev">'+(esc(linha2) || '—')+jaTem+'</div>'+
+      '</button>';
+    }).join('') + (lista.length > teto
+      ? '<div class="cvVazio" style="padding:10px">Mostrando '+teto+' de '+lista.length+'. Digite mais letras para afinar.</div>'
+      : '');
+  }
+
+  /* ---- ligações de tela ---- */
+  document.addEventListener('click', ev => {
+    const a = ev.target && ev.target.closest ? ev.target.closest('[data-conv]') : null;
+    if(a){ cvFecharPicker(); abrirConversa(a.getAttribute('data-conv')); return; }
+    const b = ev.target && ev.target.closest ? ev.target.closest('[data-cv]') : null;
+    if(b){ irSec('mensagens'); abrirConversa(b.getAttribute('data-cv')); return; }
+  });
+  el('cvBusca').addEventListener('input', pintarConversas);
+  el('btnCvFechar').addEventListener('click', fecharConversa);
+  el('btnCvEnviar').addEventListener('click', cvEnviar);
+  el('btnCvClipe').addEventListener('click', ()=>{
+    if(CONV_ENVIANDO) return;
+    const i = el('cvArquivo'); i.value=''; i.click();
+  });
+  el('btnCvCancelarUp').addEventListener('click', ()=>{ try{ if(CV_UPLOAD) CV_UPLOAD.cancel(); }catch(e){} });
+  el('cvArquivo').addEventListener('change', function(){ cvAnexar(this); });
+  el('swDocs').addEventListener('change', function(){ cvTrocarDocs(this.checked); });
+  el('swBot').addEventListener('change', function(){ cvTrocarBot(this.checked); });
+  el('swPadraoVik').addEventListener('change', function(){ cvTrocarPadrao(this.checked); });
+  el('btnCvBotPadrao').addEventListener('click', cvVoltarAoPadrao);
+  cvCarregarPadrao();
+  el('btnCvMemApagar').addEventListener('click', cvApagarMemoria);
+  el('btnCvPedido').addEventListener('click', cvSalvarPedido);
+  el('btnCvNova').addEventListener('click', cvAbrirPicker);
+  el('btnCvPickFechar').addEventListener('click', cvFecharPicker);
+  el('cvPickBusca').addEventListener('input', cvPickRender);
+  document.querySelectorAll('.cvPickFiltros [data-pick]').forEach(b => {
+    b.addEventListener('click', () => {
+      CV_PICK_FILTRO = b.getAttribute('data-pick');
+      document.querySelectorAll('.cvPickFiltros [data-pick]').forEach(x => x.classList.toggle('on', x === b));
+      cvPickRender();
+    });
+  });
+  el('cvTexto').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); cvEnviar(); }
+  });
+
+  /* custo das métricas recalculado quando os negócios chegam */
+  const _obsCusto = setInterval(()=>{ if(NEG.length){ atualizarCusto(); clearInterval(_obsCusto); } }, 800);
+  setTimeout(()=>clearInterval(_obsCusto), 20000);
+</script>
+</body>
+</html>
