@@ -362,6 +362,12 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .tela svg{width:56px;height:56px;margin-bottom:6px;filter:drop-shadow(0 0 12px rgba(0,212,255,.5));}
 .tela h1{font-size:20px;font-weight:600;}
 .tela p{color:var(--mv-txt-3);font-size:14px;max-width:320px;line-height:1.5;}
+/* Vik nas telas de estado — 2026-08-28. Nasce oculto: o "Carregando..." inicial
+   NÃO chama mostrarTela(), então ali continua aparecendo só o pino. */
+.tela img.vik{display:none;height:158px;width:auto;margin-bottom:2px;}
+.tela img.vik.on{display:block;}
+.tela.comVik svg{display:none;}
+@media(max-height:660px){.tela img.vik{height:120px}}
 .tela a{color:var(--ciano);text-decoration:none;font-weight:600;margin-top:8px;}
 .modalAv{position:fixed;inset:0;z-index:1800;background:rgba(4,10,20,.74);display:flex;align-items:center;justify-content:center;padding:20px;}
 .mavBox{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-xl);padding:24px 20px;width:100%;max-width:380px;position:relative;}
@@ -614,6 +620,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 <!-- ======================= ESTADO / MODAIS ======================= -->
 <div class="tela" id="tela">
   <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
+  <img class="vik" id="telaVik" alt="" decoding="async">
   <h1 id="telaTitulo">Carregando...</h1>
   <p id="telaTexto"></p>
 </div>
@@ -652,7 +659,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-27-wppunidade';
+  window.MOVIKI_VERSAO='2026-08-28-vik404';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -733,7 +740,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   const params=new URLSearchParams(window.location.search);
   const demoOn=params.get('demo')==='1';
 
-  function mostrarTela(t,x,link){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://moviki.com.br">Conhecer o Moviki</a>':'');el('tela').classList.remove('escondido');}
+  function mostrarTela(t,x,link,pose){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://moviki.com.br">Conhecer o Moviki</a>':'');try{var v=el('telaVik');v.src='/icones-premium/vik-'+(pose||'neutro')+'.webp';v.classList.add('on');el('tela').classList.add('comVik');}catch(e){}el('tela').classList.remove('escondido');}
   function esconderTela(){el('tela').classList.add('escondido');}
 
   function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium'||planoAtual==='enterprise';}
@@ -1463,7 +1470,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 
   (async()=>{
     if(idDireto){ouvir(idDireto);return;}
-    if(!slug){mostrarTela('Bem-vindo ao Moviki','Este link não aponta pra nenhum negócio.',true);return;}
+    if(!slug){mostrarTela('Bem-vindo ao Moviki','Este link não aponta pra nenhum negócio.',true,'acenando');return;}
     try{
       const s=await getDoc(doc(db,'slugs',slug));
       if(s.exists()){ouvir(s.data().uid);return;}
