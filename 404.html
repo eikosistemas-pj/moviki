@@ -71,7 +71,7 @@ body::before{
 .hero{position:relative;}
 .capa{position:relative;width:100%;aspect-ratio:16/9;max-height:340px;overflow:hidden;background:var(--mv-bg-2);}
 @media(min-width:760px){.capa{aspect-ratio:21/8;}}
-.capa img{width:100%;height:100%;object-fit:cover;}
+.capa img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .capa::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,13,24,.55) 0%,rgba(6,13,24,0) 34%,rgba(6,13,24,.72) 82%,var(--mv-bg) 100%);}
 /* capa sem foto: gradiente de marca + malha de mapa (nunca uma foto falsa) */
 .capaVazia{position:absolute;inset:0;background:
@@ -94,7 +94,7 @@ body::before{
 
 .heroBody{position:relative;padding:0 14px;margin-top:-46px;}
 .logoWrap{position:relative;width:92px;height:92px;border-radius:50%;padding:3px;background:linear-gradient(150deg,var(--ciano),#0b64ff);box-shadow:0 10px 28px rgba(0,0,0,.55);}
-.logoWrap>img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#0a1524;}
+.logoWrap>img{width:100%;height:100%;border-radius:50%;object-fit:contain;background:#0a1524;}
 .logoWrap>img.mvFallback{object-fit:contain;padding:14px;background:#0a1524;}
 .selo{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:var(--mv-r-pill);font-size:12.5px;font-weight:600;border:1px solid transparent;white-space:nowrap;}
 .selo .bol{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor;flex:0 0 auto;}
@@ -146,8 +146,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .uCard{flex:0 0 auto;width:158px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;cursor:pointer;text-align:left;padding:0;scroll-snap-align:start;transition:.18s;}
 .uCard:hover{border-color:var(--ciano);transform:translateY(-2px);}
 .uCard.ativa{border-color:var(--ciano);box-shadow:0 0 0 1px var(--ciano) inset,0 8px 24px rgba(0,212,255,.16);}
-.uCard .thumb{position:relative;height:92px;background:var(--mv-campo);}
-.uCard .thumb img{width:100%;height:100%;object-fit:cover;}
+.uCard .thumb{position:relative;height:92px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.uCard .thumb img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .uCard .num{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1a7dff,#0b4fd4);color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.5);}
 .uCard .corpo{padding:9px 10px 11px;}
 .uCard .nmU{font-size:13px;font-weight:600;color:var(--mv-txt);line-height:1.25;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
@@ -166,14 +166,14 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .promoDest .preco b{font-size:clamp(22px,6.4vw,30px);font-weight:800;color:#ffa62b;margin-left:5px;letter-spacing:-.5px;}
 .promoDest .val{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mv-txt-3);margin-top:9px;}
 .promoDest .val svg{width:14px;height:14px;}
-.promoDest .pImg{margin-top:12px;border-radius:var(--mv-r);overflow:hidden;max-height:170px;}
+.promoDest .pImg{position:relative;margin-top:12px;border-radius:var(--mv-r);overflow:hidden;max-height:170px;display:flex;align-items:center;justify-content:center;}
 @media(max-width:619px){
   .promoDest{padding-right:118px;}
   .promoDest .pImg{position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:150px;height:150px;margin:0;border-radius:50%;border:1px solid rgba(255,138,0,.35);box-shadow:0 12px 30px rgba(0,0,0,.5);}
   .promoDest .pImg.demoFoto{height:150px!important;}
 }
 @media(max-width:400px){.promoDest{padding-right:96px;} .promoDest .pImg{width:124px;height:124px;right:-14px;}}
-.promoDest .pImg img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;}
+.promoDest .pImg img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;cursor:zoom-in;}
 .btnPromo{margin-top:13px;align-self:start;justify-self:start;background:transparent;border:1px solid rgba(255,166,43,.7);color:#ffb960;font-weight:600;font-size:13.5px;padding:9px 17px;border-radius:var(--mv-r-pill);cursor:pointer;transition:.18s;}
 .btnPromo:hover{background:rgba(255,138,0,.14);}
 @media(min-width:620px){
@@ -185,8 +185,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 /* ---------- DESTAQUES DO CARDÁPIO ---------- */
 .pCard{flex:0 0 auto;width:160px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;text-align:left;cursor:pointer;padding:0;scroll-snap-align:start;transition:.18s;}
 .pCard:hover{border-color:var(--ciano);transform:translateY(-2px);}
-.pCard .pImg{height:104px;background:var(--mv-campo);position:relative;}
-.pCard .pImg img{width:100%;height:100%;object-fit:cover;}
+.pCard .pImg{height:142px;background:var(--mv-campo);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pCard .pImg img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .pCard .semImg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#12233a,#0b1728);}
 .pCard .semImg img{width:44px;height:44px;object-fit:contain;opacity:.75;}
 .pCard .pCorpo{padding:9px 10px 11px;}
@@ -196,7 +196,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   .gradeProd{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;overflow:visible;margin:0;padding:0;}
   .gradeProd .pCard{width:auto;}
   .gradeProd .pCard:nth-child(n+5){display:none;}   /* a arte mostra 4 destaques no desktop */
-  .pCard .pImg{height:128px;}
+  .pCard .pImg{height:172px;}
 }
 
 /* ---------- ONDE ESTAMOS ---------- */
@@ -233,9 +233,9 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .abaConteudo{padding-top:14px;}
 .galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 @media(min-width:560px){.galeria{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}}
-.galItem{aspect-ratio:1;border-radius:var(--mv-r-sm);overflow:hidden;border:1px solid var(--mv-linha);background:var(--mv-campo);cursor:zoom-in;}
-.galItem img{width:100%;height:100%;object-fit:cover;transition:.25s;}
-.galItem:hover img{transform:scale(1.05);}
+.galItem{position:relative;aspect-ratio:1;border-radius:var(--mv-r-sm);overflow:hidden;border:1px solid var(--mv-linha);background:var(--mv-campo);cursor:zoom-in;display:flex;align-items:center;justify-content:center;}
+.galItem img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;transition:.25s;}
+.galItem:hover img:not(.mvFundo){transform:scale(1.05);}
 .galMais{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-radius:var(--mv-r-sm);aspect-ratio:1;color:var(--mv-txt);cursor:pointer;font-weight:700;font-size:18px;}
 .galMais small{font-size:11px;font-weight:500;color:var(--mv-txt-3);}
 .vazioMod{text-align:center;color:var(--mv-txt-3);font-size:13.5px;padding:26px 12px;}
@@ -288,8 +288,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .uBig .uTxt{flex:1;min-width:0;}
 .uBig .uNome{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;line-height:1.2;overflow-wrap:anywhere;}
 .uBig .numB{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#1a7dff,#0b4fd4);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
-.uBig .uFoto{width:104px;height:88px;border-radius:var(--mv-r-sm);overflow:hidden;border:1px solid var(--mv-linha);background:var(--mv-campo);flex:0 0 auto;}
-.uBig .uFoto img{width:100%;height:100%;object-fit:cover;}
+.uBig .uFoto{position:relative;width:104px;height:88px;border-radius:var(--mv-r-sm);overflow:hidden;border:1px solid var(--mv-linha);background:var(--mv-campo);flex:0 0 auto;display:flex;align-items:center;justify-content:center;}
+.uBig .uFoto img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .uBig .linha{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--mv-txt-2);margin-top:9px;}
 .uBig .linha svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px;color:var(--ciano);}
 .uBig .linha.ok svg{color:var(--mv-ok);}
@@ -324,16 +324,16 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .catCardTop{padding:11px 12px 9px;}
 .catCardNome{display:block;font-size:14px;font-weight:600;color:var(--mv-txt);}
 .catCardQtd{display:block;font-size:11.5px;color:var(--mv-txt-3);margin-top:2px;}
-.catCardImg{height:96px;background:var(--mv-campo);}
-.catCardImg img{width:100%;height:100%;object-fit:cover;}
+.catCardImg{position:relative;height:118px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.catCardImg img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .catSemFoto{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#12233a,#0b1728);}
 .catSemFoto img{width:40px;height:40px;object-fit:contain;opacity:.7;}
 .voltarCat{background:var(--mv-campo);border:1px solid var(--mv-linha);color:var(--ciano);font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--mv-r-pill);cursor:pointer;margin-bottom:12px;}
 .catTitulo{font-size:18px;font-weight:700;margin-bottom:12px;}
 .itemPub{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px 13px;margin-bottom:10px;}
 .itemPub.comFoto{padding:0;overflow:hidden;}
-.itemPub .fotoCapa{height:190px;background:var(--mv-campo);}
-.itemPub .fotoCapa img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;}
+.itemPub .fotoCapa{position:relative;min-height:190px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.itemPub .fotoCapa img{position:relative;z-index:1;display:block;max-width:100%;width:auto;height:auto;max-height:min(62vh,440px);object-fit:contain;cursor:zoom-in;}
 .itemPub .itemInfo{padding:12px 13px;}
 .itemPub .itemTopo{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
 .itemPub .nm{font-size:15px;font-weight:600;flex:1;min-width:0;overflow-wrap:anywhere;}
@@ -341,7 +341,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .itemPub .desc{font-size:13px;color:var(--mv-txt-3);margin-top:5px;overflow-wrap:anywhere;}
 .itemPub .acabando{background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.4);color:#ff8b96;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:var(--mv-r-pill);}
 .miniFotos{display:flex;gap:7px;padding:0 13px 13px;}
-.miniFotos img{width:52px;height:52px;border-radius:9px;object-fit:cover;border:1px solid var(--mv-linha);cursor:pointer;opacity:.62;}
+.miniFotos img{width:52px;height:52px;border-radius:9px;object-fit:contain;background:var(--mv-campo);border:1px solid var(--mv-linha);cursor:pointer;opacity:.62;}
 .miniFotos img.ativa{opacity:1;border-color:var(--ciano);}
 .promoBox,.eventoBox{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;margin-bottom:11px;}
 .promoBox{border-color:rgba(255,138,0,.32);}
@@ -356,6 +356,16 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   max-height:min(70vh,520px);object-fit:contain;cursor:zoom-in;}
 .midiaCapa img.capaFundo{position:absolute;inset:0;z-index:0;width:100%;height:100%;max-width:none;max-height:none;
   object-fit:cover;filter:blur(22px) brightness(.45);transform:scale(1.15);cursor:default;pointer-events:none;}
+
+/* ---------- IMAGEM INTEIRA, SEM CORTE — 31/08/2026 ----------
+   Toda moldura de foto da pagina publica passou de object-fit:cover (que corta)
+   para contain (que mostra a imagem inteira). A sobra da moldura e preenchida
+   pela PROPRIA imagem repetida e desfocada (mesma URL = mesmo cache, zero
+   requisicao nova), entao o card continua "cheio" e nada do produto some. */
+img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
+  width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;
+  object-fit:cover!important;filter:blur(20px) brightness(.42);transform:scale(1.2);
+  pointer-events:none;cursor:default!important;border-radius:inherit;}
 .midiaInfo{padding:12px 13px;}
 .midiaInfo .t{font-size:15px;font-weight:600;overflow-wrap:anywhere;}
 .midiaInfo .q{font-size:12.5px;color:var(--ciano);margin-top:4px;}
@@ -415,7 +425,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .leaflet-container a.leaflet-popup-close-button{color:var(--mv-txt-3)!important;}
 .pin{filter:drop-shadow(0 0 6px rgba(0,212,255,.6));}
 .plWrap{position:relative;width:46px;height:46px;}
-.plImg{width:46px;height:46px;border-radius:50%;object-fit:cover;border:3px solid var(--ciano);background:#0A1524;box-shadow:0 0 8px rgba(0,212,255,.6);display:block;}
+.plImg{width:46px;height:46px;border-radius:50%;object-fit:contain;border:3px solid var(--ciano);background:#0A1524;box-shadow:0 0 8px rgba(0,212,255,.6);display:block;}
 .plTip{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--ciano);}
 .pinNum{background:none!important;border:none!important;}
 .pinNum .pnB{width:30px;height:30px;border-radius:50% 50% 50% 6px;transform:rotate(-45deg);background:linear-gradient(135deg,#1a7dff,#0b4fd4);border:2px solid #7ec8ff;box-shadow:0 5px 14px rgba(0,0,0,.55),0 0 12px rgba(0,140,255,.7);display:flex;align-items:center;justify-content:center;}
@@ -433,6 +443,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   <!-- ======================= HERÓI ======================= -->
   <header class="hero">
     <div class="capa" id="capa">
+      <img id="capaFundo" class="mvFundo escondido" src="" alt="" aria-hidden="true" referrerpolicy="no-referrer">
       <img id="capaImg" class="escondido" src="" alt="" referrerpolicy="no-referrer">
       <div class="capaVazia" id="capaVazia">
         <svg class="cvPino" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58s20-18 20-32A20 20 0 1 0 12 26c0 14 20 32 20 32Z" fill="#00D4FF"/><circle cx="32" cy="26" r="7" fill="#0A1524"/></svg>
@@ -668,7 +679,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-31-capainteira';
+  window.MOVIKI_VERSAO='2026-08-31-semcorte';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -756,6 +767,15 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   function liberaLogoPino(){return planoAtual==='premium'||planoAtual==='enterprise';}
   function liberaFotos(){return planoAtual==='premium'||planoAtual==='enterprise'||periodoAtual==='trial';}
   function ehEnterprise(){return planoAtual==='enterprise';}
+  /* Imagem INTEIRA (sem corte) — 31/08/2026.
+     Devolve DOIS <img> com a MESMA url: o de tras preenche a moldura desfocado
+     (mesma URL = mesmo cache, nao faz requisicao nova) e o da frente aparece
+     completo, proporcional, sem cortar nada do produto. */
+  function fotoInteira(url,alt,clicavel){
+    const u=esc(url);
+    return '<img class="mvFundo" src="'+u+'" alt="" aria-hidden="true" loading="lazy" decoding="async" referrerpolicy="no-referrer">'+
+      '<img src="'+u+'" alt="'+esc(alt||'')+'" loading="lazy" decoding="async" referrerpolicy="no-referrer"'+(clicavel?' onclick="abrirFoto(this.src)"':'')+'>';
+  }
   function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
   function fmtPreco(v){var s=String(v==null?'':v).trim();if(!s)return '';var t=s.replace(/^R\$\s*/i,'').trim();if(/^\d{1,5}([.,]\d{1,2})?$/.test(t)){var n=parseFloat(t.replace(',','.'));if(!isNaN(n))return 'R$ '+n.toFixed(2).replace('.',',');}return 'R$ '+t;}
   function fmtKm(km){return km<1?Math.round(km*1000)+' m':km.toFixed(1).replace('.',',')+' km';}
@@ -822,11 +842,13 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   /* capa: 1ª foto da galeria (só quem tem direito a fotos). Sem foto = arte de marca, nunca foto falsa. */
   function aplicarCapa(d){
     const galeria=(d&&Array.isArray(d.fotos))?d.fotos.filter(fotoOk):[];
-    const im=el('capaImg'), vz=el('capaVazia');
+    const im=el('capaImg'), vz=el('capaVazia'), fu=el('capaFundo');
     if(liberaFotos() && galeria.length){
       im.src=galeria[0]; im.alt='Foto de '+(d.nome||'negócio'); im.classList.remove('escondido'); vz.classList.add('escondido');
+      if(fu){ fu.src=galeria[0]; fu.classList.remove('escondido'); }
     }else{
       im.classList.add('escondido'); im.src=''; vz.classList.remove('escondido');
+      if(fu){ fu.classList.add('escondido'); fu.src=''; }
     }
   }
 
@@ -863,7 +885,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     el('faixaEmpTxt').textContent = (ehEnterprise()?'Empresa · ':'')+locais.length+' unidades';
     const aberto=dadosNeg&&dadosNeg.status==='aberto';
     tr.innerHTML=locais.map((l,i)=>{
-      const foto=l.foto?('<img src="'+esc(l.foto)+'" alt="'+esc(l.nome)+'" loading="lazy" referrerpolicy="no-referrer">'):('<div class="demoFoto" style="width:100%;height:100%">'+IC.unidades+'</div>');
+      const foto=l.foto?fotoInteira(l.foto,l.nome,false):('<div class="demoFoto" style="width:100%;height:100%">'+IC.unidades+'</div>');
       const km=(l.km!=null)?('<div class="dU">'+IC.pino+'a '+fmtKm(l.km)+'</div>'):'';
       return '<button class="uCard'+(i===localAtivo?' ativa':'')+'" type="button" onclick="selecionarLocal('+i+')">'+
         '<div class="thumb"><span class="num">'+(i+1)+'</span>'+foto+'</div>'+
@@ -897,7 +919,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     return {preco:mp?mp[0].replace(/^por\s*/i,'').trim():'', val:mv?mv[0].trim():'', resto:resto};
   }
   function blocoPromo(p,demo){
-    const capa=(!demo&&fotoOk(p.capa)&&liberaFotos())?('<div class="pImg"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo)+'" loading="lazy" onclick="abrirFoto(this.src)"></div>'):
+    const capa=(!demo&&fotoOk(p.capa)&&liberaFotos())?('<div class="pImg">'+fotoInteira(p.capa,p.titulo,true)+'</div>'):
       (demo?'<div class="pImg demoFoto" style="height:150px">'+IC.fotos+'</div>':'');
     const f=fatiarDetalhe(p.detalhe);
     const linhaPreco=f.preco?('<div class="preco">por <b>'+esc(f.preco)+'</b></div>'):'';
@@ -927,7 +949,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     sec.classList.remove('escondido');
     tr.innerHTML=lista.map(p=>{
       const f=(liberaFotos()&&Array.isArray(p.fotos))?p.fotos.filter(fotoOk):[];
-      const img=f.length?('<img src="'+esc(f[0])+'" alt="'+esc(p.nome)+'" loading="lazy" referrerpolicy="no-referrer">'):
+      const img=f.length?fotoInteira(f[0],p.nome,false):
         ('<div class="semImg"><img src="/icones-premium/cardapio.png" alt="" loading="lazy" onerror="this.parentElement.innerHTML=\'\'"></div>');
       const pr=p.preco?('<div class="pPreco">'+esc(fmtPreco(p.preco))+'</div>'):'';
       return '<button class="pCard" type="button" onclick="abrirCardapio()"><div class="pImg">'+img+'</div><div class="pCorpo"><div class="pNome">'+esc(p.nome)+'</div>'+pr+'</div></button>';
@@ -973,13 +995,13 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       return '<div class="vazioMod">Este negócio ainda não publicou fotos.</div>';
     }
     const mostra=lista.slice(0,7);
-    let h=mostra.map(u=>'<div class="galItem"><img src="'+esc(u)+'" alt="foto do negócio" loading="lazy" decoding="async" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>').join('');
+    let h=mostra.map(u=>'<div class="galItem">'+fotoInteira(u,'foto do negócio',true)+'</div>').join('');
     if(lista.length>mostra.length)h+='<button class="galMais" type="button" onclick="abrirTodasFotos()">+'+(lista.length-mostra.length)+'<small>ver todas</small></button>';
     return '<div class="galeria">'+h+'</div>';
   }
   window.abrirTodasFotos=function(){
     const lista=(dadosNeg&&liberaFotos())?(dadosNeg.fotos||[]).filter(fotoOk).slice(0,12):[];
-    el('corpoCardapio').innerHTML='<div class="galeria">'+lista.map(u=>'<div class="galItem"><img src="'+esc(u)+'" alt="foto" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>').join('')+'</div>';
+    el('corpoCardapio').innerHTML='<div class="galeria">'+lista.map(u=>'<div class="galItem">'+fotoInteira(u,'foto',true)+'</div>').join('')+'</div>';
     el('folhaCardapio').querySelector('h2').textContent='Fotos';
     abrirFolha('folhaCardapio');
   };
@@ -1046,7 +1068,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     let fotos=[];
     if(mostrarFotos&&Array.isArray(p.fotos))fotos=p.fotos.filter(fotoOk).slice(0,3);
     if(fotos.length){
-      const capa='<div class="fotoCapa"><img src="'+esc(fotos[0])+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" decoding="async" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>';
+      const capa='<div class="fotoCapa">'+fotoInteira(fotos[0],p.nome||'foto',true)+'</div>';
       let mini='';
       if(fotos.length>1){ mini='<div class="miniFotos">'+fotos.map((u,idx)=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" referrerpolicy="no-referrer" class="'+(idx===0?'ativa':'')+'" onclick="trocarCapa(this)">').join('')+'</div>'; }
       return '<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+'</div>'+mini+'</div>';
@@ -1062,7 +1084,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       const c=o.c;
       const n=(c.produtos||[]).filter(x=>x&&x.nome).length;
       const capa=(mostrarFotosAtual&&fotoOk(c.capa))
-        ?('<img src="'+esc(c.capa)+'" alt="'+esc(c.categoria||'')+'" loading="lazy" decoding="async" referrerpolicy="no-referrer">')
+        ?fotoInteira(c.capa,c.categoria||'',false)
         :('<div class="catSemFoto"><img src="/icones-premium/cardapio.png" alt="" loading="lazy" onerror="this.style.display=\'none\'"></div>');
       h+='<button class="catCard" type="button" onclick="abrirCategoria('+o.i+')"><div class="catCardTop"><span class="catCardNome">'+esc(c.categoria||'Itens')+'</span><span class="catCardQtd">'+n+(n===1?' item':' itens')+'</span></div><div class="catCardImg">'+capa+'</div></button>';
     });
@@ -1147,7 +1169,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       .filter(o=>!filtro||o.l.nome.toLowerCase().indexOf(filtro)>=0)
       .map(o=>{
         const l=o.l,i=o.i;
-        const foto=l.foto?('<div class="uFoto"><img src="'+esc(l.foto)+'" alt="" loading="lazy" referrerpolicy="no-referrer"></div>'):'';
+        const foto=l.foto?('<div class="uFoto">'+fotoInteira(l.foto,'',false)+'</div>'):'';
         const km=(l.km!=null)?('<div class="linha">'+IC.pino+'<span>a '+fmtKm(l.km)+' de você</span></div>'):'';
         const hor=l.horario?('<div class="linha">'+IC.relogio+'<span>'+esc(l.horario)+'</span></div>'):'';
         const perto=(i===maisPerto&&locais.length>1)?'<span class="maisPerto">mais perto</span>':'';
@@ -1306,7 +1328,10 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   }
 
   /* ============ fotos ============ */
-  window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;var capa=card.querySelector('.fotoCapa img');if(capa)capa.src=mini.src;card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
+  window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;
+    var capa=card.querySelector('.fotoCapa img:not(.mvFundo)');if(capa)capa.src=mini.src;
+    var fundo=card.querySelector('.fotoCapa img.mvFundo');if(fundo)fundo.src=mini.src;
+    card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
   window.abrirFoto=function(src){var lb=el('lb');if(!lb||!src)return;lb.querySelector('img').src=src;lb.classList.add('on');};
   window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
 
