@@ -188,6 +188,35 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   .promoDest .badge,.promoDest h3,.promoDest .preco,.promoDest .val,.btnPromo{grid-column:1;}
 }
 
+/* ---------- EVENTO EM DESTAQUE (home) — 31/08/2026 ----------
+   Roxo de proposito: a promocao ja e laranja e a marca e ciano. Roxo/violeta
+   nao briga com nenhum dos dois, ja existe na paleta do painel (#b57bff nas
+   cores de categoria) e e a cor que o mercado associa a agenda/evento.
+   O flyer aparece INTEIRO (mesma moldura .midiaCapa do bloco de eventos) —
+   flyer de evento e quase sempre em pe e traz nome, data e local escritos na
+   propria arte. Cortar ele aqui apagaria justamente a informacao. */
+.eventoDest{position:relative;overflow:hidden;border-radius:var(--mv-r-lg);border:1px solid rgba(168,85,247,.42);
+  background:radial-gradient(120% 130% at 100% 0%,rgba(168,85,247,.24),transparent 58%),linear-gradient(150deg,#1b1030,#130e1e 60%,#0d1524);
+  padding:15px;}
+.eventoDest .badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#a855f7,#6d28d9);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.7px;padding:5px 11px;border-radius:var(--mv-r-pill);text-transform:uppercase;}
+.eventoDest .badge svg{width:13px;height:13px;}
+.eventoDest h3{font-size:20px;font-weight:700;margin-top:11px;line-height:1.22;overflow-wrap:anywhere;}
+.eventoDest .quando{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#d6b4ff;margin-top:7px;overflow-wrap:anywhere;}
+.eventoDest .quando svg{width:15px;height:15px;flex:0 0 auto;}
+.eventoDest .onde{display:flex;align-items:flex-start;gap:6px;font-size:13px;color:var(--mv-txt-3);margin-top:6px;overflow-wrap:anywhere;}
+.eventoDest .onde svg{width:14px;height:14px;flex:0 0 auto;margin-top:2px;}
+.eventoDest .eImg{margin-top:13px;border-radius:var(--mv-r);overflow:hidden;border:1px solid rgba(168,85,247,.28);}
+.eventoDest .eImg .midiaCapa{max-height:none;}
+/* a moldura .midiaCapa limita a ALTURA no proprio <img>; se so o container
+   fosse limitado, o flyer estouraria e seria cortado embaixo (o overflow do
+   container e hidden) — foi o que aconteceu na 1a montagem deste card. */
+.eventoDest .eImg .midiaCapa img:not(.capaFundo){max-height:min(58vh,420px);}
+.eventoDest.soFlyer .badgeFlutua{position:absolute;top:23px;left:23px;z-index:3;box-shadow:0 6px 18px rgba(0,0,0,.55);}
+.eventoDest.soFlyer .eImg{margin-top:0;}
+.btnEvento{margin-top:13px;background:transparent;border:1px solid rgba(168,85,247,.7);color:#c9a2ff;font-weight:600;font-size:13.5px;padding:9px 17px;border-radius:var(--mv-r-pill);cursor:pointer;transition:.18s;}
+.btnEvento:hover{background:rgba(168,85,247,.16);}
+@media(min-width:620px){.eventoDest{padding:20px;}}
+
 /* ---------- DESTAQUES DO CARDÁPIO ---------- */
 .pCard{flex:0 0 auto;width:160px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;text-align:left;cursor:pointer;padding:0;scroll-snap-align:start;transition:.18s;}
 .pCard:hover{border-color:var(--ciano);transform:translateY(-2px);}
@@ -524,6 +553,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   <!-- ======================= PROMOÇÃO EM DESTAQUE ======================= -->
   <section class="sec escondido" id="secPromo"></section>
 
+  <!-- ======================= EVENTO EM DESTAQUE ======================= -->
+  <section class="sec escondido" id="secEvento"></section>
+
   <!-- ======================= DESTAQUES DO CARDÁPIO ======================= -->
   <section class="sec escondido" id="secDestaques">
     <div class="secTit">
@@ -684,7 +716,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-31-capapropria';
+  window.MOVIKI_VERSAO='2026-08-31-evento-destaque';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -902,9 +934,22 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     }).join('');
   }
 
+  /* 31/08/2026 — FIM DO FILTRO POR TITULO.
+     A pagina inteira exigia `titulo` pra considerar que a promocao/evento
+     existe. Evento cadastrado so com o flyer sumia da pagina publica mesmo
+     estando no banco. Agora vale QUALQUER conteudo: titulo, quando, detalhe
+     ou imagem. Um bloco 100% vazio continua fora — la nao ha o que mostrar. */
+  function temAlgo(x){
+    if(!x)return false;
+    return !!(String(x.titulo||'').trim() || String(x.quando||'').trim()
+           || String(x.detalhe||'').trim() || fotoOk(x.capa));
+  }
+  function listaPromos(d){ return liberaConteudo()?(((d&&d.promocoes)||[]).filter(temAlgo)):[]; }
+  function listaEventos(d){ return liberaConteudo()?(((d&&d.eventos)||[]).filter(temAlgo)):[]; }
+
   function montarPromo(d){
     const sec=el('secPromo');
-    const promos=liberaConteudo()?((d.promocoes||[]).filter(p=>p&&p.titulo)):[];
+    const promos=listaPromos(d);
     if(!promos.length){
       if(demoOn&&liberaConteudo()){ sec.classList.remove('escondido'); sec.innerHTML=blocoPromo({titulo:'Prato executivo + refrigerante',detalhe:'por R$ 24,90 · válido até o fim do mês'},true); }
       else sec.classList.add('escondido');
@@ -927,16 +972,59 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     return {preco:mp?mp[0].replace(/^por\s*/i,'').trim():'', val:mv?mv[0].trim():'', resto:resto};
   }
   function blocoPromo(p,demo){
-    const capa=(!demo&&fotoOk(p.capa)&&liberaFotos())?('<div class="pImg">'+fotoInteira(p.capa,p.titulo,true)+'</div>'):
+    const capa=(!demo&&fotoOk(p.capa)&&liberaFotos())?('<div class="pImg">'+fotoInteira(p.capa,p.titulo||'Promoção',true)+'</div>'):
       (demo?'<div class="pImg demoFoto" style="height:150px">'+IC.fotos+'</div>':'');
     const f=fatiarDetalhe(p.detalhe);
     const linhaPreco=f.preco?('<div class="preco">por <b>'+esc(f.preco)+'</b></div>'):'';
     const linhaResto=(!f.preco&&f.resto)?('<div class="preco">'+esc(f.resto)+'</div>'):(f.preco&&f.resto?('<div class="preco" style="font-size:13.5px;color:var(--mv-txt-3)">'+esc(f.resto)+'</div>'):'');
     const linhaVal=f.val?('<div class="val">'+IC.relogio+'<span>'+esc(f.val)+'</span></div>'):'';
+    const _tit=String(p.titulo||'').trim();
     return '<div class="promoDest'+(demo?' ehDemo demoBloco':'')+'">'+
       '<span class="badge">'+IC.fogo+'Promoção</span>'+
-      '<h3>'+esc(p.titulo)+'</h3>'+linhaPreco+linhaResto+linhaVal+capa+
+      (_tit?'<h3>'+esc(_tit)+'</h3>':'')+linhaPreco+linhaResto+linhaVal+capa+
       '<button class="btnPromo" type="button" onclick="irParaAba(\'promocoes\')">Ver promoção</button></div>';
+  }
+
+  /* ---- EVENTO EM DESTAQUE na home (31/08/2026) ----
+     Card proprio, roxo, LOGO ABAIXO da promocao. Mostra o proximo evento
+     cadastrado. Se o evento tiver so o flyer, o card VIRA o flyer: a arte ja
+     carrega nome, data e local escritos, entao inventar texto em volta so
+     roubaria espaco dela. */
+  function montarEvento(d){
+    const sec=el('secEvento');
+    const evs=listaEventos(d);
+    if(!evs.length){
+      if(demoOn&&liberaConteudo()){
+        sec.classList.remove('escondido');
+        sec.innerHTML=blocoEvento({titulo:'Feira da praça central',quando:'Sáb 06/09 às 20h',detalhe:'Praça Central — em frente ao coreto'},true);
+      } else sec.classList.add('escondido');
+      return;
+    }
+    sec.classList.remove('escondido');
+    sec.innerHTML=blocoEvento(evs[0],false);
+  }
+  function blocoEvento(e,demo){
+    const tit=String(e.titulo||'').trim();
+    const quando=String(e.quando||'').trim();
+    const onde=String(e.detalhe||'').trim();
+    const temCapa=!demo&&liberaFotos()&&fotoOk(e.capa);
+    const semTexto=!tit&&!quando&&!onde;
+
+    const badge='<span class="badge'+(temCapa&&semTexto?' badgeFlutua':'')+'">'+IC.eventos+'Evento</span>';
+    const img=temCapa
+      ? ('<div class="eImg"><div class="midiaCapa">'
+         +'<img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer">'
+         +'<img src="'+esc(e.capa)+'" alt="'+esc(tit||'Evento')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)">'
+         +'</div></div>')
+      : (demo?'<div class="eImg demoFoto" style="height:150px">'+IC.eventos+'</div>':'');
+
+    const txt=(tit?'<h3>'+esc(tit)+'</h3>':'')
+      +(quando?'<div class="quando">'+IC.relogio+'<span>'+esc(quando)+'</span></div>':'')
+      +(onde?'<div class="onde">'+IC.pino+'<span>'+esc(onde)+'</span></div>':'');
+
+    return '<div class="eventoDest'+(temCapa&&semTexto?' soFlyer':'')+(demo?' ehDemo demoBloco':'')+'">'
+      +badge+txt+img
+      +'<button class="btnEvento" type="button" onclick="irParaAba(\'eventos\')">Ver evento</button></div>';
   }
 
   function montarDestaques(d){
@@ -967,8 +1055,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   /* ---- abas de baixo ---- */
   function montarAbas(d){
     const fotos=(liberaFotos()?((d.fotos||[]).filter(fotoOk)):[]);
-    const promos=liberaConteudo()?((d.promocoes||[]).filter(p=>p&&p.titulo)):[];
-    const eventos=liberaConteudo()?((d.eventos||[]).filter(e=>e&&e.titulo)):[];
+    const promos=listaPromos(d);
+    const eventos=listaEventos(d);
     const abas=[];
     if(fotos.length||demoOn)abas.push({k:'fotos',lb:'Fotos',ic:IC.fotos,n:fotos.length});
     abas.push({k:'avaliacoes',lb:'Avaliações',ic:IC.avaliacoes,n:qtdCache});
@@ -984,7 +1072,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(abaAtiva==='fotos')       box.innerHTML=htmlGaleria((d.fotos||[]).filter(fotoOk));
     else if(abaAtiva==='avaliacoes') box.innerHTML=htmlAvaliacoes();
     else if(abaAtiva==='promocoes')  box.innerHTML=htmlPromos((d.promocoes||[]).filter(p=>p&&p.titulo));
-    else if(abaAtiva==='eventos')    box.innerHTML=htmlEventos((d.eventos||[]).filter(e=>e&&e.titulo));
+    else if(abaAtiva==='eventos')    box.innerHTML=htmlEventos(listaEventos(d));
     else box.innerHTML=htmlInfo(d);
   }
   window.irParaAba=function(k){
@@ -1051,9 +1139,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(!promos.length)return '<div class="vazioMod">Sem promoções agora.</div>';
     return promos.map(p=>{
       const temCapa=liberaFotos()&&fotoOk(p.capa);
-      const info='<div class="midiaInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div>';
+      /* sem titulo nao se pinta uma linha de texto vazia; e se nao houver
+         texto NENHUM, o bloco inteiro de informacao sai — sobra so a arte. */
+      const _t=String(p.titulo||'').trim(), _d=String(p.detalhe||'').trim();
+      const info=(_t||_d)?('<div class="midiaInfo">'+(_t?'<div class="t">'+esc(_t)+'</div>':'')+(_d?'<div class="d">'+esc(_d)+'</div>':'')+'</div>'):'';
       return temCapa
-        ? '<div class="promoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(p.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo)+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
+        ? '<div class="promoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(p.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(p.capa)+'" alt="'+esc(_t||'Promoção')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
         : '<div class="promoBox">'+info+'</div>';
     }).join('');
   }
@@ -1061,9 +1152,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(!evs.length)return '<div class="vazioMod">Sem eventos agora.</div>';
     return evs.map(e=>{
       const temCapa=liberaFotos()&&fotoOk(e.capa);
-      const info='<div class="midiaInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>';
+      const _t=String(e.titulo||'').trim(), _q=String(e.quando||'').trim(), _d=String(e.detalhe||'').trim();
+      const info=(_t||_q||_d)?('<div class="midiaInfo">'+(_t?'<div class="t">'+esc(_t)+'</div>':'')+(_q?'<div class="q">'+esc(_q)+'</div>':'')+(_d?'<div class="d">'+esc(_d)+'</div>':'')+'</div>'):'';
       return temCapa
-        ? '<div class="eventoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(e.capa)+'" alt="'+esc(e.titulo)+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
+        ? '<div class="eventoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(e.capa)+'" alt="'+esc(_t||'Evento')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
         : '<div class="eventoBox">'+info+'</div>';
     }).join('');
   }
@@ -1224,7 +1316,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const its=[{k:'mapa',lb:'Mapa',ic:IC.mapa}];
     const temCard=liberaConteudo()&&(d.cardapio||[]).some(c=>c&&c.produtos&&c.produtos.length);
     const temPromo=liberaConteudo()&&(d.promocoes||[]).some(p=>p&&p.titulo);
-    const temEv=liberaConteudo()&&(d.eventos||[]).some(e=>e&&e.titulo);
+    const temEv=listaEventos(d).length>0;
     const temFotos=liberaFotos()&&(d.fotos||[]).filter(fotoOk).length>0;
     if(temCard)its.push({k:'cardapio',lb:'Cardápio',ic:IC.cardapio});
     if(temPromo)its.push({k:'promocoes',lb:'Promoções',ic:IC.promocoes});
@@ -1393,7 +1485,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     else el('subNeg').classList.add('escondido');
     atualizarBtnWpp();
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
-    montarRapidos(d); montarUnidades(); montarPromo(d); montarDestaques(d); montarAbas(d); montarTabbar(d); pintarFav();
+    montarRapidos(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarAbas(d); montarTabbar(d); pintarFav();
     if(demoOn)el('demoAviso').classList.remove('escondido');
   }
   /* WhatsApp por unidade (27/08/2026). Cada ponto Enterprise pode ter o proprio
