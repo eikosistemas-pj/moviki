@@ -435,11 +435,40 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 .mavBox input,.mavBox textarea{width:100%;background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:11px;padding:11px 13px;color:var(--mv-txt);font-size:14px;margin-bottom:11px;resize:vertical;}
 .mavEnviar{width:100%;background:var(--mv-grad);color:#04121f;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:15px;cursor:pointer;}
 .mavAviso{text-align:center;font-size:13px;margin-top:10px;min-height:16px;color:var(--mv-txt-3);}
-.lb{position:fixed;inset:0;z-index:1900;background:rgba(3,8,16,.93);display:none;align-items:center;justify-content:center;padding:20px;}
+/* ---------- VISOR DE FOTOS (31/08/2026) ----------
+   Antes era so uma imagem ampliada: pra ver a proxima foto o cliente tinha que
+   fechar, voltar na grade e clicar de novo. Agora ele DESLIZA pro lado (ou usa
+   as setas / o teclado) e as fotos vao passando, como em qualquer galeria de
+   celular. O grupo de fotos e descoberto a partir da que foi clicada. */
+.lb{position:fixed;inset:0;z-index:1900;background:rgba(3,8,16,.95);display:none;align-items:center;justify-content:center;padding:20px;touch-action:pan-y;}
 .lb.on{display:flex;}
-.lb img{max-width:100%;max-height:88vh;border-radius:var(--mv-r);}
-.lbX{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;background:rgba(19,38,61,.9);border:1px solid var(--mv-linha);color:var(--mv-txt);width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lb img{max-width:100%;max-height:82vh;border-radius:var(--mv-r);
+  -webkit-user-select:none;user-select:none;-webkit-user-drag:none;
+  transition:transform .22s cubic-bezier(.22,.9,.3,1),opacity .18s;}
+.lb img.desliza{transition:none;}
+.lbX{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;background:rgba(19,38,61,.9);border:1px solid var(--mv-linha);color:var(--mv-txt);width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;}
 .lbX svg{width:16px;height:16px;}
+/* setas: alvo grande (48px) porque no celular o dedo erra alvo pequeno */
+.lbSeta{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:48px;height:48px;border-radius:50%;cursor:pointer;
+  background:rgba(10,22,38,.78);border:1px solid rgba(255,255,255,.18);color:#eaf6ff;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:.16s;}
+.lbSeta:hover{background:rgba(16,34,58,.92);border-color:var(--ciano);color:var(--ciano);}
+.lbSeta svg{width:22px;height:22px;}
+.lbSeta.ant{left:10px;} .lbSeta.prox{right:10px;}
+@media(min-width:760px){.lbSeta.ant{left:26px;} .lbSeta.prox{right:26px;}}
+/* uma foto so: nao existe pra onde ir, entao setas e contador somem */
+.lb.unica .lbSeta,.lb.unica .lbConta,.lb.unica .lbPontos{display:none;}
+.lbConta{position:absolute;top:calc(20px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:3;
+  background:rgba(10,22,38,.78);border:1px solid rgba(255,255,255,.16);color:#eaf6ff;
+  font-size:12.5px;font-weight:700;letter-spacing:.4px;padding:6px 13px;border-radius:var(--mv-r-pill);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+.lbPontos{position:absolute;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom));z-index:3;
+  display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap;padding:0 20px;}
+.lbPontos i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.32);cursor:pointer;transition:.16s;}
+.lbPontos i.on{background:var(--ciano);box-shadow:0 0 10px rgba(0,212,255,.8);transform:scale(1.35);}
+@media(prefers-reduced-motion:reduce){.lb img{transition:none;}}
 
 /* ---------- MODO DEMONSTRAÇÃO (?demo=1) ---------- */
 .demoAviso{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,102,255,.10));border:1px solid rgba(0,212,255,.38);border-radius:var(--mv-r);padding:11px 13px;margin:14px 14px 0;font-size:12.5px;color:var(--mv-txt-2);}
@@ -696,11 +725,19 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   </div>
 </div>
 
-<div class="lb" id="lb" onclick="fecharFoto()">
+<div class="lb" id="lb" onclick="lbFundo(event)">
   <button class="lbX" type="button" onclick="fecharFoto()" aria-label="Fechar">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
-  <img src="" alt="foto ampliada">
+  <span class="lbConta" id="lbConta"></span>
+  <button class="lbSeta ant" id="lbAnt" type="button" onclick="lbIr(-1,event)" aria-label="Foto anterior">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <img id="lbImg" src="" alt="foto ampliada">
+  <button class="lbSeta prox" id="lbProx" type="button" onclick="lbIr(1,event)" aria-label="Próxima foto">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <div class="lbPontos" id="lbPontos"></div>
 </div>
 
 <script type="module">
@@ -716,7 +753,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-31-evento-destaque';
+  window.MOVIKI_VERSAO='2026-08-31-visor-fotos';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -811,7 +848,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function fotoInteira(url,alt,clicavel){
     const u=esc(url);
     return '<img class="mvFundo" src="'+u+'" alt="" aria-hidden="true" loading="lazy" decoding="async" referrerpolicy="no-referrer">'+
-      '<img src="'+u+'" alt="'+esc(alt||'')+'" loading="lazy" decoding="async" referrerpolicy="no-referrer"'+(clicavel?' onclick="abrirFoto(this.src)"':'')+'>';
+      '<img src="'+u+'" alt="'+esc(alt||'')+'" loading="lazy" decoding="async" referrerpolicy="no-referrer"'+(clicavel?' onclick="abrirFoto(this)"':'')+'>';
   }
   function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
   function fmtPreco(v){var s=String(v==null?'':v).trim();if(!s)return '';var t=s.replace(/^R\$\s*/i,'').trim();if(/^\d{1,5}([.,]\d{1,2})?$/.test(t)){var n=parseFloat(t.replace(',','.'));if(!isNaN(n))return 'R$ '+n.toFixed(2).replace('.',',');}return 'R$ '+t;}
@@ -1014,7 +1051,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const img=temCapa
       ? ('<div class="eImg"><div class="midiaCapa">'
          +'<img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer">'
-         +'<img src="'+esc(e.capa)+'" alt="'+esc(tit||'Evento')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)">'
+         +'<img src="'+esc(e.capa)+'" alt="'+esc(tit||'Evento')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this)">'
          +'</div></div>')
       : (demo?'<div class="eImg demoFoto" style="height:150px">'+IC.eventos+'</div>':'');
 
@@ -1144,7 +1181,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       const _t=String(p.titulo||'').trim(), _d=String(p.detalhe||'').trim();
       const info=(_t||_d)?('<div class="midiaInfo">'+(_t?'<div class="t">'+esc(_t)+'</div>':'')+(_d?'<div class="d">'+esc(_d)+'</div>':'')+'</div>'):'';
       return temCapa
-        ? '<div class="promoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(p.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(p.capa)+'" alt="'+esc(_t||'Promoção')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
+        ? '<div class="promoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(p.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(p.capa)+'" alt="'+esc(_t||'Promoção')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this)"></div>'+info+'</div>'
         : '<div class="promoBox">'+info+'</div>';
     }).join('');
   }
@@ -1155,7 +1192,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       const _t=String(e.titulo||'').trim(), _q=String(e.quando||'').trim(), _d=String(e.detalhe||'').trim();
       const info=(_t||_q||_d)?('<div class="midiaInfo">'+(_t?'<div class="t">'+esc(_t)+'</div>':'')+(_q?'<div class="q">'+esc(_q)+'</div>':'')+(_d?'<div class="d">'+esc(_d)+'</div>':'')+'</div>'):'';
       return temCapa
-        ? '<div class="eventoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(e.capa)+'" alt="'+esc(_t||'Evento')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
+        ? '<div class="eventoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(e.capa)+'" alt="'+esc(_t||'Evento')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this)"></div>'+info+'</div>'
         : '<div class="eventoBox">'+info+'</div>';
     }).join('');
   }
@@ -1432,8 +1469,116 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     var capa=card.querySelector('.fotoCapa img:not(.mvFundo)');if(capa)capa.src=mini.src;
     var fundo=card.querySelector('.fotoCapa img.mvFundo');if(fundo)fundo.src=mini.src;
     card.querySelectorAll('.miniFotos img').forEach(function(m){m.classList.toggle('ativa',m===mini);});};
-  window.abrirFoto=function(src){var lb=el('lb');if(!lb||!src)return;lb.querySelector('img').src=src;lb.classList.add('on');};
-  window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');};
+  /* ---------------------------------------------------------------------
+     VISOR DE FOTOS COM NAVEGAÇÃO — 31/08/2026
+     `abrirFoto` passou a aceitar o PRÓPRIO <img> clicado (não só a url), e a
+     partir dele descobre com quais outras fotos aquela anda junto:
+       - dentro da galeria  -> todas as fotos da galeria
+       - dentro de um produto -> as fotos daquele produto (as miniaturas)
+       - fora disso (capa de promoção/evento) -> só ela mesma
+     Continua aceitando uma string, pra não quebrar nenhuma chamada antiga.
+     --------------------------------------------------------------------- */
+  var _lbFotos=[], _lbI=0;
+  function lbGrupo(no){
+    if(!no||!no.closest) return [];
+    var g=no.closest('.galeria');
+    if(g) return Array.prototype.slice.call(g.querySelectorAll('.galItem img:not(.mvFundo)')).map(function(i){return i.src;});
+    var it=no.closest('.itemPub');
+    if(it){
+      var m=Array.prototype.slice.call(it.querySelectorAll('.miniFotos img')).map(function(i){return i.src;});
+      if(m.length) return m;
+    }
+    return [];
+  }
+  function lbPinta(){
+    var im=el('lbImg'), lb=el('lb');
+    if(!im||!lb||!_lbFotos.length)return;
+    if(_lbI<0)_lbI=_lbFotos.length-1;
+    if(_lbI>=_lbFotos.length)_lbI=0;
+    im.src=_lbFotos[_lbI];
+    im.style.transform='';
+    lb.classList.toggle('unica',_lbFotos.length<2);
+    var c=el('lbConta'); if(c)c.textContent=(_lbI+1)+' / '+_lbFotos.length;
+    var pts=el('lbPontos');
+    if(pts){
+      pts.innerHTML='';
+      if(_lbFotos.length>1&&_lbFotos.length<=12){
+        for(var k=0;k<_lbFotos.length;k++){
+          var b=document.createElement('i');
+          if(k===_lbI)b.className='on';
+          b.setAttribute('data-i',k);
+          pts.appendChild(b);
+        }
+      }
+    }
+  }
+  window.lbIr=function(passo,ev){
+    if(ev&&ev.stopPropagation)ev.stopPropagation();
+    if(_lbFotos.length<2)return;
+    _lbI+=passo; lbPinta();
+  };
+  /* clique no fundo fecha; clique na foto NÃO — senão passar a foto no
+     desktop fecharia o visor sem querer. */
+  window.lbFundo=function(ev){
+    if(!ev||!ev.target)return fecharFoto();
+    if(ev.target.id==='lb') fecharFoto();
+  };
+  window.abrirFoto=function(alvo){
+    var lb=el('lb'), im=el('lbImg'); if(!lb||!im||!alvo)return;
+    var src=(typeof alvo==='string')?alvo:alvo.src;
+    if(!src)return;
+    var grupo=(typeof alvo==='string')?[]:lbGrupo(alvo);
+    _lbFotos=grupo.length?grupo:[src];
+    _lbI=_lbFotos.indexOf(src); if(_lbI<0)_lbI=0;
+    lbPinta();
+    lb.classList.add('on');
+    document.body.style.overflow='hidden';   /* a pagina nao rola por tras */
+  };
+  window.fecharFoto=function(){var lb=el('lb');if(lb)lb.classList.remove('on');document.body.style.overflow='';};
+
+  /* ---- deslizar com o dedo, ponto do rodapé e teclado ---- */
+  (function lbGestos(){
+    var lb=el('lb'), im=el('lbImg'); if(!lb||!im)return;
+    var x0=0,y0=0,dx=0,arrastando=false;
+    im.addEventListener('pointerdown',function(e){
+      if(_lbFotos.length<2)return;
+      arrastando=true; dx=0; x0=e.clientX; y0=e.clientY;
+      im.classList.add('desliza');
+      try{im.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    im.addEventListener('pointermove',function(e){
+      if(!arrastando)return;
+      dx=e.clientX-x0;
+      /* movimento mais vertical que horizontal = o usuario quer rolar, nao passar foto */
+      if(Math.abs(e.clientY-y0)>Math.abs(dx)&&Math.abs(e.clientY-y0)>18){arrastando=false;im.classList.remove('desliza');im.style.transform='';return;}
+      im.style.transform='translateX('+dx+'px)';
+    });
+    ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+      im.addEventListener(ev,function(){
+        if(!arrastando)return;
+        arrastando=false; im.classList.remove('desliza');
+        var limite=Math.max(45,Math.min(110,(lb.clientWidth||360)*0.16));
+        if(dx<=-limite) lbIr(1);
+        else if(dx>=limite) lbIr(-1);
+        else im.style.transform='';
+        dx=0;
+      });
+    });
+    /* o clique na foto nao pode fechar o visor */
+    im.addEventListener('click',function(e){e.stopPropagation();});
+    var pts=el('lbPontos');
+    if(pts)pts.addEventListener('click',function(e){
+      e.stopPropagation();
+      var i=e.target&&e.target.getAttribute&&e.target.getAttribute('data-i');
+      if(i!==null&&i!==undefined&&i!==''){_lbI=Number(i);lbPinta();}
+    });
+    document.addEventListener('keydown',function(e){
+      if(!lb.classList.contains('on'))return;
+      if(e.key==='ArrowLeft'){e.preventDefault();lbIr(-1);}
+      else if(e.key==='ArrowRight'){e.preventDefault();lbIr(1);}
+      else if(e.key==='Escape'){fecharFoto();}
+    });
+  })();
 
   /* ============ localização do visitante ============ */
   function usarPosicao(p){
