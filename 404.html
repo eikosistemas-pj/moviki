@@ -345,8 +345,17 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .miniFotos img.ativa{opacity:1;border-color:var(--ciano);}
 .promoBox,.eventoBox{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;margin-bottom:11px;}
 .promoBox{border-color:rgba(255,138,0,.32);}
-.midiaCapa{height:180px;background:var(--mv-campo);}
-.midiaCapa img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;}
+/* Capa de promoção/evento — 31/08/2026.
+   ANTES: height:180px + object-fit:cover. Flyer de evento costuma ser EM PÉ
+   (4:5, 9:16, print de story) — o corte comia data, endereço e preço, que é
+   justamente o que o cliente precisa ler. AGORA a imagem aparece INTEIRA,
+   proporcional, e a sobra das laterais é preenchida pela própria imagem
+   desfocada (mesma URL, sem requisição nova). Continua clicável pra ampliar. */
+.midiaCapa{position:relative;background:var(--mv-campo);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.midiaCapa img{position:relative;z-index:1;display:block;max-width:100%;width:auto;height:auto;
+  max-height:min(70vh,520px);object-fit:contain;cursor:zoom-in;}
+.midiaCapa img.capaFundo{position:absolute;inset:0;z-index:0;width:100%;height:100%;max-width:none;max-height:none;
+  object-fit:cover;filter:blur(22px) brightness(.45);transform:scale(1.15);cursor:default;pointer-events:none;}
 .midiaInfo{padding:12px 13px;}
 .midiaInfo .t{font-size:15px;font-weight:600;overflow-wrap:anywhere;}
 .midiaInfo .q{font-size:12.5px;color:var(--ciano);margin-top:4px;}
@@ -659,7 +668,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-28-vik404';
+  window.MOVIKI_VERSAO='2026-08-31-capainteira';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -1014,7 +1023,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       const temCapa=liberaFotos()&&fotoOk(p.capa);
       const info='<div class="midiaInfo"><div class="t">'+esc(p.titulo)+'</div>'+(p.detalhe?'<div class="d">'+esc(p.detalhe)+'</div>':'')+'</div>';
       return temCapa
-        ? '<div class="promoBox"><div class="midiaCapa"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo)+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
+        ? '<div class="promoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(p.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(p.capa)+'" alt="'+esc(p.titulo)+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
         : '<div class="promoBox">'+info+'</div>';
     }).join('');
   }
@@ -1024,7 +1033,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
       const temCapa=liberaFotos()&&fotoOk(e.capa);
       const info='<div class="midiaInfo"><div class="t">'+esc(e.titulo)+'</div>'+(e.quando?'<div class="q">'+esc(e.quando)+'</div>':'')+(e.detalhe?'<div class="d">'+esc(e.detalhe)+'</div>':'')+'</div>';
       return temCapa
-        ? '<div class="eventoBox"><div class="midiaCapa"><img src="'+esc(e.capa)+'" alt="'+esc(e.titulo)+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
+        ? '<div class="eventoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(e.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(e.capa)+'" alt="'+esc(e.titulo)+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this.src)"></div>'+info+'</div>'
         : '<div class="eventoBox">'+info+'</div>';
     }).join('');
   }
