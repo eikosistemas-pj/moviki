@@ -239,21 +239,30 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .ondeTopo{display:flex;align-items:flex-start;gap:10px;justify-content:space-between;flex-wrap:wrap;}
 .endLinha{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;color:var(--mv-txt-2);}
 .endLinha svg{width:16px;height:16px;color:var(--mv-ok);flex:0 0 auto;margin-top:2px;}
-.mapaBox{position:relative;height:230px;border-radius:var(--mv-r);overflow:hidden;border:1px solid var(--mv-linha);margin-top:12px;background:#0b1a2e;}
+/* Mapa da home — 01/09/2026.
+   O mapa pequeno virou PRÉVIA: não arrasta, não dá zoom, não pede dois dedos.
+   Tocar em qualquer ponto dele abre o mapa completo, e é lá que o cliente
+   mexe à vontade. Era o aviso "use dois dedos pra aproximar" que denunciava o
+   problema: se precisa de instrução, a interação está errada. */
+.mapaBox{position:relative;height:230px;border-radius:var(--mv-r);overflow:hidden;border:1px solid var(--mv-linha);margin-top:12px;background:#0b1a2e;cursor:pointer;}
+.mapaBox:hover{border-color:rgba(0,212,255,.45);}
 #map{position:absolute;inset:0;}
-.mapHint{position:absolute;left:10px;bottom:10px;z-index:500;background:rgba(8,17,30,.78);backdrop-filter:blur(6px);color:#cfe0f5;font-size:11px;padding:5px 10px;border-radius:var(--mv-r-pill);border:1px solid var(--mv-linha);pointer-events:none;}
+/* capa invisível por cima da prévia: engole arrasto e pinça e abre o mapa cheio */
+.mapCapa{position:absolute;left:0;top:0;width:100%;height:100%;z-index:550;cursor:pointer;background:transparent;border:none;padding:0;margin:0;appearance:none;-webkit-appearance:none;}
+/* botão "Ver mapa completo" DENTRO do mapa */
+.mapAbrir{position:absolute;left:10px;bottom:10px;z-index:600;display:inline-flex;align-items:center;gap:7px;
+  background:rgba(10,22,38,.88);border:1px solid var(--mv-linha-forte);color:var(--ciano);
+  font-family:inherit;font-weight:700;font-size:12.5px;padding:9px 14px;border-radius:var(--mv-r-pill);cursor:pointer;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:.18s;}
+.mapAbrir:hover{border-color:var(--ciano);background:rgba(16,34,58,.95);}
+.mapAbrir svg{width:15px;height:15px;flex:0 0 auto;}
 .mapBtns{position:absolute;right:10px;top:10px;z-index:600;display:flex;flex-direction:column;gap:8px;}
 .mapBtn{width:38px;height:38px;border-radius:50%;background:rgba(11,23,40,.92);border:1px solid var(--mv-linha-forte);color:var(--ciano);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:.18s;}
 .mapBtn:hover{border-color:var(--ciano);}
 .mapBtn svg{width:18px;height:18px;}
-.ondeAcoes{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
-@media(min-width:440px){.btnLinha{flex:1 1 0;}}
-.btnLinha{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:1 1 100%;min-width:0;background:var(--mv-campo);border:1px solid var(--mv-linha-forte);color:var(--ciano);font-weight:600;font-size:13.5px;padding:11px 12px;border-radius:var(--mv-r);cursor:pointer;text-decoration:none;transition:.18s;}
-.btnLinha:hover{border-color:var(--ciano);background:#12233c;}
-.btnLinha svg{width:16px;height:16px;flex:0 0 auto;}
 @media(min-width:860px){
   .ondeBox{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px;align-items:start;}
-  .ondeBox .mapaBox{margin-top:0;grid-row:1/span 3;grid-column:2;height:100%;min-height:250px;}
+  .ondeBox .mapaBox{margin-top:0;grid-row:1/-1;grid-column:2;height:100%;min-height:250px;}
 }
 
 /* ---------- ABAS ---------- */
@@ -487,6 +496,15 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 .leaflet-popup-tip{background:var(--mv-surf)!important;}
 .leaflet-popup-content{margin:10px 13px!important;font-size:13px!important;}
 .leaflet-container a.leaflet-popup-close-button{color:var(--mv-txt-3)!important;}
+/* balão do pino: nome + botão "Como chegar" (01/09/2026) */
+.popNeg{min-width:150px;}
+.popNeg b{display:block;font-size:14px;color:var(--mv-txt);line-height:1.25;}
+.popNeg .popSub{display:block;font-size:12px;color:var(--mv-txt-3);margin-top:3px;line-height:1.4;}
+.popRota{display:flex!important;align-items:center;justify-content:center;gap:7px;margin-top:10px;
+  background:linear-gradient(135deg,#25e39b,#0aa2ff);color:#03251a!important;font-weight:800;font-size:13px;
+  padding:10px 14px;border-radius:var(--mv-r-pill);text-decoration:none!important;white-space:nowrap;}
+.popRota:hover{filter:brightness(1.06);}
+.popRota svg{width:15px;height:15px;flex:0 0 auto;}
 .pin{filter:drop-shadow(0 0 6px rgba(0,212,255,.6));}
 .plWrap{position:relative;width:46px;height:46px;}
 .plImg{width:46px;height:46px;border-radius:50%;object-fit:contain;border:3px solid var(--ciano);background:#0A1524;box-shadow:0 0 8px rgba(0,212,255,.6);display:block;}
@@ -608,22 +626,18 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       </div>
       <div class="mapaBox">
         <div id="map"></div>
-        <div class="mapHint">use dois dedos pra aproximar</div>
+        <!-- a capa fica ACIMA do mapa e abaixo dos botões: qualquer toque no
+             mapa abre o mapa completo, em vez de arrastar a prévia -->
+        <button class="mapCapa" type="button" onclick="abrirMapaCheio()" aria-label="Abrir o mapa completo"></button>
+        <button class="mapAbrir" type="button" onclick="abrirMapaCheio()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>
+          Ver mapa completo
+        </button>
         <div class="mapBtns">
-          <button class="mapBtn" type="button" onclick="localizarme()" aria-label="Ver minha localização">
+          <button class="mapBtn" type="button" onclick="event.stopPropagation();localizarme()" aria-label="Ver minha localização">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
           </button>
         </div>
-      </div>
-      <div class="ondeAcoes">
-        <button class="btnLinha" type="button" onclick="abrirMapaCheio()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>
-          Ver no mapa completo
-        </button>
-        <a class="btnLinha escondido" id="btnRota2" href="#" target="_blank" rel="noopener" data-ev="rota">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 2.6a1 1 0 0 0-1.1-.22l-17 7a1 1 0 0 0 .06 1.87l7 2.4 2.4 7a1 1 0 0 0 1.87.06l7-17a1 1 0 0 0-.23-1.11z"/></svg>
-          Como chegar
-        </a>
       </div>
     </div>
   </section>
@@ -753,7 +767,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-08-31-visor-fotos';
+  window.MOVIKI_VERSAO='2026-09-01-mapa';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -869,11 +883,16 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 
   /* ============ mapas (Leaflet) ============ */
   const TILE='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  const map=L.map('map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false}).setView([-8.05,-34.9],13);
-  L.control.zoom({position:'topright'}).addTo(map);
+  /* PRÉVIA, não mapa de trabalho (01/09/2026): sem arrastar, sem pinça, sem
+     roda, sem duplo clique e sem controle de zoom. Tocar abre o mapa completo.
+     Foi assim que a dica "use dois dedos pra aproximar" deixou de ser
+     necessária — ninguém precisa de instrução pra tocar numa imagem. */
+  const map=L.map('map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false,
+    dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false}).setView([-8.05,-34.9],13);
   L.tileLayer(TILE,{maxZoom:19}).addTo(map);
   let mapUnid=null, mapCheio=null, marcador=null, viewerMarker=null, negocioPos=null;
   let camadaUnid=null, camadaCheio=null, camadaMapa=null;
+  let marcadorCheio=null, marcadorEuCheio=null;
 
   function iconePara(d){
     if(liberaLogoPino() && d && d.markerLogo){
@@ -884,6 +903,19 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function iconeNum(n){
     return L.divIcon({className:'pinNum',html:'<div class="pnB"><span>'+n+'</span></div>',iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-28]});
   }
+  /* Balão do pino — 01/09/2026.
+     O cliente toca no pino do lojista e o balão já traz o botão "Como chegar",
+     que abre a navegação. Antes, no mapa completo, tocar no pino não levava a
+     lugar nenhum: pra traçar rota era preciso fechar o mapa e achar o botão
+     lá embaixo do card. */
+  function balaoLocal(nome,sub,lat,lng){
+    const url='https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng;
+    return '<div class="popNeg"><b>'+esc(nome||'Aqui')+'</b>'
+      +(sub?'<span class="popSub">'+esc(sub)+'</span>':'')
+      +'<a class="popRota" href="'+url+'" target="_blank" rel="noopener" data-ev="rota">'
+      +'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 2.6a1 1 0 0 0-1.1-.22l-17 7a1 1 0 0 0 .06 1.87l7 2.4 2.4 7a1 1 0 0 0 1.87.06l7-17a1 1 0 0 0-.23-1.11z"/></svg>'
+      +'Como chegar</a></div>';
+  }
   function desenharTodosPinos(alvo,camadaAnterior){
     if(camadaAnterior){try{alvo.removeLayer(camadaAnterior);}catch(_){}}
     const g=L.layerGroup();
@@ -891,7 +923,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     locais.forEach((l,i)=>{
       if(typeof l.lat!=='number'||typeof l.lng!=='number')return;
       pts.push([l.lat,l.lng]);
-      L.marker([l.lat,l.lng],{icon:iconeNum(i+1)}).bindPopup('<b>'+esc(l.nome)+'</b>'+(l.km!=null?'<br><span style="color:#8fa6c4">a '+fmtKm(l.km)+' de você</span>':'')).addTo(g);
+      L.marker([l.lat,l.lng],{icon:iconeNum(i+1)})
+        .bindPopup(balaoLocal(l.nome,(l.km!=null?'a '+fmtKm(l.km)+' de você':''),l.lat,l.lng),{minWidth:170})
+        .addTo(g);
     });
     g.addTo(alvo);
     if(pts.length===1)alvo.setView(pts[0],16);
@@ -1259,8 +1293,22 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       }
       mapCheio.invalidateSize();
       if(locais.length>1){camadaCheio=desenharTodosPinos(mapCheio,camadaCheio);}
-      else if(negocioPos){L.marker(negocioPos,{icon:iconePara(dadosNeg||{})}).addTo(mapCheio);mapCheio.setView(negocioPos,16);}
-      if(minhaPos)L.circleMarker(minhaPos,{radius:8,color:'#fff',weight:2,fillColor:'#0066FF',fillOpacity:1}).addTo(mapCheio).bindPopup('Você está aqui');
+      else if(negocioPos){
+        /* guardado numa variável: antes um marcador NOVO era criado a cada
+           abertura do mapa e eles iam empilhando no mesmo ponto. */
+        if(!marcadorCheio){
+          marcadorCheio=L.marker(negocioPos,{icon:iconePara(dadosNeg||{})}).addTo(mapCheio);
+        }else{
+          marcadorCheio.setLatLng(negocioPos).setIcon(iconePara(dadosNeg||{}));
+        }
+        marcadorCheio.bindPopup(balaoLocal((dadosNeg&&dadosNeg.nome)||'Aqui',(dadosNeg&&dadosNeg.horario)||'',negocioPos[0],negocioPos[1]),{minWidth:170});
+        mapCheio.setView(negocioPos,16);
+      }
+      if(minhaPos){
+        if(!marcadorEuCheio){
+          marcadorEuCheio=L.circleMarker(minhaPos,{radius:8,color:'#fff',weight:2,fillColor:'#0066FF',fillOpacity:1}).addTo(mapCheio).bindPopup('Você está aqui');
+        }else{ marcadorEuCheio.setLatLng(minhaPos); }
+      }
     },240);
     ev('mapa_cheio',{});
   };
@@ -1652,15 +1700,14 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     negocioPos=[lat,lng];
     const url='https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng;
     el('btnRota').href=url; el('btnRota').classList.remove('escondido');
-    el('btnRota2').href=url; el('btnRota2').classList.remove('escondido');
     if(!marcador){marcador=L.marker(negocioPos,{icon:iconePara(d)}).addTo(map);map.setView(negocioPos,16);setTimeout(()=>map.invalidateSize(),120);}
     else{marcador.setLatLng(negocioPos);marcador.setIcon(iconePara(d));}
-    marcador.bindPopup('<b>'+esc(d.nome||'Negócio')+'</b>'+(d&&d.horario?'<br><span style="font-size:12px;color:#8fa6c4">'+esc(d.horario)+'</span>':''),{autoPan:false});
+    marcador.bindPopup(balaoLocal(d.nome||'Negócio',(d&&d.horario)||'',lat,lng),{autoPan:false,minWidth:170});
     if(locais.length>1){camadaMapa=desenharTodosPinos(map,camadaMapa);}
     if(minhaPos)usarPosicao(minhaPos);
   }
   function semLocal(nome){
-    el('btnRota').classList.add('escondido'); el('btnRota2').classList.add('escondido');
+    el('btnRota').classList.add('escondido');
     mostrarTela(nome||'Negócio','Este negócio ainda não ligou a localização. Volte daqui a pouco.');
   }
 
