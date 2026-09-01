@@ -902,7 +902,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-01-unidades';
+  window.MOVIKI_VERSAO='2026-09-01-evento-auto';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -1273,7 +1273,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       } else { sec.classList.add('escondido'); return; }
     }
     sec.classList.remove('escondido');
-    _evLista=evs; _evI=0;
+    if(typeof evParar==='function')evParar();   /* mata o relógio da montagem anterior */
+    _evLista=evs; _evI=0; _evParado=false;
     if(evs.length===1){ sec.innerHTML=blocoEvento(evs[0],!!evs[0]._demo); return; }
     sec.innerHTML=
       '<div class="evCarrossel" id="evCarrossel">'
@@ -1288,10 +1289,34 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       +'</div>';
     evLigar();
   }
+  /* ---- CARROSSEL AUTOMÁTICO (3s) — 01/09/2026 ----
+     Passa sozinho de 3 em 3 segundos, sem limite de eventos. Ele PARA quando:
+       - o dedo/mouse está em cima (ninguém gosta de ler algo que foge);
+       - o cliente acabou de mexer (o relógio reinicia, senão pularia na cara dele);
+       - a seção não está na tela (não adianta girar o que ninguém vê);
+       - a aba do navegador está em segundo plano;
+       - o aparelho pede menos animação (acessibilidade).
+     Um relógio só, sempre reiniciado — nunca dois rodando ao mesmo tempo. */
+  const EV_SEG=3000;
+  let _evTimer=null, _evNaTela=true, _evParado=false;
+  const _evMenosMovimento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function evParar(){ if(_evTimer){clearInterval(_evTimer);_evTimer=null;} }
+  function evAndar(){
+    evParar();
+    if(_evMenosMovimento) return;
+    if(_evLista.length<2) return;
+    if(_evParado || !_evNaTela || document.hidden) return;
+    _evTimer=setInterval(function(){
+      if(_evParado||!_evNaTela||document.hidden)return;
+      _evI=(_evI+1)%_evLista.length;
+      evPintar();
+    },EV_SEG);
+  }
   window.evIr=function(passo){
     if(_evLista.length<2)return;
     _evI=(_evI+passo+_evLista.length)%_evLista.length;
     evPintar();
+    evAndar();   /* mexeu na mão: o relógio recomeça do zero */
   };
   function evPintar(){
     const tr=el('evTrilho'); if(!tr)return;
@@ -1301,6 +1326,24 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   }
   function evLigar(){
     const car=el('evCarrossel'), tr=el('evTrilho'); if(!car||!tr)return;
+    /* mouse em cima: para. Saiu: volta. No celular o "hover" não existe, e
+       quem manda lá é o toque (pointerdown/up abaixo). */
+    car.addEventListener('mouseenter',function(){_evParado=true;evParar();});
+    car.addEventListener('mouseleave',function(){_evParado=false;evAndar();});
+    car.addEventListener('focusin',function(){_evParado=true;evParar();});
+    car.addEventListener('focusout',function(){_evParado=false;evAndar();});
+    /* fora da tela não gira */
+    if(window.IntersectionObserver){
+      try{
+        new IntersectionObserver(function(es){
+          _evNaTela=es[0].isIntersecting;
+          if(_evNaTela)evAndar(); else evParar();
+        },{threshold:.35}).observe(car);
+      }catch(_){}
+    }
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden)evParar(); else evAndar();
+    });
     let x0=0,y0=0,dx=0,arr=false,arrastou=false;
     /* o arrasto nativo de imagem cancela o gesto — some com ele */
     tr.addEventListener('dragstart',function(e){e.preventDefault();});
@@ -1313,6 +1356,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       /* clique em botão ou link não vira arrasto */
       if(e.target&&e.target.closest&&e.target.closest('button,a'))return;
       arr=true; dx=0; arrastou=false; x0=e.clientX; y0=e.clientY; tr.style.transition='none';
+      _evParado=true; evParar();
       try{tr.setPointerCapture(e.pointerId);}catch(_){}
     });
     tr.addEventListener('pointermove',function(e){
@@ -1327,14 +1371,15 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         if(!arr)return; arr=false; tr.style.transition='';
         const lim=Math.max(45,Math.min(120,(car.clientWidth||360)*0.16));
         if(dx<=-lim)evIr(1); else if(dx>=lim)evIr(-1); else evPintar();
-        dx=0;
+        dx=0; _evParado=false; evAndar();
       });
     });
     const pts=el('evPontos');
     if(pts)pts.addEventListener('click',function(e){
       const i=e.target&&e.target.getAttribute&&e.target.getAttribute('data-i');
-      if(i!==null&&i!==undefined&&i!==''){_evI=Number(i);evPintar();}
+      if(i!==null&&i!==undefined&&i!==''){_evI=Number(i);evPintar();evAndar();}
     });
+    evAndar();   /* liga o automático */
   }
   function blocoEvento(e,demo){
     const tit=String(e.titulo||'').trim();
