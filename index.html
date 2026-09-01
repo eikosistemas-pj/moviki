@@ -204,25 +204,55 @@ a{color:inherit}
   .lp-cena .lp-neg{width:min(206px,56%);}
   .lp-cena .lp-neg img{width:36px;height:36px;flex:0 0 36px;}
 }
-/* ---- CELULAR: A CENA VIRA SO O APARELHO (01/09/2026, 2a volta) ----
-   A composicao com cartoes flutuando e pinos espalhados e um recurso de
-   DESKTOP, onde sobra largura. Numa tela de 390px eles caem em cima do
-   aparelho: o cartao cobre a saudacao, os pinos pousam no meio do texto, e o
-   conjunto vira ruido em cima justamente da coisa que a gente quer mostrar.
-   Abaixo de 900px fica so o aparelho, centrado, com o mapa de fundo bem fraco.
-   Quem chega pelo celular ve o painel — que e o argumento — e mais nada. */
+/* ---- CELULAR: MESMA CENA DO DESKTOP, SO QUE MENOR (01/09/2026, 3a volta) ----
+   Os cartoes e os pinos ficam — eles e que dao a ideia de "negocios em volta".
+   O que estava errado era a PROPORCAO: aparelho grande demais pra largura, e os
+   cartoes caindo em cima do miolo da tela.
+   O ajuste: o aparelho ENCOLHE e DESCE (padding-top), abrindo uma faixa livre
+   em cima; os cartoes encolhem junto e ficam nas pontas (topo, meio-direita,
+   base), encostando so na MOLDURA — nunca no texto do painel. */
 @media(max-width:900px){
-  .lp-cena{aspect-ratio:auto;min-height:0;padding:22px 0 6px;}
-  .lp-cena .lp-fone{padding-top:0;}
-  .lp-cena .lp-fone__corpo{max-width:min(268px,72%);}
-  .lp-cena .lp-neg{display:none;}      /* cartoes flutuantes: so no desktop */
-  .lp-cena__saida{display:none;}       /* pinos soltos: so no desktop */
-  .lp-cena__mapa{top:6%;height:64%;width:150%;opacity:.5;}
-  .lp-cena__luz{top:26%;opacity:.75;}
+  /* faixa livre em CIMA e EMBAIXO: e nelas que os cartoes do topo e da base
+     ficam, sem cobrir a saudacao nem o botao "Salvar tudo". */
+  .lp-cena{aspect-ratio:auto;min-height:0;padding:0 0 56px;}
+  .lp-cena .lp-fone{padding-top:72px;}
+  .lp-cena .lp-fone__corpo{max-width:min(238px,62%);}
+  .lp-cena__mapa{top:0;height:70%;width:154%;opacity:.72;}
+  .lp-cena__luz{top:30%;}
+  /* Cartoes menores e PUXADOS PRA FORA (left/right negativos): assim eles
+     encostam so na moldura do aparelho, e nao em cima do texto do painel.
+     Cada um numa altura diferente — topo, meio e base — pra nao empilhar. */
+  .lp-cena .lp-neg{width:min(162px,46%);padding:7px 9px;gap:7px;border-radius:12px;
+    box-shadow:0 10px 26px rgba(0,0,0,.6);}
+  .lp-cena .lp-neg img{width:26px;height:26px;flex:0 0 26px;}
+  .lp-cena .lp-neg__n{font-size:10px;line-height:1.2;}
+  .lp-cena .lp-neg__e{font-size:9px;margin-top:1px;}
+  .lp-cena .lp-neg__d{font-size:8.5px;margin-top:1px;}
+  /* No celular os tres cartoes ficam nas FAIXAS LIVRES (a de cima e a de baixo),
+     nunca na altura do meio: la e onde esta o texto do painel. Dois em cima
+     (um em cada canto) e um embaixo. Puxados pra fora, encostam so na moldura.
+     Foi a 3a tentativa: com um deles no meio da direita, ele cobria o cartao do
+     mapa e ainda era cortado pela borda da tela. */
+  /* INTEIROS dentro da tela, sem sangrar pela borda: sangrando, o nome do
+     negocio era cortado no meio da palavra ("Pizzaria do Bair"), o que parece
+     defeito e nao estilo. */
+  .lp-cena .lp-neg--a{top:4px;left:0;}
+  .lp-cena .lp-neg--b{top:4px;right:0;left:auto;}
+  .lp-cena .lp-neg--c{bottom:0;left:0;}
+  /* pinos menores, nas beiradas */
+  .lp-cena__saida .lp-pin{width:16px;height:16px;margin:-16px 0 0 -8px;}
+  .lp-cena__saida .lp-pin--borda{width:20px;height:20px;margin:-20px 0 0 -10px;}
+  .lp-cena__saida .p1{left:10%;top:30%;}
+  .lp-cena__saida .p2{left:19%;top:50%;}
+  .lp-cena__saida .p3{left:90%;top:56%;}
+  .lp-cena__saida .p4{left:8%;top:74%;}
 }
 @media(max-width:479px){
-  .lp-cena{padding:18px 0 4px;}
-  .lp-cena .lp-fone__corpo{max-width:min(250px,78%);}
+  .lp-cena{padding-bottom:52px;}
+  .lp-cena .lp-fone{padding-top:66px;}
+  .lp-cena .lp-fone__corpo{max-width:min(224px,62%);}
+  .lp-cena .lp-neg{width:min(150px,47%);}
+  .lp-cena .lp-neg img{width:24px;height:24px;flex:0 0 24px;}
 }
 
 /* ---------- SEÇÕES ---------- */
@@ -512,7 +542,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-mob';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v3';</script>
 </head>
 
 <body class="mv">
@@ -626,7 +656,7 @@ a{color:inherit}
               </div>
 
               <div class="fn-corpo">
-                <div class="fn-ola">Olá, Zé! 👋<small>Aqui está o resumo do seu negócio hoje.</small></div>
+                <div class="fn-ola">Olá, amigo(a)! 👋<small>Aqui está o resumo do seu negócio hoje.</small></div>
 
                 <div class="fn-card">
                   <div class="fn-cardT"><b>Seu negócio no mapa</b><span class="fn-sel"><i></i>Visível</span></div>
