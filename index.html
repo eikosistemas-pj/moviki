@@ -380,6 +380,19 @@ a{color:inherit}
   .lp-links,.lp-nav-cta{display:none}
   .lp-burger{display:flex}
   .lp-hero-grid{grid-template-columns:minmax(0,1fr)}
+  /* ---- RESPIRO entre o bloco de texto e a cena do celular ----
+     No celular tudo vira uma coluna so e o aparelho ficava colado no texto
+     de cima ("muita informacao logo de cara"). Aqui a cena ganha um espaco
+     proprio e um risquinho luminoso que separa visualmente as duas partes. */
+  .lp-hero-grid>.lp-painel-col{position:relative;margin-top:30px;padding-top:46px}
+  .lp-hero-grid>.lp-painel-col::before{content:"";position:absolute;z-index:0;
+    left:50%;top:0;transform:translateX(-50%);
+    width:min(260px,64%);height:1px;
+    background:linear-gradient(90deg,transparent,rgba(37,227,155,.6),rgba(0,212,255,.6),transparent)}
+  .lp-hero-grid>.lp-painel-col::after{content:"";position:absolute;z-index:0;
+    left:50%;top:-3px;transform:translateX(-50%);
+    width:7px;height:7px;border-radius:50%;background:var(--mv-ok);
+    box-shadow:0 0 14px rgba(37,227,155,.9)}
   /* ---- no celular e no tablet o conteudo fica centralizado ---- */
   .lp-hero-grid>div:first-child{text-align:center}
   .lp-tag{text-align:center;justify-content:center}
@@ -542,7 +555,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v3';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v4';</script>
 </head>
 
 <body class="mv">
