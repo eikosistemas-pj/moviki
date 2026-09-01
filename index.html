@@ -129,7 +129,10 @@ a{color:inherit}
   background:#fff;box-shadow:0 0 0 7px rgba(0,120,255,.42),0 0 34px 8px rgba(0,180,255,.65)}
 .lp-pin{position:absolute;width:22px;height:22px;margin:-22px 0 0 -11px;border-radius:50% 50% 50% 0;
   transform:rotate(-45deg);background:var(--mv-grad);box-shadow:0 0 16px rgba(0,212,255,.9);animation:lpPin 3.6s ease-in-out infinite}
-.lp-pin::after{content:"";position:absolute;inset:6px;border-radius:50%;background:#04101e}
+/* MIOLO ACESO: bolinha branca com brilho — e ela que da o ar de "pino ligado".
+   Antes era escura (#04101e) e o pino ficava apagado. */
+.lp-pin::after{content:"";position:absolute;inset:6px;border-radius:50%;background:#fff;
+  box-shadow:0 0 8px 2px rgba(255,255,255,.95),0 0 16px 4px rgba(0,212,255,.7)}
 @keyframes lpPin{0%,100%{transform:rotate(-45deg) translateY(0)}50%{transform:rotate(-45deg) translateY(-7px)}}
 .lp-halo{position:absolute;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;
   border:1.5px solid rgba(0,212,255,.5);animation:lpHalo 3s ease-out infinite}
@@ -177,21 +180,18 @@ a{color:inherit}
 .lp-cena .lp-fone__corpo{max-width:min(268px,58%);}
 /* --- o que ESCAPA do aparelho: fica por cima de tudo --- */
 .lp-cena__saida{position:absolute;inset:0;z-index:4;pointer-events:none;}
-.lp-cena__saida .lp-pin{filter:drop-shadow(0 10px 16px rgba(0,0,0,.6));}
-.lp-cena__saida .lp-pin--borda{width:28px;height:28px;margin:-28px 0 0 -14px;
-  filter:drop-shadow(0 14px 22px rgba(0,0,0,.75)) drop-shadow(0 0 18px rgba(0,212,255,.6));}
-/* posicao dos pinos por tamanho de tela: no celular eles tem que ficar nas
-   BEIRADAS, senao pousam em cima do texto do painel e sujam a leitura. */
-.lp-cena__saida .p1{left:22%;top:24%;}
-.lp-cena__saida .p2{left:35%;top:37%;animation-delay:.4s;}
-.lp-cena__saida .p3{left:79%;top:70%;animation-delay:.8s;}
-.lp-cena__saida .p4{left:24%;top:78%;animation-delay:1.2s;}
+.lp-cena__saida .lp-pin{width:24px;height:24px;margin:-24px 0 0 -12px;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(0,212,255,.55));}
+/* UM PINO POR NEGOCIO: cada pino fica logo abaixo do seu cartao, nunca em cima
+   do aparelho — pino em cima do celular confunde a leitura da cena. */
+.lp-cena__saida .p1{left:13%;top:22%;}
+.lp-cena__saida .p2{left:88%;top:46%;animation-delay:.5s;}
+.lp-cena__saida .p3{left:15%;top:73%;animation-delay:1s;}
 @media(max-width:900px){
-  .lp-cena__saida .lp-pin--borda{width:24px;height:24px;margin:-24px 0 0 -12px;}
-  .lp-cena__saida .p1{left:9%;top:34%;}
-  .lp-cena__saida .p2{left:14%;top:52%;}
-  .lp-cena__saida .p3{left:90%;top:60%;}
-  .lp-cena__saida .p4{left:8%;top:76%;}
+  .lp-cena__saida .lp-pin{width:19px;height:19px;margin:-19px 0 0 -9px;}
+  .lp-cena__saida .p1{left:9%;top:20%;}
+  .lp-cena__saida .p2{left:91%;top:22%;}
+  .lp-cena__saida .p3{left:11%;top:88%;}
 }
 .lp-cena .lp-neg{position:absolute;width:min(244px,58%);z-index:5;}
 .lp-cena .lp-neg img{width:42px;height:42px;flex:0 0 42px;}
@@ -240,12 +240,6 @@ a{color:inherit}
   .lp-cena .lp-neg--b{top:4px;right:0;left:auto;}
   .lp-cena .lp-neg--c{bottom:0;left:0;}
   /* pinos menores, nas beiradas */
-  .lp-cena__saida .lp-pin{width:16px;height:16px;margin:-16px 0 0 -8px;}
-  .lp-cena__saida .lp-pin--borda{width:20px;height:20px;margin:-20px 0 0 -10px;}
-  .lp-cena__saida .p1{left:10%;top:30%;}
-  .lp-cena__saida .p2{left:19%;top:50%;}
-  .lp-cena__saida .p3{left:90%;top:56%;}
-  .lp-cena__saida .p4{left:8%;top:74%;}
 }
 @media(max-width:479px){
   .lp-cena{padding-bottom:52px;}
@@ -555,7 +549,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v4';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v5';</script>
 </head>
 
 <body class="mv">
@@ -700,12 +694,11 @@ a{color:inherit}
 
         <!-- o que SAI da tela: pinos e cartões por cima do aparelho -->
         <div class="lp-cena__saida">
+          <!-- um pino pra cada negocio dos cartoes: hamburgueria, pizzaria e
+               cafeteria. Ficam ao lado do cartao, fora do aparelho. -->
           <span class="lp-pin p1"></span>
-          <!-- este fica MONTADO na moldura do aparelho: metade no mapa, metade
-               no celular. E o detalhe que faz o olho ler "esta saindo da tela". -->
-          <span class="lp-pin lp-pin--borda p2"></span>
+          <span class="lp-pin p2"></span>
           <span class="lp-pin p3"></span>
-          <span class="lp-pin p4"></span>
         </div>
 
         <div class="lp-neg lp-neg--a">
