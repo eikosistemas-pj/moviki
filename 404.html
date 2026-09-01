@@ -129,17 +129,28 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .acao.rota{background:linear-gradient(135deg,#1a7dff,#0b4fd4);box-shadow:0 10px 26px rgba(0,102,255,.30);}
 
 /* info rápida */
-.rapidos{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-top:12px;}
-@media(min-width:560px){.rapidos{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}}
-.rapido{display:flex;align-items:center;gap:7px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:9px 8px;min-width:0;}
+/* Cartões de informação do topo — 01/09/2026.
+   ANTES: `auto-fit,minmax(104px,1fr)` punha 3 por linha num celular de 390px.
+   Sobravam ~104px por cartão, e "Seg à Sáb 18h às 22h" ou "R$ 24,90 por pessoa"
+   quebravam em 3 linhas, com um cartão órfão embaixo. Ficava apertado e torto.
+   AGORA: 2 fixos por linha no celular (sempre a mesma altura, sem órfão), 3 a
+   partir de 560px e 4 a partir de 860px. */
+.rapidos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;}
+@media(min-width:560px){.rapidos{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}}
+@media(min-width:860px){.rapidos{grid-template-columns:repeat(4,minmax(0,1fr));}}
+.rapido{display:flex;align-items:center;gap:9px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:10px;min-width:0;}
 @media(min-width:560px){.rapido{gap:10px;padding:11px 12px;}}
 .rapido .ico{width:26px;height:26px;border-radius:10px;background:var(--mv-campo);border:1px solid var(--mv-linha);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
 .rapido .ico svg{width:15px;height:15px;color:var(--ciano);}
 @media(min-width:560px){.rapido .ico{width:32px;height:32px;} .rapido .ico svg{width:17px;height:17px;}}
 .rapido .ico.verde svg{color:var(--mv-ok);}
 .rapido .tx{min-width:0;}
-.rapido .lb{font-size:10px;color:var(--mv-txt-3);letter-spacing:.2px;text-transform:uppercase;line-height:1.3;}
-.rapido .vl{font-size:12px;font-weight:600;color:var(--mv-txt);line-height:1.2;overflow-wrap:break-word;word-break:normal;hyphens:none;}
+.rapido .lb{display:block;font-size:10px;color:var(--mv-txt-3);letter-spacing:.2px;text-transform:uppercase;line-height:1.3;margin-bottom:2px;}
+/* 2 linhas no máximo e sem partir palavra: "por pessoa" não vira "pes-soa" */
+.rapido .vl{font-size:12.5px;font-weight:600;color:var(--mv-txt);line-height:1.25;
+  overflow-wrap:normal;word-break:keep-all;hyphens:none;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+@media(min-width:560px){.rapido .vl{font-size:13px;}}
 @media(min-width:560px){.rapido .vl{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}}
 
 /* ---------- FAIXA EMPRESA / UNIDADES ---------- */
@@ -167,25 +178,31 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   display:grid;grid-template-columns:1fr;gap:0;padding:15px 15px 15px;}
 .promoDest .badge{justify-self:start;align-self:start;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#ff8a00,#e04f16);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.7px;padding:5px 11px;border-radius:var(--mv-r-pill);text-transform:uppercase;}
 .promoDest .badge svg{width:13px;height:13px;}
-.promoDest h3{font-size:20px;font-weight:700;margin-top:11px;line-height:1.22;overflow-wrap:anywhere;}
+.promoDest h3{font-size:18px;font-weight:700;margin-top:11px;line-height:1.3;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+@media(min-width:620px){.promoDest h3{font-size:20px;-webkit-line-clamp:4;}}
 .promoDest .preco{margin-top:4px;font-size:15px;color:var(--mv-txt-2);}
 .promoDest .preco b{font-size:clamp(22px,6.4vw,30px);font-weight:800;color:#ffa62b;margin-left:5px;letter-spacing:-.5px;}
 .promoDest .val{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mv-txt-3);margin-top:9px;}
 .promoDest .val svg{width:14px;height:14px;}
-.promoDest .pImg{position:relative;margin-top:12px;border-radius:var(--mv-r);overflow:hidden;max-height:170px;display:flex;align-items:center;justify-content:center;}
-@media(max-width:619px){
-  .promoDest{padding-right:118px;}
-  .promoDest .pImg{position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:150px;height:150px;margin:0;border-radius:50%;border:1px solid rgba(255,138,0,.35);box-shadow:0 12px 30px rgba(0,0,0,.5);}
-  .promoDest .pImg.demoFoto{height:150px!important;}
-}
-@media(max-width:400px){.promoDest{padding-right:96px;} .promoDest .pImg{width:124px;height:124px;right:-14px;}}
+/* Promoção no celular — 01/09/2026.
+   ANTES: a foto era um círculo POSICIONADO POR CIMA do card, e o texto ganhava
+   um `padding-right` pra "desviar" dele. Título grande passava por baixo do
+   círculo e o círculo ainda saía pela borda. Era o "texto todo bagunçado".
+   AGORA: nada de posicionamento absoluto. No celular a arte fica ABAIXO do
+   texto, largura inteira; a partir de 620px ela volta pra coluna da direita.
+   Cada coisa no seu lugar, nada por cima de nada. */
+.promoDest .pImg{position:relative;margin-top:13px;border-radius:var(--mv-r);overflow:hidden;
+  border:1px solid rgba(255,138,0,.28);max-height:200px;display:flex;align-items:center;justify-content:center;}
 .promoDest .pImg img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;cursor:zoom-in;}
 .btnPromo{margin-top:13px;align-self:start;justify-self:start;background:transparent;border:1px solid rgba(255,166,43,.7);color:#ffb960;font-weight:600;font-size:13.5px;padding:9px 17px;border-radius:var(--mv-r-pill);cursor:pointer;transition:.18s;}
 .btnPromo:hover{background:rgba(255,138,0,.14);}
+/* .dTxt = a coluna de texto do card (promoção e evento). No celular é só um
+   bloco; a partir de 620px vira a 1ª coluna da grade, ao lado da arte. */
+.dTxt{min-width:0;}
 @media(min-width:620px){
-  .promoDest{grid-template-columns:1.25fr .85fr;column-gap:16px;align-items:center;padding:20px;}
-  .promoDest .pImg{grid-row:1/span 6;grid-column:2;margin-top:0;max-height:210px;height:100%;}
-  .promoDest .badge,.promoDest h3,.promoDest .preco,.promoDest .val,.btnPromo{grid-column:1;}
+  .promoDest{grid-template-columns:1.2fr .8fr;column-gap:18px;align-items:center;padding:20px;}
+  .promoDest .pImg{margin-top:0;max-height:230px;}
 }
 
 /* ---------- EVENTO EM DESTAQUE (home) — 31/08/2026 ----------
@@ -198,6 +215,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .eventoDest{position:relative;overflow:hidden;border-radius:var(--mv-r-lg);border:1px solid rgba(168,85,247,.42);
   background:radial-gradient(120% 130% at 100% 0%,rgba(168,85,247,.24),transparent 58%),linear-gradient(150deg,#1b1030,#130e1e 60%,#0d1524);
   padding:15px;}
+.eventoDest .dTxt{display:flex;flex-direction:column;align-items:flex-start;}
 .eventoDest .badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#a855f7,#6d28d9);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.7px;padding:5px 11px;border-radius:var(--mv-r-pill);text-transform:uppercase;}
 .eventoDest .badge svg{width:13px;height:13px;}
 .eventoDest h3{font-size:20px;font-weight:700;margin-top:11px;line-height:1.22;overflow-wrap:anywhere;}
@@ -207,10 +225,21 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .eventoDest .onde svg{width:14px;height:14px;flex:0 0 auto;margin-top:2px;}
 .eventoDest .eImg{margin-top:13px;border-radius:var(--mv-r);overflow:hidden;border:1px solid rgba(168,85,247,.28);}
 .eventoDest .eImg .midiaCapa{max-height:none;}
+/* No desktop o flyer sozinho ocupando a largura toda virava um paredão roxo
+   com a arte pequena no meio. A partir de 620px vira 2 colunas, igual à
+   promoção — a página inteira passa a ter o mesmo ritmo. */
+@media(min-width:620px){
+  .eventoDest:not(.soFlyer){display:grid;grid-template-columns:1.2fr .8fr;column-gap:18px;align-items:center;}
+  .eventoDest:not(.soFlyer) .eImg{margin-top:0;}
+  /* só flyer: a arte é o conteúdo, então fica centrada e com largura de leitura */
+  .eventoDest.soFlyer .eImg{max-width:520px;margin:0 auto;}
+  .eventoDest.soFlyer .dTxt{text-align:center;}
+}
 /* a moldura .midiaCapa limita a ALTURA no proprio <img>; se so o container
    fosse limitado, o flyer estouraria e seria cortado embaixo (o overflow do
    container e hidden) — foi o que aconteceu na 1a montagem deste card. */
-.eventoDest .eImg .midiaCapa img:not(.capaFundo){max-height:min(58vh,420px);}
+.eventoDest .eImg .midiaCapa img:not(.capaFundo){max-height:min(52vh,360px);}
+@media(min-width:620px){.eventoDest .eImg .midiaCapa img:not(.capaFundo){max-height:300px;}}
 .eventoDest.soFlyer .badgeFlutua{position:absolute;top:23px;left:23px;z-index:3;box-shadow:0 6px 18px rgba(0,0,0,.55);}
 .eventoDest.soFlyer .eImg{margin-top:0;}
 .btnEvento{margin-top:13px;background:transparent;border:1px solid rgba(168,85,247,.7);color:#c9a2ff;font-weight:600;font-size:13.5px;padding:9px 17px;border-radius:var(--mv-r-pill);cursor:pointer;transition:.18s;}
@@ -236,9 +265,16 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 
 /* ---------- ONDE ESTAMOS ---------- */
 .ondeBox{padding:14px;}
-.ondeTopo{display:flex;align-items:flex-start;gap:10px;justify-content:space-between;flex-wrap:wrap;}
+/* 01/09/2026: era flex com space-between, então o bloco de informações ia
+   parar AO LADO do nome e sobrava um vazio embaixo. Agora empilha. */
+.ondeTopo{display:block;min-width:0;}
 .endLinha{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;color:var(--mv-txt-2);}
 .endLinha svg{width:16px;height:16px;color:var(--mv-ok);flex:0 0 auto;margin-top:2px;}
+.ondeInfo{display:grid;gap:9px;margin-top:12px;}
+.ondeInfo:empty{display:none;}
+.ondeIt{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--mv-txt-2);line-height:1.5;overflow-wrap:anywhere;}
+.ondeIt svg{width:15px;height:15px;color:var(--ciano);flex:0 0 auto;margin-top:2px;}
+.ondeIt b{color:var(--mv-txt);font-weight:600;}
 /* Mapa da home — 01/09/2026.
    O mapa pequeno virou PRÉVIA: não arrasta, não dá zoom, não pede dois dedos.
    Tocar em qualquer ponto dele abre o mapa completo, e é lá que o cliente
@@ -300,7 +336,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .infoIt{display:flex;align-items:flex-start;gap:11px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px 13px;}
 .infoIt .ico{width:34px;height:34px;border-radius:10px;background:var(--mv-campo);border:1px solid var(--mv-linha);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
 .infoIt .ico svg{width:17px;height:17px;color:var(--ciano);}
-.infoIt .lb{font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--mv-txt-3);}
+.infoIt .lb{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--mv-txt-3);}
 .infoIt .vl{font-size:14px;color:var(--mv-txt);overflow-wrap:anywhere;}
 
 /* ---------- crédito + barra inferior ---------- */
@@ -449,12 +485,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
    fechar, voltar na grade e clicar de novo. Agora ele DESLIZA pro lado (ou usa
    as setas / o teclado) e as fotos vao passando, como em qualquer galeria de
    celular. O grupo de fotos e descoberto a partir da que foi clicada. */
-.lb{position:fixed;inset:0;z-index:1900;background:rgba(3,8,16,.95);display:none;align-items:center;justify-content:center;padding:20px;touch-action:pan-y;}
-.lb.on{display:flex;}
-.lb img{max-width:100%;max-height:82vh;border-radius:var(--mv-r);
+#lb{position:fixed;inset:0;z-index:1900;background:rgba(3,8,16,.95);display:none;align-items:center;justify-content:center;padding:20px;touch-action:pan-y;}
+#lb.on{display:flex;}
+#lb img{max-width:100%;max-height:82vh;border-radius:var(--mv-r);
   -webkit-user-select:none;user-select:none;-webkit-user-drag:none;
   transition:transform .22s cubic-bezier(.22,.9,.3,1),opacity .18s;}
-.lb img.desliza{transition:none;}
+#lb img.desliza{transition:none;}
 .lbX{position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;background:rgba(19,38,61,.9);border:1px solid var(--mv-linha);color:var(--mv-txt);width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;}
 .lbX svg{width:16px;height:16px;}
 /* setas: alvo grande (48px) porque no celular o dedo erra alvo pequeno */
@@ -468,7 +504,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 .lbSeta.ant{left:10px;} .lbSeta.prox{right:10px;}
 @media(min-width:760px){.lbSeta.ant{left:26px;} .lbSeta.prox{right:26px;}}
 /* uma foto so: nao existe pra onde ir, entao setas e contador somem */
-.lb.unica .lbSeta,.lb.unica .lbConta,.lb.unica .lbPontos{display:none;}
+#lb.unica .lbSeta,#lb.unica .lbConta,#lb.unica .lbPontos{display:none;}
 .lbConta{position:absolute;top:calc(20px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:3;
   background:rgba(10,22,38,.78);border:1px solid rgba(255,255,255,.16);color:#eaf6ff;
   font-size:12.5px;font-weight:700;letter-spacing:.4px;padding:6px 13px;border-radius:var(--mv-r-pill);
@@ -477,7 +513,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap;padding:0 20px;}
 .lbPontos i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.32);cursor:pointer;transition:.16s;}
 .lbPontos i.on{background:var(--ciano);box-shadow:0 0 10px rgba(0,212,255,.8);transform:scale(1.35);}
-@media(prefers-reduced-motion:reduce){.lb img{transition:none;}}
+@media(prefers-reduced-motion:reduce){#lb img{transition:none;}}
 
 /* ---------- MODO DEMONSTRAÇÃO (?demo=1) ---------- */
 .demoAviso{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(0,212,255,.14),rgba(0,102,255,.10));border:1px solid rgba(0,212,255,.38);border-radius:var(--mv-r);padding:11px 13px;margin:14px 14px 0;font-size:12.5px;color:var(--mv-txt-2);}
@@ -623,6 +659,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <div><b id="ondeNome">—</b><div id="ondeDist" style="color:var(--mv-txt-3);font-size:12.5px;"></div></div>
         </div>
+        <!-- 01/09/2026: no desktop esta coluna ficava VAZIA do lado do mapa, um
+             buraco enorme no meio da página. Agora ela carrega o endereço, o
+             horário e o WhatsApp — que é justamente o que quem olha o mapa
+             quer saber em seguida. -->
+        <div class="ondeInfo" id="ondeInfo"></div>
       </div>
       <div class="mapaBox">
         <div id="map"></div>
@@ -767,7 +808,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-01-mapa';
+  window.MOVIKI_VERSAO='2026-09-01-layout';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -970,6 +1011,21 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     el('metaSep').classList.toggle('escondido',!(a&&b));
   }
   function fmtReal(v){ return 'R$ '+Number(v).toFixed(2).replace('.',','); }
+  /* Coluna de informações do "Onde estamos" — 01/09/2026.
+     Só mostra o que o lojista preencheu; campo em branco simplesmente não
+     aparece (mesma regra do resto da página: nada de dado inventado). */
+  function montarOndeInfo(d){
+    const box=el('ondeInfo'); if(!box)return;
+    const its=[];
+    const end=(d&&d.endereco||'').trim();
+    if(end) its.push({ic:IC.pino,vl:end});
+    const hor=(d&&d.horario||'').trim();
+    if(hor) its.push({ic:IC.relogio,vl:hor});
+    const ent=(d&&d.entrega||'').trim();
+    if(ent) its.push({ic:IC.moto,vl:ent});
+    if(minhaPos&&negocioPos) its.push({ic:IC.seta,vl:'a '+fmtKm(distanciaKm(minhaPos,negocioPos))+' de você'});
+    box.innerHTML=its.map(i=>'<div class="ondeIt">'+i.ic+'<span>'+esc(i.vl)+'</span></div>').join('');
+  }
   function montarRapidos(d){
     const box=el('rapidos'); const its=[];
     const aberto=d.status==='aberto';
@@ -1050,10 +1106,17 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const linhaResto=(!f.preco&&f.resto)?('<div class="preco">'+esc(f.resto)+'</div>'):(f.preco&&f.resto?('<div class="preco" style="font-size:13.5px;color:var(--mv-txt-3)">'+esc(f.resto)+'</div>'):'');
     const linhaVal=f.val?('<div class="val">'+IC.relogio+'<span>'+esc(f.val)+'</span></div>'):'';
     const _tit=String(p.titulo||'').trim();
+    /* 01/09/2026: o texto vai TODO dentro de .dTxt. Antes cada linha era um
+       filho solto da grade, e no desktop a imagem (que ocupa todas as linhas)
+       esticava as linhas do texto — o selo ficava no topo e o título despencava
+       pro rodapé, com um vazio no meio. Com um filho só, a coluna de texto é
+       centralizada como um bloco. */
     return '<div class="promoDest'+(demo?' ehDemo demoBloco':'')+'">'+
-      '<span class="badge">'+IC.fogo+'Promoção</span>'+
-      (_tit?'<h3>'+esc(_tit)+'</h3>':'')+linhaPreco+linhaResto+linhaVal+capa+
-      '<button class="btnPromo" type="button" onclick="irParaAba(\'promocoes\')">Ver promoção</button></div>';
+      '<div class="dTxt">'+
+        '<span class="badge">'+IC.fogo+'Promoção</span>'+
+        (_tit?'<h3>'+esc(_tit)+'</h3>':'')+linhaPreco+linhaResto+linhaVal+
+        '<button class="btnPromo" type="button" onclick="irParaAba(\'promocoes\')">Ver promoção</button>'+
+      '</div>'+capa+'</div>';
   }
 
   /* ---- EVENTO EM DESTAQUE na home (31/08/2026) ----
@@ -1094,8 +1157,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       +(onde?'<div class="onde">'+IC.pino+'<span>'+esc(onde)+'</span></div>':'');
 
     return '<div class="eventoDest'+(temCapa&&semTexto?' soFlyer':'')+(demo?' ehDemo demoBloco':'')+'">'
-      +badge+txt+img
-      +'<button class="btnEvento" type="button" onclick="irParaAba(\'eventos\')">Ver evento</button></div>';
+      +'<div class="dTxt">'+badge+txt
+      +'<button class="btnEvento" type="button" onclick="irParaAba(\'eventos\')">Ver evento</button></div>'
+      +img+'</div>';
   }
 
   function montarDestaques(d){
@@ -1678,7 +1742,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     else el('subNeg').classList.add('escondido');
     atualizarBtnWpp();
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
-    montarRapidos(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarAbas(d); montarTabbar(d); pintarFav();
+    montarRapidos(d); montarOndeInfo(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarAbas(d); montarTabbar(d); pintarFav();
     if(demoOn)el('demoAviso').classList.remove('escondido');
   }
   /* WhatsApp por unidade (27/08/2026). Cada ponto Enterprise pode ter o proprio
