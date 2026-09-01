@@ -217,6 +217,10 @@ a{color:inherit}
   .lp-cena{aspect-ratio:auto;min-height:0;padding:0 0 56px;}
   .lp-cena .lp-fone{padding-top:72px;}
   .lp-cena .lp-fone__corpo{max-width:min(238px,62%);}
+  /* tela menor: uma linha de ferramentas e mapinha mais baixo, pra nada
+     encostar no botao "Salvar tudo". */
+  .fn-grade .fn-cel:nth-child(n+4){display:none;}
+  .fn-mapa{height:52px;margin:5px 0 6px;}
   .lp-cena__mapa{top:0;height:70%;width:154%;opacity:.72;}
   .lp-cena__luz{top:30%;}
   /* Cartoes menores e PUXADOS PRA FORA (left/right negativos): assim eles
@@ -490,7 +494,7 @@ a{color:inherit}
 .fn-ola{font-size:15px;font-weight:800;letter-spacing:-.4px;color:#eaf6ff;}
 .fn-ola small{display:block;font-size:9.5px;font-weight:500;color:var(--mv-txt-3);margin-top:2px;}
 .fn-card{position:relative;overflow:hidden;margin-top:9px;border:1px solid rgba(0,212,255,.2);border-radius:13px;
-  background:linear-gradient(160deg,#0a1a2f,#07101f);padding:11px;}
+  background:linear-gradient(160deg,#0a1a2f,#07101f);padding:9px;}
 .fn-card::before{content:"";position:absolute;inset:0;opacity:.3;
   background-image:linear-gradient(rgba(0,212,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.1) 1px,transparent 1px);
   background-size:26px 26px;transform:perspective(200px) rotateX(62deg) scale(1.7);transform-origin:50% 0%;}
@@ -501,19 +505,44 @@ a{color:inherit}
   color:var(--mv-ok);background:rgba(37,227,155,.13);border:1px solid rgba(37,227,155,.32);white-space:nowrap;}
 .fn-sel i{width:4px;height:4px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;}
 .fn-cardP{font-size:9px;line-height:1.45;color:var(--mv-txt-2);margin:5px 0 9px;}
-.fn-status{background:rgba(6,17,31,.88);border:1px solid rgba(0,212,255,.22);border-radius:10px;padding:8px;}
+/* ---- MAPINHA DENTRO DA TELA DO CELULAR (01/09/2026) ----
+   Sem ele a tela parecia "um painel qualquer": quem nunca viu o Moviki nao
+   entendia do que se trata. O mapa explica o produto num segundo. */
+.fn-mapa{position:relative;height:58px;margin:6px 0 7px;border-radius:10px;overflow:hidden;
+  border:1px solid rgba(0,212,255,.24);background:radial-gradient(120% 110% at 50% 45%,#0b2138,#050e1b);}
+.fn-mapa__ruas{position:absolute;inset:-45%;
+  background-image:linear-gradient(rgba(0,212,255,.15) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,212,255,.15) 1px,transparent 1px);
+  background-size:19px 19px;transform:rotate(-16deg);}
+.fn-mapa__rota{position:absolute;inset:0;width:100%;height:100%;}
+.fn-mapa__rota path{fill:none;stroke:#25e39b;stroke-width:1.7;stroke-linecap:round;
+  stroke-dasharray:5 5;opacity:.85;animation:fnRota 2.6s linear infinite;}
+@keyframes fnRota{to{stroke-dashoffset:-20}}
+.fn-mapa__p{position:absolute;width:9px;height:9px;margin:-9px 0 0 -4.5px;border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);background:rgba(0,212,255,.5);box-shadow:0 0 7px rgba(0,212,255,.55);}
+.fn-mapa__eu{position:absolute;left:50%;top:58%;width:17px;height:17px;margin:-17px 0 0 -8.5px;
+  border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--mv-grad);
+  box-shadow:0 0 15px rgba(0,212,255,.95);}
+.fn-mapa__eu::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#fff;
+  box-shadow:0 0 7px 1px rgba(255,255,255,.95);}
+.fn-mapa__onda{position:absolute;left:50%;top:58%;width:32px;height:32px;margin:-16px 0 0 -16px;
+  border-radius:50%;border:1.5px solid rgba(0,212,255,.5);animation:lpHalo 2.8s ease-out infinite;}
+.fn-mapa__tag{position:absolute;left:6px;bottom:6px;font-size:7.5px;font-weight:700;padding:2px 6px;
+  border-radius:99px;color:#eaf6ff;background:rgba(4,12,22,.8);border:1px solid rgba(0,212,255,.32);}
+@media(prefers-reduced-motion:reduce){.fn-mapa__rota path,.fn-mapa__onda{animation:none}}
+.fn-status{background:rgba(6,17,31,.88);border:1px solid rgba(0,212,255,.22);border-radius:10px;padding:7px;}
 .fn-statusL{font-size:8px;font-weight:700;color:var(--mv-txt-3);text-transform:uppercase;letter-spacing:.3px;}
-.fn-tog{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;}
-.fn-tog span{display:flex;align-items:center;justify-content:center;gap:4px;height:26px;border-radius:8px;
+.fn-tog{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px;}
+.fn-tog span{display:flex;align-items:center;justify-content:center;gap:4px;height:24px;border-radius:8px;
   font-size:9.5px;font-weight:700;border:1px solid var(--mv-linha);color:var(--mv-txt-3);}
 .fn-tog span.on{color:var(--mv-ok);border-color:rgba(37,227,155,.55);background:rgba(37,227,155,.13);}
 .fn-tog i{width:5px;height:5px;border-radius:50%;background:currentColor;}
-.fn-cta{display:flex;align-items:center;justify-content:center;gap:5px;height:30px;margin-top:9px;border-radius:9px;
+.fn-cta{display:flex;align-items:center;justify-content:center;gap:5px;height:28px;margin-top:8px;border-radius:9px;
   background:var(--mv-grad);color:#02131f;font-size:10px;font-weight:800;box-shadow:0 6px 16px rgba(0,102,255,.34);}
-.fn-rot{font-size:10.5px;font-weight:800;color:#eaf6ff;margin:11px 0 7px;letter-spacing:-.2px;}
-.fn-grade{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.fn-rot{font-size:10.5px;font-weight:800;color:#eaf6ff;margin:9px 0 6px;letter-spacing:-.2px;}
+.fn-grade{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
 .fn-cel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  aspect-ratio:1;border-radius:11px;background:var(--mv-surf);border:1px solid var(--mv-linha);
+  aspect-ratio:1/.88;border-radius:11px;background:var(--mv-surf);border:1px solid var(--mv-linha);
   font-size:7.5px;font-weight:600;color:var(--mv-txt-2);text-align:center;line-height:1.15;padding:3px;}
 .fn-cel img{width:22px;height:22px;object-fit:contain;flex:0 0 auto;
   filter:drop-shadow(0 3px 6px rgba(0,150,255,.4));}
@@ -535,7 +564,17 @@ a{color:inherit}
   .fn-ola{font-size:13.5px;}
   .fn-ola small{font-size:9px;}
   .fn-cardP{margin-bottom:8px;}
-  .fn-grade .fn-cel:nth-child(n+4){display:none;}
+  .fn-mapa{height:46px;margin:5px 0 5px;}
+  .fn-status{padding:6px;}
+  .fn-mapa__tag{font-size:7px;padding:1px 5px;}
+}
+/* Telas bem estreitas (<=400px): o aparelho ficava tao pequeno que o conteudo
+   nao cabia. Aqui ele ganha um pouco mais de largura — e a tela, sendo 9/19,
+   cresce em altura junto. */
+@media(max-width:400px){
+  .lp-cena .lp-fone__corpo{max-width:min(224px,70%);}
+  .lp-cena .lp-neg{width:min(138px,43%);}
+  
   .fn-salvar{margin:0 11px 12px;}
 }
 @media(prefers-reduced-motion:reduce){.lp-fone__corpo{transition:none;}}
@@ -549,7 +588,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v5';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v6';</script>
 </head>
 
 <body class="mv">
@@ -667,7 +706,18 @@ a{color:inherit}
 
                 <div class="fn-card">
                   <div class="fn-cardT"><b>Seu negócio no mapa</b><span class="fn-sel"><i></i>Visível</span></div>
-                  <p class="fn-cardP">Seu negócio está no mapa e no seu link. Quem estiver perto pode te encontrar.</p>
+                  <!-- o mapinha: e ele que mostra do que o Moviki se trata -->
+                  <div class="fn-mapa">
+                    <span class="fn-mapa__ruas"></span>
+                    <svg class="fn-mapa__rota" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                      <path d="M3,35 C24,31 33,20 51,19 C69,18 82,11 97,7"/>
+                    </svg>
+                    <span class="fn-mapa__p" style="left:20%;top:70%"></span>
+                    <span class="fn-mapa__p" style="left:80%;top:30%"></span>
+                    <span class="fn-mapa__onda"></span>
+                    <span class="fn-mapa__eu"></span>
+                    <span class="fn-mapa__tag">📍 Você está no mapa</span>
+                  </div>
                   <div class="fn-status">
                     <span class="fn-statusL">Seu negócio está agora:</span>
                     <div class="fn-tog"><span class="on"><i></i>Aberto</span><span><i></i>Fechado</span></div>
