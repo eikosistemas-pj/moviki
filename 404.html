@@ -139,6 +139,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .rapidos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;}
 @media(min-width:560px){.rapidos{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}}
 @media(min-width:860px){.rapidos{grid-template-columns:repeat(4,minmax(0,1fr));}}
+/* número ímpar de cartões: o último não fica sozinho ocupando meia linha */
+@media(max-width:559px){.rapidos .rapido:last-child:nth-child(odd){grid-column:1/-1;}}
 .rapido{display:flex;align-items:center;gap:9px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:10px;min-width:0;}
 @media(min-width:560px){.rapido{gap:10px;padding:11px 12px;}}
 .rapido .ico{width:26px;height:26px;border-radius:10px;background:var(--mv-campo);border:1px solid var(--mv-linha);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
@@ -260,6 +262,30 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .btnEvento{margin-top:13px;background:transparent;border:1px solid rgba(168,85,247,.7);color:#c9a2ff;font-weight:600;font-size:13.5px;padding:9px 17px;border-radius:var(--mv-r-pill);cursor:pointer;transition:.18s;}
 .btnEvento:hover{background:rgba(168,85,247,.16);}
 @media(min-width:620px){.eventoDest{padding:20px;}}
+
+/* ---------- CARROSSEL DE EVENTOS (01/09/2026) ---------- */
+.evCarrossel{position:relative;overflow:hidden;border-radius:var(--mv-r-lg);}
+/* Sem isto o navegador inicia o ARRASTO NATIVO da imagem ao segurar em cima do
+   flyer, dispara pointercancel e o deslize do carrossel morre no meio. */
+.evTrilho{display:flex;transition:transform .3s cubic-bezier(.22,.9,.3,1);touch-action:pan-y;}
+.evTrilho img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;}
+.evSlide{flex:0 0 100%;min-width:0;}
+.evSlide .eventoDest{border-radius:var(--mv-r-lg);height:100%;}
+.evSeta{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:40px;height:40px;border-radius:50%;
+  background:rgba(10,22,38,.82);border:1px solid rgba(168,85,247,.5);color:#d6b4ff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:.16s;}
+.evSeta:hover{background:rgba(24,14,42,.95);border-color:#a855f7;color:#fff;}
+.evSeta svg{width:20px;height:20px;}
+.evSeta.ant{left:8px;} .evSeta.prox{right:8px;}
+@media(min-width:620px){.evSeta.ant{left:12px;} .evSeta.prox{right:12px;}}
+.evPontos{position:absolute;left:0;right:0;bottom:10px;z-index:4;display:flex;justify-content:center;gap:7px;pointer-events:auto;}
+.evPontos i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.34);cursor:pointer;transition:.16s;}
+.evPontos i.on{background:#c9a2ff;box-shadow:0 0 10px rgba(168,85,247,.9);transform:scale(1.3);}
+/* com carrossel, o card precisa de espaço embaixo pros pontinhos e dos lados pras setas */
+.evCarrossel .eventoDest{padding-bottom:30px;}
+.evCarrossel .btnEvento{margin-left:44px;margin-right:44px;}
+@media(min-width:620px){.evCarrossel .btnEvento{margin-left:0;margin-right:0;}}
+@media(prefers-reduced-motion:reduce){.evTrilho{transition:none;}}
 
 /* ---------- DESTAQUES DO CARDÁPIO ---------- */
 .pCard{flex:0 0 auto;width:160px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;text-align:left;cursor:pointer;padding:0;scroll-snap-align:start;transition:.18s;}
@@ -411,6 +437,29 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .fCorpo{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(24px + env(safe-area-inset-bottom));}
 .fCorpo.semPad{padding:0;}
 #mapCheio{width:100%;height:100%;}
+/* ---------- UM MAPA POR PONTO (01/09/2026) ---------- */
+.listaPontos{display:grid;gap:14px;}
+@media(min-width:900px){.listaPontos{grid-template-columns:1fr 1fr;}}
+.pontoCard{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);overflow:hidden;}
+.pTopo{display:flex;align-items:center;gap:9px;padding:13px 14px 11px;}
+.pNum{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#1a7dff,#0b4fd4);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.pNome{font-size:15.5px;font-weight:700;line-height:1.2;overflow-wrap:anywhere;min-width:0;}
+.pPerto{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#04121f;background:linear-gradient(135deg,var(--ciano),#0aa2ff);padding:3px 9px;border-radius:var(--mv-r-pill);}
+.pMapa{height:190px;background:#0b1a2e;border-top:1px solid var(--mv-linha);border-bottom:1px solid var(--mv-linha);}
+@media(min-width:620px){.pMapa{height:220px;}}
+.pInfo{display:grid;gap:7px;padding:12px 14px 0;}
+.pInfo:empty{display:none;}
+.pLinha{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--mv-txt-2);line-height:1.45;overflow-wrap:anywhere;}
+.pLinha svg{width:15px;height:15px;color:var(--ciano);flex:0 0 auto;margin-top:2px;}
+.pBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 14px 14px;}
+.pontoCard .pBtns:only-child{grid-template-columns:1fr;}
+.pBtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;border-radius:var(--mv-r);
+  font-family:inherit;font-weight:700;font-size:13.5px;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:.18s;}
+.pBtn svg{width:16px;height:16px;flex:0 0 auto;}
+.pBtn.wpp{background:linear-gradient(135deg,#25e39b,#12b981);color:#03251a;}
+.pBtn.wpp:hover{filter:brightness(1.06);}
+.pBtn.rota{background:linear-gradient(135deg,#1a7dff,#0b4fd4);color:#fff;}
+.pBtn.rota:hover{filter:brightness(1.08);}
 
 /* cardápio: grade de categorias e itens (reaproveitado do layout antigo) */
 .catGrade{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px;}
@@ -772,7 +821,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     </button>
     <h2 id="tituloMapaCheio">Mapa</h2>
   </div>
-  <div class="fCorpo semPad"><div id="mapCheio"></div></div>
+  <!-- 1 ponto: um mapa que ocupa a folha inteira.
+       2+ pontos: uma lista, um cartão por ponto, cada um com o SEU mapa, o SEU
+       horário, o SEU WhatsApp e o SEU "Como chegar". -->
+  <div class="fCorpo semPad" id="corpoMapa"><div id="mapCheio"></div></div>
 </div>
 
 <div class="folha" id="folhaMais">
@@ -835,7 +887,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-01-layout2';
+  window.MOVIKI_VERSAO='2026-09-01-carrossel-pontos';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -1151,18 +1203,83 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      cadastrado. Se o evento tiver so o flyer, o card VIRA o flyer: a arte ja
      carrega nome, data e local escritos, entao inventar texto em volta so
      roubaria espaco dela. */
+  /* CARROSSEL DE EVENTOS — 01/09/2026.
+     Com 2 ou mais eventos cadastrados, o destaque vira carrossel: desliza com o
+     dedo, tem setas e pontinhos, igual ao visor de fotos. Com 1 evento só, é o
+     card de sempre — carrossel de um item é enfeite inútil. */
+  let _evLista=[], _evI=0;
   function montarEvento(d){
     const sec=el('secEvento');
-    const evs=listaEventos(d);
+    let evs=listaEventos(d);
     if(!evs.length){
       if(demoOn&&liberaConteudo()){
-        sec.classList.remove('escondido');
-        sec.innerHTML=blocoEvento({titulo:'Feira da praça central',quando:'Sáb 06/09 às 20h',detalhe:'Praça Central — em frente ao coreto'},true);
-      } else sec.classList.add('escondido');
-      return;
+        evs=[{titulo:'Feira da praça central',quando:'Sáb 06/09 às 20h',detalhe:'Praça Central — em frente ao coreto',_demo:true},
+             {titulo:'Noite do hambúrguer',quando:'Sex 12/09 às 19h',detalhe:'No nosso ponto de sempre',_demo:true}];
+      } else { sec.classList.add('escondido'); return; }
     }
     sec.classList.remove('escondido');
-    sec.innerHTML=blocoEvento(evs[0],false);
+    _evLista=evs; _evI=0;
+    if(evs.length===1){ sec.innerHTML=blocoEvento(evs[0],!!evs[0]._demo); return; }
+    sec.innerHTML=
+      '<div class="evCarrossel" id="evCarrossel">'
+      +'<div class="evTrilho" id="evTrilho">'
+      + evs.map(e=>'<div class="evSlide">'+blocoEvento(e,!!e._demo)+'</div>').join('')
+      +'</div>'
+      +'<button class="evSeta ant" type="button" onclick="evIr(-1)" aria-label="Evento anterior">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>'
+      +'<button class="evSeta prox" type="button" onclick="evIr(1)" aria-label="Próximo evento">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>'
+      +'<div class="evPontos" id="evPontos">'+evs.map((e,i)=>'<i class="'+(i?'':'on')+'" data-i="'+i+'"></i>').join('')+'</div>'
+      +'</div>';
+    evLigar();
+  }
+  window.evIr=function(passo){
+    if(_evLista.length<2)return;
+    _evI=(_evI+passo+_evLista.length)%_evLista.length;
+    evPintar();
+  };
+  function evPintar(){
+    const tr=el('evTrilho'); if(!tr)return;
+    tr.style.transform='translateX('+(-_evI*100)+'%)';
+    const pts=el('evPontos');
+    if(pts)Array.prototype.forEach.call(pts.children,function(b,i){b.className=(i===_evI?'on':'');});
+  }
+  function evLigar(){
+    const car=el('evCarrossel'), tr=el('evTrilho'); if(!car||!tr)return;
+    let x0=0,y0=0,dx=0,arr=false,arrastou=false;
+    /* o arrasto nativo de imagem cancela o gesto — some com ele */
+    tr.addEventListener('dragstart',function(e){e.preventDefault();});
+    /* deslizar em cima do flyer nao pode ABRIR o flyer ao soltar */
+    tr.addEventListener('click',function(e){
+      if(arrastou){e.preventDefault();e.stopPropagation();arrastou=false;}
+    },true);
+    tr.addEventListener('pointerdown',function(e){
+      if(_evLista.length<2)return;
+      /* clique em botão ou link não vira arrasto */
+      if(e.target&&e.target.closest&&e.target.closest('button,a'))return;
+      arr=true; dx=0; arrastou=false; x0=e.clientX; y0=e.clientY; tr.style.transition='none';
+      try{tr.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    tr.addEventListener('pointermove',function(e){
+      if(!arr)return;
+      dx=e.clientX-x0;
+      if(Math.abs(dx)>8)arrastou=true;
+      if(Math.abs(e.clientY-y0)>Math.abs(dx)&&Math.abs(e.clientY-y0)>18){arr=false;tr.style.transition='';evPintar();return;}
+      tr.style.transform='translateX(calc('+(-_evI*100)+'% + '+dx+'px))';
+    });
+    ['pointerup','pointercancel','pointerleave'].forEach(function(nome){
+      tr.addEventListener(nome,function(){
+        if(!arr)return; arr=false; tr.style.transition='';
+        const lim=Math.max(45,Math.min(120,(car.clientWidth||360)*0.16));
+        if(dx<=-lim)evIr(1); else if(dx>=lim)evIr(-1); else evPintar();
+        dx=0;
+      });
+    });
+    const pts=el('evPontos');
+    if(pts)pts.addEventListener('click',function(e){
+      const i=e.target&&e.target.getAttribute&&e.target.getAttribute('data-i');
+      if(i!==null&&i!==undefined&&i!==''){_evI=Number(i);evPintar();}
+    });
   }
   function blocoEvento(e,demo){
     const tit=String(e.titulo||'').trim();
@@ -1395,17 +1512,60 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   /* ============ folhas ============ */
   function abrirFolha(id){const f=el(id);if(!f)return;f.classList.add('on');document.body.style.overflow='hidden';}
   window.fecharFolha=function(id){const f=el(id);if(!f)return;f.classList.remove('on');document.body.style.overflow='';};
+  /* Um cartão de mapa por ponto — 01/09/2026.
+     Com mais de um ponto, um mapa único com vários pinos obriga o cliente a
+     adivinhar qual pino é qual, e não dá pra chamar UMA unidade no WhatsApp
+     nem traçar rota até ELA. Agora cada ponto tem o seu cartão, um embaixo do
+     outro, com mapa próprio, horário, distância, WhatsApp e "Como chegar". */
+  let _mapasPonto=[];
+  function montarMapasPorPonto(){
+    const corpo=el('corpoMapa'); if(!corpo)return;
+    /* solta os mapas da abertura anterior: Leaflet não limpa sozinho */
+    _mapasPonto.forEach(function(m){try{m.remove();}catch(_){}}); _mapasPonto=[];
+    let maisPerto=-1, menor=Infinity;
+    locais.forEach((l,i)=>{if(l.km!=null&&l.km<menor){menor=l.km;maisPerto=i;}});
+    corpo.classList.remove('semPad');
+    corpo.innerHTML='<div class="listaPontos">'+locais.map(function(l,i){
+      const km=(l.km!=null)?('<div class="pLinha">'+IC.pino+'<span>a '+fmtKm(l.km)+' de você</span></div>'):'';
+      const hor=l.horario?('<div class="pLinha">'+IC.relogio+'<span>'+esc(l.horario)+'</span></div>'):'';
+      const w=(l.whatsapp||'').replace(/\D/g,'')||((dadosNeg&&dadosNeg.whatsapp)||'').replace(/\D/g,'');
+      const bw=w?('<a class="pBtn wpp" href="https://wa.me/55'+w+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
+      const br='<a class="pBtn rota" href="https://www.google.com/maps/dir/?api=1&destination='+l.lat+','+l.lng+'" target="_blank" rel="noopener" data-ev="rota_unidade">'+IC.seta+'Como chegar</a>';
+      const perto=(i===maisPerto&&locais.length>1)?'<span class="pPerto">mais perto</span>':'';
+      return '<div class="pontoCard">'
+        +'<div class="pTopo"><span class="pNum">'+(i+1)+'</span><span class="pNome">'+esc(l.nome||('Ponto '+(i+1)))+'</span>'+perto+'</div>'
+        +'<div class="pMapa" id="pMapa'+i+'"></div>'
+        +'<div class="pInfo">'+hor+km+'</div>'
+        +'<div class="pBtns">'+bw+br+'</div>'
+        +'</div>';
+    }).join('')+'</div>';
+    /* os mapas só nascem depois do HTML estar na tela, senão o Leaflet mede 0x0 */
+    locais.forEach(function(l,i){
+      const no=el('pMapa'+i); if(!no)return;
+      try{
+        const m=L.map(no,{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,
+          touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false}).setView([l.lat,l.lng],16);
+        L.tileLayer(TILE,{maxZoom:19}).addTo(m);
+        L.marker([l.lat,l.lng],{icon:iconeNum(i+1)}).addTo(m);
+        setTimeout(function(){try{m.invalidateSize();}catch(_){}} ,120);
+        _mapasPonto.push(m);
+      }catch(_){}
+    });
+  }
   window.abrirMapaCheio=function(){
-    el('tituloMapaCheio').textContent=(locais.length>1?'Nossas unidades':(dadosNeg&&dadosNeg.nome)||'Mapa');
+    el('tituloMapaCheio').textContent=(locais.length>1?(locais.length+' unidades'):((dadosNeg&&dadosNeg.nome)||'Mapa'));
     abrirFolha('folhaMapa');
+    if(locais.length>1){ setTimeout(montarMapasPorPonto,220); ev('mapa_cheio',{}); return; }
+    /* 1 ponto: volta a ser um mapa só, ocupando a folha inteira */
+    const corpo=el('corpoMapa');
+    if(corpo&&!el('mapCheio')){ corpo.classList.add('semPad'); corpo.innerHTML='<div id="mapCheio"></div>'; mapCheio=null; marcadorCheio=null; marcadorEuCheio=null; }
     setTimeout(()=>{
       if(!mapCheio){
         mapCheio=L.map('mapCheio',{zoomControl:true,attributionControl:false}).setView(negocioPos||[-8.05,-34.9],15);
         L.tileLayer(TILE,{maxZoom:19}).addTo(mapCheio);
       }
       mapCheio.invalidateSize();
-      if(locais.length>1){camadaCheio=desenharTodosPinos(mapCheio,camadaCheio);}
-      else if(negocioPos){
+      if(negocioPos){
         /* guardado numa variável: antes um marcador NOVO era criado a cada
            abertura do mapa e eles iam empilhando no mesmo ponto. */
         if(!marcadorCheio){
