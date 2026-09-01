@@ -365,6 +365,58 @@ a{color:inherit}
 .lp-foot h4.lp-news__okTit{font-size:16.5px;font-weight:800;margin:0 0 6px;color:var(--mv-ok);text-transform:none;letter-spacing:-.2px}
 .lp-legal{margin-top:32px;padding-top:22px;border-top:1px solid var(--mv-linha);font-size:12.5px;line-height:1.7;color:var(--mv-txt-3)}
 
+/* ---------- DIVULGACAO NAS REDES DO MOVIKI (01/09/2026) ----------
+   Bloco novo: mostra que o Moviki tambem faz propaganda do cliente nas redes
+   sociais dele (a autorizacao fica no painel, aba "Divulgacao e marca propria").
+   Tem faixa propria — nao entra no reveza claro/escuro das outras secoes. */
+.lp-sec--divulga{background:
+  radial-gradient(70% 120% at 85% 10%,rgba(0,212,255,.13),transparent 60%),
+  radial-gradient(60% 110% at 10% 90%,rgba(37,227,155,.11),transparent 62%),
+  linear-gradient(180deg,#07111f,#060d18);
+  border-block:1px solid rgba(0,212,255,.2)}
+.lp-divulga-lista{display:grid;gap:11px;margin:20px 0 22px}
+.lp-divulga-lista li{display:flex;align-items:flex-start;gap:12px;list-style:none;
+  background:rgba(14,28,48,.6);border:1px solid var(--mv-linha);border-radius:14px;padding:12px 14px;
+  text-align:left}
+.lp-divulga-lista .ic3d{width:32px;height:32px}
+.lp-divulga-lista div>b{display:block;font-size:14.5px;font-weight:700;color:#eaf6ff;letter-spacing:-.2px}
+.lp-divulga-lista span b{color:#cfe0f5}
+.lp-divulga-lista span{display:block;font-size:13px;line-height:1.55;color:var(--mv-txt-3);margin-top:3px}
+/* o "post" de exemplo */
+.lp-post{max-width:400px;margin-inline:auto;width:100%;border-radius:20px;overflow:hidden;
+  border:1px solid var(--mv-linha);background:linear-gradient(180deg,#0e1c30,#0a1424);
+  box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.lp-post__topo{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(28,52,87,.7)}
+.lp-post__av{width:34px;height:34px;border-radius:50%;flex:0 0 auto;background:var(--mv-grad);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(0,212,255,.55)}
+.lp-post__av i{width:12px;height:12px;border-radius:50%;background:#04121f}
+.lp-post__quem b{display:block;font-size:14px;font-weight:800;color:#eaf6ff;letter-spacing:-.2px}
+.lp-post__quem span{display:block;font-size:11.5px;color:var(--mv-txt-3);margin-top:1px}
+.lp-post__selo{margin-left:auto;font-size:11px;font-weight:700;padding:4px 9px;border-radius:99px;
+  color:var(--mv-ok);background:rgba(37,227,155,.13);border:1px solid rgba(37,227,155,.34);white-space:nowrap}
+.lp-post__arte{position:relative;aspect-ratio:1/.78;overflow:hidden;
+  background:radial-gradient(110% 100% at 50% 38%,#0d2440,#060d18)}
+.lp-post__grade{position:absolute;inset:-40%;
+  background-image:linear-gradient(rgba(0,212,255,.13) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,212,255,.13) 1px,transparent 1px);
+  background-size:34px 34px;transform:rotate(-14deg)}
+.lp-post__miolo{position:relative;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;text-align:center;padding:16px}
+.lp-post__miolo img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 10px 22px rgba(0,150,255,.5))}
+.lp-post__nome{font-size:19px;font-weight:800;letter-spacing:-.5px;color:#fff}
+.lp-post__cid{font-size:12.5px;color:var(--mv-txt-2);display:flex;align-items:center;gap:5px}
+.lp-post__fita{position:absolute;top:12px;left:12px;font-size:11px;font-weight:800;letter-spacing:.3px;
+  padding:5px 10px;border-radius:99px;color:#02131f;background:var(--mv-grad);box-shadow:0 6px 18px rgba(0,102,255,.4)}
+.lp-post__pe{padding:12px 14px 14px}
+.lp-post__acoes{display:flex;align-items:center;gap:16px;font-size:12.5px;color:var(--mv-txt-3);margin-bottom:9px}
+.lp-post__txt{font-size:13px;line-height:1.6;color:var(--mv-txt-2);margin:0}
+.lp-post__txt b{color:#eaf6ff}
+.lp-post__tags{color:var(--mv-ciano)}
+@media(max-width:560px){
+  .lp-post__miolo img{width:60px;height:60px}
+  .lp-post__nome{font-size:17px}
+}
+
 /* ---------- BREAKPOINTS ---------- */
 @media(max-width:1240px){
   .lp-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -588,7 +640,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-v6';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-divulgacao';</script>
 </head>
 
 <body class="mv">
@@ -622,6 +674,7 @@ a{color:inherit}
       </div>
       <a class="item" href="#recursos" onclick="lpMenu(false)">Recursos</a>
       <a class="item" href="#como" onclick="lpMenu(false)">Como funciona</a>
+      <a class="item" href="#divulgacao" onclick="lpMenu(false)">Divulgação grátis</a>
       <a class="item" href="#paraquem" onclick="lpMenu(false)">Para quem é</a>
       <a class="item" href="#empresas" onclick="lpMenu(false)">Várias unidades</a>
       <a class="item" href="#planos" onclick="lpMenu(false)">Planos</a>
@@ -814,6 +867,49 @@ a{color:inherit}
           <h3>Divulgue e conecte</h3><p>Mostre seu cardápio, promoções e fale com seus clientes.</p></div>
         <div class="lp-passo"><div class="n">4</div><img class="ic3d ic3d--g" src="icones-premium/crescimento.png" alt="" loading="lazy" onerror="lpIco(this,'📈')">
           <h3>Venda mais</h3><p>Seja encontrado por mais pessoas e aumente seus resultados.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DIVULGAÇÃO NAS REDES DO MOVIKI ================= -->
+  <section class="lp-sec lp-sec--divulga" id="divulgacao">
+    <div class="mv-container lp-duplo">
+      <div>
+        <div class="lp-tit lp-tit--esq" style="margin-bottom:6px">
+          <h2>A Moviki também <em>divulga o seu negócio</em></h2>
+          <p>Além de colocar você no mapa, a gente monta o post do seu negócio e publica nas redes sociais da Moviki. É divulgação gratuita — e quem manda é você.</p>
+        </div>
+        <ul class="lp-divulga-lista">
+          <li><img class="ic3d" src="icones-premium/indicar.png" alt="" loading="lazy" onerror="lpIco(this,'📣')">
+            <div><b>A gente monta o post pra você</b><span>Nome do negócio, sua logo, o segmento, a cidade e o seu link. Você não precisa fazer nada.</span></div></li>
+          <li><img class="ic3d" src="icones-premium/escudo.png" alt="" loading="lazy" onerror="lpIco(this,'🔒')">
+            <div><b>Seu endereço exato nunca vai no post</b><span>Só a cidade aparece. A localização precisa continua sendo do cliente que abre a sua página.</span></div></li>
+          <li><img class="ic3d" src="icones-premium/aberto.png" alt="" loading="lazy" onerror="lpIco(this,'🎚️')">
+            <div><b>Você liga e desliga quando quiser</b><span>É um botão no seu painel, na aba <b>Divulgação e marca própria</b>. Sem autorização, nada é publicado.</span></div></li>
+        </ul>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_divulgacao">Quero ser divulgado</a>
+      </div>
+
+      <div class="lp-post">
+        <div class="lp-post__topo">
+          <span class="lp-post__av"><i></i></span>
+          <span class="lp-post__quem"><b>moviki</b><span>Negócios no mapa · agora</span></span>
+          <span class="lp-post__selo">✓ Divulgação ligada</span>
+        </div>
+        <div class="lp-post__arte">
+          <span class="lp-post__grade"></span>
+          <span class="lp-post__fita">NOVO NO MAPA</span>
+          <div class="lp-post__miolo">
+            <img src="icones-premium/foodtruck.png" alt="" loading="lazy" onerror="lpIco(this,'🚚')">
+            <span class="lp-post__nome">Food Truck do Zé</span>
+            <span class="lp-post__cid">📍 João Pessoa · PB</span>
+          </div>
+        </div>
+        <div class="lp-post__pe">
+          <div class="lp-post__acoes"><span>♥ 214</span><span>💬 31</span><span>↗ 12</span></div>
+          <p class="lp-post__txt"><b>moviki</b> Mais um negócio no mapa! 🚚 <b>Food Truck do Zé</b> agora aparece pra quem está perto. Toque no link e veja o cardápio.
+            <span class="lp-post__tags">#moviki #nomapa #negociolocal</span></p>
+        </div>
       </div>
     </div>
   </section>
