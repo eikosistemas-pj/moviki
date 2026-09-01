@@ -167,6 +167,15 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .uCard:hover{border-color:var(--ciano);transform:translateY(-2px);}
 .uCard.ativa{border-color:var(--ciano);box-shadow:0 0 0 1px var(--ciano) inset,0 8px 24px rgba(0,212,255,.16);}
 .uCard .thumb{position:relative;height:92px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+/* selo "mais perto" no card do carrossel */
+.uPerto{position:absolute;top:7px;right:7px;z-index:3;font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  color:#04121f;background:linear-gradient(135deg,var(--ciano),#0aa2ff);padding:3px 8px;border-radius:var(--mv-r-pill);
+  box-shadow:0 3px 10px rgba(0,0,0,.45);}
+.convDist{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;
+  background:var(--mv-campo);border:1px dashed rgba(0,212,255,.45);color:var(--ciano);
+  font-family:inherit;font-weight:600;font-size:13px;padding:11px 14px;border-radius:var(--mv-r);cursor:pointer;transition:.18s;}
+.convDist:hover{border-color:var(--ciano);background:rgba(0,212,255,.08);border-style:solid;}
+.convDist svg{width:16px;height:16px;flex:0 0 auto;}
 .uCard .thumb img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .uCard .num{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1a7dff,#0b4fd4);color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.5);}
 .uCard .corpo{padding:9px 10px 11px;}
@@ -707,6 +716,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       </button>
     </div>
     <div class="trilho" id="trilhoUnid"></div>
+    <!-- 01/09/2026: sem localização liberada não há como dizer qual unidade é a
+         mais perto. Este convite aparece só nesse caso e some depois. -->
+    <button class="convDist escondido" id="convDist" type="button" onclick="localizarme()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      Ver qual unidade está mais perto de mim
+    </button>
   </section>
 
   <!-- ======================= PROMOÇÃO EM DESTAQUE ======================= -->
@@ -887,7 +902,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-01-carrossel-pontos';
+  window.MOVIKI_VERSAO='2026-09-01-unidades';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -1123,6 +1138,26 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     box.innerHTML=its.slice(0,6).map(i=>'<div class="rapido'+(i.demo?' demoBloco':'')+'"><div class="ico'+(i.verde?' verde':'')+'">'+i.ico+'</div><div class="tx"><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('');
   }
 
+  /* Foto de capa da unidade — 01/09/2026.
+     O ponto principal nunca teve foto própria (só os pontos extras têm), então
+     ele aparecia com o ícone cinza no carrossel. Agora, quem não tem foto
+     própria usa a CAPA do negócio e, na falta dela, a 1ª foto da galeria —
+     card com imagem de verdade convence, card com ícone cinza não. */
+  function fotoDaUnidade(l){
+    if(l&&fotoOk(l.foto))return l.foto;
+    if(!liberaFotos())return '';
+    const d=dadosNeg||{};
+    if(fotoOk(d.capa))return d.capa;
+    const g=(d.fotos||[]).filter(fotoOk);
+    return g.length?g[0]:'';
+  }
+  /* Índice da unidade mais perto (só existe depois que o cliente libera a
+     localização). Um número só, usado no carrossel e na gaveta. */
+  function unidadeMaisPerto(){
+    let idx=-1,menor=Infinity;
+    locais.forEach((l,i)=>{if(l.km!=null&&l.km<menor){menor=l.km;idx=i;}});
+    return idx;
+  }
   function montarUnidades(){
     const sec=el('secUnidades'), tr=el('trilhoUnid');
     el('ondeQtd').textContent = locais.length>1 ? '('+locais.length+' unidades)' : '';
@@ -1130,15 +1165,35 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     sec.classList.remove('escondido');
     el('faixaEmpTxt').textContent = (ehEnterprise()?'Empresa · ':'')+locais.length+' unidades';
     const aberto=dadosNeg&&dadosNeg.status==='aberto';
+    const perto=unidadeMaisPerto();
+    const temDist=locais.some(l=>l.km!=null);
     tr.innerHTML=locais.map((l,i)=>{
-      const foto=l.foto?fotoInteira(l.foto,l.nome,false):('<div class="demoFoto" style="width:100%;height:100%">'+IC.unidades+'</div>');
+      const u=fotoDaUnidade(l);
+      const foto=u?fotoInteira(u,l.nome,false):('<div class="demoFoto" style="width:100%;height:100%">'+IC.unidades+'</div>');
       const km=(l.km!=null)?('<div class="dU">'+IC.pino+'a '+fmtKm(l.km)+'</div>'):'';
-      return '<button class="uCard'+(i===localAtivo?' ativa':'')+'" type="button" onclick="selecionarLocal('+i+')">'+
-        '<div class="thumb"><span class="num">'+(i+1)+'</span>'+foto+'</div>'+
+      const selo=(i===perto&&locais.length>1)?'<span class="uPerto">mais perto</span>':'';
+      return '<button class="uCard'+(i===localAtivo?' ativa':'')+'" type="button" onclick="abrirUnidade('+i+')">'+
+        '<div class="thumb"><span class="num">'+(i+1)+'</span>'+selo+foto+'</div>'+
         '<div class="corpo"><div class="nmU">'+esc(l.nome)+'</div>'+
         '<span class="selo '+(aberto?'aberto':'fechado')+'"><span class="bol"></span>'+(aberto?'Aberto agora':'Fechado')+'</span>'+km+'</div></button>';
     }).join('');
+    /* Sem a localização liberada, nenhuma distância aparece — e a pergunta que
+       o cliente faz ("qual é a mais perto de mim?") fica sem resposta. Um
+       convite curto resolve, e some sozinho depois que ele libera. */
+    const conv=el('convDist');
+    if(conv)conv.classList.toggle('escondido', temDist || locais.length<2);
   }
+  /* Tocar numa unidade JÁ ABRE a lista lateral com ela marcada. Antes era
+     preciso marcar aqui e depois procurar o "Ver todas" — dois passos pra uma
+     intenção só. */
+  window.abrirUnidade=function(i){
+    selecionarLocal(i);
+    abrirGaveta();
+    setTimeout(function(){
+      const alvo=document.querySelector('#gvLista .uBig.ativa');
+      if(alvo){try{alvo.scrollIntoView({behavior:'smooth',block:'center'});}catch(_){}}
+    },340);
+  };
 
   /* 31/08/2026 — FIM DO FILTRO POR TITULO.
      A pagina inteira exigia `titulo` pra considerar que a promocao/evento
@@ -1620,13 +1675,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   window.filtrarUnidades=function(t){renderGaveta((t||'').trim().toLowerCase());};
   function renderGaveta(filtro){
     const aberto=dadosNeg&&dadosNeg.status==='aberto';
-    let maisPerto=-1, menor=Infinity;
-    locais.forEach((l,i)=>{if(l.km!=null&&l.km<menor){menor=l.km;maisPerto=i;}});
+    const maisPerto=unidadeMaisPerto();
     const html=locais.map((l,i)=>({l:l,i:i}))
       .filter(o=>!filtro||o.l.nome.toLowerCase().indexOf(filtro)>=0)
       .map(o=>{
         const l=o.l,i=o.i;
-        const foto=l.foto?('<div class="uFoto">'+fotoInteira(l.foto,'',false)+'</div>'):'';
+        const uf=fotoDaUnidade(l);
+        const foto=uf?('<div class="uFoto">'+fotoInteira(uf,l.nome||'',false)+'</div>'):'';
         const km=(l.km!=null)?('<div class="linha">'+IC.pino+'<span>a '+fmtKm(l.km)+' de você</span></div>'):'';
         const hor=l.horario?('<div class="linha">'+IC.relogio+'<span>'+esc(l.horario)+'</span></div>'):'';
         const perto=(i===maisPerto&&locais.length>1)?'<span class="maisPerto">mais perto</span>':'';
