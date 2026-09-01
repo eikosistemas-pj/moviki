@@ -53,6 +53,7 @@ body::before{
 
 /* ---------- casca ---------- */
 .pg{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding-bottom:calc(84px + env(safe-area-inset-bottom));}
+@media(min-width:760px){.pg{padding-bottom:28px;}}   /* sem barra de baixo, sem espaço reservado */
 @media(min-width:1120px){
   .pg{margin:22px auto 26px;border:1px solid var(--mv-linha);border-radius:var(--mv-r-xl);overflow:hidden;background:linear-gradient(180deg,#08111f,#060d18);box-shadow:0 26px 70px rgba(0,0,0,.5);padding-bottom:120px;}
   .capa{border-radius:0;}
@@ -238,10 +239,24 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 /* a moldura .midiaCapa limita a ALTURA no proprio <img>; se so o container
    fosse limitado, o flyer estouraria e seria cortado embaixo (o overflow do
    container e hidden) — foi o que aconteceu na 1a montagem deste card. */
-.eventoDest .eImg .midiaCapa img:not(.capaFundo){max-height:min(52vh,360px);}
-@media(min-width:620px){.eventoDest .eImg .midiaCapa img:not(.capaFundo){max-height:300px;}}
+/* Flyer do evento — 01/09/2026 (2ª volta).
+   No celular ele tem que ABRIR NA LARGURA DO CARD. Flyer é quase sempre em pé
+   (2:3, 9:16): se o limite for de ALTURA, a arte encolhe e sobram tarjas
+   borradas dos lados — foi o que aconteceu ao apertar pra 360px. Agora o limite
+   é de LARGURA (a arte usa os 100% do card) e a altura só tem um teto de
+   segurança bem alto. No desktop, onde ele divide espaço com o texto, o teto de
+   altura volta a valer. */
+.eventoDest .eImg .midiaCapa img:not(.capaFundo){width:100%;height:auto;max-width:100%;max-height:min(86vh,620px);}
+@media(min-width:620px){
+  .eventoDest .eImg .midiaCapa img:not(.capaFundo){width:auto;max-height:340px;}
+}
+.eventoDest.soFlyer .dTxt{display:flex;flex-direction:column;align-items:flex-start;}
 .eventoDest.soFlyer .badgeFlutua{position:absolute;top:23px;left:23px;z-index:3;box-shadow:0 6px 18px rgba(0,0,0,.55);}
-.eventoDest.soFlyer .eImg{margin-top:0;}
+/* o botão vai pro FIM do card, abaixo da arte, e não flutuando em cima dela */
+.eventoDest.soFlyer{display:flex;flex-direction:column;}
+.eventoDest.soFlyer .dTxt{order:2;margin-top:13px;}
+.eventoDest.soFlyer .eImg{order:1;margin-top:0;}
+.eventoDest.soFlyer .btnEvento{margin-top:0;}
 .btnEvento{margin-top:13px;background:transparent;border:1px solid rgba(168,85,247,.7);color:#c9a2ff;font-weight:600;font-size:13.5px;padding:9px 17px;border-radius:var(--mv-r-pill);cursor:pointer;transition:.18s;}
 .btnEvento:hover{background:rgba(168,85,247,.16);}
 @media(min-width:620px){.eventoDest{padding:20px;}}
@@ -345,7 +360,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .credito:hover{opacity:1;}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:900;display:flex;justify-content:space-around;align-items:center;gap:2px;
   padding:8px 6px calc(8px + env(safe-area-inset-bottom));background:rgba(8,17,30,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--mv-linha);}
-@media(min-width:760px){.tabbar{max-width:560px;margin:0 auto;bottom:16px;border-radius:var(--mv-r-pill);border:1px solid var(--mv-linha);box-shadow:0 16px 40px rgba(0,0,0,.55);padding:8px 10px;}}
+@media(min-width:760px){.tabbar{display:none;}}
 .tb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--mv-txt-3);font-size:10.5px;cursor:pointer;padding:3px 6px;flex:1 1 0;min-width:0;transition:.18s;}
 .tb svg{width:21px;height:21px;}
 .tb span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
@@ -425,6 +440,18 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .miniFotos img.ativa{opacity:1;border-color:var(--ciano);}
 .promoBox,.eventoBox{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;margin-bottom:11px;}
 .promoBox{border-color:rgba(255,138,0,.32);}
+/* promoção acesa por um instante depois do "Ver promoção" */
+.promoBox.acesa{border-color:#ff8a00;box-shadow:0 0 0 2px rgba(255,138,0,.35),0 0 30px rgba(255,138,0,.28);}
+/* caminho pra pedir: WhatsApp com a promoção escrita, e o cardápio */
+.pAcoes{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px;}
+.pAcao{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:1 1 190px;min-width:0;
+  font-family:inherit;font-weight:700;font-size:13.5px;padding:12px 14px;border-radius:var(--mv-r);
+  cursor:pointer;text-decoration:none;border:1px solid transparent;transition:.18s;}
+.pAcao svg{width:16px;height:16px;flex:0 0 auto;}
+.pAcao.pedir{background:linear-gradient(135deg,#25e39b,#12b981);color:#03251a;}
+.pAcao.pedir:hover{filter:brightness(1.06);}
+.pAcao.ver{background:var(--mv-campo);border-color:var(--mv-linha-forte);color:var(--ciano);}
+.pAcao.ver:hover{border-color:var(--ciano);background:#12233c;}
 /* Capa de promoção/evento — 31/08/2026.
    ANTES: height:180px + object-fit:cover. Flyer de evento costuma ser EM PÉ
    (4:5, 9:16, print de story) — o corte comia data, endereço e preço, que é
@@ -808,7 +835,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-01-layout';
+  window.MOVIKI_VERSAO='2026-09-01-layout2';
   const app=initializeApp(firebaseConfig);
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
@@ -1115,7 +1142,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       '<div class="dTxt">'+
         '<span class="badge">'+IC.fogo+'Promoção</span>'+
         (_tit?'<h3>'+esc(_tit)+'</h3>':'')+linhaPreco+linhaResto+linhaVal+
-        '<button class="btnPromo" type="button" onclick="irParaAba(\'promocoes\')">Ver promoção</button>'+
+        '<button class="btnPromo" type="button" onclick="verPromocao()">Ver promoção</button>'+
       '</div>'+capa+'</div>';
   }
 
@@ -1210,6 +1237,19 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     else if(abaAtiva==='eventos')    box.innerHTML=htmlEventos(listaEventos(d));
     else box.innerHTML=htmlInfo(d);
   }
+  /* Rola até a promoção e acende o primeiro bloco por 1,6s. Sem o destaque
+     visual a pessoa chegava lá embaixo sem saber o que tinha mudado na tela. */
+  window.verPromocao=function(){
+    irParaAba('promocoes');
+    setTimeout(function(){
+      const box=document.querySelector('#abaConteudo .promoBox');
+      if(!box)return;
+      try{ box.scrollIntoView({behavior:'smooth',block:'center'}); }catch(_){}
+      box.classList.add('acesa');
+      setTimeout(function(){ box.classList.remove('acesa'); },1600);
+    },260);
+    ev('ver_promocao',{});
+  };
   window.irParaAba=function(k){
     abaAtiva=k;
     if(k==='avaliacoes')carregarListaAvaliacoes(negocioUid);
@@ -1270,6 +1310,14 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(mediaCache>0)its.push({ic:IC.avaliacoes,lb:'Nota média',vl:mediaCache.toFixed(1).replace('.',',')+' de 5 · '+qtdCache+' avaliação'+(qtdCache>1?'ões':'')});
     return '<div class="infoLista">'+its.map(i=>'<div class="infoIt'+(i.demo?' ehDemo demoBloco':'')+'"><div class="ico">'+i.ic+'</div><div><div class="lb">'+esc(i.lb)+'</div><div class="vl">'+esc(i.vl)+'</div></div></div>').join('')+'</div>';
   }
+  function acoesPromo(titulo){
+    const w=wppDaUnidade();
+    const msg=encodeURIComponent('Olá! Vi no Moviki e quero a promoção: '+(titulo||'a promoção do dia'));
+    const wpp=w?('<a class="pAcao pedir" href="https://wa.me/55'+w+'?text='+msg+'" target="_blank" rel="noopener" data-ev="wpp_promocao">'+IC.whats+'Pedir esta promoção</a>'):'';
+    const card=(cardapioAtual&&cardapioAtual.length)
+      ? '<button class="pAcao ver" type="button" onclick="abrirCardapio()">'+IC.cardapio+'Ver no cardápio</button>' : '';
+    return (wpp||card)?('<div class="pAcoes">'+wpp+card+'</div>'):'';
+  }
   function htmlPromos(promos){
     if(!promos.length)return '<div class="vazioMod">Sem promoções agora.</div>';
     return promos.map(p=>{
@@ -1277,7 +1325,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       /* sem titulo nao se pinta uma linha de texto vazia; e se nao houver
          texto NENHUM, o bloco inteiro de informacao sai — sobra so a arte. */
       const _t=String(p.titulo||'').trim(), _d=String(p.detalhe||'').trim();
-      const info=(_t||_d)?('<div class="midiaInfo">'+(_t?'<div class="t">'+esc(_t)+'</div>':'')+(_d?'<div class="d">'+esc(_d)+'</div>':'')+'</div>'):'';
+      const info='<div class="midiaInfo">'+(_t?'<div class="t">'+esc(_t)+'</div>':'')+(_d?'<div class="d">'+esc(_d)+'</div>':'')+acoesPromo(_t)+'</div>';
       return temCapa
         ? '<div class="promoBox"><div class="midiaCapa"><img class="capaFundo" src="'+esc(p.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer"><img src="'+esc(p.capa)+'" alt="'+esc(_t||'Promoção')+'" loading="lazy" referrerpolicy="no-referrer" onclick="abrirFoto(this)"></div>'+info+'</div>'
         : '<div class="promoBox">'+info+'</div>';
