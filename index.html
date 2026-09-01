@@ -204,28 +204,25 @@ a{color:inherit}
   .lp-cena .lp-neg{width:min(206px,56%);}
   .lp-cena .lp-neg img{width:36px;height:36px;flex:0 0 36px;}
 }
-/* Abaixo de 900px a cena fica estreita: TRES cartoes flutuando cobrem a tela do
-   aparelho e o painel — que e o que a gente quer mostrar — some. Fica UM
-   cartao, encostado no topo, e o aparelho ganha espaco. Menos e mais aqui. */
+/* ---- CELULAR: A CENA VIRA SO O APARELHO (01/09/2026, 2a volta) ----
+   A composicao com cartoes flutuando e pinos espalhados e um recurso de
+   DESKTOP, onde sobra largura. Numa tela de 390px eles caem em cima do
+   aparelho: o cartao cobre a saudacao, os pinos pousam no meio do texto, e o
+   conjunto vira ruido em cima justamente da coisa que a gente quer mostrar.
+   Abaixo de 900px fica so o aparelho, centrado, com o mapa de fundo bem fraco.
+   Quem chega pelo celular ve o painel — que e o argumento — e mais nada. */
 @media(max-width:900px){
-  .lp-cena{aspect-ratio:1/1.18;min-height:440px;}
-  .lp-cena .lp-fone__corpo{max-width:min(250px,60%);}
-  .lp-cena .lp-neg--b,.lp-cena .lp-neg--c{display:none;}
-  .lp-cena .lp-neg--a{top:0;left:0;width:min(216px,58%);}
-  .lp-cena__mapa{height:60%;}
-  /* o aparelho desce um pouco pra o cartao encostar na moldura, e nao cobrir
-     a saudacao dentro da tela */
-  .lp-cena .lp-fone{padding-top:58px;}
+  .lp-cena{aspect-ratio:auto;min-height:0;padding:22px 0 6px;}
+  .lp-cena .lp-fone{padding-top:0;}
+  .lp-cena .lp-fone__corpo{max-width:min(268px,72%);}
+  .lp-cena .lp-neg{display:none;}      /* cartoes flutuantes: so no desktop */
+  .lp-cena__saida{display:none;}       /* pinos soltos: so no desktop */
+  .lp-cena__mapa{top:6%;height:64%;width:150%;opacity:.5;}
+  .lp-cena__luz{top:26%;opacity:.75;}
 }
 @media(max-width:479px){
-  /* min-height alto de proposito: abaixo de 480 a coluna e estreita, e o
-     aspect-ratio sozinho dava uma cena MAIS BAIXA que o proprio aparelho
-     (222px de largura = 469 de altura) — ele vazava por cima. */
-  .lp-cena{aspect-ratio:1/1.24;min-height:545px;}
-  .lp-cena .lp-fone{padding-top:44px;}
-  .lp-cena .lp-fone__corpo{max-width:222px;}
-  .lp-cena .lp-neg--a{width:min(184px,60%);padding:8px 10px;}
-  .lp-cena .lp-neg--a img{width:32px;height:32px;flex:0 0 32px;}
+  .lp-cena{padding:18px 0 4px;}
+  .lp-cena .lp-fone__corpo{max-width:min(250px,78%);}
 }
 
 /* ---------- SEÇÕES ---------- */
@@ -515,7 +512,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-01-cena3d';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-cena3d-mob';</script>
 </head>
 
 <body class="mv">
