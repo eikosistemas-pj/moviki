@@ -93,7 +93,7 @@ a{color:inherit}
 .lp-hero>.mv-container{position:relative;z-index:1}
 /* .lp-head NAO entra aqui: position:relative sobrescreveria o sticky do cabecalho */
 .lp-sec,.lp-foot{position:relative;z-index:1}
-.lp-hero-grid{display:grid;gap:clamp(16px,1.8vw,26px);grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) minmax(0,.96fr);align-items:center}
+.lp-hero-grid{display:grid;gap:clamp(16px,2.4vw,34px);grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center}
 .lp-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.7px;line-height:1.45;
   padding:9px 16px;text-align:left;max-width:100%}
 .lp-tag svg{width:14px;height:14px;flex:0 0 14px;fill:var(--mv-ciano);filter:drop-shadow(0 0 6px rgba(0,212,255,.7))}
@@ -150,30 +150,83 @@ a{color:inherit}
 .lp-neg--c{bottom:6%;left:8%;animation-delay:.3s}
 @keyframes lpSobe{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-/* ---------- MOCK DO PAINEL ---------- */
-.lp-painel{background:linear-gradient(180deg,rgba(16,33,55,.97),rgba(9,18,32,.97));border:1px solid rgba(0,212,255,.3);
-  border-radius:20px;padding:15px;box-shadow:0 26px 64px rgba(0,0,0,.55),var(--mv-glow)}
-.lp-painel__top{display:flex;align-items:center;gap:9px;margin-bottom:13px}
-.lp-painel__top .t{font-size:13.5px;font-weight:700;line-height:1.2}
-.lp-painel__top .s{font-size:10.5px;color:var(--mv-txt-3)}
-.lp-rot{font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--mv-txt-3);margin:0 0 8px}
-.lp-tog{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
-.lp-tog span{text-align:center;font-size:12px;font-weight:600;padding:10px 6px;border-radius:11px;
-  border:1px solid var(--mv-linha);color:var(--mv-txt-3)}
-.lp-tog span.on{border-color:rgba(37,227,155,.6);color:var(--mv-ok);background:rgba(37,227,155,.1)}
-.lp-caixa{background:var(--mv-campo);border:1px solid rgba(37,227,155,.35);border-radius:12px;padding:11px 12px;margin-bottom:13px}
-.lp-caixa .t{font-size:11.5px;font-weight:700}
-.lp-caixa .s{font-size:10px;color:var(--mv-txt-3);margin-top:2px}
-.lp-caixa .l{display:flex;align-items:center;gap:8px;margin-top:9px;background:rgba(0,0,0,.3);border-radius:9px;padding:8px 10px}
-.lp-caixa .l span{flex:1;font-size:10.5px;color:var(--mv-ciano);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lp-grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.lp-cel{position:relative;background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-radius:12px;
-  padding:11px 5px 9px;text-align:center;font-size:10.5px;color:var(--mv-txt-2)}
-.lp-cel img{width:32px;height:32px;object-fit:contain;margin-bottom:5px}
-.lp-cel .b{position:absolute;top:5px;right:5px;background:var(--mv-azul);color:#fff;font-size:9.5px;font-weight:800;
-  min-width:17px;height:17px;padding:0 5px;border-radius:999px;display:grid;place-items:center}
-.lp-painel__pe{margin-top:11px;text-align:center;font-size:11.5px;color:var(--mv-ciano);
-  border:1px solid rgba(0,212,255,.4);border-radius:11px;padding:10px}
+/* O mock antigo do painel (.lp-painel, .lp-tog, .lp-caixa, .lp-grade, .lp-cel)
+   saiu em 01/09/2026 — foi substituido pelo celular 3D no fim desta folha. */
+
+/* ============ CENA DO HERO: O MAPA SAINDO DO CELULAR — 01/09/2026 ============
+   Antes eram DUAS colunas soltas: o mapa isometrico de um lado e o celular do
+   outro, sem relacao nenhuma entre si. Agora e uma cena so — o mapa nasce de
+   dentro da tela e sobe, e os pinos e cartoes ESCAPAM da moldura.
+   O truque do "sai da tela" tem uma regra so: o que escapa NAO pode ser filho
+   da tela (ela tem overflow:hidden e cortaria tudo). Entao o mapa fica ATRAS do
+   aparelho e os pinos/cartoes ficam NA FRENTE, irmaos do aparelho, com sombra
+   propria — e o olho junta as duas metades numa coisa so. */
+.lp-cena{position:relative;width:100%;aspect-ratio:1/1.06;min-height:420px;
+  display:flex;align-items:flex-end;justify-content:center;}
+/* o mapa: atras do aparelho, subindo pra fora dele */
+.lp-cena__mapa{position:absolute;left:50%;top:-2%;width:132%;height:74%;
+  transform:translateX(-50%);z-index:1;pointer-events:none;
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 96%,#000 30%,rgba(0,0,0,.55) 62%,transparent 88%);
+          mask-image:radial-gradient(120% 100% at 50% 96%,#000 30%,rgba(0,0,0,.55) 62%,transparent 88%);}
+.lp-cena__mapa .lp-iso__grade{position:absolute;inset:-30% -20%;}
+/* brilho na boca da tela: e ele que "cola" o mapa no aparelho */
+.lp-cena__luz{position:absolute;left:50%;top:30%;width:74%;height:30%;transform:translate(-50%,-50%);
+  z-index:2;pointer-events:none;filter:blur(30px);
+  background:radial-gradient(ellipse at 50% 100%,rgba(0,205,255,.75),rgba(0,102,255,.34) 42%,transparent 70%);}
+.lp-cena .lp-fone{position:relative;z-index:3;width:100%;padding-bottom:0;}
+.lp-cena .lp-fone__corpo{max-width:min(268px,58%);}
+/* --- o que ESCAPA do aparelho: fica por cima de tudo --- */
+.lp-cena__saida{position:absolute;inset:0;z-index:4;pointer-events:none;}
+.lp-cena__saida .lp-pin{filter:drop-shadow(0 10px 16px rgba(0,0,0,.6));}
+.lp-cena__saida .lp-pin--borda{width:28px;height:28px;margin:-28px 0 0 -14px;
+  filter:drop-shadow(0 14px 22px rgba(0,0,0,.75)) drop-shadow(0 0 18px rgba(0,212,255,.6));}
+/* posicao dos pinos por tamanho de tela: no celular eles tem que ficar nas
+   BEIRADAS, senao pousam em cima do texto do painel e sujam a leitura. */
+.lp-cena__saida .p1{left:22%;top:24%;}
+.lp-cena__saida .p2{left:35%;top:37%;animation-delay:.4s;}
+.lp-cena__saida .p3{left:79%;top:70%;animation-delay:.8s;}
+.lp-cena__saida .p4{left:24%;top:78%;animation-delay:1.2s;}
+@media(max-width:900px){
+  .lp-cena__saida .lp-pin--borda{width:24px;height:24px;margin:-24px 0 0 -12px;}
+  .lp-cena__saida .p1{left:9%;top:34%;}
+  .lp-cena__saida .p2{left:14%;top:52%;}
+  .lp-cena__saida .p3{left:90%;top:60%;}
+  .lp-cena__saida .p4{left:8%;top:76%;}
+}
+.lp-cena .lp-neg{position:absolute;width:min(244px,58%);z-index:5;}
+.lp-cena .lp-neg img{width:42px;height:42px;flex:0 0 42px;}
+.lp-cena .lp-neg__n{font-size:12.5px;}
+.lp-cena .lp-neg__e,.lp-cena .lp-neg__d{font-size:11px;}
+.lp-cena .lp-neg--a{top:5%;left:0;}
+.lp-cena .lp-neg--b{top:29%;right:0;left:auto;}
+.lp-cena .lp-neg--c{bottom:17%;left:-3%;}
+@media(max-width:1099px){
+  .lp-cena .lp-neg{width:min(206px,56%);}
+  .lp-cena .lp-neg img{width:36px;height:36px;flex:0 0 36px;}
+}
+/* Abaixo de 900px a cena fica estreita: TRES cartoes flutuando cobrem a tela do
+   aparelho e o painel — que e o que a gente quer mostrar — some. Fica UM
+   cartao, encostado no topo, e o aparelho ganha espaco. Menos e mais aqui. */
+@media(max-width:900px){
+  .lp-cena{aspect-ratio:1/1.18;min-height:440px;}
+  .lp-cena .lp-fone__corpo{max-width:min(250px,60%);}
+  .lp-cena .lp-neg--b,.lp-cena .lp-neg--c{display:none;}
+  .lp-cena .lp-neg--a{top:0;left:0;width:min(216px,58%);}
+  .lp-cena__mapa{height:60%;}
+  /* o aparelho desce um pouco pra o cartao encostar na moldura, e nao cobrir
+     a saudacao dentro da tela */
+  .lp-cena .lp-fone{padding-top:58px;}
+}
+@media(max-width:479px){
+  /* min-height alto de proposito: abaixo de 480 a coluna e estreita, e o
+     aspect-ratio sozinho dava uma cena MAIS BAIXA que o proprio aparelho
+     (222px de largura = 469 de altura) — ele vazava por cima. */
+  .lp-cena{aspect-ratio:1/1.24;min-height:545px;}
+  .lp-cena .lp-fone{padding-top:44px;}
+  .lp-cena .lp-fone__corpo{max-width:222px;}
+  .lp-cena .lp-neg--a{width:min(184px,60%);padding:8px 10px;}
+  .lp-cena .lp-neg--a img{width:32px;height:32px;flex:0 0 32px;}
+}
 
 /* ---------- SEÇÕES ---------- */
 .lp-sec{padding:clamp(46px,6vw,84px) 0}
@@ -353,6 +406,105 @@ a{color:inherit}
 @media(max-width:420px){ .lp-rec,.lp-rec--3,.lp-rec--6{grid-template-columns:minmax(0,1fr)} }
 /* palavras longas nunca empurram o layout */
 .lp-rec h3,.lp-passo h3,.mv-h3,.lp-plano h3{overflow-wrap:anywhere}
+
+/* ================= CELULAR 3D COM O PAINEL ATUAL — 01/09/2026 =================
+   Substitui o mockup antigo (`.lp-painel`), que mostrava uma tela que nao existe
+   mais: "Link exclusivo", grade de 9 celulas e um toggle solto. O painel de hoje
+   abre com a saudacao, o card do mapa com a chave Aberto/Fechado e o bloco
+   Ferramentas.
+   Feito em CSS puro, sem imagem: fica nitido em qualquer tela, pesa quase nada
+   e, quando o painel mudar de novo, e texto pra editar — nao um print pra
+   refazer. O 3D e perspective + rotateY, com espessura na lateral, brilho
+   diagonal no vidro e sombra projetada no chao. */
+.lp-fone{position:relative;perspective:1400px;perspective-origin:60% 40%;padding:8px 0 26px;}
+.lp-fone__corpo{position:relative;width:100%;max-width:300px;margin:0 auto;aspect-ratio:9/19;
+  border-radius:40px;padding:9px;
+  background:linear-gradient(150deg,#3a4a63 0%,#16202f 26%,#0c1420 60%,#243247 100%);
+  box-shadow:0 2px 0 rgba(255,255,255,.16) inset,0 -2px 0 rgba(0,0,0,.5) inset,
+             28px 42px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.07);
+  transform:rotateY(-15deg) rotateX(5deg) rotateZ(.6deg);
+  transform-style:preserve-3d;transition:transform .5s cubic-bezier(.22,.9,.3,1);}
+.lp-fone:hover .lp-fone__corpo{transform:rotateY(-7deg) rotateX(2deg) rotateZ(0deg);}
+.lp-fone__corpo::before{content:"";position:absolute;inset:0;border-radius:40px;
+  background:linear-gradient(90deg,#0a111c,#1d2a3d 40%,#0a111c);
+  transform:translateZ(-13px);filter:brightness(.7);}
+.lp-fone__bt{position:absolute;right:-3px;width:3px;border-radius:2px;
+  background:linear-gradient(180deg,#46587a,#1b2637);transform:translateZ(-5px);}
+.lp-fone__bt.b1{top:23%;height:34px;} .lp-fone__bt.b2{top:33%;height:52px;}
+.lp-fone__bt.b3{left:-3px;right:auto;top:20%;height:26px;}
+.lp-fone__tela{position:relative;height:100%;border-radius:32px;overflow:hidden;
+  background:linear-gradient(180deg,#0a1424,#060d18);
+  box-shadow:0 0 0 1px rgba(0,0,0,.9) inset;display:flex;flex-direction:column;}
+.lp-fone__brilho{position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:32px;
+  background:linear-gradient(118deg,rgba(255,255,255,.13) 0%,rgba(255,255,255,.05) 16%,transparent 34%,transparent 74%,rgba(255,255,255,.045) 100%);}
+.lp-fone__ilha{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:5;
+  width:74px;height:19px;border-radius:12px;background:#04080f;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06);}
+.lp-fone__ilha::after{content:"";position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#1e3b5e,#050a12);}
+.lp-fone__chao{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);
+  width:74%;height:26px;border-radius:50%;filter:blur(16px);
+  background:radial-gradient(ellipse at center,rgba(0,102,255,.34),rgba(0,0,0,.5) 55%,transparent 72%);}
+
+/* ---- conteudo da tela: o painel de hoje, em miniatura ---- */
+.fn-topo{display:flex;align-items:center;gap:7px;padding:32px 13px 9px;flex:0 0 auto;}
+.fn-logo{display:flex;align-items:center;gap:5px;font-weight:800;font-size:13px;letter-spacing:-.3px;color:#eaf6ff;}
+.fn-logo i{width:16px;height:16px;border-radius:50%;background:var(--mv-grad);box-shadow:0 0 10px rgba(0,212,255,.7);flex:0 0 auto;}
+.fn-logo span{color:var(--mv-ciano);}
+.fn-av{margin-left:auto;width:22px;height:22px;border-radius:50%;background:linear-gradient(150deg,#00d4ff,#0b64ff);flex:0 0 auto;}
+.fn-corpo{flex:1;min-height:0;overflow:hidden;padding:0 13px 13px;}
+.fn-ola{font-size:15px;font-weight:800;letter-spacing:-.4px;color:#eaf6ff;}
+.fn-ola small{display:block;font-size:9.5px;font-weight:500;color:var(--mv-txt-3);margin-top:2px;}
+.fn-card{position:relative;overflow:hidden;margin-top:9px;border:1px solid rgba(0,212,255,.2);border-radius:13px;
+  background:linear-gradient(160deg,#0a1a2f,#07101f);padding:11px;}
+.fn-card::before{content:"";position:absolute;inset:0;opacity:.3;
+  background-image:linear-gradient(rgba(0,212,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.1) 1px,transparent 1px);
+  background-size:26px 26px;transform:perspective(200px) rotateX(62deg) scale(1.7);transform-origin:50% 0%;}
+.fn-card>*{position:relative;}
+.fn-cardT{display:flex;align-items:center;gap:6px;}
+.fn-cardT b{font-size:11px;font-weight:800;color:#eaf6ff;letter-spacing:-.2px;}
+.fn-sel{display:inline-flex;align-items:center;gap:4px;font-size:8px;font-weight:700;padding:3px 7px;border-radius:99px;
+  color:var(--mv-ok);background:rgba(37,227,155,.13);border:1px solid rgba(37,227,155,.32);white-space:nowrap;}
+.fn-sel i{width:4px;height:4px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;}
+.fn-cardP{font-size:9px;line-height:1.45;color:var(--mv-txt-2);margin:5px 0 9px;}
+.fn-status{background:rgba(6,17,31,.88);border:1px solid rgba(0,212,255,.22);border-radius:10px;padding:8px;}
+.fn-statusL{font-size:8px;font-weight:700;color:var(--mv-txt-3);text-transform:uppercase;letter-spacing:.3px;}
+.fn-tog{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;}
+.fn-tog span{display:flex;align-items:center;justify-content:center;gap:4px;height:26px;border-radius:8px;
+  font-size:9.5px;font-weight:700;border:1px solid var(--mv-linha);color:var(--mv-txt-3);}
+.fn-tog span.on{color:var(--mv-ok);border-color:rgba(37,227,155,.55);background:rgba(37,227,155,.13);}
+.fn-tog i{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.fn-cta{display:flex;align-items:center;justify-content:center;gap:5px;height:30px;margin-top:9px;border-radius:9px;
+  background:var(--mv-grad);color:#02131f;font-size:10px;font-weight:800;box-shadow:0 6px 16px rgba(0,102,255,.34);}
+.fn-rot{font-size:10.5px;font-weight:800;color:#eaf6ff;margin:11px 0 7px;letter-spacing:-.2px;}
+.fn-grade{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.fn-cel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  aspect-ratio:1;border-radius:11px;background:var(--mv-surf);border:1px solid var(--mv-linha);
+  font-size:7.5px;font-weight:600;color:var(--mv-txt-2);text-align:center;line-height:1.15;padding:3px;}
+.fn-cel img{width:22px;height:22px;object-fit:contain;flex:0 0 auto;
+  filter:drop-shadow(0 3px 6px rgba(0,150,255,.4));}
+/* fallback: se o PNG nao carregar, o lpIco troca por um <span> com emoji */
+.fn-cel span{font-size:15px!important;line-height:1!important;}
+.fn-cta img{width:14px;height:14px;object-fit:contain;flex:0 0 auto;}
+.fn-cta span{font-size:12px!important;line-height:1!important;}
+.fn-salvar{flex:0 0 auto;margin:0 13px 14px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#25e39b,#12b981);color:#03251a;font-size:10px;font-weight:800;}
+@media(max-width:1099px){.lp-fone__corpo{max-width:272px;}}
+/* Telas estreitas: o aparelho fica menor e o conteudo nao cabe inteiro. Em vez
+   de deixar a grade ser cortada pela borda (fica com cara de bug), a tela mostra
+   uma linha de ferramentas so — continua sendo o painel de verdade, so que
+   menos linhas. */
+@media(max-width:479px){
+  .lp-fone__corpo{max-width:258px;transform:rotateY(-9deg) rotateX(3deg);}
+  .fn-topo{padding:28px 11px 7px;}
+  .fn-corpo{padding:0 11px 10px;}
+  .fn-ola{font-size:13.5px;}
+  .fn-ola small{font-size:9px;}
+  .fn-cardP{margin-bottom:8px;}
+  .fn-grade .fn-cel:nth-child(n+4){display:none;}
+  .fn-salvar{margin:0 11px 12px;}
+}
+@media(prefers-reduced-motion:reduce){.lp-fone__corpo{transition:none;}}
 </style>
 <style>
 /* Vik no FAQ - 2026-08-28-vikfaq. So a partir de 820px: no celular ele empurraria
@@ -363,7 +515,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-08-28-vikfaq';</script>
+<script>window.MOVIKI_VERSAO='2026-09-01-cena3d';</script>
 </head>
 
 <body class="mv">
@@ -445,23 +597,75 @@ a{color:inherit}
         </div>
       </div>
 
-      <!-- coluna 2: mapa isométrico -->
-      <div class="lp-palco" aria-hidden="true">
-        <div class="lp-iso">
+      <!-- coluna 2: A CENA — o mapa saindo de dentro do celular (01/09/2026) -->
+      <div class="lp-painel-col">
+      <div class="lp-cena" aria-hidden="true">
+
+        <!-- o mapa, ATRAS do aparelho, subindo pra fora da tela -->
+        <div class="lp-cena__mapa">
           <div class="lp-iso__grade"></div>
-          <img class="lp-iso__foto" src="img/mapa-3d.png" alt="" loading="eager" onerror="this.remove()">
           <svg class="lp-iso__rota" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M26,20 C38,28 50,38 58,46"/>
-            <path d="M58,46 C64,54 70,62 74,70"/>
-            <path d="M58,46 C48,58 40,68 32,78"/>
+            <path d="M22,26 C36,34 50,44 58,52"/>
+            <path d="M58,52 C66,60 72,68 78,76"/>
+            <path d="M58,52 C46,62 36,70 26,80"/>
           </svg>
-          <span class="lp-halo" style="left:26%;top:20%"></span>
-          <span class="lp-halo" style="left:74%;top:70%;animation-delay:1s"></span>
-          <span class="lp-halo" style="left:32%;top:78%;animation-delay:2s"></span>
-          <span class="lp-pin" style="left:26%;top:20%"></span>
-          <span class="lp-pin" style="left:74%;top:70%;animation-delay:.6s"></span>
-          <span class="lp-pin" style="left:32%;top:78%;animation-delay:1.2s"></span>
-          <span class="lp-nucleo"></span>
+          <span class="lp-halo" style="left:22%;top:26%"></span>
+          <span class="lp-halo" style="left:78%;top:76%;animation-delay:1s"></span>
+          <span class="lp-halo" style="left:26%;top:80%;animation-delay:2s"></span>
+        </div>
+        <span class="lp-cena__luz"></span>
+
+        <!-- o aparelho, com o painel de hoje -->
+        <div class="lp-fone">
+          <div class="lp-fone__corpo">
+            <span class="lp-fone__bt b3"></span><span class="lp-fone__bt b1"></span><span class="lp-fone__bt b2"></span>
+            <div class="lp-fone__tela">
+              <span class="lp-fone__ilha"></span>
+              <span class="lp-fone__brilho"></span>
+
+              <div class="fn-topo">
+                <span class="fn-logo"><i></i>movi<span>ki</span></span>
+                <span class="fn-av"></span>
+              </div>
+
+              <div class="fn-corpo">
+                <div class="fn-ola">Olá, Zé! 👋<small>Aqui está o resumo do seu negócio hoje.</small></div>
+
+                <div class="fn-card">
+                  <div class="fn-cardT"><b>Seu negócio no mapa</b><span class="fn-sel"><i></i>Visível</span></div>
+                  <p class="fn-cardP">Seu negócio está no mapa e no seu link. Quem estiver perto pode te encontrar.</p>
+                  <div class="fn-status">
+                    <span class="fn-statusL">Seu negócio está agora:</span>
+                    <div class="fn-tog"><span class="on"><i></i>Aberto</span><span><i></i>Fechado</span></div>
+                  </div>
+                  <div class="fn-cta"><img src="icones-premium/link.png" alt="" loading="lazy" onerror="lpIco(this,'🌐')">Ver minha página</div>
+                </div>
+
+                <div class="fn-rot">Ferramentas</div>
+                <div class="fn-grade">
+                  <div class="fn-cel"><img src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'👤')">Perfil</div>
+                  <div class="fn-cel"><img src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'🍽️')">Cardápio</div>
+                  <div class="fn-cel"><img src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🔥')">Promoções</div>
+                  <div class="fn-cel"><img src="icones-premium/eventos.png" alt="" loading="lazy" onerror="lpIco(this,'📅')">Eventos</div>
+                  <div class="fn-cel"><img src="icones-premium/galeria.png" alt="" loading="lazy" onerror="lpIco(this,'📸')">Fotos</div>
+                  <div class="fn-cel"><img src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Localização</div>
+                </div>
+              </div>
+
+              <div class="fn-salvar">Salvar tudo</div>
+            </div>
+            <span class="lp-fone__chao"></span>
+          </div>
+        </div>
+
+        <!-- o que SAI da tela: pinos e cartões por cima do aparelho -->
+        <div class="lp-cena__saida">
+          <span class="lp-pin p1"></span>
+          <!-- este fica MONTADO na moldura do aparelho: metade no mapa, metade
+               no celular. E o detalhe que faz o olho ler "esta saindo da tela". -->
+          <span class="lp-pin lp-pin--borda p2"></span>
+          <span class="lp-pin p3"></span>
+          <span class="lp-pin p4"></span>
         </div>
 
         <div class="lp-neg lp-neg--a">
@@ -475,7 +679,7 @@ a{color:inherit}
         <div class="lp-neg lp-neg--b">
           <img src="icones-premium/foodtruck.png" alt="" loading="lazy" onerror="lpIco(this,'🍕')">
           <div style="min-width:0">
-            <div class="lp-neg__n">Pizzaria do Bairro <span class="mv-badge mv-badge--ok" style="font-size:10px;padding:2px 7px">Aberto</span></div>
+            <div class="lp-neg__n">Pizzaria do Bairro</div>
             <div class="lp-neg__e">★★★★☆ <b>4,6</b> <span style="color:var(--mv-txt-3)">(95)</span></div>
             <div class="lp-neg__d">📍 A 600 m de você</div>
           </div>
@@ -483,46 +687,13 @@ a{color:inherit}
         <div class="lp-neg lp-neg--c">
           <img src="icones-premium/quiosque.png" alt="" loading="lazy" onerror="lpIco(this,'☕')">
           <div style="min-width:0">
-            <div class="lp-neg__n">Cafeteria Premium <span class="mv-badge mv-badge--ok" style="font-size:10px;padding:2px 7px">Aberto</span></div>
+            <div class="lp-neg__n">Cafeteria Premium</div>
             <div class="lp-neg__e">★★★★★ <b>4,9</b> <span style="color:var(--mv-txt-3)">(74)</span></div>
             <div class="lp-neg__d">📍 A 200 m de você</div>
           </div>
         </div>
+
       </div>
-
-      <!-- coluna 3: painel do negócio -->
-      <div class="lp-painel-col">
-        <div class="lp-painel" aria-hidden="true">
-          <div class="lp-painel__top">
-            <img class="ic3d ic3d--p" src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'🏪')">
-            <div style="flex:1;min-width:0"><div class="t">Painel do Negócio</div><div class="s">Gerencie seu negócio em movimento</div></div>
-            <span class="mv-badge mv-badge--ok" style="font-size:10.5px;padding:4px 9px"><i class="mv-ponto"></i>Aberto</span>
-            <span class="mv-badge mv-badge--neutro" style="font-size:10.5px;padding:4px 9px">Sair</span>
-          </div>
-
-          <p class="lp-rot">Status do meu negócio</p>
-          <div class="lp-tog"><span class="on">● Aberto</span><span>○ Fechado</span></div>
-
-          <div class="lp-caixa">
-            <div class="t">🔗 Link exclusivo do seu negócio</div>
-            <div class="s">Compartilhe e seja encontrado por mais clientes.</div>
-            <div class="l"><span>moviki.com.br/hamburgueriaartesanal</span>📋</div>
-          </div>
-
-          <div class="lp-grade">
-            <div class="lp-cel"><img src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'🍽️')">Cardápio</div>
-            <div class="lp-cel"><img src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">Promoções</div>
-            <div class="lp-cel"><img src="icones-premium/galeria.png" alt="" loading="lazy" onerror="lpIco(this,'📸')">Fotos</div>
-            <div class="lp-cel"><img src="icones-premium/eventos.png" alt="" loading="lazy" onerror="lpIco(this,'📅')">Eventos</div>
-            <div class="lp-cel"><span class="b">32</span><img src="icones-premium/avaliacoes.png" alt="" loading="lazy" onerror="lpIco(this,'⭐')">Avaliações</div>
-            <div class="lp-cel"><img src="icones-premium/chat.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Mensagens</div>
-            <div class="lp-cel"><img src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Localização</div>
-            <div class="lp-cel"><img src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">WhatsApp</div>
-            <div class="lp-cel"><img src="icones-premium/relatorios.png" alt="" loading="lazy" onerror="lpIco(this,'📊')">Meu plano</div>
-          </div>
-
-          <div class="lp-painel__pe">👁️ Ver meu perfil público</div>
-        </div>
       </div>
 
     </div>
@@ -593,7 +764,7 @@ a{color:inherit}
       <div class="mv-card mv-card-glow">
         <div class="mv-card-head">
           <div class="mv-flex"><img class="ic3d ic3d--p" src="icones-premium/multipontos.png" alt="" loading="lazy" onerror="lpIco(this,'🏬')">
-            <h3 class="mv-h3">Caldeirão Nordestino</h3></div>
+            <h3 class="mv-h3">Food Truck do Zé</h3></div>
           <span class="mv-badge mv-badge--info">3 unidades</span>
         </div>
         <div class="lp-unid">
