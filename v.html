@@ -4,6 +4,7 @@
 <meta name="description" content="Confira se a pessoa que está falando com você é mesmo um parceiro autorizado do Moviki.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="favicon512.png">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
 <script src="/mvmetrica.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -122,6 +123,7 @@
    confere o parceiro e comerciante prestes a decidir.
    --------------------------------------------------------------------------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -132,8 +134,23 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-09-03-verificacao-cta';
+window.MOVIKI_VERSAO = '2026-09-03-verificacao-appcheck';
 const app = initializeApp(firebaseConfig);
+
+/* APP CHECK — 03/09/2026.
+   Esta pagina nasceu DEPOIS da rodada que instalou o App Check nas outras
+   sete, e ficou de fora. Ela fala com o Firestore: no dia em que o
+   enforcement for ligado no Console, sem este bloco ela para de responder
+   CALADA — e some justamente a pagina que o comerciante abre pra decidir se
+   confia no parceiro. Mesma chave e mesmo padrao das outras sete.
+   try/catch de proposito: App Check com problema nunca derruba a pagina. */
+try {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'),
+    isTokenAutoRefreshEnabled: true
+  });
+} catch (e) { console.error('App Check:', e); }
+
 const db  = getFirestore(app);
 
 const ROBO = 'https://moviki-robo.vercel.app/api/novo-parceiro';
@@ -211,12 +228,12 @@ function pintarAutorizado(d, apelido){
   const ref = encodeURIComponent(apelido);
   const utm = 'utm_source=parceiro&utm_medium=verificacao&utm_campaign=programa_parceiros&utm_content=' + ref;
   el('depois').innerHTML = blocoExplica() +
-    '<a class="btn" data-ev="cta_click" data-cta="verificar_cadastrar" ' +
+    '<a class="btn" data-ev="verificar_cadastrar" ' +
       'href="https://app.moviki.com.br/?ref=' + ref + '&' + utm + '">' +
       'Quero me cadastrar agora</a>' +
     '<div class="rodape-cta">Leva 2 minutos e come&ccedil;a gr&aacute;tis. ' +
       'A indica&ccedil;&atilde;o de <b>@APELIDO@</b> fica registrada.</div>' +
-    '<a class="btn calmo" data-ev="cta_click" data-cta="verificar_conhecer" ' +
+    '<a class="btn calmo" data-ev="verificar_conhecer" ' +
       'href="/comerciantes.html?' + utm + '&ref=' + ref + '">' +
       'Prefiro entender melhor antes</a>' +
     '<div class="linhaZap"><a href="https://wa.me/554120186848?text=' +
@@ -259,13 +276,27 @@ function pintarNegado(apelido, existe){
     '<a class="btn" href="https://wa.me/554120186848?text=' +
       encodeURIComponent('Olá! Alguém disse ser parceiro do Moviki com o apelido "' + apelido + '" e eu não consegui confirmar.') +
       '" target="_blank" rel="noopener">Falar com o Moviki</a>' +
-    '<a class="btn calmo" data-ev="cta_click" data-cta="verificar_conhecer_negado" href="/comerciantes.html">Conhecer o Moviki</a>';
+    '<a class="btn calmo" data-ev="verificar_conhecer_negado" href="/comerciantes.html">Conhecer o Moviki</a>';
 }
 
 function mostrar(){
   el('carregando').classList.add('escondido');
   el('conteudo').classList.remove('escondido');
 }
+
+/* MEDICAO DOS CTAs — 03/09/2026.
+   Os botoes desta pagina tinham data-ev mas NINGUEM escutava: o mvmetrica.js
+   nao faz delegacao (so carimba link externo), e cada landing traz o seu
+   proprio ouvinte inline. Sem isto, o clique que leva ao cadastro com o ref
+   — a conversao inteira desta pagina — nao chegava ao GA4.
+   Padrao identico ao de comerciantes.html e parceiros.html: o VALOR de
+   data-ev e o nome do CTA, e o evento enviado e sempre cta_click. Os botoes
+   nascem dentro de innerHTML, entao o ouvinte fica no documento. */
+document.addEventListener('click', function(e){
+  var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+  if(!a) return;
+  try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'verificacao' }); } catch(err){}
+});
 
 (async function(){
   const apelido = apelidoDaUrl();
