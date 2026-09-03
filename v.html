@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moviki · Verificar parceiro</title>
+<meta name="description" content="Confira se a pessoa que está falando com você é mesmo um parceiro autorizado do Moviki.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon512.png">
+<script src="/mvmetrica.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
+    --suave:#9fb2c6; --linha:rgba(0,212,255,.16); --verde:#25e39b;
+    --alerta:#ffa84a; --card:rgba(15,28,44,.66); --grad:linear-gradient(120deg,#00D4FF,#0066FF);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',system-ui,-apple-system,sans-serif;color:var(--claro);background:#050b14;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:560px;margin:0 auto;padding:0 20px 60px}
+  a{color:inherit;text-decoration:none}
+
+  .topo{display:flex;flex-direction:column;align-items:center;gap:6px;padding:28px 0 4px;text-align:center}
+  .topo .logotxt{font-weight:800;font-size:23px}
+  .topo .logotxt b{color:var(--ciano)}
+  .slogan{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--suave);font-weight:600}
+
+  .titulo{text-align:center;font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--suave);font-weight:700;margin:26px 0 14px}
+
+  .cartao{background:var(--card);border:1px solid var(--linha);border-radius:22px;padding:26px 22px;text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.35)}
+  .cartao.ruim{border-color:rgba(255,168,74,.35)}
+
+  .foto{width:104px;height:104px;border-radius:50%;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;
+    background:rgba(0,212,255,.09);border:3px solid var(--linha);font-size:38px;font-weight:800;color:var(--ciano);
+    background-size:cover;background-position:center;overflow:hidden}
+  .foto.temFoto{font-size:0;color:transparent;border-color:var(--verde)}
+
+  .nome{font-size:25px;font-weight:800;line-height:1.2;letter-spacing:-.01em;word-break:break-word}
+  .arroba{display:inline-block;margin-top:5px;font-size:14.5px;color:var(--suave);font-weight:500}
+  .arroba:hover{color:var(--ciano)}
+
+  .selo{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:10px 18px;border-radius:999px;
+    font-size:14px;font-weight:700;line-height:1.25;text-align:left}
+  .selo.ok{background:rgba(37,227,155,.13);border:1px solid rgba(37,227,155,.42);color:var(--verde)}
+  .selo.nao{background:rgba(255,168,74,.11);border:1px solid rgba(255,168,74,.42);color:var(--alerta)}
+  .selo svg{width:19px;height:19px;flex:0 0 auto}
+
+  .fatos{margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:11px;text-align:left}
+  .fato{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--claro)}
+  .fato svg{width:17px;height:17px;flex:0 0 auto;margin-top:4px;color:var(--verde)}
+  .fato span b{font-weight:600}
+  .fato .cinza{color:var(--suave);font-size:13.5px;display:block;margin-top:1px}
+
+  .explica{margin-top:22px;background:rgba(0,212,255,.05);border:1px solid var(--linha);border-radius:16px;padding:18px 18px;text-align:left}
+  .explica h2{font-size:14.5px;font-weight:700;margin-bottom:11px}
+  .explica ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .explica li{font-size:14px;color:var(--suave);padding-left:18px;position:relative;line-height:1.55}
+  .explica li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--ciano)}
+  .explica li b{color:var(--claro);font-weight:600}
+
+  .btn{display:block;width:100%;margin-top:20px;padding:15px 20px;border-radius:14px;background:var(--grad);color:#04121e;
+    font-family:inherit;font-size:15.5px;font-weight:700;text-align:center;border:0;cursor:pointer}
+  .btn.calmo{background:transparent;border:1px solid var(--linha);color:var(--claro);margin-top:11px}
+
+  .carregando{text-align:center;padding:52px 0;color:var(--suave);font-size:14.5px}
+  .spin{width:26px;height:26px;margin:0 auto 14px;border:3px solid rgba(255,255,255,.14);border-top-color:var(--ciano);
+    border-radius:50%;animation:gira .8s linear infinite}
+  @keyframes gira{to{transform:rotate(360deg)}}
+  @media(prefers-reduced-motion:reduce){.spin{animation:none}}
+
+  .pe{margin-top:30px;text-align:center;font-size:12px;line-height:1.7;color:var(--suave)}
+  .pe b{color:#c7d6ea;font-weight:600}
+  .pe .links{margin-top:6px;display:flex;gap:5px 15px;justify-content:center;flex-wrap:wrap}
+  .pe a{border-bottom:1px solid rgba(255,255,255,.14)}
+  .escondido{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topo">
+    <div class="logotxt">mo<b>viki</b></div>
+    <div class="slogan">Verificação de parceiro</div>
+  </div>
+
+  <div id="carregando" class="carregando"><div class="spin"></div>Conferindo o apelido…</div>
+
+  <div id="conteudo" class="escondido">
+    <div class="titulo" id="tituloTopo">Esta pessoa é parceira do Moviki?</div>
+    <div class="cartao" id="cartao"></div>
+    <div id="depois"></div>
+  </div>
+
+  <div class="pe">
+    <div><b>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA</b></div>
+    <div>CNPJ 68.289.841/0001-02 &middot; Curitiba/PR</div>
+    <div class="links">
+      <a href="/termos.html">Termos de uso</a>
+      <a href="/privacidade.html">Privacidade</a>
+      <a href="/regulamento.html">Regulamento do Programa</a>
+      <a href="https://wa.me/554120186848" target="_blank" rel="noopener">(41) 2018-6848</a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* MOVIKI v.html | versao 2026-09-03-verificacao
+   ---------------------------------------------------------------------------
+   A pagina que o COMERCIANTE abre, no celular dele, na frente do parceiro.
+   Responde uma pergunta so: essa pessoa e mesmo do Moviki?
+
+   Le `parceiros_publicos/{slug}` — o espelho publico escrito pelo robo. NAO le
+   `parceiros/{uid}`, e nunca vai ler: aquele documento guarda a chave Pix, e
+   regra do Firestore libera o documento inteiro ou nada.
+
+   O link de rastreio continua sendo o /p/{apelido}. Este e outro endereco, com
+   outro trabalho — mas ele tambem carimba o ref no CTA, porque comerciante que
+   confere o parceiro e comerciante prestes a decidir.
+   --------------------------------------------------------------------------- */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+  authDomain: "moviki-app.firebaseapp.com",
+  projectId: "moviki-app",
+  storageBucket: "moviki-app.firebasestorage.app",
+  messagingSenderId: "451920150738",
+  appId: "1:451920150738:web:be458392064c964c792d0b"
+};
+window.MOVIKI_VERSAO = '2026-09-03-verificacao';
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const ROBO = 'https://moviki-robo.vercel.app/api/novo-parceiro';
+const el = id => document.getElementById(id);
+/* O nome do parceiro e texto que ELE digitou. Escapar nao e opcional. */
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>';
+const ALERTA= '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6L1.8 20.4h20.4z"/><path d="M12 10v4.2"/><path d="M12 17.6v.1"/></svg>';
+const RISCA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>';
+
+/* /v/joao_silva -> joao_silva. Mesmo alfabeto do apelido do parceiro. */
+function apelidoDaUrl(){
+  const m = location.pathname.match(/\/v\/([^\/?#]+)/);
+  let s = m ? decodeURIComponent(m[1]) : (new URLSearchParams(location.search).get('p') || '');
+  s = String(s).toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,40);
+  return s.length >= 3 ? s : '';
+}
+
+function mesAno(iso){
+  const m = /^(\d{4})-(\d{2})$/.exec(String(iso||''));
+  if(!m) return '';
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const i = parseInt(m[2],10) - 1;
+  return (meses[i] || '') + ' de ' + m[1];
+}
+
+/* Bloco que aparece nos DOIS casos. No caso bom ele protege o comerciante; no
+   caso ruim ele é a coisa mais útil da página. A frase do dinheiro é a que
+   mais importa: é ela que desmonta o golpe de quem cobra em nome do Moviki. */
+function blocoExplica(){
+  return '<div class="explica">' +
+    '<h2>O que isso quer dizer</h2>' +
+    '<ul>' +
+      '<li>Um parceiro pode <b>apresentar o Moviki</b> e indicar o seu negócio para a plataforma.</li>' +
+      '<li><b>Você não paga nada a ele.</b> A comissão dele sai do Moviki, e só existe se você assinar um plano pago — nunca do seu bolso, nunca em dinheiro na mão.</li>' +
+      '<li>Se alguém pedir <b>pagamento, taxa de cadastro ou dados bancários</b> em nome do Moviki, não é o Moviki. Fale com a gente.</li>' +
+    '</ul></div>';
+}
+
+function pintarAutorizado(d, apelido){
+  const nome = esc(d.nome || 'Parceiro Moviki');
+  const arroba = esc(d.arroba || '');
+  const inicial = esc((String(d.nome||'P').trim()[0] || 'P').toUpperCase());
+  const desde = mesAno(d.desde);
+
+  el('cartao').innerHTML =
+    '<div class="foto" id="foto">' + inicial + '</div>' +
+    '<div class="nome">' + nome + '</div>' +
+    (arroba
+      ? '<a class="arroba" href="https://instagram.com/' + encodeURIComponent(arroba.replace(/^@/,'')) + '" target="_blank" rel="noopener nofollow">' + arroba + '</a>'
+      : '') +
+    '<div><span class="selo ok">' + CHECK + 'Parceiro autorizado do Moviki</span></div>' +
+    '<div class="fatos">' +
+      (desde ? '<div class="fato">' + RISCA + '<span>Autorizado desde <b>' + esc(desde) + '</b></span></div>' : '') +
+      (d.treinado
+        ? '<div class="fato">' + RISCA + '<span>Treinamento oficial concluído<span class="cinza">Assistiu às aulas do Programa de Parceiros antes de sair indicando.</span></span></div>'
+        : '') +
+      '<div class="fato">' + RISCA + '<span>Apelido <b>/p/' + esc(apelido) + '</b><span class="cinza">É este o link que ele usa para indicar você.</span></span></div>' +
+    '</div>';
+
+  const ref = encodeURIComponent(apelido);
+  el('depois').innerHTML = blocoExplica() +
+    '<a class="btn" data-ev="cta_click" data-cta="verificar_conhecer" ' +
+      'href="/comerciantes.html?utm_source=parceiro&utm_medium=verificacao&utm_campaign=programa_parceiros&utm_content=' + ref + '&ref=' + ref + '">' +
+      'Conhecer o Moviki</a>' +
+    '<a class="btn calmo" href="https://wa.me/554120186848?text=' +
+      encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /p/' + apelido) +
+      '" target="_blank" rel="noopener">Falar com o Moviki</a>';
+
+  /* Foto do perfil, da mesma busca que o painel usa. Cache de 7 dias no robô,
+     então quase sempre é resposta instantânea. Falha calada: fica a inicial. */
+  const puro = String(d.arroba||'').replace(/^@+/,'');
+  if(/^[a-z0-9._]{2,30}$/i.test(puro)){
+    fetch(ROBO + '?instagram=' + encodeURIComponent(puro))
+      .then(r => r.json())
+      .then(j => {
+        if(!j || !j.achou) return;
+        if(typeof j.foto !== 'string' || j.foto.indexOf('data:image/') !== 0) return;
+        const f = el('foto'); if(!f) return;
+        f.style.backgroundImage = 'url("' + j.foto + '")';
+        f.classList.add('temFoto');
+      })
+      .catch(()=>{});
+  }
+}
+
+function pintarNegado(apelido, existe){
+  el('tituloTopo').textContent = 'Não confirmamos este apelido';
+  el('cartao').className = 'cartao ruim';
+  el('cartao').innerHTML =
+    '<div class="foto">?</div>' +
+    '<div class="nome">' + (apelido ? '/p/' + esc(apelido) : 'Apelido não informado') + '</div>' +
+    '<div><span class="selo nao">' + ALERTA +
+      (existe ? 'Este apelido não está autorizado no momento'
+              : 'Não existe parceiro com este apelido') + '</span></div>' +
+    '<div class="fatos"><div class="fato"><span>' +
+      'Isso não quer dizer, sozinho, que alguém agiu de má-fé — pode ser o apelido digitado errado. ' +
+      'Mas <b>não conte como confirmação</b>: peça a pessoa mostrar o link de verificação dela, ou fale direto com a gente.' +
+    '</span></div></div>';
+
+  el('depois').innerHTML = blocoExplica() +
+    '<a class="btn" href="https://wa.me/554120186848?text=' +
+      encodeURIComponent('Olá! Alguém disse ser parceiro do Moviki com o apelido "' + apelido + '" e eu não consegui confirmar.') +
+      '" target="_blank" rel="noopener">Falar com o Moviki</a>' +
+    '<a class="btn calmo" data-ev="cta_click" data-cta="verificar_conhecer_negado" href="/comerciantes.html">Conhecer o Moviki</a>';
+}
+
+function mostrar(){
+  el('carregando').classList.add('escondido');
+  el('conteudo').classList.remove('escondido');
+}
+
+(async function(){
+  const apelido = apelidoDaUrl();
+  try{ if(window.mvEv) mvEv('verificar_parceiro', { ref: apelido || 'sem_ref' }); }catch(_){}
+
+  if(!apelido){ pintarNegado('', false); mostrar(); return; }
+
+  try{
+    const snap = await getDoc(doc(db, 'parceiros_publicos', apelido));
+    if(!snap.exists()){ pintarNegado(apelido, false); mostrar(); return; }
+    const d = snap.data() || {};
+    if(d.ativo !== true){ pintarNegado(apelido, true); mostrar(); return; }
+    pintarAutorizado(d, apelido);
+    mostrar();
+  }catch(e){
+    /* Rede caiu ou o Firestore não respondeu. NÃO dizemos "não é parceiro" —
+       seria acusar alguém por causa de um problema nosso. Dizemos que não deu
+       para conferir agora, que é a verdade. */
+    el('tituloTopo').textContent = 'Não deu para conferir agora';
+    el('cartao').className = 'cartao ruim';
+    el('cartao').innerHTML =
+      '<div class="foto">…</div>' +
+      '<div class="nome">/p/' + esc(apelido) + '</div>' +
+      '<div><span class="selo nao">' + ALERTA + 'A conexão falhou — tente de novo</span></div>' +
+      '<div class="fatos"><div class="fato"><span>Isto é um problema nosso, não uma resposta sobre a pessoa. ' +
+      'Recarregue a página, ou fale com a gente pelo WhatsApp.</span></div></div>';
+    el('depois').innerHTML =
+      '<a class="btn" href="https://wa.me/554120186848" target="_blank" rel="noopener">Falar com o Moviki</a>';
+    mostrar();
+  }
+})();
+</script>
+</body></html>
