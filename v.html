@@ -60,6 +60,11 @@
   .btn{display:block;width:100%;margin-top:20px;padding:15px 20px;border-radius:14px;background:var(--grad);color:#04121e;
     font-family:inherit;font-size:15.5px;font-weight:700;text-align:center;border:0;cursor:pointer}
   .btn.calmo{background:transparent;border:1px solid var(--linha);color:var(--claro);margin-top:11px}
+  .rodape-cta{margin-top:9px;text-align:center;font-size:12.5px;color:var(--suave);line-height:1.5}
+  .rodape-cta b{color:var(--claro);font-weight:600}
+  .linhaZap{margin-top:14px;text-align:center;font-size:13px}
+  .linhaZap a{color:var(--suave);border-bottom:1px solid rgba(255,255,255,.16)}
+  .linhaZap a:hover{color:var(--ciano)}
 
   .carregando{text-align:center;padding:52px 0;color:var(--suave);font-size:14.5px}
   .spin{width:26px;height:26px;margin:0 auto 14px;border:3px solid rgba(255,255,255,.14);border-top-color:var(--ciano);
@@ -127,7 +132,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-09-03-verificacao';
+window.MOVIKI_VERSAO = '2026-09-03-verificacao-cta';
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
@@ -191,14 +196,33 @@ function pintarAutorizado(d, apelido){
       '<div class="fato">' + RISCA + '<span>Apelido <b>/p/' + esc(apelido) + '</b><span class="cinza">É este o link que ele usa para indicar você.</span></span></div>' +
     '</div>';
 
+  /* ORDEM DOS BOTOES — 03/09/2026, ideia do Paulo.
+     Quem chega aqui pelo cracha ja ouviu o parceiro: a conversa de
+     convencimento aconteceu ao vivo, minutos atras. Mandar essa pessoa pra
+     landing de apresentacao e fazer ela repetir uma etapa que ela ja cumpriu.
+     Entao o botao principal FECHA — vai direto pro cadastro, levando o ref,
+     que e o que faz a comissao do parceiro nascer. Quem preferir ler antes
+     tem o segundo botao, e nada se perde: o ref viaja nos dois caminhos.
+
+     E ele vem DEPOIS do bloco "O que isso quer dizer", de proposito. O
+     comerciante le "voce nao paga nada a ele" ANTES de ver qualquer convite.
+     Pagina de verificacao que vende antes de proteger deixa de ser
+     verificacao e vira propaganda — e ai nao serve mais pra nada. */
   const ref = encodeURIComponent(apelido);
+  const utm = 'utm_source=parceiro&utm_medium=verificacao&utm_campaign=programa_parceiros&utm_content=' + ref;
   el('depois').innerHTML = blocoExplica() +
-    '<a class="btn" data-ev="cta_click" data-cta="verificar_conhecer" ' +
-      'href="/comerciantes.html?utm_source=parceiro&utm_medium=verificacao&utm_campaign=programa_parceiros&utm_content=' + ref + '&ref=' + ref + '">' +
-      'Conhecer o Moviki</a>' +
-    '<a class="btn calmo" href="https://wa.me/554120186848?text=' +
+    '<a class="btn" data-ev="cta_click" data-cta="verificar_cadastrar" ' +
+      'href="https://app.moviki.com.br/?ref=' + ref + '&' + utm + '">' +
+      'Quero me cadastrar agora</a>' +
+    '<div class="rodape-cta">Leva 2 minutos e come&ccedil;a gr&aacute;tis. ' +
+      'A indica&ccedil;&atilde;o de <b>@APELIDO@</b> fica registrada.</div>' +
+    '<a class="btn calmo" data-ev="cta_click" data-cta="verificar_conhecer" ' +
+      'href="/comerciantes.html?' + utm + '&ref=' + ref + '">' +
+      'Prefiro entender melhor antes</a>' +
+    '<div class="linhaZap"><a href="https://wa.me/554120186848?text=' +
       encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /p/' + apelido) +
-      '" target="_blank" rel="noopener">Falar com o Moviki</a>';
+      '" target="_blank" rel="noopener">ou fale direto com o Moviki</a></div>';
+  el('depois').innerHTML = el('depois').innerHTML.replace('@APELIDO@', esc(apelido));
 
   /* Foto do perfil, da mesma busca que o painel usa. Cache de 7 dias no robô,
      então quase sempre é resposta instantânea. Falha calada: fica a inicial. */
