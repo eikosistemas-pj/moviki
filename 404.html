@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 <title>Moviki</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#060d18">
@@ -644,6 +644,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}
 }
+/* A insignia do reCAPTCHA (que vem junto com o App Check) nasce colada no canto
+   inferior direito e bateria na barra de baixo. Subir resolve. NAO esconder:
+   escondida, o Google exige um texto de atribuicao visivel na pagina. */
+.grecaptcha-badge{bottom:76px !important;z-index:60}
 </style>
 </head>
 <body>
@@ -899,6 +903,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, getDocs, query, where, limit, addDoc, increment, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -910,8 +915,24 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-03-frescor';
+  window.MOVIKI_VERSAO='2026-09-03-appcheck';
   const app=initializeApp(firebaseConfig);
+  /* ---- App Check — 03/09/2026 ----
+     Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
+     verdade — e nao um script rodando por fora. As regras dizem O QUE pode ser
+     gravado; o App Check diz QUEM pode gravar. E ele que da limite de
+     velocidade contra escrita anonima (avaliacoes, metricas, newsletter).
+     AINDA SEM IMPOSICAO: so barra de verdade quando o enforcement for ligado no
+     console do Firebase — e isso so depois que TODAS as paginas estiverem no ar
+     com este bloco e o painel do Firebase mostrar o trafego verificado. Ligar
+     antes derruba, CALADA, a pagina que tiver ficado de fora.
+     try/catch de proposito: App Check com problema nunca derruba a pagina. */
+  try {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'),
+      isTokenAutoRefreshEnabled: true
+    });
+  } catch (e) { console.error('App Check:', e); }
   const db=getFirestore(app);
   const el=id=>document.getElementById(id);
   function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}

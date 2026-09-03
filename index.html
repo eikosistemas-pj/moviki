@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googleapis.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googleapis.com; frame-src https://www.google.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
@@ -640,7 +640,7 @@ a{color:inherit}
 .lpVik{display:none}
 @media(min-width:820px){.lpVik{display:block;height:124px;width:auto;flex:none;margin-bottom:-6px}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-02-conformidade';</script>
+<script>window.MOVIKI_VERSAO='2026-09-03-appcheck';</script>
 </head>
 
 <body class="mv">
@@ -1201,9 +1201,22 @@ a{color:inherit}
     if (lpDbPromise) return lpDbPromise;
     lpDbPromise = Promise.all([
       import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js')
     ]).then(function(mods){
       var app = mods[0].initializeApp(LP_FB, 'landing');
+      /* App Check — 03/09/2026. Carrega junto com o Firestore, ou seja, so quando
+         a pessoa encosta no campo da newsletter: a landing continua leve e a
+         insignia do reCAPTCHA so aparece nessa hora. SEM IMPOSICAO ainda — so
+         barra quando o enforcement for ligado no console, depois que TODAS as
+         paginas estiverem no ar. try/catch: nunca derrubar o cadastro por causa
+         do App Check. */
+      try {
+        mods[2].initializeAppCheck(app, {
+          provider: new mods[2].ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'),
+          isTokenAutoRefreshEnabled: true
+        });
+      } catch (e) { console.error('App Check:', e); }
       return { fs: mods[1], db: mods[1].getFirestore(app) };
     });
     return lpDbPromise;

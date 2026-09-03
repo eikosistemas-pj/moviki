@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com; connect-src 'self' https://*.googleapis.com https://www.gstatic.com; frame-src https://www.google.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <title>Sair da lista de e-mails · Moviki</title>
@@ -137,9 +137,10 @@
 <script type="module">
   /* Marca de versão: digitar MOVIKI_VERSAO no console do navegador diz na hora
      qual arquivo está no ar. */
-  window.MOVIKI_VERSAO = '2026-08-27-descadastro';
+  window.MOVIKI_VERSAO = '2026-09-03-appcheck';
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
   import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -182,6 +183,22 @@
     m.className = 'msg'; m.textContent = '';
     try {
       const app = initializeApp(firebaseConfig, 'descadastro');
+      /* ---- App Check — 03/09/2026 ----
+         Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
+         verdade — e nao um script rodando por fora. As regras dizem O QUE pode ser
+         gravado; o App Check diz QUEM pode gravar. E ele que da limite de
+         velocidade contra escrita anonima (avaliacoes, metricas, newsletter).
+         AINDA SEM IMPOSICAO: so barra de verdade quando o enforcement for ligado no
+         console do Firebase — e isso so depois que TODAS as paginas estiverem no ar
+         com este bloco e o painel do Firebase mostrar o trafego verificado. Ligar
+         antes derruba, CALADA, a pagina que tiver ficado de fora.
+         try/catch de proposito: App Check com problema nunca derruba a pagina. */
+      try {
+        initializeAppCheck(app, {
+          provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'),
+          isTokenAutoRefreshEnabled: true
+        });
+      } catch (e) { console.error('App Check:', e); }
       const db  = getFirestore(app);
       // A regra do Firestore só deixa mexer no campo "ativo", e só para false.
       await updateDoc(doc(db, 'newsletter', id), { ativo: false });
