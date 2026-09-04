@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-08-27-wppunidade | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-04-avaliacoes | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -915,7 +915,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-03-appcheck';
+  window.MOVIKI_VERSAO='2026-09-04-avaliacoes';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1007,7 +1007,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   let donoMarkerLogo=null, negocioUid='', dadosNeg=null, notaEscolhida=0;
   let locais=[], localAtivo=0, seletorMontado=false, minhaPos=null;
   let cardapioAtual=[], mostrarFotosAtual=false;
-  let abaAtiva='fotos', avaliacoesCache=[], mediaCache=0, qtdCache=0, listaAvCarregada=false;
+  /* avEstado: 'nao' (ainda nao pediu) | 'carregando' | 'pronto' | 'erro'.
+     Antes isto era um booleano de "ja carregou", que nao sabia diferenciar
+     "ainda nao carregou" de "carregou e nao veio nada" nem de "a leitura
+     falhou" — e as tres viravam o mesmo "Carregando avaliacoes..." eterno. */
+  let abaAtiva='fotos', avaliacoesCache=[], mediaCache=0, qtdCache=0, avEstado='nao';
 
   const params=new URLSearchParams(window.location.search);
   const demoOn=params.get('demo')==='1';
@@ -1478,7 +1482,21 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function pintarAba(d){
     const box=el('abaConteudo'); if(!box)return;
     if(abaAtiva==='fotos')       box.innerHTML=htmlGaleria((d.fotos||[]).filter(fotoOk));
-    else if(abaAtiva==='avaliacoes') box.innerHTML=htmlAvaliacoes();
+    else if(abaAtiva==='avaliacoes'){
+      /* BUG CORRIGIDO EM 04/09/2026 — a lista so era pedida no CLIQUE
+         (irParaAba). Negocio sem fotos liberadas, sem promocao e sem evento
+         cai no fallback de montarAbas e ABRE ja na aba Avaliacoes, sem
+         clique nenhum: a lista nunca era pedida e a tela ficava presa em
+         "Carregando avaliacoes..." para sempre, com a nota certa ao lado.
+         Pedir aqui cobre TODOS os caminhos de pintura, nao so o clique.
+         So dispara no estado 'nao'. Isso NAO e detalhe: se disparasse
+         tambem no estado 'erro', cada falha repintaria, cada repintura
+         tentaria de novo, e a pagina entraria em laco infinito de leitura
+         negada — o pior jeito possivel de descobrir que o App Check foi
+         enforcado. Sair do 'erro' e escolha da pessoa, no botao. */
+      if(avEstado==='nao')carregarListaAvaliacoes(negocioUid);
+      box.innerHTML=htmlAvaliacoes();
+    }
     else if(abaAtiva==='promocoes')  box.innerHTML=htmlPromos((d.promocoes||[]).filter(p=>p&&p.titulo));
     else if(abaAtiva==='eventos')    box.innerHTML=htmlEventos(listaEventos(d));
     else box.innerHTML=htmlInfo(d);
@@ -1525,7 +1543,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function htmlAvaliacoes(){
     let h='<button class="btnAvaliar" type="button" onclick="abrirAvaliar()">'+IC.avaliacoes+'Avaliar este negócio</button>';
     if(!avaliacoesCache.length){
-      if(qtdCache>0)return h+'<div class="vazioMod">Carregando avaliações…</div>';
+      /* Falha de leitura tem que APARECER. Depois que o App Check for
+         enforcado, leitura negada falha calada — sem esta mensagem o
+         sintoma seria identico ao de uma pagina so lenta. */
+      if(avEstado==='erro')return h+'<div class="vazioMod">Não foi possível carregar as avaliações agora.<br><button type="button" class="btnAvaliar" style="margin-top:10px" onclick="recarregarAvaliacoes()">Tentar de novo</button></div>';
+      if(avEstado==='carregando'||(avEstado==='nao'&&qtdCache>0))return h+'<div class="vazioMod">Carregando avaliações…</div>';
       return h+'<div class="vazioMod">Ainda não há avaliações. Seja o primeiro.</div>';
     }
     h+='<div style="margin-top:12px">';
@@ -1860,7 +1882,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){}
       av.style.color='#25e39b';av.textContent='Obrigado pela sua avaliação!';
       ev('avaliacao_enviada',{nota:notaEscolhida});
-      setTimeout(()=>{fecharAvaliar();listaAvCarregada=false;avaliacoesCache=[];carregarAvaliacoesPub(negocioUid);if(abaAtiva==='avaliacoes')carregarListaAvaliacoes(negocioUid);},1000);
+      setTimeout(()=>{fecharAvaliar();avEstado='nao';avaliacoesCache=[];carregarAvaliacoesPub(negocioUid);if(abaAtiva==='avaliacoes')carregarListaAvaliacoes(negocioUid);},1000);
     }catch(e){av.textContent='Não deu pra enviar agora. Tente mais tarde.';}
     btn.disabled=false;btn.textContent=t;
   };
@@ -1894,7 +1916,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
         const lista=[];n=0;soma=0;
         qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario});}});
-        avaliacoesCache=lista.slice(0,20); listaAvCarregada=true;
+        avaliacoesCache=lista.slice(0,20); avEstado='pronto';
         if(n>0){try{await setDoc(doc(db,'negocios',uid,'resumo','avaliacoes'),{n:n,soma:soma});}catch(_){}}
       }
       qtdCache=n; mediaCache=n?soma/n:0;
@@ -1902,16 +1924,23 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     }catch(e){}
   }
   async function carregarListaAvaliacoes(uid){
-    if(listaAvCarregada||!uid)return;
-    listaAvCarregada=true;
+    if(!uid||avEstado!=='nao')return;   // 'carregando', 'pronto' e 'erro' nao repetem sozinhos
+    avEstado='carregando';
     try{
       const qs=await getDocs(query(collection(db,'negocios',uid,'avaliacoes'),limit(20)));
       const lista=[];
       qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5)lista.push({nota:r,nome:x.nome,comentario:x.comentario});});
       avaliacoesCache=lista;
-      if(dadosNeg&&abaAtiva==='avaliacoes')pintarAba(dadosNeg);
-    }catch(_){listaAvCarregada=false;}
+      avEstado='pronto';
+    }catch(_){ avEstado='erro'; }
+    if(dadosNeg&&abaAtiva==='avaliacoes')pintarAba(dadosNeg);
   }
+  /* Botao "Tentar de novo" da mensagem de erro. */
+  window.recarregarAvaliacoes=function(){
+    avEstado='nao'; avaliacoesCache=[];
+    carregarListaAvaliacoes(negocioUid);
+    if(dadosNeg&&abaAtiva==='avaliacoes')pintarAba(dadosNeg);
+  };
 
   /* ============ fotos ============ */
   window.trocarCapa=function(mini){var card=mini.closest('.comFoto');if(!card)return;
