@@ -134,7 +134,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-09-03-verificacao-appcheck';
+window.MOVIKI_VERSAO = '2026-09-04-verificacao-medicao';
 const app = initializeApp(firebaseConfig);
 
 /* APP CHECK — 03/09/2026.
@@ -236,7 +236,7 @@ function pintarAutorizado(d, apelido){
     '<a class="btn calmo" data-ev="verificar_conhecer" ' +
       'href="/comerciantes.html?' + utm + '&ref=' + ref + '">' +
       'Prefiro entender melhor antes</a>' +
-    '<div class="linhaZap"><a href="https://wa.me/554120186848?text=' +
+    '<div class="linhaZap"><a data-ev="verificar_zap" href="https://wa.me/554120186848?text=' +
       encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /p/' + apelido) +
       '" target="_blank" rel="noopener">ou fale direto com o Moviki</a></div>';
   el('depois').innerHTML = el('depois').innerHTML.replace('@APELIDO@', esc(apelido));
@@ -272,11 +272,18 @@ function pintarNegado(apelido, existe){
       'Mas <b>não conte como confirmação</b>: peça a pessoa mostrar o link de verificação dela, ou fale direto com a gente.' +
     '</span></div></div>';
 
+  /* NAO se vende nesta tela. Quem chegou aqui pode estar diante de alguem se
+     passando por parceiro: empurrar cadastro seria o pior momento possivel, e
+     por isso o botao principal continua sendo falar com a gente. O que faltava
+     era medicao — o clique no WhatsApp nao chegava ao GA4 — e o UTM no segundo
+     botao, que ia para a landing sem dizer de onde veio. Sem `ref`, de
+     proposito: apelido nao confirmado nao gera comissao para ninguem. */
+  const utmN = 'utm_source=parceiro&utm_medium=verificacao_negada&utm_campaign=programa_parceiros';
   el('depois').innerHTML = blocoExplica() +
-    '<a class="btn" href="https://wa.me/554120186848?text=' +
+    '<a class="btn" data-ev="verificar_zap_negado" href="https://wa.me/554120186848?text=' +
       encodeURIComponent('Olá! Alguém disse ser parceiro do Moviki com o apelido "' + apelido + '" e eu não consegui confirmar.') +
       '" target="_blank" rel="noopener">Falar com o Moviki</a>' +
-    '<a class="btn calmo" data-ev="verificar_conhecer_negado" href="/comerciantes.html">Conhecer o Moviki</a>';
+    '<a class="btn calmo" data-ev="verificar_conhecer_negado" href="/comerciantes.html?' + utmN + '">Conhecer o Moviki</a>';
 }
 
 function mostrar(){
@@ -324,7 +331,7 @@ document.addEventListener('click', function(e){
       '<div class="fatos"><div class="fato"><span>Isto é um problema nosso, não uma resposta sobre a pessoa. ' +
       'Recarregue a página, ou fale com a gente pelo WhatsApp.</span></div></div>';
     el('depois').innerHTML =
-      '<a class="btn" href="https://wa.me/554120186848" target="_blank" rel="noopener">Falar com o Moviki</a>';
+      '<a class="btn" data-ev="verificar_zap_falha" href="https://wa.me/554120186848" target="_blank" rel="noopener">Falar com o Moviki</a>';
     mostrar();
   }
 })();
