@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-08-27-og3 | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-09-04-og-sa | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
@@ -24,11 +24,36 @@
  *
  * NAO TOCA no repo moviki-robo: o teto de 12 funcoes e POR PROJETO da Vercel, e
  * o projeto do site usa zero.
+ *
+ * ---- 04/09/2026: CONTA DE SERVICO, para o App Check poder ser enforcado ----
+ * Ate aqui esta funcao lia o Firestore com a CHAVE PUBLICA do app web, do
+ * servidor. Para o Firebase isso e uma requisicao de CLIENTE sem token de App
+ * Check: no dia em que o enforcement fosse ligado, ela passaria a ser RECUSADA
+ * e todo link de lojista compartilhado viraria cartao cinza — o canal de
+ * distribuicao do produto.
+ *
+ * Agora ela pede um token OAuth de conta de servico (lib/gauth.js) e le
+ * autenticada. Chamada de conta de servico passa por IAM, nao pela chave
+ * publica: o App Check nao se aplica a ela, e o enforcement deixa de ser um
+ * risco para o compartilhamento.
+ *
+ * A conta e SOMENTE LEITURA e nao e a do moviki-robo. Mas conta de servico
+ * PASSA POR CIMA DAS REGRAS do Firestore: esta funcao so pode ler os cinco
+ * documentos que ja lia pelo navegador (slug, ponto_slug, ponto, negocio,
+ * assinatura, resumo) e so pode publicar o que a propria pagina ja mostra.
+ * Nada de campo novo, nada de colecao de dinheiro.
+ *
+ * SEM a env FIREBASE_SA_LEITURA a funcao volta sozinha ao modo antigo (chave
+ * publica) — e o que permite subir este arquivo ANTES de criar a conta, sem
+ * quebrar nada. O cabecalho de resposta X-Moviki-Firestore diz qual via foi
+ * usada: "sa" (conta de servico) ou "key" (chave publica). Enquanto ele
+ * responder "key", NAO ligar o enforcement.
  */
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
+const gauth = require('../lib/gauth');
 
 const PROJ = 'moviki-app';
 const API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw';
@@ -74,13 +99,18 @@ function fotoOk(u) {
     /^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);
 }
 
-async function lerDoc(caminho) {
-  const url = 'https://firestore.googleapis.com/v1/projects/' + PROJ +
-    '/databases/(default)/documents/' + caminho + '?key=' + encodeURIComponent(API_KEY);
+/* Com token: leitura autenticada por conta de servico (imune ao App Check).
+   Sem token: modo antigo, chave publica — vale so ate o enforcement entrar. */
+async function lerDoc(caminho, token) {
+  const base = 'https://firestore.googleapis.com/v1/projects/' + PROJ +
+    '/databases/(default)/documents/' + caminho;
+  const url = token ? base : base + '?key=' + encodeURIComponent(API_KEY);
+  const opcoes = token ? { headers: { Authorization: 'Bearer ' + token } } : {};
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 2500);   // a funcao tem ~10s; nunca ficar pendurado
-    const r = await fetch(url, { signal: ctrl.signal });
+    opcoes.signal = ctrl.signal;
+    const r = await fetch(url, opcoes);
     clearTimeout(t);
     if (!r.ok) return null;
     const j = await r.json();
@@ -150,7 +180,10 @@ module.exports = async (req, res) => {
     slug = limpaSlug(u.searchParams.get('slug') || u.pathname.replace(/^\/+/, ''));
   } catch (e) {}
 
-  const casca = await lerCasca(host);
+  /* O token sai junto com a leitura da casca: em requisicao fria isso poupa
+     uma ida de rede inteira do orcamento de ~10s da funcao. */
+  const [casca, token] = await Promise.all([lerCasca(host), gauth.tokenLeitura()]);
+  const via = token ? 'sa' : 'key';
   if (!casca) {                       // nunca derrubar a pagina por causa de preview
     res.statusCode = 302;
     res.setHeader('Location', '/');
@@ -169,28 +202,28 @@ module.exports = async (req, res) => {
     jsonld: null
   };
 
-  if (slug.length < 3) return responder(res, injetar(casca, tags(generico)), 404);
+  if (slug.length < 3) return responder(res, injetar(casca, tags(generico)), 404, via);
 
   /* 1) apelido do negocio; 2) apelido de unidade Enterprise */
   let uid = '', pontoNome = '', achou = false;
-  const s = await lerDoc('slugs/' + slug);
+  const s = await lerDoc('slugs/' + slug, token);
   if (s && txt(s.uid)) { uid = txt(s.uid); achou = true; }
   else {
-    const ps = await lerDoc('ponto_slugs/' + slug);
+    const ps = await lerDoc('ponto_slugs/' + slug, token);
     if (ps && txt(ps.ownerUid)) {
       uid = txt(ps.ownerUid); achou = true;
-      const pt = txt(ps.pid) ? await lerDoc('pontos/' + txt(ps.pid)) : null;
+      const pt = txt(ps.pid) ? await lerDoc('pontos/' + txt(ps.pid), token) : null;
       if (pt) pontoNome = txt(pt.nome);
     }
   }
-  if (!achou || !uid) return responder(res, injetar(casca, tags(generico)), 404);
+  if (!achou || !uid) return responder(res, injetar(casca, tags(generico)), 404, via);
 
   const [neg, ass, resumo] = await Promise.all([
-    lerDoc('negocios/' + uid),
-    lerDoc('assinaturas/' + uid),
-    lerDoc('negocios/' + uid + '/resumo/avaliacoes')
+    lerDoc('negocios/' + uid, token),
+    lerDoc('assinaturas/' + uid, token),
+    lerDoc('negocios/' + uid + '/resumo/avaliacoes', token)
   ]);
-  if (!neg) return responder(res, injetar(casca, tags(generico)), 404);
+  if (!neg) return responder(res, injetar(casca, tags(generico)), 404, via);
 
   /* Mesma trava de plano da pagina: foto e Premium/Enterprise (ou trial);
      logo do pino e Premium/Enterprise. Preview nunca mostra o que a pagina esconde. */
@@ -271,12 +304,15 @@ module.exports = async (req, res) => {
     jsonld: ld
   });
 
-  return responder(res, injetar(casca, bloco), 200);
+  return responder(res, injetar(casca, bloco), 200, via);
 };
 
-function responder(res, html, status) {
+function responder(res, html, status, via) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  /* Diagnostico sem console: "sa" = conta de servico (pronto para enforcement),
+     "key" = chave publica (o enforcement ainda derrubaria o preview). */
+  res.setHeader('X-Moviki-Firestore', via || 'key');
   /* CDN guarda 5 min e serve stale por 24 h enquanto revalida: o caso comum
      nao le o Firestore. Lojista que troca a foto ve o preview novo em minutos. */
   res.setHeader('Cache-Control', status === 200
