@@ -148,6 +148,11 @@
     document.querySelectorAll('a[href^="https://app.moviki.com.br"]').forEach(function(a){
       var u=new URL(a.href); u.searchParams.set('ref',ref); a.href=u.toString();
     });
+    /* Carimbar so o botao nao bastava: quem le a pagina, fecha e volta depois
+       pelo Google chegava ao app sem ref nenhum e a indicacao sumia. O cookie
+       no dominio pai atravessa para o app.moviki.com.br e vale 90 dias. */
+    try{ document.cookie='mv_ref='+encodeURIComponent(ref)+
+      '; Max-Age=7776000; Path=/; Domain=.moviki.com.br; SameSite=Lax; Secure'; }catch(e){}
   }catch(e){}
 })();
 </script>
@@ -165,7 +170,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-08-27-ga4l2';
+window.MOVIKI_VERSAO = '2026-09-04-ref-cookie';
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;

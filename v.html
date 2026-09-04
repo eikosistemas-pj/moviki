@@ -134,7 +134,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-09-04-verificacao-medicao';
+window.MOVIKI_VERSAO = '2026-09-04-verificacao-cookie';
 const app = initializeApp(firebaseConfig);
 
 /* APP CHECK — 03/09/2026.
@@ -225,6 +225,12 @@ function pintarAutorizado(d, apelido){
      comerciante le "voce nao paga nada a ele" ANTES de ver qualquer convite.
      Pagina de verificacao que vende antes de proteger deixa de ser
      verificacao e vira propaganda — e ai nao serve mais pra nada. */
+  /* A indicacao comeca AQUI, no crache, e nao no clique: o comerciante pode
+     conferir, fechar a tela e so se cadastrar a noite. O cookie no dominio pai
+     guarda o apelido por 90 dias e o app le mesmo sem ?ref na URL. */
+  try{ document.cookie='mv_ref='+encodeURIComponent(apelido)+
+    '; Max-Age=7776000; Path=/; Domain=.moviki.com.br; SameSite=Lax; Secure'; }catch(e){}
+
   const ref = encodeURIComponent(apelido);
   const utm = 'utm_source=parceiro&utm_medium=verificacao&utm_campaign=programa_parceiros&utm_content=' + ref;
   el('depois').innerHTML = blocoExplica() +

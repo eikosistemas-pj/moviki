@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Moviki</title>
 <script>
-/* MOVIKI p.html | versao 2026-08-27-ga4l2 | redirecionador do link de parceiro /p/apelido
+/* MOVIKI p.html | versao 2026-09-04-ref-cookie | redirecionador do link de parceiro /p/apelido
    NAO carrega Google Analytics de proposito: a pagina redireciona na hora e o GA nao
    teria tempo de enviar nada. Em vez disso, ela CARIMBA o destino com UTM — assim o
    comerciantes.html mede a visita ja sabendo que ela veio de indicacao, e de quem. */
@@ -15,7 +15,18 @@
   var ref=(m?decodeURIComponent(m[1]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
   var q='utm_source=parceiro&utm_medium=indicacao&utm_campaign=programa_parceiros'
       +'&utm_content='+encodeURIComponent(ref.length>=3?ref:'sem_ref');
-  if(ref.length>=3) q+='&ref='+encodeURIComponent(ref);
+  if(ref.length>=3){
+    q+='&ref='+encodeURIComponent(ref);
+    /* COOKIE DE INDICACAO — 04/09/2026.
+       O ?ref viajava so na URL: bastava o comerciante ler a landing, fechar a
+       aba e voltar depois pelo Google para a indicacao do parceiro morrer no
+       caminho. O cookie e gravado no dominio PAI (.moviki.com.br), entao o
+       app.moviki.com.br, que e outro dominio para o localStorage, enxerga o
+       mesmo valor. 90 dias, first-party, so o apelido do parceiro — nada de
+       publicidade e nada de terceiro. */
+    try{ document.cookie='mv_ref='+encodeURIComponent(ref)+
+      '; Max-Age=7776000; Path=/; Domain=.moviki.com.br; SameSite=Lax; Secure'; }catch(e){}
+  }
   location.replace('/comerciantes.html?'+q);
 })();
 </script>
