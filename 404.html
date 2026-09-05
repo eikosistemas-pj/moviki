@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-04-avaliacoes | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-05-resposta | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -378,6 +378,13 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .vazioMod{text-align:center;color:var(--mv-txt-3);font-size:13.5px;padding:26px 12px;}
 
 /* avaliações listadas */
+/* ---- resposta do lojista a avaliacao (05/09/2026) ----
+   Recuada e com barra a esquerda, como no Google: a hierarquia visual diz,
+   sem legenda, quem e cliente e quem e o negocio. */
+.avResp{margin:10px 0 0;padding:9px 12px;border-left:2px solid var(--mv-ciano);
+  background:rgba(0,212,255,.06);border-radius:0 10px 10px 0;}
+.avRespQuem{font-size:12px;font-weight:700;color:var(--mv-ciano);letter-spacing:-.2px;}
+.avResp p{margin:4px 0 0;font-size:13.5px;line-height:1.5;color:var(--mv-txt-2);}
 .avItem{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px 13px;margin-bottom:9px;}
 .avItem .avTopo{display:flex;align-items:center;justify-content:space-between;gap:9px;}
 .avItem .avNm{font-size:13.5px;font-weight:600;}
@@ -915,7 +922,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-04-avaliacoes';
+  window.MOVIKI_VERSAO='2026-09-05-resposta';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1553,7 +1560,16 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     h+='<div style="margin-top:12px">';
     avaliacoesCache.forEach(a=>{
       let st='';for(let i=1;i<=5;i++)st+=(i<=a.nota?estrelaCheia:estrelaVazia);
-      h+='<div class="avItem"><div class="avTopo"><span class="avNm">'+esc(a.nome||'Cliente')+'</span><span class="avSt">'+st+'</span></div>'+(a.comentario?'<p>'+esc(a.comentario)+'</p>':'')+'</div>';
+      /* A resposta e escrita SO pelo dono do negocio: a regra do Firestore
+         deixa o visitante anonimo CRIAR a avaliacao apenas com nota, nome,
+         comentario e data, e so o dono pode atualizar o documento depois.
+         Entao quem assina aqui e mesmo quem diz ser — nao e promessa da tela. */
+      const resp = (typeof a.resposta === 'string') ? a.resposta.trim() : '';
+      const quem = (dadosNeg && dadosNeg.nome) ? dadosNeg.nome : 'o negócio';
+      h+='<div class="avItem"><div class="avTopo"><span class="avNm">'+esc(a.nome||'Cliente')+'</span><span class="avSt">'+st+'</span></div>'
+        +(a.comentario?'<p>'+esc(a.comentario)+'</p>':'')
+        +(resp?'<div class="avResp"><div class="avRespQuem">Resposta de '+esc(quem)+'</div><p>'+esc(resp.slice(0,600))+'</p></div>':'')
+        +'</div>';
     });
     return h+'</div>';
   }
@@ -1915,7 +1931,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
            o resumo. Da proxima visita em diante, nunca mais. */
         const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
         const lista=[];n=0;soma=0;
-        qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario});}});
+        qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario,resposta:x.resposta});}});
         avaliacoesCache=lista.slice(0,20); avEstado='pronto';
         if(n>0){try{await setDoc(doc(db,'negocios',uid,'resumo','avaliacoes'),{n:n,soma:soma});}catch(_){}}
       }
@@ -1929,7 +1945,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     try{
       const qs=await getDocs(query(collection(db,'negocios',uid,'avaliacoes'),limit(20)));
       const lista=[];
-      qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5)lista.push({nota:r,nome:x.nome,comentario:x.comentario});});
+      qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5)lista.push({nota:r,nome:x.nome,comentario:x.comentario,resposta:x.resposta});});
       avaliacoesCache=lista;
       avEstado='pronto';
     }catch(_){ avEstado='erro'; }
