@@ -73,6 +73,38 @@
   .phoneImg{max-width:240px;width:62%;filter:drop-shadow(0 22px 44px rgba(0,0,0,.55))}
   .svgBand{max-width:520px;margin:0 auto}
   .svgBand svg{width:100%;height:auto;display:block}
+
+  /* ===== VÍDEO DE APRESENTAÇÃO =====
+     Fica DEPOIS do primeiro botão de propósito: quem já se convenceu clica e vai;
+     quem ficou em dúvida rola e encontra o vídeo. Capa em CSS puro, nada do
+     YouTube carrega antes do clique. */
+  .lpv{max-width:100%;margin:0 auto}
+  .lpv__box{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;
+    border:1px solid rgba(0,212,255,.22);
+    background:radial-gradient(120% 90% at 50% 0%,rgba(0,102,255,.30),rgba(5,11,20,.94) 62%),#050b14;
+    box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .lpv__box::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(0,212,255,.055) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(0,212,255,.055) 1px,transparent 1px);
+    background-size:40px 40px}
+  .lpv__capa{position:absolute;inset:0;width:100%;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;padding:18px;text-align:center;
+    border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}
+  .lpv__play{width:78px;height:78px;border-radius:999px;display:grid;place-items:center;
+    background:var(--grad);box-shadow:0 0 0 10px rgba(0,212,255,.10),0 14px 36px rgba(0,102,255,.42);
+    transition:transform .2s ease}
+  .lpv__capa:hover .lpv__play,.lpv__capa:focus-visible .lpv__play{transform:scale(1.06)}
+  .lpv__play svg{width:31px;height:31px;margin-left:4px;fill:#04121f}
+  .lpv__rot{font-weight:800;font-size:18px;color:#eaf6ff}
+  .lpv__sub{font-weight:500;font-size:14px;color:var(--suave)}
+  .lpv iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  @media(max-width:640px){
+    .lpv{max-width:320px}
+    .lpv__box{aspect-ratio:9/16;border-radius:24px}
+    .lpv__play{width:68px;height:68px}
+    .lpv__play svg{width:27px;height:27px}
+  }
+  @media(prefers-reduced-motion:reduce){.lpv__capa:hover .lpv__play{transform:none}}
 </style></head><body><div class="wrap"><div class="topo">
   <img src="logo.png" alt="Moviki" onerror="this.style.display='none';document.getElementById('lt').style.display='block'">
   <div class="logotxt" id="lt" style="display:none">movi<b>ki</b></div>
@@ -87,6 +119,21 @@
     <div class="selo"><b>30 dias grátis</b> do plano Pró · sem cartão de crédito</div>
     <div class="heroVisual"><img src="app-mockup.png" alt="Seu negocio no mapa Moviki" class="phoneImg"></div>
   </div>
+
+  <section id="video">
+    <h2>Entenda o Moviki em 1 minuto</h2>
+    <p class="lead">O que é, pra quem serve e como fica a sua página — sem termo difícil.</p>
+    <div class="lpv">
+      <div class="lpv__box" id="lpvBox">
+        <button class="lpv__capa" type="button" id="lpvPlay"
+                aria-label="Assistir ao vídeo de apresentação do Moviki, 1 minuto">
+          <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          <span class="lpv__rot">Assistir agora</span>
+          <span class="lpv__sub">com legenda &mdash; dá pra assistir sem som</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
   <section>
     <h2>Cansou disso?</h2>
@@ -157,6 +204,28 @@
 })();
 </script>
 <script>
+/* Player do vídeo: entra só depois do clique. Tela estreita abre a versão
+   vertical (9:16), tela larga abre a horizontal (16:9) — carrega um só. */
+(function(){
+  var caixa=document.getElementById('lpvBox'), botao=document.getElementById('lpvPlay');
+  if(!caixa||!botao) return;
+  var HORIZONTAL='f6GN-5B30_o', VERTICAL='Glc3kwYh4cA';
+  botao.addEventListener('click', function(){
+    var estreito=window.matchMedia('(max-width:640px)').matches;
+    var id=estreito?VERTICAL:HORIZONTAL;
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+id+
+          '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+    f.title='Entenda o Moviki em 1 minuto';
+    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    f.setAttribute('allowfullscreen','');
+    caixa.innerHTML=''; caixa.appendChild(f);
+    if(window.gtag){try{gtag('event','play_video_comerciantes',{formato:estreito?'9x16':'16x9'});}catch(e){}}
+  });
+})();
+</script>
+
+<script>
 /* Ícone com 2 tentativas de nome (com e sem hífen — o download do navegador às vezes
    remove o hífen) e, se as duas falharem, cai no emoji. */
 function mvIco(img,alt2,emoji){
@@ -170,7 +239,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-04-ref-cookie';
+window.MOVIKI_VERSAO = '2026-09-09-video';
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
