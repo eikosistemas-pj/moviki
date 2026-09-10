@@ -134,7 +134,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-09-04-verificacao-cookie';
+window.MOVIKI_VERSAO = '2026-09-10-foto-parceiro';
 const app = initializeApp(firebaseConfig);
 
 /* APP CHECK — 03/09/2026.
@@ -246,6 +246,28 @@ function pintarAutorizado(d, apelido){
       encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /p/' + apelido) +
       '" target="_blank" rel="noopener">ou fale direto com o Moviki</a></div>';
   el('depois').innerHTML = el('depois').innerHTML.replace('@APELIDO@', esc(apelido));
+
+  /* ---------- A FOTO — 10/09/2026 ----------
+     Dois caminhos, nesta ordem:
+
+     1) A foto que o PARCEIRO escolheu no painel dele. Vem junto com o resto do
+        documento, já embutida como texto — não custa nenhuma ida à rede e
+        aparece no mesmo instante em que a página abre.
+
+     2) Se ele nunca escolheu, a do Instagram, buscada no robô como antes.
+
+     POR QUE O CAMINHO 2 NÃO FUNCIONAVA: o robô só reconhecia o endereço do
+     painel (app.moviki.com.br). Esta página mora em moviki.com.br, então o
+     navegador do comerciante buscava a foto, recebia a resposta e a descartava
+     por vir "de outro endereço" — calado, sem erro na tela. Era por isso que o
+     parceiro via foto no painel dele e o comerciante via a inicial. O robô foi
+     corrigido junto com esta página (api/novo-parceiro.js). */
+  const fotoDele = d.foto;
+  if(typeof fotoDele === 'string' && fotoDele.indexOf('data:image/') === 0){
+    const f = el('foto');
+    if(f){ f.style.backgroundImage = 'url("' + fotoDele + '")'; f.classList.add('temFoto'); }
+    return;
+  }
 
   /* Foto do perfil, da mesma busca que o painel usa. Cache de 7 dias no robô,
      então quase sempre é resposta instantânea. Falha calada: fica a inicial. */
