@@ -32,6 +32,10 @@
   .rodape{max-width:820px;margin:0 auto;padding:6px 22px 60px;text-align:center;color:#64748b;font-size:13px}
   .rodape a{color:#0066FF;font-weight:600;text-decoration:none}
   .rodape a:hover{text-decoration:underline}
+  /* tabela rola sozinha no celular em vez de empurrar a pagina (10/09/2026) */
+  .doc .tab{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .doc .tab table{margin:0;min-width:460px}
+  @media(max-width:560px){ .doc table{font-size:13px} .doc th,.doc td{padding:8px 9px} }
 </style>
 </head>
 <body>
@@ -64,7 +68,7 @@
 <h2>4. Comissões</h2>
 <p>4.1. As comissões incidem <strong>exclusivamente sobre assinaturas pagas</strong> por comerciantes ativos, ou seja, que estejam efetivamente adimplentes com a Moviki. <strong>Não há qualquer remuneração pelo simples cadastro</strong> de comerciantes ou de outros parceiros.</p>
 <p>4.2. <strong>Estrutura de comissionamento (3 níveis):</strong></p>
-<table>
+<div class="tab"><table>
 <thead>
 <tr>
 <th>Nível</th>
@@ -93,12 +97,12 @@
 <td><strong>Bônus único</strong>, apenas no 1º mês pago</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>4.3. A comissão é calculada sobre o <strong>valor efetivamente pago</strong> pelo comerciante em cada mensalidade. O <strong>preço pago pelo comerciante não é alterado</strong> em razão da existência de comissão — o valor da recompensa é custeado pela Moviki, a partir da própria receita da assinatura.</p>
 <p>4.4. A comissão recorrente do Nível 1 permanece devida <strong>enquanto o comerciante indicado continuar sendo cliente pagante</strong>. Caso o comerciante cancele, fique inadimplente ou seja reembolsado, a comissão correspondente àquele período <strong>deixa de ser gerada</strong>.</p>
 <p>4.5. Períodos de teste grátis, cortesias, reembolsos, estornos (chargebacks) e cancelamentos <strong>não geram comissão</strong>. Comissões eventualmente pagas sobre valores posteriormente estornados poderão ser <strong>compensadas</strong> em pagamentos futuros.</p>
 <p>4.6. <strong>Plano de Níveis do Parceiro.</strong> O Parceiro é classificado, mês a mês, em um dos cinco níveis abaixo, conforme a quantidade de <strong>comerciantes indicados diretamente por ele (Nível 1) que tenham pago a mensalidade no mês de referência</strong>. Comerciantes de Nível 2 e Nível 3 (indiretos) <strong>não são considerados</strong> nesta contagem.</p>
-<table>
+<div class="tab"><table>
 <thead>
 <tr>
 <th>Nível</th>
@@ -114,7 +118,7 @@
 <tr><td><strong>Diamante</strong></td><td>51 a 100</td><td>17%</td><td>R$ 150,00</td></tr>
 <tr><td><strong>Esmeralda</strong></td><td>101 ou mais</td><td>18%</td><td>R$ 300,00</td></tr>
 </tbody>
-</table>
+</table></div>
 <p>4.7. O percentual do nível aplica-se <strong>exclusivamente à comissão de Nível 1</strong>. Os percentuais de Nível 2 (7,5%) e Nível 3 (5%) permanecem inalterados em qualquer nível.</p>
 <p>4.8. O nível é apurado <strong>a cada mensalidade paga</strong>, e o percentual aplicado é o do nível vigente <strong>no momento em que aquele pagamento é confirmado</strong>. Comissões já geradas não são recalculadas em razão de mudança de nível posterior.</p>
 <p>4.9. O nível <strong>não é permanente</strong>: como a contagem considera apenas comerciantes pagantes no mês de referência, o Parceiro cujos indicados deixem de pagar passa automaticamente ao nível correspondente à nova contagem, sem necessidade de aviso prévio. Comissões e bônus já creditados <strong>não são retirados</strong> em razão de queda de nível.</p>
