@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-11-fotoajuste | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-11-live1 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -306,7 +306,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 /* ---------- DESTAQUES DO CARDÁPIO ---------- */
 .pCard{flex:0 0 auto;width:160px;background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden;text-align:left;cursor:pointer;padding:0;scroll-snap-align:start;transition:.18s;}
 .pCard:hover{border-color:var(--ciano);transform:translateY(-2px);}
-.pCard .pImg{aspect-ratio:1/1;background:var(--mv-campo);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pCard .pImg{height:142px;background:var(--mv-campo);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .pCard .pImg img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .pCard .semImg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#12233a,#0b1728);}
 .pCard .semImg img{width:44px;height:44px;object-fit:contain;opacity:.75;}
@@ -317,6 +317,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   .gradeProd{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;overflow:visible;margin:0;padding:0;}
   .gradeProd .pCard{width:auto;}
   .gradeProd .pCard:nth-child(n+5){display:none;}   /* a arte mostra 4 destaques no desktop */
+  .pCard .pImg{height:172px;}
 }
 
 /* ---------- ONDE ESTAMOS ---------- */
@@ -557,7 +558,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .catCardTop{padding:11px 12px 9px;}
 .catCardNome{display:block;font-size:14px;font-weight:600;color:var(--mv-txt);}
 .catCardQtd{display:block;font-size:11.5px;color:var(--mv-txt-3);margin-top:2px;}
-.catCardImg{position:relative;aspect-ratio:4/3;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.catCardImg{position:relative;height:118px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .catCardImg img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;}
 .catSemFoto{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#12233a,#0b1728);}
 .catSemFoto img{width:40px;height:40px;object-fit:contain;opacity:.7;}
@@ -565,8 +566,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .catTitulo{font-size:18px;font-weight:700;margin-bottom:12px;}
 .itemPub{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px 13px;margin-bottom:10px;}
 .itemPub.comFoto{padding:0;overflow:hidden;}
-.itemPub .fotoCapa{position:relative;width:100%;aspect-ratio:1/1;max-height:min(62vh,440px);background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
-.itemPub .fotoCapa img{position:relative;z-index:1;display:block;width:100%;height:100%;object-fit:contain;cursor:zoom-in;}
+.itemPub .fotoCapa{position:relative;min-height:190px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.itemPub .fotoCapa img{position:relative;z-index:1;display:block;max-width:100%;width:auto;height:auto;max-height:min(62vh,440px);object-fit:contain;cursor:zoom-in;}
 .itemPub .itemInfo{padding:12px 13px;}
 .itemPub .itemTopo{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
 .itemPub .nm{font-size:15px;font-weight:600;flex:1;min-width:0;overflow-wrap:anywhere;}
@@ -602,12 +603,6 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .midiaCapa img.capaFundo{position:absolute;inset:0;z-index:0;width:100%;height:100%;max-width:none;max-height:none;
   object-fit:cover;filter:blur(22px) brightness(.45);transform:scale(1.15);cursor:default;pointer-events:none;}
 
-/* ---------- MOLDURAS DO CARDAPIO NO FORMATO DO PAINEL — 11/09/2026 ----------
-   O painel passou a entregar a foto do produto ja enquadrada em quadrado
-   (1080x1080) e a capa da categoria em 4:3 (1200x900), pelo editor de ajuste.
-   As molduras daqui ficaram com a MESMA proporcao: a foto nova preenche o
-   quadro inteiro, sem barra e sem corte. Foto antiga, de qualquer formato,
-   continua protegida pelo contain + fundo desfocado logo abaixo. */
 /* ---------- IMAGEM INTEIRA, SEM CORTE — 31/08/2026 ----------
    Toda moldura de foto da pagina publica passou de object-fit:cover (que corta)
    para contain (que mostra a imagem inteira). A sobra da moldura e preenchida
@@ -727,9 +722,19 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
    inferior direito e bateria na barra de baixo. Subir resolve. NAO esconder:
    escondida, o Google exige um texto de atribuicao visivel na pagina. */
 .grecaptcha-badge{bottom:76px !important;z-index:60}
+
+/* ---- 11/09/2026: selo AO VIVO (Modo Live) ----
+   Aparece so quando negocios/{uid}/estado/live esta ativo E com pulso recente.
+   Leva para /live/{apelido}. Fixo no topo, acima de tudo, sem empurrar layout. */
+#mvAoVivo{position:fixed;top:calc(env(safe-area-inset-top) + 64px);left:50%;transform:translateX(-50%);z-index:1200;display:flex;align-items:center;gap:8px;background:#ff2d55;color:#fff;text-decoration:none;font-weight:800;font-size:13.5px;letter-spacing:.2px;border-radius:999px;padding:9px 16px 9px 12px;box-shadow:0 8px 24px rgba(255,45,85,.45);white-space:nowrap;max-width:calc(100% - 24px)}
+#mvAoVivo i{width:9px;height:9px;border-radius:50%;background:#fff;flex:0 0 9px;animation:mvVivoPisca 1.2s infinite}
+#mvAoVivo span{overflow:hidden;text-overflow:ellipsis}
+#mvAoVivo b{background:rgba(0,0,0,.22);border-radius:999px;padding:2px 9px;font-weight:700}
+@keyframes mvVivoPisca{50%{opacity:.25}}
 </style>
 </head>
 <body>
+<a id="mvAoVivo" class="escondido" href="#"><i></i><span id="mvAoVivoTxt">AO VIVO agora</span><b>Assistir</b></a>
 
 <div class="pg" id="pg">
 
@@ -1012,7 +1017,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-11-fotoajuste';
+  window.MOVIKI_VERSAO='2026-09-11-live1';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2398,9 +2403,35 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     mostrarTela(nome||'Negócio','Este negócio ainda não ligou a localização. Volte daqui a pouco.');
   }
 
+  /* ============ Modo Live — 11/09/2026 ============
+     Ouve negocios/{uid}/estado/live (subdocumento: leitura publica pelo match
+     recursivo, escrita so do dono). O estudio carimba `pulso` a cada 45 s;
+     sem pulso ha 3 min, a live acabou mesmo que a aba do lojista tenha
+     fechado sem "Encerrar". Falha calada: selo que nao carrega nao derruba
+     a pagina. */
+  let liveOuvindo='';
+  function ouvirLive(uid){
+    if(!uid||liveOuvindo===uid)return; liveOuvindo=uid;
+    let est=null;
+    const pintar=()=>{
+      const a=el('mvAoVivo'); if(!a)return;
+      const p=est&&est.pulso&&est.pulso.toMillis?est.pulso.toMillis():0;
+      const vivo=!!(est&&est.ativa===true&&est.whep&&(Date.now()-p)<180000);
+      const sl=(dadosNeg&&dadosNeg.slug)||'';
+      if(!vivo||!sl){a.classList.add('escondido');return;}
+      a.href='/live/'+encodeURIComponent(sl);
+      el('mvAoVivoTxt').textContent=est.titulo?('AO VIVO · '+String(est.titulo).slice(0,40)):'AO VIVO agora';
+      if(a.classList.contains('escondido')){a.classList.remove('escondido');ev('live_selo_visto',{});}
+    };
+    try{onSnapshot(doc(db,'negocios',uid,'estado','live'),s=>{est=s.exists()?s.data():null;pintar();},()=>{});}catch(_){}
+    setInterval(pintar,30000); setTimeout(pintar,1500); setTimeout(pintar,4500);
+    const a=el('mvAoVivo'); if(a)a.addEventListener('click',()=>ev('live_selo_clique',{}));
+  }
+
   /* ============ leitura do Firestore ============ */
   async function ouvir(uid){
     negocioUid=uid;
+    ouvirLive(uid);
     await carregarPlano(uid);
     carregarAvaliacoesPub(uid);
     mvVisita();
@@ -2422,6 +2453,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   }
   async function ouvirPonto(pid,ownerUid){
     negocioUid=ownerUid;
+    ouvirLive(ownerUid);
     await carregarPlano(ownerUid);
     carregarAvaliacoesPub(ownerUid);
     mvVisita();

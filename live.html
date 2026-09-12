@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO -->
+<meta charset="UTF-8">
+<title>Ao vivo no Moviki</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060d18">
+<meta name="robots" content="noindex">
+<meta name="description" content="Transmissão ao vivo de um negócio no Moviki.">
+<link rel="icon" href="/favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="/mvmetrica.js"></script>
+<style>
+:root{
+  --mv-ciano:#00D4FF;--mv-azul:#0066FF;--mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
+  --mv-bg:#060d18;--mv-surf:#0e1c30;--mv-surf-2:#13263d;--mv-linha:#1c3457;
+  --mv-txt:#eaf6ff;--mv-txt-2:#c6d8ee;--mv-txt-3:#8fa6c4;
+  --mv-ok:#25e39b;--mv-alerta:#ffb020;--mv-erro:#ff6b6b;--mv-laranja:#ff8a00;--mv-whats:#25D366;
+  --mv-fonte:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --vivo:#ff2d55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;color:var(--mv-txt);font-family:var(--mv-fonte);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.escondido{display:none !important}
+svg{display:block}
+
+/* ---------- palco vertical ---------- */
+#palco{position:relative;height:100dvh;height:100vh;width:100%;max-width:520px;margin:0 auto;background:radial-gradient(900px 500px at 50% 0%,rgba(0,102,255,.25),transparent 60%),var(--mv-bg);overflow:hidden}
+@supports(height:100dvh){#palco{height:100dvh}}
+#vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#palco::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.55) 0,transparent 22%,transparent 52%,rgba(0,0,0,.72) 100%)}
+.camada{position:absolute;z-index:3}
+
+/* ---------- topo ---------- */
+#topo{top:0;left:0;right:0;padding:calc(env(safe-area-inset-top) + 12px) 12px 0;display:flex;align-items:center;gap:10px}
+.idBox{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.42);border-radius:999px;padding:4px 12px 4px 4px;min-width:0;max-width:70%;backdrop-filter:blur(6px)}
+.idLogo{width:34px;height:34px;border-radius:50%;background:var(--mv-grad) center/cover no-repeat;flex:0 0 34px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#001428}
+.idTxt{min-width:0}
+.idNome{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.idSub{font-size:11.5px;color:var(--mv-txt-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pillVivo{display:inline-flex;align-items:center;gap:5px;background:var(--vivo);color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.6px;padding:4px 9px;border-radius:6px}
+.pillVivo i{width:7px;height:7px;border-radius:50%;background:#fff;animation:pisca 1.2s infinite}
+@keyframes pisca{50%{opacity:.25}}
+.pillOlho{display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.42);font-size:12px;font-weight:600;padding:4px 9px;border-radius:6px}
+.pillOlho svg{width:14px;height:14px}
+.topoDir{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btnRedondo{width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.42);color:#fff;display:flex;align-items:center;justify-content:center}
+.btnRedondo svg{width:18px;height:18px}
+#faixaOferta{left:12px;right:12px}
+
+/* ---------- oferta relampago (Enterprise) ---------- */
+#faixaOferta{top:calc(env(safe-area-inset-top) + 60px);background:linear-gradient(135deg,#ff2d55,#ff8a00);border-radius:14px;padding:10px 12px;box-shadow:0 8px 24px rgba(255,45,85,.35)}
+.ofTopo{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:.6px}
+.ofTopo svg{width:15px;height:15px}
+.ofRelogio{margin-left:auto;background:rgba(0,0,0,.28);border-radius:6px;padding:2px 8px;font-variant-numeric:tabular-nums;font-size:13px}
+.ofCorpo{display:flex;align-items:baseline;gap:8px;margin-top:4px;flex-wrap:wrap}
+.ofNome{font-weight:700;font-size:14px;min-width:0;flex:1 1 140px}
+.ofDe{text-decoration:line-through;opacity:.8;font-size:12.5px}
+.ofPor{font-weight:800;font-size:20px}
+.ofEstoque{margin-top:6px;font-size:12px;font-weight:600}
+.ofBarra{height:5px;border-radius:5px;background:rgba(0,0,0,.25);margin-top:4px;overflow:hidden}
+.ofBarra i{display:block;height:100%;background:#fff;border-radius:5px}
+#faixaBrinde{background:rgba(0,0,0,.5);border:1px solid rgba(255,215,106,.55);border-radius:999px;padding:6px 12px;font-size:12.5px;display:flex;align-items:center;gap:6px}
+#faixaBrinde svg{width:16px;height:16px;color:#ffd76a;flex:0 0 16px}
+
+/* ---------- lateral direita ---------- */
+#lateral{right:10px;bottom:calc(env(safe-area-inset-bottom) + 206px);display:flex;flex-direction:column;gap:14px;align-items:center}
+.latBtn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#fff;text-decoration:none;font-size:11px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.latBtn span.ico{position:relative;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
+.latBtn svg{width:23px;height:23px}
+.latBtn b{position:absolute;top:-3px;right:-3px;background:var(--vivo);color:#fff;border-radius:999px;font-size:11px;min-width:19px;height:19px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+
+/* ---------- chat ---------- */
+#chat{margin-right:64px;max-height:30vh;overflow:hidden;display:flex;flex-direction:column-reverse;gap:5px;-webkit-mask-image:linear-gradient(0deg,#000 75%,transparent);mask-image:linear-gradient(0deg,#000 75%,transparent)}
+.msg{align-self:flex-start;max-width:100%;background:rgba(0,0,0,.42);border-radius:14px;padding:5px 10px;font-size:13px;line-height:1.35;word-wrap:break-word;overflow-wrap:anywhere}
+.msg b{color:#9fe8ff;font-weight:600;margin-right:4px}
+.msg.quero{background:rgba(37,211,102,.28)}
+.msg.quero b{color:#bff5d4}
+.msg.dono{background:rgba(0,102,255,.5)}
+.msg.dono b{color:#fff}
+
+/* ---------- produto em destaque ---------- */
+#pilha{left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 64px);display:flex;flex-direction:column;gap:8px;pointer-events:none}
+#pilha>*{pointer-events:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-right:64px}
+.chips:empty{display:none}
+#cardProduto{background:rgba(10,20,36,.92);border:1px solid rgba(0,212,255,.3);border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:sobe .35s ease}
+@keyframes sobe{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.cpFoto{width:62px;height:62px;border-radius:12px;background:var(--mv-surf-2) center/cover no-repeat;flex:0 0 62px;display:flex;align-items:center;justify-content:center;color:var(--mv-txt-3)}
+.cpFoto svg{width:28px;height:28px}
+.cpInfo{min-width:0;flex:1}
+.cpSelo{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.5px;color:#001428;background:var(--mv-ciano);border-radius:4px;padding:1px 6px;margin-bottom:3px}
+.cpNome{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cpPreco{font-size:13px;color:var(--mv-txt-2)}
+.cpPreco s{opacity:.7;margin-right:5px}
+.cpPreco strong{color:#fff;font-size:15px}
+.cpBtns{display:flex;gap:6px;flex:1 1 100%}
+.cpBtns .btnQuero{flex:1}
+.itSacola{flex-wrap:wrap}
+.btnQuero{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;background:var(--mv-whats);color:#06240f;font-weight:800;font-size:13px;padding:9px 12px;text-decoration:none;white-space:nowrap}
+.btnQuero svg{width:16px;height:16px}
+.btnLink{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--mv-linha);border-radius:10px;background:transparent;color:var(--mv-txt);font-weight:600;font-size:12px;padding:6px 10px;text-decoration:none;white-space:nowrap;max-width:52%;overflow:hidden;text-overflow:ellipsis}
+.btnLink svg{width:13px;height:13px}
+
+/* ---------- barra de baixo ---------- */
+#barra{left:0;right:0;bottom:0;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px);display:flex;gap:8px;align-items:center}
+#barra form{flex:1;display:flex;gap:6px;min-width:0}
+#txtMsg{flex:1;min-width:0;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.45);color:#fff;border-radius:999px;padding:11px 14px;font:inherit;font-size:14px;outline:none}
+#txtMsg::placeholder{color:#b8c7da}
+#btnEnviar{border:0;border-radius:50%;width:42px;height:42px;background:var(--mv-grad);color:#001428;display:flex;align-items:center;justify-content:center;flex:0 0 42px}
+#btnEnviar svg{width:19px;height:19px}
+
+/* ---------- avisos sobre o video ---------- */
+#btnSom{left:50%;top:42%;transform:translate(-50%,-50%);border:0;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-weight:700;font-size:14px;padding:11px 18px;display:flex;align-items:center;gap:8px}
+#btnSom svg{width:18px;height:18px}
+#aguardando{left:50%;top:42%;transform:translate(-50%,-50%);text-align:center;font-size:13.5px;color:var(--mv-txt-2);background:rgba(0,0,0,.5);border-radius:14px;padding:10px 16px}
+
+/* ---------- tela fora do ar ---------- */
+#fora{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 22px;background:radial-gradient(700px 420px at 50% 10%,rgba(0,102,255,.28),transparent 60%),var(--mv-bg)}
+.foLogo{width:84px;height:84px;border-radius:50%;background:var(--mv-grad) center/cover no-repeat;margin-bottom:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:32px;color:#001428;box-shadow:0 0 0 4px rgba(0,212,255,.18)}
+.foNome{font-weight:800;font-size:20px;margin:0 0 6px}
+.foTit{font-size:15px;color:var(--mv-txt-2);margin:0 0 18px;max-width:340px;line-height:1.45}
+.foAgenda{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:16px;padding:14px 16px;margin-bottom:16px;width:min(340px,100%)}
+.foAgenda small{display:block;color:var(--mv-txt-3);font-size:12px;margin-bottom:3px}
+.foAgenda strong{font-size:16px}
+.foAgenda div{font-size:13.5px;color:var(--mv-txt-2);margin-top:4px}
+.foBtns{display:flex;flex-direction:column;gap:10px;width:min(340px,100%)}
+.btnGrad{border:0;border-radius:12px;background:var(--mv-grad);color:#001428;font-weight:800;font-size:15px;padding:13px 16px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.btnGrad svg{width:18px;height:18px}
+.btnSec{border:1px solid var(--mv-linha);border-radius:12px;background:transparent;color:var(--mv-txt);font-weight:600;font-size:14px;padding:12px 16px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.foRodape{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 14px);font-size:11.5px;color:var(--mv-txt-3)}
+
+/* ---------- folhas (sacola, nome, cupom) ---------- */
+.folha{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.fCaixa{width:100%;max-width:520px;max-height:78vh;overflow:auto;background:var(--mv-surf);border-radius:20px 20px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px);animation:sobe .25s ease}
+.fTopo{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.fTopo h2{font-size:16px;margin:0;font-weight:700}
+.fTopo button{margin-left:auto}
+.itSacola{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--mv-linha)}
+.itSacola:first-of-type{border-top:0}
+.itSacola .cpFoto{width:54px;height:54px;flex-basis:54px}
+.itSacola.ativo .cpNome::after{content:" · em destaque";color:var(--mv-ciano);font-weight:600;font-size:12px}
+.campo{width:100%;border:1px solid var(--mv-linha);background:#0b1728;color:#fff;border-radius:12px;padding:12px 14px;font:inherit;font-size:15px;outline:none}
+.nota{font-size:12px;color:var(--mv-txt-3);margin:8px 0 14px;line-height:1.45}
+
+/* ---------- cupom (Enterprise) ---------- */
+#cupomBox{right:10px;top:calc(env(safe-area-inset-top) + 60px);width:150px;background:rgba(10,20,36,.92);border:1px dashed rgba(255,215,106,.7);border-radius:14px;padding:9px 10px;text-align:center}
+#faixaOferta:not(.escondido) ~ #cupomBox{top:calc(env(safe-area-inset-top) + 170px)}
+.cuTit{font-size:10.5px;font-weight:800;letter-spacing:.5px;color:#ffd76a}
+.cuTxt{font-size:12.5px;font-weight:600;margin:3px 0 6px}
+.cuBarra{height:5px;border-radius:5px;background:var(--mv-surf-2);overflow:hidden}
+.cuBarra i{display:block;height:100%;background:#ffd76a}
+.cuFalta{font-size:11px;color:var(--mv-txt-3);margin-top:4px}
+.cuCodigo{font-weight:800;font-size:16px;letter-spacing:1px;border:0;background:#ffd76a;color:#2a1c00;border-radius:8px;padding:5px 8px;width:100%}
+#faixaLocal a{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.5);color:#fff;text-decoration:none;font-size:12px;font-weight:600;border-radius:999px;padding:6px 11px;border:1px solid rgba(37,227,155,.55)}
+#faixaLocal svg{width:14px;height:14px;color:var(--mv-ok)}
+/* ---- checkout Pix (Enterprise) ---- */
+.btnPix{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;background:var(--mv-grad);color:#001428;font-weight:800;font-size:13.5px;padding:10px 12px;text-decoration:none;white-space:nowrap;flex:1}
+.btnPix svg{width:16px;height:16px}
+.btnWppMini{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(37,211,102,.16);color:#bff5d4;border:1px solid rgba(37,211,102,.45);width:42px;flex:0 0 42px}
+.btnWppMini svg{width:18px;height:18px}
+.msg.venda{background:rgba(37,227,155,.3)}
+.msg.venda b{color:#d6ffe9}
+.ckLinha{display:flex;align-items:center;gap:10px;background:var(--mv-surf-2);border-radius:12px;padding:10px;margin-bottom:10px}
+.ckQtd{display:flex;align-items:center;gap:8px;margin-left:auto}
+.ckQtd button{width:32px;height:32px;border-radius:9px;border:1px solid var(--mv-linha);background:transparent;color:#fff;font-size:18px}
+.ckTotal{display:flex;justify-content:space-between;font-weight:800;font-size:16px;margin:4px 0 10px}
+.ckRot{display:block;font-size:12px;color:var(--mv-txt-3);margin:10px 0 5px}
+.ckEnt{display:flex;gap:8px}
+.ckEnt label{flex:1;border:1px solid var(--mv-linha);border-radius:11px;padding:10px;font-size:13.5px;display:flex;gap:7px;align-items:center}
+.ckChk{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--mv-txt-2);margin:12px 0;line-height:1.4}
+.ckQr{display:block;width:220px;height:220px;margin:6px auto 10px;background:#fff;border-radius:12px;padding:8px;image-rendering:pixelated}
+.ckCod{width:100%;font-size:12px;word-break:break-all;background:#0b1728;border:1px solid var(--mv-linha);border-radius:10px;padding:8px;color:var(--mv-txt-2);max-height:70px;overflow:auto}
+.ckEst{text-align:center;font-size:13.5px;color:var(--mv-txt-2);margin:10px 0}
+.ckOk{text-align:center;padding:10px 0}
+.ckOk svg{width:56px;height:56px;color:var(--mv-ok);margin:0 auto 8px}
+.msgErro{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);color:#ffd0d0;border-radius:11px;padding:10px 12px;font-size:13px;margin-top:10px}
+#toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);z-index:30;background:rgba(0,0,0,.85);color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;max-width:86%;text-align:center}
+</style>
+</head>
+<body>
+<div id="palco">
+  <video id="vid" playsinline autoplay muted></video>
+
+  <div id="topo" class="camada">
+    <div class="idBox"><div class="idLogo" id="idLogo"></div><div class="idTxt"><div class="idNome" id="idNome">Carregando…</div><div class="idSub" id="idSub"></div></div></div>
+    <div class="topoDir">
+      <span class="pillVivo escondido" id="pillVivo"><i></i>AO VIVO</span>
+      <span class="pillOlho escondido" id="pillOlho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><span id="nOlho">0</span></span>
+      <a class="btnRedondo" id="btnFechar" href="/" aria-label="Sair da live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    </div>
+  </div>
+
+  <div id="faixaOferta" class="camada escondido">
+    <div class="ofTopo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>OFERTA DA LIVE<span class="ofRelogio" id="ofRelogio">--:--</span></div>
+    <div class="ofCorpo"><span class="ofNome" id="ofNome"></span><span class="ofDe" id="ofDe"></span><span class="ofPor" id="ofPor"></span></div>
+    <div id="ofEstoqueBox" class="escondido"><div class="ofEstoque" id="ofEstoque"></div><div class="ofBarra"><i id="ofBarra"></i></div></div>
+  </div>
+  <div id="cupomBox" class="camada escondido">
+    <div class="cuTit">CUPOM DA LIVE</div>
+    <div class="cuTxt" id="cuTxt"></div>
+    <div id="cuTrava"><div class="cuBarra"><i id="cuBarra"></i></div><div class="cuFalta" id="cuFalta"></div></div>
+    <button type="button" class="cuCodigo escondido" id="cuCodigo" title="Copiar"></button>
+  </div>
+
+  <button type="button" id="btnSom" class="camada escondido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>Toque para ouvir</button>
+  <div id="aguardando" class="camada escondido">Conectando ao vídeo…</div>
+
+
+
+  <div id="lateral" class="camada">
+    <button type="button" class="latBtn" id="btnSacola"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><b id="nSacola">0</b></span>Sacolinha</button>
+    <button type="button" class="latBtn" id="btnCompartilhar"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>Enviar</button>
+    <button type="button" class="latBtn" id="btnDenunciar"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4M4 4h12l-2 4 2 4H4"/></svg></span>Denunciar</button>
+    <a class="latBtn" id="btnLoja" href="/"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9h18v11H3zM9 20v-6h6v6"/></svg></span>Página</a>
+  </div>
+
+  <div id="pilha" class="camada">
+    <div id="chat"></div>
+    <div class="chips">
+      <div id="faixaBrinde" class="escondido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 1 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 1 1 0 5"/></svg><span id="brTxt"></span></div>
+      <div id="faixaLocal" class="escondido"><a id="lnkRota" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Estou aqui agora · Como chegar</a></div>
+    </div>
+    <div id="cardProduto" class="escondido"></div>
+  </div>
+
+  <div id="barra" class="camada">
+    <form id="formMsg" autocomplete="off">
+      <input id="txtMsg" maxlength="140" placeholder="Comente ou pergunte…" enterkeyhint="send">
+      <button type="submit" id="btnEnviar" aria-label="Enviar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+    </form>
+  </div>
+
+  <div id="fora">
+    <div class="foLogo" id="foLogo"></div>
+    <h1 class="foNome" id="foNome">Carregando…</h1>
+    <p class="foTit" id="foTit"></p>
+    <div class="foAgenda escondido" id="foAgenda"><small>Próxima live</small><strong id="foQuando"></strong><div id="foAgTit"></div></div>
+    <div class="foBtns">
+      <a class="btnGrad escondido" id="btnAgenda" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Lembrar na minha agenda</a>
+      <a class="btnSec" id="btnPagina" href="/">Ver a página do negócio</a>
+    </div>
+    <div class="foRodape">Transmissão pelo Moviki</div>
+  </div>
+</div>
+
+<div class="folha escondido" id="folhaSacola"><div class="fCaixa">
+  <div class="fTopo"><h2>Sacolinha da live</h2><button type="button" class="btnRedondo" data-fecha="folhaSacola" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div id="listaSacola"></div>
+  <p class="nota">O pedido é combinado direto com o negócio pelo WhatsApp. Preço e condições valem como anunciados na live.</p>
+</div></div>
+
+<div class="folha escondido" id="folhaNome"><div class="fCaixa">
+  <div class="fTopo"><h2>Como quer aparecer no chat?</h2><button type="button" class="btnRedondo" data-fecha="folhaNome" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <input class="campo" id="campoNome" maxlength="30" placeholder="Seu nome ou apelido">
+  <p class="nota">Seu nome e suas mensagens aparecem para todos que estão assistindo e ficam guardados por até 30 dias. Não escreva telefone, endereço ou documento no chat.</p>
+  <button type="button" class="btnGrad" id="btnSalvarNome" style="width:100%">Entrar no chat</button>
+</div></div>
+
+<div class="folha escondido" id="folhaCompra"><div class="fCaixa">
+  <div class="fTopo"><h2 id="ckTit">Comprar com Pix</h2><button type="button" class="btnRedondo" data-fecha="folhaCompra" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div id="ckForm">
+    <div class="ckLinha"><div class="cpInfo"><div class="cpNome" id="ckProd"></div><div class="cpPreco" id="ckUnit"></div></div><div class="ckQtd"><button type="button" id="ckMenos">−</button><b id="ckQ">1</b><button type="button" id="ckMais">+</button></div></div>
+    <div class="ckTotal"><span>Total</span><span id="ckTotal"></span></div>
+    <input class="campo" id="ckNome" maxlength="60" placeholder="Nome e sobrenome" autocomplete="name">
+    <div style="display:flex;gap:8px;margin-top:8px"><input class="campo" id="ckWpp" maxlength="16" inputmode="tel" placeholder="WhatsApp com DDD" autocomplete="tel"><input class="campo" id="ckCpf" maxlength="14" inputmode="numeric" placeholder="CPF"></div>
+    <span class="ckRot">Como você vai receber?</span>
+    <div class="ckEnt"><label><input type="radio" name="ckEnt" value="retirada" checked> Retirar no local</label><label><input type="radio" name="ckEnt" value="entrega"> Combinar entrega</label></div>
+    <input class="campo escondido" id="ckEnd" maxlength="140" placeholder="Endereço ou ponto de referência para a entrega" style="margin-top:8px">
+    <label class="ckChk"><input type="checkbox" id="ckMostrar"><span>Pode mostrar na live que eu comprei (só o meu primeiro nome).</span></label>
+    <label class="ckChk"><input type="checkbox" id="ckAceite"><span>Li e aceito os <a href="/termos.html" target="_blank" rel="noopener" style="color:var(--mv-ciano)">Termos de Uso</a> e a <a href="/privacidade.html" target="_blank" rel="noopener" style="color:var(--mv-ciano)">Política de Privacidade</a>, e autorizo o uso dos meus dados para gerar o Pix e para o vendedor combinar a entrega.</span></label>
+    <p class="nota" id="ckAviso"></p>
+    <button type="button" class="btnGrad" id="ckGerar" style="width:100%">Gerar Pix</button>
+    <div id="ckErro" class="msgErro escondido"></div>
+  </div>
+  <div id="ckPix" class="escondido">
+    <img class="ckQr" id="ckQr" alt="QR Code do Pix">
+    <div class="ckTotal"><span id="ckPixProd"></span><span id="ckPixTotal"></span></div>
+    <div class="ckCod" id="ckCod"></div>
+    <button type="button" class="btnGrad" id="ckCopiar" style="width:100%;margin-top:10px">Copiar código Pix</button>
+    <div class="ckEst" id="ckEst">Esperando o pagamento…</div>
+    <p class="nota">Abra o app do seu banco, escolha Pix copia e cola ou leia o QR. Esta tela confirma sozinha quando o pagamento cair.</p>
+  </div>
+  <div id="ckOk" class="ckOk escondido">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
+    <h2 style="margin:0 0 6px;font-size:18px">Pagamento confirmado!</h2>
+    <p class="nota" id="ckOkTxt" style="margin:0 0 12px"></p>
+    <a class="btnQuero" id="ckOkWpp" href="#" target="_blank" rel="noopener" style="width:100%">Combinar com o vendedor no WhatsApp</a>
+  </div>
+</div></div>
+
+<div class="folha escondido" id="folhaDenuncia"><div class="fCaixa">
+  <div class="fTopo"><h2>Denunciar esta live</h2><button type="button" class="btnRedondo" data-fecha="folhaDenuncia" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <p class="nota" style="margin-top:0">A denúncia é anônima e vai direto para a equipe do Moviki, que pode encerrar a transmissão.</p>
+  <div id="denMotivos" style="display:flex;flex-direction:column;gap:8px">
+    <label class="ckChk" style="margin:0"><input type="radio" name="denM" value="proibido"> Produto proibido (droga, arma, remédio, cigarro, falsificado)</label>
+    <label class="ckChk" style="margin:0"><input type="radio" name="denM" value="sexual"> Conteúdo sexual ou nudez</label>
+    <label class="ckChk" style="margin:0"><input type="radio" name="denM" value="menor"> Criança ou adolescente em risco</label>
+    <label class="ckChk" style="margin:0"><input type="radio" name="denM" value="violencia"> Violência, ódio ou ameaça</label>
+    <label class="ckChk" style="margin:0"><input type="radio" name="denM" value="golpe"> Golpe, preço enganoso ou cobrança indevida</label>
+    <label class="ckChk" style="margin:0"><input type="radio" name="denM" value="outro"> Outro motivo</label>
+  </div>
+  <input class="campo" id="denDetalhe" maxlength="300" placeholder="Conte o que viu (opcional)" style="margin-top:10px">
+  <p class="nota" id="denUrgente" style="display:none">Se alguém está em perigo agora, ligue <b>190</b>. Violência contra criança ou adolescente: <b>Disque 100</b>.</p>
+  <button type="button" class="btnGrad" id="denEnviar" style="width:100%">Enviar denúncia</button>
+</div></div>
+
+<div id="toast" class="escondido"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  window.MOVIKI_VERSAO='2026-09-12-beta1';
+  const app=initializeApp({
+    apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
+    storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
+  });
+  /* App Check: o Firestore esta ENFORCADO desde 05/09. Pagina que fala com o
+     Firebase sem isto tem toda leitura negada, calada. */
+  try{initializeAppCheck(app,{provider:new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'),isTokenAutoRefreshEnabled:true});}catch(e){console.error('App Check:',e);}
+  const db=getFirestore(app);
+
+  const el=id=>document.getElementById(id);
+  /* ---- FILTRO DE CONTEUDO DA LIVE — 11/09/2026 ----
+     Mesma lista, byte a byte, em 4 lugares: estudio (moviki-app/live.html),
+     pagina publica (moviki/live.html), painel do dono (eikoadm01.html) e
+     servidor (moviki/api/live.js). A fonte e uma so; mudou aqui, muda nos 4.
+     Termos EXTRAS o dono cadastra no painel (configuracoes/liveTermos) sem
+     precisar de deploy. Filtro de palavra nao pega tudo: e a primeira
+     barreira. As outras sao o aceite das regras, a denuncia e o botao de
+     encerrar do dono. */
+  const MV_TERMOS={"grupos":{"drogas":["maconha","cocaina","crack","oxi","lsd","ecstasy","mdma","haxixe","skunk","heroina","ketamina","lanca perfume","cogumelo magico","cogumelos magicos","psilocibina","thc","cbd","entorpecente","entorpecentes"],"armas":["arma de fogo","armas de fogo","pistola","pistolas","revolver","revolveres","fuzil","fuzis","espingarda","espingardas","carabina","metralhadora","submetralhadora","municao","municoes","simulacro","explosivo","explosivos","dinamite","granada","soco ingles","taser","arma de choque","spray de pimenta","silenciador"],"sexual":["sexo","porno","pornografia","conteudo adulto","nude","nudes","pack de fotos","acompanhante","acompanhantes","garota de programa","garoto de programa","programa sexual","onlyfans","xvideos","sexo ao vivo","erotico","erotica","sex shop","vibrador","novinha","novinhas"],"medicamentos":["anabolizante","anabolizantes","esteroide","esteroides","sibutramina","ozempic","mounjaro","semaglutida","tirzepatida","tarja preta","receita controlada","rivotril","clonazepam","ritalina","zolpidem","viagra","cytotec","misoprostol","abortivo"],"tabaco":["vape","vapes","pod descartavel","cigarro eletronico","cigarros eletronicos","juul","cigarro","cigarros","tabaco"],"fraude":["dinheiro falso","nota falsa","notas falsas","cedula falsa","cartao clonado","cartoes clonados","documento falso","cnh falsa","rg falso","diploma falso","atestado falso","conta hackeada","dados de cartao","roubado","roubada","roubados","furtado","furtada"],"apostas":["bet365","rifa","rifas","sorteio","sorteios","jogo do bicho","aposta","apostas","bet","cassino","tigrinho","fortune tiger","bingo"],"animais":["animal silvestre","animais silvestres","trafico de animais"],"golpe":["piramide financeira","renda garantida","lucro garantido","dinheiro facil"]},"excecoes":["pistola de agua","pistola de cola","pistola de pintura","pistola de ar","pistola de solda","sexo do bebe","beijo roubado","beijos roubados","bingo de sabores"]};
+  let MV_TERMOS_EXTRAS=[];
+  const MV_LEET={'0':'o','@':'a','4':'a','1':'i','!':'i','3':'e','$':'s'};
+  /* digito vira letra so ENTRE letras (c0caina -> cocaina), sem estragar bet365 */
+  function mvNormaliza(s){return (' '+String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/([a-z])([0@41!3$]+)(?=[a-z]|[^a-z0-9]|$)/g,(m,a,d)=>a+d.split('').map(c=>MV_LEET[c]).join('')).replace(/[^a-z0-9]+/g,' ')+' ');}
+  function mvProibido(s){
+    let n=mvNormaliza(s);
+    MV_TERMOS.excecoes.forEach(e=>{n=n.split(' '+e+' ').join(' ');});
+    for(const g in MV_TERMOS.grupos)for(const t of MV_TERMOS.grupos[g])if(n.includes(' '+t+' '))return {grupo:g,termo:t};
+    for(const t of MV_TERMOS_EXTRAS){const x=mvNormaliza(t).trim();if(x&&n.includes(' '+x+' '))return {grupo:'extra',termo:x};}
+    return null;
+  }
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function ev(n,p){try{if(window.mvEv)window.mvEv(n,p||{});}catch(_){}}
+  function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
+  function linkOk(u){return typeof u==='string'&&u.length<=500&&/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}(\/|$|\?)/i.test(u);}
+  function whepOk(u){return typeof u==='string'&&/^https:\/\/customer-[a-z0-9]+\.cloudflarestream\.com\/[a-f0-9]{32}\/webRTC\/play$/.test(u);}
+  function fmtPreco(v){var s=String(v==null?'':v).trim();if(!s)return '';var t=s.replace(/^R\$\s*/i,'').trim();if(/^\d{1,5}([.,]\d{1,2})?$/.test(t)){var n=parseFloat(t.replace(',','.'));if(!isNaN(n))return 'R$ '+n.toFixed(2).replace('.',',');}return 'R$ '+t;}
+  function toast(t){const x=el('toast');x.textContent=t;x.classList.remove('escondido');clearTimeout(toast._t);toast._t=setTimeout(()=>x.classList.add('escondido'),2600);}
+  function ms(t){if(!t)return 0;if(typeof t.toMillis==='function')return t.toMillis();if(typeof t==='number')return t;const p=Date.parse(t);return isNaN(p)?0:p;}
+  const SVG_PRATO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l1 14H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>';
+  const SVG_WPP='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.4.6-.3.4c-.1.1-.2.3-.1.5.1.2.6 1 1.3 1.6.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.7-.9c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.1.1.6-.2 1.2z"/></svg>';
+  const SVG_LINK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+
+  /* ---- nivel pelo plano: MESMA conta do api/live.js ---- */
+  function nivelDe(a){
+    if(!a||a.ativo!==true)return null;
+    const v=ms(a.vence_em); if(v&&v<Date.now())return null;
+    if(a.plano==='enterprise')return 'enterprise';
+    if(a.plano==='premium'||a.periodo==='trial')return 'premium';
+    return null;
+  }
+
+  const _m=/^\/+live\/+([^/?#]+)/.exec(decodeURIComponent(location.pathname));
+  const slug=((_m&&_m[1])||new URLSearchParams(location.search).get('s')||'').trim().toLowerCase();
+  let bloqueado=false,liveDesligada=false,pixAtivo=false,uid='',neg=null,nivel=null,est={},noAr=false,pc=null,tentando=false,chatDes=null,chatDesdeMs=0,presencaT=null;
+  const sid=(()=>{try{let s=sessionStorage.getItem('mv_live_sid');if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now()).replace(/-/g,'').slice(0,24);sessionStorage.setItem('mv_live_sid',s);}return s;}catch(_){return String(Date.now());}})();
+
+  /* ================= carregamento ================= */
+  (async()=>{
+    if(!/^[a-z0-9_-]{3,40}$/.test(slug)){fora('Link de live inválido','Confira o endereço que você recebeu.');return;}
+    el('btnPagina').href='/'+slug; el('btnLoja').href='/'+slug; el('btnFechar').href='/'+slug;
+    try{
+      const s=await getDoc(doc(db,'slugs',slug));
+      if(!s.exists()){fora('Negócio não encontrado','Não achamos "'+esc(slug)+'" no Moviki.');return;}
+      uid=s.data().uid;
+      const [n,a]=await Promise.all([getDoc(doc(db,'negocios',uid)),getDoc(doc(db,'assinaturas',uid)).catch(()=>null)]);
+      neg=n.exists()?n.data():{};
+      nivel=nivelDe(a&&a.exists()?a.data():null);
+      pintarIdentidade();
+      if(nivel==='enterprise')onSnapshot(doc(db,'checkout_publico',uid),c=>{pixAtivo=!!(c.exists()&&c.data().ativo===true);if(noAr){pintarProduto();pintarSacola();}},()=>{});
+      onSnapshot(doc(db,'configuracoes','liveTermos'),t=>{const d=t.exists()?(t.data()||{}):{};
+        MV_TERMOS_EXTRAS=Array.isArray(d.extras)?d.extras.filter(x=>typeof x==='string').slice(0,300):[];
+        liveDesligada=d.liveDesligada===true;
+        if(noAr){el('cardProduto')._chave='';pintarProduto();pintarSacola();}
+        aplicarEstado();},()=>{});
+      onSnapshot(doc(db,'live_bloqueios',uid),b=>{const d=b.exists()?b.data():null;bloqueado=!!(d&&(!d.ate||ms(d.ate)>Date.now()));aplicarEstado();},()=>{});
+      onSnapshot(doc(db,'negocios',uid,'estado','live'),snap=>{est=snap.exists()?(snap.data()||{}):{};aplicarEstado();},()=>fora('Não deu para carregar','Tente de novo em instantes.'));
+    }catch(e){fora('Não deu para carregar','Tente de novo em instantes. Se continuar, o problema é do nosso lado.');}
+  })();
+
+  function pintarIdentidade(){
+    const nome=neg.nome||'Negócio'; document.title=nome+' · ao vivo no Moviki';
+    el('idNome').textContent=nome; el('foNome').textContent=nome;
+    [el('idLogo'),el('foLogo')].forEach(x=>{
+      if(fotoOk(neg.markerLogo)){x.style.backgroundImage='url("'+neg.markerLogo+'")';x.textContent='';}
+      else x.textContent=nome.trim().charAt(0).toUpperCase();
+    });
+  }
+
+  function vivoDeVerdade(){
+    /* O estudio carimba `pulso` a cada 45 s. Aba fechada sem "Encerrar" deixa
+       ativa:true para tras — sem este teste a pagina mostraria AO VIVO para
+       sempre. 3 min sem pulso = acabou. */
+    return est.ativa===true && whepOk(est.whep) && (Date.now()-ms(est.pulso))<180000;
+  }
+
+  function aplicarEstado(){
+    const agora=vivoDeVerdade();
+    if(agora && !nivel){fora('Live indisponível','Este negócio não está com a live ativa no plano no momento.');pararVideo();return;}
+    if(bloqueado){noAr=false;pararVideo();pararChat();pararPresenca();fora('Live indisponível','Esta transmissão foi suspensa pela equipe do Moviki.');return;}
+    if(liveDesligada){noAr=false;pararVideo();pararChat();pararPresenca();fora('Live indisponível','As transmissões ao vivo estão temporariamente desligadas para manutenção. Volte daqui a pouco.');return;}
+    if(!agora){
+      noAr=false; pararVideo(); pararChat(); pararPresenca();
+      const ag=est.agendada&&ms(est.agendada.em)>Date.now()-3600000?est.agendada:null;
+      if(ag){
+        fora('','');
+        el('foTit').textContent='A live ainda não começou. Deixe salvo na sua agenda para não perder.';
+        el('foAgenda').classList.remove('escondido');
+        el('foQuando').textContent=new Date(ms(ag.em)).toLocaleString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+        el('foAgTit').textContent=ag.titulo||'';
+        el('btnAgenda').href=linkAgenda(ag); el('btnAgenda').classList.remove('escondido');
+      }else{
+        fora('', est.fim?'Esta live terminou. Obrigado por acompanhar!':'Nenhuma live agora. Veja a página do negócio para saber onde ele está.');
+      }
+      return;
+    }
+    el('fora').classList.add('escondido');
+    el('pillVivo').classList.remove('escondido');
+    el('idSub').textContent=est.titulo||'Ao vivo agora';
+    const n=Number(est.assistindo||0);
+    el('pillOlho').classList.toggle('escondido',n<3); el('nOlho').textContent=n;
+    if(!noAr){noAr=true;ev('live_assistir',{slug});tocar();ouvirChat();ligarPresenca();}
+    pintarProduto(); pintarSacola(); pintarEnterprise();
+  }
+
+  function fora(titulo,sub){
+    el('fora').classList.remove('escondido'); el('pillVivo').classList.add('escondido');
+    if(titulo)el('foNome').textContent=titulo; else if(neg)el('foNome').textContent=neg.nome||'Negócio';
+    el('foTit').textContent=sub||''; el('foAgenda').classList.add('escondido'); el('btnAgenda').classList.add('escondido');
+  }
+
+  function linkAgenda(ag){
+    const i=new Date(ms(ag.em)), f=new Date(ms(ag.em)+3600000);
+    const z=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+    const url='https://moviki.com.br/live/'+slug;
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Live: '+(neg&&neg.nome||'Moviki')+(ag.titulo?' — '+ag.titulo:''))+
+      '&dates='+z(i)+'/'+z(f)+'&details='+encodeURIComponent('Assista em '+url)+'&location='+encodeURIComponent(url);
+  }
+  el('btnAgenda').addEventListener('click',()=>ev('live_agenda',{slug}));
+
+  /* ================= video (WHEP) ================= */
+  async function esperarIce(p){
+    if(p.iceGatheringState==='complete')return;
+    await new Promise(r=>{const t=setTimeout(r,2000);p.addEventListener('icegatheringstatechange',()=>{if(p.iceGatheringState==='complete'){clearTimeout(t);r();}});});
+  }
+  async function tocar(){
+    if(tentando||!noAr)return; tentando=true;
+    el('aguardando').classList.remove('escondido');
+    try{
+      pararVideo(true);
+      const p=new RTCPeerConnection({iceServers:[{urls:'stun:stun.cloudflare.com:3478'}],bundlePolicy:'max-bundle'});
+      pc=p;
+      p.addTransceiver('video',{direction:'recvonly'}); p.addTransceiver('audio',{direction:'recvonly'});
+      const ms_=new MediaStream();
+      p.ontrack=e=>{ms_.addTrack(e.track); const v=el('vid'); if(v.srcObject!==ms_)v.srcObject=ms_; v.play().then(()=>{if(v.muted)el('btnSom').classList.remove('escondido');}).catch(()=>el('btnSom').classList.remove('escondido'));};
+      p.onconnectionstatechange=()=>{
+        if(p.connectionState==='connected')el('aguardando').classList.add('escondido');
+        if(['failed','disconnected','closed'].includes(p.connectionState)&&pc===p&&noAr)setTimeout(tocar,4000);
+      };
+      await p.setLocalDescription(await p.createOffer());
+      await esperarIce(p);
+      const r=await fetch(est.whep,{method:'POST',headers:{'Content-Type':'application/sdp'},body:p.localDescription.sdp});
+      if(!r.ok)throw new Error('whep '+r.status);
+      await p.setRemoteDescription({type:'answer',sdp:await r.text()});
+    }catch(e){
+      /* 404/409 = o lojista ainda nao conectou a camera. Tenta de novo. */
+      el('aguardando').textContent='Esperando a transmissão começar…';
+      tentando=false; if(noAr)setTimeout(tocar,5000); return;
+    }
+    tentando=false;
+  }
+  function pararVideo(manterAviso){
+    if(pc){try{pc.close();}catch(_){}pc=null;}
+    const v=el('vid'); try{v.srcObject=null;}catch(_){}
+    if(!manterAviso){el('aguardando').classList.add('escondido');el('btnSom').classList.add('escondido');}
+  }
+  el('btnSom').addEventListener('click',()=>{const v=el('vid');v.muted=false;v.play().catch(()=>{});el('btnSom').classList.add('escondido');});
+
+  /* ================= presenca (quem esta assistindo) =================
+     Um documento por aba, carimbado a cada 60 s. Quem conta e o estudio do
+     lojista, uma vez a cada 30 s, e publica o numero em estado/live — cada
+     espectador nao precisa contar ninguem. */
+  function ligarPresenca(){
+    const bater=()=>{ if(document.visibilityState!=='visible'||!noAr)return;
+      setDoc(doc(db,'negocios',uid,'livepresenca',sid),{em:serverTimestamp(),expiraEm:Timestamp.fromMillis(Date.now()+2*86400000)}).catch(()=>{}); };
+    bater(); clearInterval(presencaT); presencaT=setInterval(bater,60000);
+  }
+  function pararPresenca(){clearInterval(presencaT);presencaT=null;}
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&noAr)ligarPresenca();});
+
+  /* ================= chat ================= */
+  function ouvirChat(){
+    pararChat();
+    chatDesdeMs=ms(est.inicio)||Date.now()-3600000;
+    const q=query(collection(db,'negocios',uid,'livechat'),where('criadoEm','>=',Timestamp.fromMillis(chatDesdeMs)),orderBy('criadoEm','desc'),limit(30));
+    chatDes=onSnapshot(q,s=>{
+      const box=el('chat'); box.innerHTML='';
+      s.forEach(d=>{const m=d.data()||{};if(m.tipo!=='venda'&&mvProibido(m.texto))return;const x=document.createElement('div');
+        x.className='msg'+(m.tipo==='quero'?' quero':'')+(m.tipo==='dono'?' dono':'')+(m.tipo==='venda'?' venda':'');
+        x.innerHTML='<b>'+esc(m.nome||'')+'</b>'+(m.tipo==='quero'?'quer: ':'')+(m.tipo==='venda'?'comprou ':'')+esc(m.texto||'');
+        box.appendChild(x);});
+    },()=>{});
+  }
+  function pararChat(){if(chatDes){chatDes();chatDes=null;}}
+  function meuNome(){try{return localStorage.getItem('mv_live_nome')||'';}catch(_){return '';}}
+  let depoisDoNome=null;
+  function pedirNome(fn){depoisDoNome=fn;el('campoNome').value=meuNome();el('folhaNome').classList.remove('escondido');setTimeout(()=>el('campoNome').focus(),60);}
+  el('btnSalvarNome').addEventListener('click',()=>{
+    const n=el('campoNome').value.replace(/\s+/g,' ').trim();
+    if(n.length<2){toast('Escreva pelo menos 2 letras.');return;}
+    try{localStorage.setItem('mv_live_nome',n.slice(0,30));}catch(_){}
+    el('folhaNome').classList.add('escondido'); const f=depoisDoNome; depoisDoNome=null; if(f)f();
+  });
+  let ultimoEnvio=0;
+  async function gravarChat(tipo,texto){
+    const nome=meuNome(); if(!nome)return false;
+    await addDoc(collection(db,'negocios',uid,'livechat'),{nome:nome.slice(0,30),texto:String(texto).slice(0,140),tipo,criadoEm:serverTimestamp(),expiraEm:Timestamp.fromMillis(Date.now()+30*86400000)});
+    return true;
+  }
+  el('formMsg').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const t=el('txtMsg').value.replace(/\s+/g,' ').trim(); if(!t)return;
+    if(!noAr){toast('O chat abre quando a live começa.');return;}
+    if(!meuNome()){pedirNome(()=>el('formMsg').requestSubmit());return;}
+    if(Date.now()-ultimoEnvio<3000){toast('Calma, espere uns segundinhos.');return;}
+    if(mvProibido(t)){toast('Essa mensagem tem um termo que não é permitido na live.');return;}
+    ultimoEnvio=Date.now(); el('txtMsg').value='';
+    try{await gravarChat('msg',t);ev('live_chat',{slug});}catch(_){toast('Não foi. Tente de novo.');el('txtMsg').value=t;}
+  });
+
+  /* ================= produto em destaque + sacolinha ================= */
+  function precoTexto(p){
+    const of=ofertaAtiva(); const naOferta=of&&p&&of.nome===p.nome;
+    const base=fmtPreco(p.preco), live=fmtPreco(naOferta?of.precoPor:p.precoLive);
+    if(live&&base&&live!==base)return '<s>'+esc(base)+'</s><strong>'+esc(live)+'</strong>';
+    return '<strong>'+esc(live||base||'')+'</strong>';
+  }
+  function linkWpp(p){
+    const w=String(neg&&neg.whatsapp||'').replace(/\D/g,''); if(!w)return '';
+    const of=ofertaAtiva(); const naOferta=of&&p&&of.nome===p.nome;
+    const preco=fmtPreco(naOferta?of.precoPor:(p.precoLive||p.preco));
+    let t='Oi! Vi na sua live no Moviki e quero: '+p.nome+(preco?' ('+preco+')':'')+'.';
+    const cod=cupomLiberado(); if(cod)t+=' Cupom da live: '+cod+'.';
+    return 'https://wa.me/55'+w+'?text='+encodeURIComponent(t);
+  }
+  function blocoBotoes(p){
+    const w=linkWpp(p); let h='';
+    if(pixPode(p)){
+      h+='<button type="button" class="btnPix" data-comprar="1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4.2 4.2-2.1 2.1L12 6.2 9.9 8.3 7.8 6.2zM2 12l4.2-4.2 2.1 2.1L6.2 12l2.1 2.1-2.1 2.1zm10 10l-4.2-4.2 2.1-2.1 2.1 2.1 2.1-2.1 2.1 2.1zm10-10l-4.2 4.2-2.1-2.1 2.1-2.1-2.1-2.1 2.1-2.1zM12 9.2L14.8 12 12 14.8 9.2 12z"/></svg>Comprar com Pix</button>';
+      if(w)h+='<a class="btnWppMini" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener" title="Perguntar no WhatsApp">'+SVG_WPP+'</a>';
+    } else if(w)h+='<a class="btnQuero" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener">'+SVG_WPP+'Quero este</a>';
+    if(linkOk(p.link)){let host='';try{host=new URL(p.link).hostname.replace(/^www\./,'');}catch(_){}
+      h+='<a class="btnLink" data-link="1" href="'+esc(p.link)+'" target="_blank" rel="noopener nofollow">'+SVG_LINK+'Ver em '+esc(host)+'</a>';}
+    return h;
+  }
+  function fotoDiv(p){return fotoOk(p.foto)?'<div class="cpFoto" style="background-image:url(&quot;'+esc(p.foto)+'&quot;)"></div>':'<div class="cpFoto">'+SVG_PRATO+'</div>';}
+  function pintarProduto(){
+    const p=est.fixado, box=el('cardProduto');
+    if(!p||!p.nome||mvProibido(p.nome)){box.classList.add('escondido');box._chave='';return;}
+    const chave=JSON.stringify([p,ofertaAtiva()?1:0,cupomLiberado(),pixAtivo]);
+    if(box._chave===chave)return; box._chave=chave;
+    box.innerHTML=fotoDiv(p)+'<div class="cpInfo"><span class="cpSelo">EM DESTAQUE</span><div class="cpNome">'+esc(p.nome)+'</div><div class="cpPreco">'+precoTexto(p)+'</div></div><div class="cpBtns">'+blocoBotoes(p)+'</div>';
+    box.classList.remove('escondido'); ligarCliques(box,p);
+  }
+  function sacolaLista(){const s=Array.isArray(est.sacola)?est.sacola:[];return s.filter(x=>x&&x.nome&&!mvProibido(x.nome)).slice(0,nivel==='enterprise'?20:5);}
+  function pintarSacola(){
+    const s=sacolaLista(); el('nSacola').textContent=s.length; el('btnSacola').classList.toggle('escondido',!s.length);
+    const l=el('listaSacola'); l.innerHTML='';
+    s.forEach(p=>{const d=document.createElement('div');d.className='itSacola'+(est.fixado&&est.fixado.nome===p.nome?' ativo':'');
+      d.innerHTML=fotoDiv(p)+'<div class="cpInfo"><div class="cpNome">'+esc(p.nome)+'</div><div class="cpPreco">'+precoTexto(p)+'</div></div><div class="cpBtns">'+blocoBotoes(p)+'</div>';
+      l.appendChild(d); ligarCliques(d,p);});
+  }
+  function ligarCliques(box,p){
+    const q=box.querySelector('[data-quero]');
+    if(q)q.addEventListener('click',e=>{
+      if(!meuNome()){e.preventDefault();pedirNome(()=>{registrarQuero(p);window.open(q.href,'_blank','noopener');});return;}
+      registrarQuero(p);
+    });
+    const k=box.querySelector('[data-link]'); if(k)k.addEventListener('click',()=>ev('live_link',{slug}));
+    const c=box.querySelector('[data-comprar]'); if(c)c.addEventListener('click',()=>abrirCompra(p));
+  }
+  function registrarQuero(p){ev('live_quero',{slug});if(noAr)gravarChat('quero',p.nome).catch(()=>{});}
+  el('btnSacola').addEventListener('click',()=>el('folhaSacola').classList.remove('escondido'));
+  document.querySelectorAll('[data-fecha]').forEach(b=>b.addEventListener('click',()=>el(b.dataset.fecha).classList.add('escondido')));
+  document.querySelectorAll('.folha').forEach(f=>f.addEventListener('click',e=>{if(e.target===f)f.classList.add('escondido');}));
+
+  /* ================= ferramentas do Enterprise =================
+     So aparecem se o PLANO do negocio for Enterprise — conferido aqui, no
+     documento de assinatura que so o robo escreve. Estado forjado pelo
+     proprio lojista de outro plano nao pinta nada. */
+  function ofertaAtiva(){const o=est.oferta;return nivel==='enterprise'&&o&&o.nome&&ms(o.fimEm)>Date.now()?o:null;}
+  function pintarEnterprise(){
+    const ent=nivel==='enterprise';
+    const o=ofertaAtiva(); el('faixaOferta').classList.toggle('escondido',!o);
+    if(o){
+      el('ofNome').textContent=o.nome; el('ofDe').textContent=o.precoDe?fmtPreco(o.precoDe):''; el('ofPor').textContent=fmtPreco(o.precoPor);
+      const tot=Number(o.estoque||0), vend=Math.min(Number(o.vendidos||0),tot);
+      el('ofEstoqueBox').classList.toggle('escondido',!(tot>0));
+      if(tot>0){const r=tot-vend;el('ofEstoque').textContent=r>0?('Restam '+r+' de '+tot):'Esgotado';el('ofBarra').style.width=Math.round(vend/tot*100)+'%';}
+    }
+    const b=est.brinde; el('faixaBrinde').classList.toggle('escondido',!(ent&&b&&b.texto));
+    if(ent&&b&&b.texto)el('brTxt').textContent=(b.primeiros?'Para os '+b.primeiros+' primeiros pedidos: ':'Brinde: ')+b.texto;
+    const temLocal=ent&&est.local===true&&typeof neg.lat==='number'&&typeof neg.lng==='number';
+    el('faixaLocal').classList.toggle('escondido',!temLocal);
+    if(temLocal)el('lnkRota').href='https://www.google.com/maps/dir/?api=1&destination='+neg.lat+','+neg.lng;
+    pintarCupom();
+  }
+  setInterval(()=>{if(!noAr)return;const o=ofertaAtiva();
+    if(o){const s=Math.max(0,Math.floor((ms(o.fimEm)-Date.now())/1000));el('ofRelogio').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+    else if(!el('faixaOferta').classList.contains('escondido')){pintarEnterprise();pintarProduto();pintarSacola();}
+  },1000);
+
+  /* Cupom com tarefa: fica liberado depois de X minutos ASSISTINDO (aba
+     visivel, video tocando). E o "assista 3 minutos" do cupom interativo das
+     plataformas chinesas. O codigo nao e segredo de banco — quem honra o
+     cupom e o lojista, na conversa. */
+  let assistidoS=0;
+  setInterval(()=>{const v=el('vid');if(noAr&&document.visibilityState==='visible'&&v.srcObject&&!v.paused){assistidoS++;if(assistidoS%5===0)pintarCupom();}},1000);
+  function cupomLiberado(){const c=est.cupom;if(nivel!=='enterprise'||!c||!c.codigo)return '';return assistidoS>=Number(c.minutos||0)*60?String(c.codigo):'';}
+  function pintarCupom(){
+    const c=est.cupom, ok=nivel==='enterprise'&&c&&c.codigo;
+    el('cupomBox').classList.toggle('escondido',!ok); if(!ok)return;
+    el('cuTxt').textContent=c.texto||'Desconto especial';
+    const falta=Math.max(0,Number(c.minutos||0)*60-assistidoS);
+    el('cuTrava').classList.toggle('escondido',falta<=0); el('cuCodigo').classList.toggle('escondido',falta>0);
+    if(falta>0){el('cuBarra').style.width=Math.round(100-falta/(Number(c.minutos)*60)*100)+'%';el('cuFalta').textContent='Assista mais '+Math.ceil(falta/60)+' min para liberar';}
+    else{if(el('cuCodigo').textContent!==String(c.codigo)){el('cuCodigo').textContent=c.codigo;ev('live_cupom',{slug});pintarProduto();pintarSacola();}}
+  }
+  el('cuCodigo').addEventListener('click',()=>{try{navigator.clipboard.writeText(el('cuCodigo').textContent);toast('Cupom copiado. Mande no WhatsApp junto com o pedido.');}catch(_){}});
+
+  /* ================= compartilhar ================= */
+  el('btnCompartilhar').addEventListener('click',async()=>{
+    const url='https://moviki.com.br/live/'+slug+'?utm_source=live&utm_medium=compartilhar';
+    const t=(neg&&neg.nome?neg.nome:'Negócio')+' está ao vivo no Moviki';
+    ev('live_compartilhar',{slug});
+    try{if(navigator.share){await navigator.share({title:t,text:t,url});return;}}catch(_){return;}
+    try{await navigator.clipboard.writeText(url);toast('Link copiado.');}catch(_){toast(url);}
+  });
+  /* ================= checkout Pix (Enterprise, 11/09/2026) =================
+     O Pix e emitido pela conta do LOJISTA no Asaas (subconta), pelo robo.
+     O preco que vale e o do servidor — o daqui e so para mostrar. */
+  const ROBO='https://moviki-robo.vercel.app/api/pontos';
+  const brl=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
+  function precoUnit(p){const of=ofertaAtiva();const t=String((of&&of.nome===p.nome?of.precoPor:(p.precoLive||p.preco))||'').replace(/^R\$\s*/i,'').trim();
+    if(!/^\d{1,5}([.,]\d{1,2})?$/.test(t))return NaN;return Math.round(parseFloat(t.replace(',','.'))*100)/100;}
+  function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0;}
+  let ckP=null,ckQ=1,ckPoll=null,ckPed=null;
+  const ERR_CK={aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva o endereço ou um ponto de referência.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
+  function abrirCompra(p){
+    ckP=p; ckQ=1; clearInterval(ckPoll);
+    el('ckForm').classList.remove('escondido'); el('ckPix').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckErro').classList.add('escondido');
+    el('ckProd').textContent=p.nome; el('ckAviso').textContent='A venda é feita por '+((neg&&neg.nome)||'este negócio')+' e o Pix vai direto para a conta dele. O CPF é exigido pelo banco para gerar o Pix; o Moviki não guarda o número inteiro.';
+    try{const g=JSON.parse(localStorage.getItem('mv_ck_dados')||'{}');if(g.nome)el('ckNome').value=g.nome;if(g.wpp)el('ckWpp').value=g.wpp;}catch(_){}
+    if(!el('ckNome').value&&meuNome().includes(' '))el('ckNome').value=meuNome();
+    ckTotal(); el('folhaSacola').classList.add('escondido'); el('folhaCompra').classList.remove('escondido'); ev('live_comprar_abrir',{slug});
+  }
+  function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;el('ckTotal').textContent=brl(u*ckQ);}
+  el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();}};
+  el('ckMais').onclick=()=>{const of=ofertaAtiva();const lim=(of&&of.nome===ckP.nome&&Number(of.estoque)>0)?Math.max(1,Number(of.estoque)-Number(of.vendidos||0)):10;if(ckQ<Math.min(10,lim)){ckQ++;ckTotal();}else toast('Limite desta compra.');};
+  document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',()=>el('ckEnd').classList.toggle('escondido',document.querySelector('input[name="ckEnt"]:checked').value!=='entrega')));
+  el('ckCpf').addEventListener('input',()=>{let d=el('ckCpf').value.replace(/\D/g,'').slice(0,11);el('ckCpf').value=d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');});
+  el('ckGerar').onclick=async()=>{
+    const b=el('ckGerar'), er=el('ckErro'); er.classList.add('escondido');
+    if(!el('ckAceite').checked){er.textContent='Marque que aceita os Termos e a Política de Privacidade.';er.classList.remove('escondido');return;}
+    const ent_=document.querySelector('input[name="ckEnt"]:checked').value;
+    const corpo={acao:'compra_criar',lojistaUid:uid,produto:ckP.nome,qtd:ckQ,nome:el('ckNome').value,whatsapp:el('ckWpp').value,cpf:el('ckCpf').value,entrega:ent_,detalhe:el('ckEnd').value,mostrarNome:el('ckMostrar').checked,aceite:true};
+    b.disabled=true; b.textContent='Gerando o Pix…';
+    let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)})).json();}catch(_){r={ok:false,erro:'rede'};}
+    b.disabled=false; b.textContent='Gerar Pix';
+    if(!r||!r.ok){
+      let msg=(r&&r.erro==='asaas')?(r.mensagem||'O banco recusou. Tente de novo.'):(ERR_CK[r&&r.erro]||'Não deu certo. Confira a internet e tente de novo.');
+      if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
+      er.textContent=msg;er.classList.remove('escondido');return;}
+    try{localStorage.setItem('mv_ck_dados',JSON.stringify({nome:corpo.nome,wpp:corpo.whatsapp}));}catch(_){}
+    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total};
+    try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}
+    ev('live_pix_gerado',{slug,valor:r.total});
+    el('ckForm').classList.add('escondido'); el('ckPix').classList.remove('escondido');
+    el('ckQr').src=r.pix.imagem?'data:image/png;base64,'+r.pix.imagem:''; el('ckQr').classList.toggle('escondido',!r.pix.imagem);
+    el('ckCod').textContent=r.pix.copiaCola; el('ckPixProd').textContent=(r.qtd>1?r.qtd+'x ':'')+r.produto; el('ckPixTotal').textContent=brl(r.total);
+    esperarPagamento();
+  };
+  el('ckCopiar').onclick=async()=>{try{await navigator.clipboard.writeText(el('ckCod').textContent);toast('Código copiado. Cole no app do banco em Pix copia e cola.');}catch(_){toast('Segure o código para copiar.');}};
+  function esperarPagamento(){
+    clearInterval(ckPoll); const t0=Date.now();
+    ckPoll=setInterval(async()=>{
+      if(!ckPed)return clearInterval(ckPoll);
+      if(Date.now()-t0>30*60000){clearInterval(ckPoll);el('ckEst').textContent='O prazo deste Pix passou. Se você já pagou, fale com o vendedor.';return;}
+      if(document.visibilityState!=='visible')return;
+      let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({acao:'compra_status',pedidoId:ckPed.id,chave:ckPed.chave})})).json();}catch(_){return;}
+      if(r&&r.ok&&(r.status==='pago'||r.status==='entregue')){clearInterval(ckPoll);pago();}
+      else if(r&&r.ok&&(r.status==='expirado'||r.status==='cancelado')){clearInterval(ckPoll);el('ckEst').textContent='Este Pix foi cancelado ou venceu. Gere outro se ainda quiser.';}
+    },4000);
+  }
+  function pago(){
+    ev('purchase_live',{slug,valor:ckPed.total});
+    try{sessionStorage.removeItem('mv_ck_ped');}catch(_){}
+    el('ckPix').classList.add('escondido'); el('ckOk').classList.remove('escondido'); el('folhaCompra').classList.remove('escondido');
+    const cod=ckPed.id.slice(-6).toUpperCase(), ent_=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
+    el('ckOkTxt').textContent='Pedido #'+cod+': '+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+' — '+brl(ckPed.total)+'. '+((neg&&neg.nome)||'O vendedor')+' já vê o seu pedido.';
+    const w=String(neg&&neg.whatsapp||'').replace(/\D/g,'');
+    const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(ent_==='entrega'?'Vamos combinar a entrega?':'Quando posso retirar?');
+    el('ckOkWpp').href=w?'https://wa.me/55'+w+'?text='+encodeURIComponent(msg):'#'; el('ckOkWpp').classList.toggle('escondido',!w);
+  }
+  /* Fechou a aba no meio do pagamento e voltou: retoma a espera. */
+  try{const g=JSON.parse(sessionStorage.getItem('mv_ck_ped')||'null');if(g&&g.id){ckPed=g;setTimeout(()=>{el('ckForm').classList.add('escondido');el('ckOk').classList.add('escondido');el('ckPix').classList.remove('escondido');el('ckQr').classList.add('escondido');el('ckCod').textContent='Se ainda não pagou, gere o Pix de novo.';el('ckPixProd').textContent=g.produto;el('ckPixTotal').textContent=brl(g.total);el('folhaCompra').classList.remove('escondido');esperarPagamento();},1500);}}catch(_){}
+  /* ================= denuncia (anonima) ================= */
+  el('btnDenunciar').addEventListener('click',()=>{el('folhaDenuncia').classList.remove('escondido');ev('live_denuncia_aberta',{slug});});
+  document.querySelectorAll('input[name="denM"]').forEach(x=>x.addEventListener('change',()=>{const v=document.querySelector('input[name="denM"]:checked').value;el('denUrgente').style.display=(v==='menor'||v==='violencia')?'block':'none';}));
+  el('denEnviar').addEventListener('click',async()=>{
+    const m=document.querySelector('input[name="denM"]:checked'); if(!m){toast('Escolha o motivo.');return;}
+    const chave='mv_den_'+uid+'_'+m.value; try{if(sessionStorage.getItem(chave)){toast('Você já denunciou por esse motivo. Obrigado.');el('folhaDenuncia').classList.add('escondido');return;}}catch(_){}
+    const b=el('denEnviar'); b.disabled=true;
+    try{await addDoc(collection(db,'denuncias'),{lojistaUid:uid,slug:slug.slice(0,40),motivo:m.value,detalhe:el('denDetalhe').value.replace(/\s+/g,' ').trim().slice(0,300),status:'aberta',criadoEm:serverTimestamp()});
+      try{sessionStorage.setItem(chave,'1');}catch(_){}
+      el('folhaDenuncia').classList.add('escondido'); el('denDetalhe').value=''; toast('Recebemos a sua denúncia. A equipe do Moviki vai analisar.'); ev('live_denuncia',{motivo:m.value});
+    }catch(_){toast('Não foi. Tente de novo.');}
+    b.disabled=false;
+  });
+</script>
+</body>
+</html>
