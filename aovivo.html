@@ -6,6 +6,16 @@
 <title>Modo Live — venda ao vivo pelo celular | Moviki</title>
 <meta name="description" content="Abra a camera do celular, mostre o produto e quem esta assistindo compra ali mesmo. Sem loja, sem estudio e sem app. Modo Live do Moviki, incluido nos 30 dias gratis, sem cartao.">
 <link rel="canonical" href="https://www.moviki.com.br/aovivo">
+
+<!-- ===== CSP DESTA PAGINA =====
+     No repo moviki a politica e por ARQUIVO (meta http-equiv), nao header de
+     servidor: nada a mexer no vercel.json. O que esta pagina precisa e apenas
+     frame-src https://www.youtube-nocookie.com — o player so nasce no clique e
+     a capa e CSS puro, entao NAO ha dependencia de img-src https://i.ytimg.com.
+     Sem o frame-src, o filme nao abre e NAO da erro visivel. -->
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googleapis.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Modo Live — venda ao vivo pelo celular | Moviki">
 <meta property="og:description" content="Voce abre a camera, mostra o produto e quem esta assistindo compra ali mesmo. Sem loja e sem estudio.">
@@ -263,7 +273,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-13-aovivo2';</script>
+<script>window.MOVIKI_VERSAO='2026-09-13-aovivo3';</script>
 </head>
 
 <body>
