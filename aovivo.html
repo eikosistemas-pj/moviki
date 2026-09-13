@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Modo Live — venda ao vivo pelo celular | Moviki</title>
+<meta name="description" content="Abra a camera do celular, mostre o produto e quem esta assistindo compra ali mesmo. Sem loja, sem estudio e sem app. Modo Live do Moviki, incluido nos 30 dias gratis, sem cartao.">
+<link rel="canonical" href="https://www.moviki.com.br/aovivo">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Modo Live — venda ao vivo pelo celular | Moviki">
+<meta property="og:description" content="Voce abre a camera, mostra o produto e quem esta assistindo compra ali mesmo. Sem loja e sem estudio.">
+<meta property="og:image" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:url" content="https://www.moviki.com.br/aovivo">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="movikiui.css">
+<script src="/mvmetrica.js"></script>
+
+<style>
+/* ===== REDE DE SEGURANCA DE TOKENS — se movikiui.css nao carregar, a pagina
+   nao vira texto preto no fundo preto (licao 25/08). ===== */
+:root{
+  --mv-ciano:#00D4FF;--mv-azul:#0066FF;--mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
+  --mv-bg:#060d18;--mv-bg-2:#0a1424;--mv-surf:#0e1c30;--mv-surf-2:#13263d;
+  --mv-campo:#0b1728;--mv-linha:#1c3457;--mv-linha-forte:#284a78;
+  --mv-txt:#eaf6ff;--mv-txt-2:#c6d8ee;--mv-txt-3:#8fa6c4;
+  --mv-ok:#25e39b;--mv-alerta:#ffb020;--mv-erro:#ff6b6b;--mv-roxo:#a855f7;
+  --mv-laranja:#ff8a00;--mv-whats:#25D366;--mv-ouro:linear-gradient(135deg,#ffd76a,#d99b12);
+  --mv-r-sm:10px;--mv-r:14px;--mv-r-lg:18px;--mv-r-xl:24px;--mv-r-pill:999px;
+  --mv-sombra:0 10px 30px rgba(0,0,0,.35);
+  --mv-fonte:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mv-vivo:#ff3b46;
+}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+@supports not (overflow:clip){body{overflow-x:hidden}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--mv-fonte);color:var(--mv-txt);-webkit-font-smoothing:antialiased;line-height:1.5;
+  background:
+    radial-gradient(1200px 700px at 78% -6%,rgba(0,102,255,.16),transparent 62%),
+    radial-gradient(900px 600px at 8% 14%,rgba(255,59,70,.08),transparent 60%),
+    var(--mv-bg);
+  background-attachment:fixed}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font-family:inherit}
+.avWrap{width:min(1140px,100% - 30px);margin-inline:auto}
+.avSec{position:relative;z-index:1;padding:clamp(46px,6vw,88px) 0}
+.avSec--alt{background:linear-gradient(180deg,rgba(10,20,36,0),rgba(10,20,36,.85) 12%,rgba(10,20,36,.85) 88%,rgba(10,20,36,0))}
+h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
+.avH2{font-size:clamp(24px,3.5vw,38px);margin-bottom:14px}
+.avH2 em{font-style:normal;background:var(--mv-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.avH3{font-size:18px;margin-bottom:8px}
+.avLead{font-size:clamp(15px,1.6vw,17.5px);line-height:1.68;color:var(--mv-txt-2)}
+.avMuted{font-size:13px;line-height:1.6;color:var(--mv-txt-3)}
+.avCentro{text-align:center}
+.avCentro .avLead{max-width:760px;margin-inline:auto}
+
+/* ---------- selo / pilulas ---------- */
+.avTag{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;font-weight:700;letter-spacing:.9px;
+  text-transform:uppercase;padding:9px 15px;border-radius:var(--mv-r-pill);
+  background:rgba(255,59,70,.12);border:1px solid rgba(255,59,70,.45);color:#ffb7bb}
+.avPonto{width:9px;height:9px;border-radius:50%;background:var(--mv-vivo);box-shadow:0 0 12px rgba(255,59,70,.9);
+  animation:avPulso 1.8s ease-in-out infinite}
+@keyframes avPulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
+@media(prefers-reduced-motion:reduce){.avPonto{animation:none}}
+.avSelo{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:var(--mv-r-pill);background:var(--mv-ouro);color:#2a1c00;white-space:nowrap}
+.avSeloP{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:var(--mv-r-pill);background:rgba(0,212,255,.16);
+  border:1px solid rgba(0,212,255,.45);color:#7ff0ff;white-space:nowrap}
+
+/* ---------- botoes ---------- */
+.avBtn{display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;cursor:pointer;
+  font-weight:700;font-size:15.5px;padding:15px 22px;border-radius:var(--mv-r);border:1px solid transparent;
+  text-align:center;transition:transform .15s ease,box-shadow .15s ease}
+.avBtn:hover{transform:translateY(-1px)}
+.avBtn--p{background:linear-gradient(135deg,#2ee6a8,#0fb87f);color:#04121f;box-shadow:0 0 22px rgba(37,227,155,.42)}
+.avBtn--s{background:var(--mv-surf-2);color:var(--mv-txt);border-color:var(--mv-linha-forte)}
+.avBtn--s:hover{border-color:var(--mv-ciano)}
+.avCtas{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 14px}
+.avProva{display:inline-flex;align-items:center;gap:10px;background:rgba(19,38,61,.75);
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r-pill);padding:9px 16px;font-size:13px;color:var(--mv-txt-2)}
+.avProva b{color:var(--mv-ok)}
+
+/* ---------- cabecalho ---------- */
+.avHead{position:sticky;top:0;z-index:60;background:rgba(6,13,24,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(28,52,87,.7)}
+.avNav{display:flex;align-items:center;gap:18px;height:70px}
+.avBrand{display:flex;align-items:center;gap:9px;text-decoration:none;font-weight:800;font-size:23px;letter-spacing:-1px}
+.avBrand img{height:32px;width:auto;object-fit:contain}
+.avBrand b{color:var(--mv-ciano)}
+.avLinks{display:flex;gap:24px;margin-left:20px}
+.avLinks a{text-decoration:none;font-size:14.5px;font-weight:500;color:var(--mv-txt-2)}
+.avLinks a:hover{color:var(--mv-ciano)}
+.avNavCta{margin-left:auto;display:flex;align-items:center;gap:14px}
+.avEntrar{text-decoration:none;font-size:14.5px;font-weight:600;color:var(--mv-txt-2)}
+.avEntrar:hover{color:#fff}
+.avHead .avBtn{padding:11px 17px;font-size:14.5px}
+.avBurger{display:none;margin-left:auto;width:46px;height:46px;border-radius:12px;border:1px solid var(--mv-linha);
+  background:var(--mv-surf-2);color:var(--mv-txt);font-size:20px;cursor:pointer;align-items:center;justify-content:center}
+.avMenu{position:fixed;inset:0;z-index:70;background:rgba(4,10,20,.74);backdrop-filter:blur(4px);display:none}
+.avMenu.on{display:block}
+.avMenu__p{position:absolute;top:0;right:0;width:min(340px,88vw);height:100%;overflow-y:auto;background:var(--mv-bg-2);
+  border-left:1px solid var(--mv-linha);padding:18px 18px calc(26px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;gap:6px}
+.avMenu__topo{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.avMenu__fechar{width:44px;height:44px;border-radius:12px;border:1px solid var(--mv-linha);
+  background:var(--mv-surf-2);color:var(--mv-txt);font-size:20px;cursor:pointer}
+.avMenu__p a.item{display:block;padding:15px 14px;border-radius:12px;text-decoration:none;font-size:16px;
+  font-weight:600;color:var(--mv-txt-2)}
+.avMenu__p a.item:hover{background:rgba(255,255,255,.05);color:#fff}
+
+/* ---------- hero ---------- */
+.avHero{position:relative;z-index:1;padding:clamp(26px,3vw,40px) 0 clamp(32px,4vw,56px);overflow:hidden}
+.avHeroGrid{display:grid;gap:clamp(20px,3vw,44px);grid-template-columns:minmax(0,1.04fr) minmax(0,.86fr);align-items:center}
+.avHero h1{font-size:clamp(31px,3.9vw,50px);letter-spacing:-1.9px;margin:16px 0 14px}
+.avHero h1 em{font-style:normal;background:var(--mv-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.avBul{list-style:none;display:grid;gap:11px;margin:22px 0 0;padding-top:20px;border-top:1px solid var(--mv-linha)}
+.avBul li{display:flex;align-items:flex-start;gap:11px;font-size:14.8px;color:var(--mv-txt-2);line-height:1.55}
+.avBul li>span:last-child{flex:1 1 auto}
+.avBul .avSelo{margin-left:2px}
+.avCheck{flex:0 0 21px;width:21px;height:21px;border-radius:50%;margin-top:1px;
+  background:rgba(37,227,155,.16);border:1px solid rgba(37,227,155,.5);color:var(--mv-ok);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.avFoto{position:relative;justify-self:center;width:100%;max-width:392px}
+.avFoto img{border-radius:var(--mv-r-xl);width:auto;max-width:100%;max-height:min(620px,66vh);margin-inline:auto}
+.avFoto::after{content:"";position:absolute;inset:-8% -6% -4%;z-index:-1;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(0,150,255,.3),transparent 72%);filter:blur(6px)}
+.avFotoNota{font-size:11.5px;color:var(--mv-txt-3);text-align:center;margin-top:10px;line-height:1.5}
+
+/* ---------- antes x depois ---------- */
+.avDuplo{display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:26px}
+.avCard{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:22px}
+.avCard--frio{background:rgba(14,28,48,.55)}
+.avCard--quente{border-color:rgba(0,212,255,.4);box-shadow:0 0 0 1px rgba(0,212,255,.08),0 18px 46px rgba(0,80,160,.22)}
+.avRot{font-size:11.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;margin-bottom:12px;color:var(--mv-txt-3)}
+.avCard--quente .avRot{color:var(--mv-ciano)}
+.avLista{list-style:none;display:grid;gap:11px}
+.avLista li{display:flex;gap:10px;font-size:14.3px;color:var(--mv-txt-2);line-height:1.55;flex-wrap:nowrap}
+.avLista li span{flex:0 0 auto;font-weight:800}
+.avCard--frio .avLista li span{color:var(--mv-erro)}
+.avCard--quente .avLista li span{color:var(--mv-ok)}
+
+/* ---------- video em fachada (sem imagem externa) ---------- */
+.avVideo{position:relative;width:min(880px,100%);margin-inline:auto;aspect-ratio:16/9;border-radius:var(--mv-r-xl);
+  overflow:hidden;border:1px solid var(--mv-linha-forte);box-shadow:0 26px 70px rgba(0,0,0,.5);cursor:pointer;
+  background:
+    radial-gradient(700px 380px at 50% 40%,rgba(0,102,255,.42),transparent 70%),
+    linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px) 0 0/46px 46px,
+    linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px) 0 0/46px 46px,
+    #071223}
+.avVideo iframe{width:100%;height:100%;border:0;display:block}
+.avVideo__c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;text-align:center;padding:20px}
+.avPlay{width:78px;height:78px;border-radius:50%;border:0;cursor:pointer;background:var(--mv-grad);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 34px rgba(0,150,255,.6);transition:transform .18s ease}
+.avVideo:hover .avPlay{transform:scale(1.07)}
+.avPlay svg{width:30px;height:30px;fill:#02131f;margin-left:4px}
+.avVideo__t{font-size:clamp(16px,2.2vw,21px);font-weight:800;letter-spacing:-.5px;max-width:560px}
+.avVideo__s{font-size:12.5px;color:var(--mv-txt-3)}
+
+/* ---------- passos ---------- */
+.avPassos{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
+.avPasso{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:22px;position:relative}
+.avNum{width:34px;height:34px;border-radius:10px;background:var(--mv-grad);color:#02131f;font-weight:800;
+  display:flex;align-items:center;justify-content:center;margin-bottom:13px;font-size:16px}
+
+/* ---------- grade de recursos ---------- */
+.avRec{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
+.avRec .avCard{padding:20px}
+.avRec h3{font-size:16.5px;margin-bottom:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ---------- tabela de planos ---------- */
+.avTab{width:100%;border-collapse:collapse;margin-top:24px;font-size:14.3px;
+  background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);overflow:hidden}
+.avTab th,.avTab td{padding:13px 15px;text-align:left;border-bottom:1px solid var(--mv-linha);vertical-align:top}
+.avTab thead th{background:rgba(19,38,61,.8);font-size:12.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--mv-txt-3)}
+.avTab thead th:nth-child(2){color:#7ff0ff}
+.avTab thead th:nth-child(3){color:#ffd76a}
+.avTab td{color:var(--mv-txt-2)}
+.avTab tr:last-child td{border-bottom:0}
+.avSim{color:var(--mv-ok);font-weight:800}
+.avNao{color:var(--mv-txt-3)}
+.avTabBox{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- objecoes ---------- */
+.avObj{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:28px}
+.avObj .avCard{border-left:3px solid var(--mv-ciano)}
+.avObj h3{font-size:16.5px;color:#fff;margin-bottom:8px}
+
+/* ---------- faixa palco ---------- */
+.avPalco{background:
+    radial-gradient(620px 320px at 80% 50%,rgba(0,102,255,.3),transparent 70%),#071223;
+  border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r-xl);padding:clamp(26px,4vw,46px)}
+
+/* ---------- faq ---------- */
+.avFaq{margin-top:24px;display:grid;gap:10px}
+.avFaq details{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden}
+.avFaq summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:700;font-size:15px;
+  display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.avFaq summary::-webkit-details-marker{display:none}
+.avFaq summary::after{content:"+";color:var(--mv-ciano);font-size:22px;line-height:1;flex:0 0 auto}
+.avFaq details[open] summary::after{content:"\2212"}
+.avFaq p{padding:0 18px 17px;font-size:14.3px;color:var(--mv-txt-2);line-height:1.68}
+
+/* ---------- cta final ---------- */
+.avFinal{background:
+    radial-gradient(620px 320px at 50% 0%,rgba(0,102,255,.36),transparent 70%),
+    linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px) 0 0/44px 44px,
+    linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px) 0 0/44px 44px,#071223;
+  border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r-xl);padding:clamp(30px,4.5vw,56px);text-align:center}
+.avFinal h2{font-size:clamp(24px,3.4vw,37px);margin-bottom:13px}
+.avFinal .avCtas{justify-content:center}
+
+/* ---------- rodape ---------- */
+.avFoot{border-top:1px solid var(--mv-linha);padding:42px 0 26px;background:var(--mv-bg-2);position:relative;z-index:1}
+.avFootGrid{display:grid;gap:26px;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,.85fr))}
+.avFoot h4{font-size:12.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mv-txt-3);margin-bottom:13px}
+.avFoot ul{list-style:none;display:grid;gap:9px}
+.avFoot a{font-size:14px;color:var(--mv-txt-2);text-decoration:none}
+.avFoot a:hover{color:var(--mv-ciano)}
+.avLegal{margin-top:30px;padding-top:18px;border-top:1px solid var(--mv-linha);font-size:12px;color:var(--mv-txt-3);line-height:1.7}
+
+/* ---------- breakpoints ---------- */
+@media(max-width:980px){
+  .avLinks,.avNavCta{display:none}
+  .avBurger{display:flex}
+  .avHeroGrid{grid-template-columns:minmax(0,1fr)}
+  .avHeroGrid>div:first-child{text-align:center}
+  /* No celular a arte vem PRIMEIRO e compacta: e ela que segura o olho do
+     trafego pago. Altura limitada para o CTA nao sair da primeira dobra. */
+  .avFoto{order:-1;max-width:252px;margin-bottom:-4px}
+  .avFoto img{max-height:min(286px,30vh)}
+  .avFotoNota{display:none}
+  .avHero .avTag,.avCtas,.avProva{justify-content:center}
+  .avHero h1{margin:13px 0 11px}
+  .avHero .avLead{font-size:15px}
+  .avHero .avCtas{margin:18px 0 12px}
+  .avCtas{justify-content:center}
+  .avBul{display:inline-grid;text-align:left;justify-items:start}
+  .avLead{margin-inline:auto}
+  .avPassos,.avRec{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .avFootGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* tela baixa (celular pequeno / navegador com barras): a arte cede espaco
+   para o botao continuar acima da primeira dobra */
+@media(max-width:980px) and (max-height:780px){
+  .avFoto img{max-height:24vh}
+  .avHero{padding-top:18px}
+  .avHero h1{font-size:clamp(27px,7.4vw,34px)}
+}
+@media(max-width:640px){
+  .avNav{height:62px}
+  .avDuplo,.avObj,.avPassos,.avRec{grid-template-columns:minmax(0,1fr)}
+  .avCtas .avBtn{width:100%}
+  .avProva{width:100%;justify-content:center}
+  .avTab{font-size:13.4px}
+  .avTab th,.avTab td{padding:11px 12px}
+}
+h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
+</style>
+<script>window.MOVIKI_VERSAO='2026-09-13-aovivo2';</script>
+</head>
+
+<body>
+<!-- ================= CABECALHO ================= -->
+<header class="avHead">
+  <div class="avWrap avNav">
+    <a class="avBrand" href="/">
+      <img src="logo.png" alt="Moviki" onerror="this.style.display='none';var t=document.getElementById('brandtxt');if(t)t.style.display='inline-flex'">
+      <span id="brandtxt" style="display:none">mo<b>viki</b></span>
+    </a>
+    <nav class="avLinks">
+      <a href="#comofunciona">Como funciona</a>
+      <a href="#recursos">O que d&aacute; pra fazer</a>
+      <a href="#planos">Planos</a>
+      <a href="#duvidas">D&uacute;vidas</a>
+    </nav>
+    <div class="avNavCta">
+      <a class="avEntrar" href="https://app.moviki.com.br">Entrar</a>
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_header">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+    </div>
+    <button class="avBurger" type="button" aria-label="Abrir menu" aria-expanded="false" onclick="avMenu(true)">&#9776;</button>
+  </div>
+</header>
+
+<div class="avMenu" id="avMenu" onclick="if(event.target===this)avMenu(false)">
+  <div class="avMenu__p" role="dialog" aria-label="Menu">
+    <div class="avMenu__topo">
+      <img src="logo.png" alt="Moviki" style="height:28px" onerror="this.style.display='none'">
+      <button class="avMenu__fechar" type="button" aria-label="Fechar menu" onclick="avMenu(false)">&times;</button>
+    </div>
+    <a class="item" href="#comofunciona" onclick="avMenu(false)">Como funciona</a>
+    <a class="item" href="#recursos" onclick="avMenu(false)">O que d&aacute; pra fazer</a>
+    <a class="item" href="#planos" onclick="avMenu(false)">Planos</a>
+    <a class="item" href="#duvidas" onclick="avMenu(false)">D&uacute;vidas</a>
+    <a class="item" href="/comerciantes.html" onclick="avMenu(false)">O Moviki para o seu neg&oacute;cio</a>
+    <a class="item" href="https://app.moviki.com.br">Entrar</a>
+    <a class="avBtn avBtn--p" style="margin-top:10px" href="https://app.moviki.com.br" data-ev="aovivo_menu">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="avHero">
+  <div class="avWrap avHeroGrid">
+    <div>
+      <span class="avTag"><span class="avPonto"></span> Novo no Moviki &middot; Modo Live</span>
+      <h1>Seu cliente n&atilde;o compra a foto.<br>Ele compra <em>voc&ecirc; mostrando</em>.</h1>
+      <p class="avLead">Voc&ecirc; abre a c&acirc;mera do celular, mostra o produto na m&atilde;o e quem est&aacute; assistindo compra ali mesmo &mdash; sem sair da transmiss&atilde;o. Sem loja, sem est&uacute;dio, sem app pra instalar.</p>
+
+      <div class="avCtas">
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_hero">Ativar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--s" href="#filme" data-ev="aovivo_hero_video">Ver funcionando</a>
+      </div>
+      <span class="avProva"><b>30 dias</b>&nbsp;do plano Pr&oacute; de gra&ccedil;a, sem cart&atilde;o.</span>
+
+      <ul class="avBul">
+        <li><span class="avCheck">&#10003;</span><span>Transmite do seu pr&oacute;prio celular, direto do painel</span></li>
+        <li><span class="avCheck">&#10003;</span><span>O produto fica fixo na tela, com pre&ccedil;o e bot&atilde;o de comprar</span></li>
+        <li><span class="avCheck">&#10003;</span><span>Pix dentro da live, com o dinheiro caindo na <b>sua</b> conta <span class="avSelo">Enterprise</span></span></li>
+        <li><span class="avCheck">&#10003;</span><span>J&aacute; funciona no teste gr&aacute;tis &mdash; n&atilde;o &eacute; um recurso &ldquo;pra depois&rdquo;</span></li>
+      </ul>
+
+    </div>
+
+    <div class="avFoto">
+      <picture>
+        <source srcset="livehero.webp" type="image/webp">
+        <img src="livehero.jpg" width="880" height="1320" alt="Celular transmitindo ao vivo pelo Moviki: selo AO VIVO, contador de quem est&aacute; assistindo, produto fixado com pre&ccedil;o e confirma&ccedil;&atilde;o de pagamento por Pix." fetchpriority="high" decoding="async">
+      </picture>
+      <p class="avFotoNota">Ilustra&ccedil;&atilde;o da tela do Moviki &mdash; os n&uacute;meros s&atilde;o exemplo. Na live de verdade, tudo o que aparece na tela &eacute; contado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= A DOR ================= -->
+<section class="avSec avSec--alt">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">O produto ficou pronto. <em>E o dia n&atilde;o veio.</em></h2>
+      <p class="avLead">Voc&ecirc; acordou cedo, produziu, arrumou tudo, tirou a foto, postou &mdash; e ficou olhando o celular. A foto n&atilde;o tira d&uacute;vida, n&atilde;o mostra o tamanho, n&atilde;o responde &ldquo;tem de outro sabor?&rdquo; e n&atilde;o fecha venda nenhuma sozinha. Ela s&oacute; espera.</p>
+    </div>
+
+    <div class="avDuplo">
+      <div class="avCard avCard--frio">
+        <div class="avRot">O jeito de sempre</div>
+        <ul class="avLista">
+          <li><span>&times;</span> A foto fica parada esperando algu&eacute;m parar de rolar</li>
+          <li><span>&times;</span> A d&uacute;vida vira mensagem, a mensagem vira &ldquo;depois eu vejo&rdquo;</li>
+          <li><span>&times;</span> Voc&ecirc; responde o mesmo pre&ccedil;o vinte vezes no privado</li>
+          <li><span>&times;</span> Quem se interessou &agrave;s 9h j&aacute; esqueceu &agrave;s 15h</li>
+        </ul>
+      </div>
+      <div class="avCard avCard--quente">
+        <div class="avRot">Ao vivo, no Moviki</div>
+        <ul class="avLista">
+          <li><span>&#10003;</span> Voc&ecirc; mostra o produto de perto, girando na m&atilde;o</li>
+          <li><span>&#10003;</span> A d&uacute;vida &eacute; respondida na hora, para todo mundo de uma vez</li>
+          <li><span>&#10003;</span> O pre&ccedil;o fica fixo na tela, junto do bot&atilde;o de comprar</li>
+          <li><span>&#10003;</span> A decis&atilde;o acontece enquanto o desejo ainda est&aacute; quente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FILME ================= -->
+<section class="avSec" id="filme">
+  <div class="avWrap">
+    <div class="avCentro" style="margin-bottom:26px">
+      <h2 class="avH2">Entenda o Modo Live <em>em poucos minutos</em></h2>
+      <p class="avLead">Sem jarg&atilde;o e sem tutorial. &Eacute; a hist&oacute;ria de um dia de trabalho que quase n&atilde;o acontece &mdash; e do que muda quando a vitrine passa a falar.</p>
+    </div>
+
+    <div class="avVideo" id="avPlayer" onclick="avAbrirVideo()">
+      <div class="avVideo__c" id="avFachada">
+        <span class="avTag"><span class="avPonto"></span> Filme do Modo Live</span>
+        <button class="avPlay" type="button" aria-label="Assistir ao filme do Modo Live" data-ev="aovivo_play">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <p class="avVideo__t">Vender ao vivo pelo celular, sem loja e sem est&uacute;dio</p>
+        <p class="avVideo__s">O v&iacute;deo s&oacute; carrega quando voc&ecirc; toca em assistir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMO FUNCIONA ================= -->
+<section class="avSec avSec--alt" id="comofunciona">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">Tr&ecirc;s toques e voc&ecirc; <em>est&aacute; no ar</em></h2>
+      <p class="avLead">Sem instalar nada, sem equipamento e sem n&uacute;mero m&iacute;nimo de seguidores. O celular que voc&ecirc; usa pra tirar foto j&aacute; serve.</p>
+    </div>
+
+    <div class="avPassos">
+      <div class="avPasso">
+        <div class="avNum">1</div>
+        <h3 class="avH3">Escolha o que vai mostrar</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">No painel, voc&ecirc; monta a sacolinha da live com os produtos do dia, com foto e pre&ccedil;o. D&aacute; pra deixar um em destaque na tela.</p>
+      </div>
+      <div class="avPasso">
+        <div class="avNum">2</div>
+        <h3 class="avH3">Toque em &ldquo;Entrar ao vivo&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">A c&acirc;mera abre no navegador do pr&oacute;prio celular. Seu neg&oacute;cio ganha o selo vermelho <b>AO VIVO</b> na p&aacute;gina p&uacute;blica na mesma hora.</p>
+      </div>
+      <div class="avPasso">
+        <div class="avNum">3</div>
+        <h3 class="avH3">Quem entra, compra ali</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O cliente v&ecirc; o produto fixado, pergunta no chat e toca em comprar. No Enterprise, paga por Pix sem sair da live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RECURSOS ================= -->
+<section class="avSec" id="recursos">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">As ferramentas que fazem a <em>venda acontecer</em></h2>
+      <p class="avLead">Cada uma existe por um motivo: transformar quem est&aacute; olhando em quem decide.</p>
+    </div>
+
+    <div class="avRec">
+      <div class="avCard">
+        <h3 class="avH3">Produto fixado na tela <span class="avSeloP">Premium</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Foto, nome e pre&ccedil;o sempre &agrave; vista. Quem chegou no meio da live n&atilde;o precisa perguntar o que &eacute; nem quanto custa.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Chat com modera&ccedil;&atilde;o <span class="avSeloP">Premium</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">A d&uacute;vida de um vira resposta para todos. Voc&ecirc; apaga qualquer mensagem, e h&aacute; filtro autom&aacute;tico de palavra ofensiva.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Quem est&aacute; assistindo <span class="avSeloP">Premium</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Contagem real de presen&ccedil;a, medida pelo sistema. N&uacute;mero na tela &eacute; n&uacute;mero contado &mdash; aqui n&atilde;o existe plateia inflada.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Pix dentro da live <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">QR na hora, confirma&ccedil;&atilde;o autom&aacute;tica e o dinheiro caindo direto na sua conta &mdash; nunca na conta do Moviki.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Oferta rel&acirc;mpago <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Pre&ccedil;o especial com tempo e estoque de verdade. O &ldquo;Restam N&rdquo; s&oacute; aparece com estoque informado por voc&ecirc;, e baixa sozinho a cada pagamento.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Estou aqui agora <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O bot&atilde;o &ldquo;Como chegar&rdquo; dentro da pr&oacute;pria transmiss&atilde;o. Quem se move vende pra quem est&aacute; perto agora.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Cupom por tempo assistindo <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Quem fica ganha o c&oacute;digo. &Eacute; recompensa por aten&ccedil;&atilde;o, n&atilde;o sorteio &mdash; o Moviki n&atilde;o faz sorteio.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Brinde aos primeiros <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Por ordem de chegada, com o n&uacute;mero que voc&ecirc; definir. Simples de cumprir e f&aacute;cil de anunciar.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Corte de 60 s pro Reels <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Voc&ecirc; grava um trecho da pr&oacute;pria live e o arquivo fica no seu celular. A live em si n&atilde;o &eacute; gravada em servidor nenhum.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PALCO E MEGAFONE ================= -->
+<section class="avSec avSec--alt">
+  <div class="avWrap">
+    <div class="avPalco">
+      <h2 class="avH2">O Moviki &eacute; o palco. <em>O megafone voc&ecirc; j&aacute; tem.</em></h2>
+      <p class="avLead" style="max-width:780px">Aqui ningu&eacute;m vai te prometer plateia pronta. O Moviki entrega o lugar onde a venda acontece: a transmiss&atilde;o, a vitrine na tela, o chat e o pagamento. Chamar a sua gente &mdash; o grupo do WhatsApp, o status, o Instagram, os clientes que j&aacute; te conhecem &mdash; continua sendo com voc&ecirc;.</p>
+      <p class="avLead" style="max-width:780px;margin-top:14px">E &eacute; por isso que o teste gr&aacute;tis vem com a <b>Academia Moviki</b>: as aulas ensinam justamente isso &mdash; como avisar, como abrir a live com poucas pessoas na sala e como conduzir at&eacute; a primeira venda.</p>
+      <div class="avCtas" style="margin-bottom:0">
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_palco">Come&ccedil;ar com a Academia inclusa &nbsp;&rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OBJECOES ================= -->
+<section class="avSec">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">&ldquo;Legal, mas <em>eu</em> n&atilde;o consigo fazer isso.&rdquo;</h2>
+      <p class="avLead">Foi o que a maioria pensou antes da primeira vez. Veja o que est&aacute; realmente no caminho.</p>
+    </div>
+
+    <div class="avObj">
+      <div class="avCard">
+        <h3>&ldquo;E se ningu&eacute;m entrar?&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">A primeira aula da Academia prepara voc&ecirc; exatamente para 0, 1 ou poucas pessoas na sala. A regra: nunca abrir perguntando &ldquo;tem algu&eacute;m a&iacute;?&rdquo;. Voc&ecirc; come&ccedil;a como quem grava um conte&uacute;do &uacute;til &mdash; e quem chega depois j&aacute; encontra voc&ecirc; falando de produto.</p>
+      </div>
+      <div class="avCard">
+        <h3>&ldquo;N&atilde;o tenho seguidores.&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">N&atilde;o existe m&iacute;nimo de seguidores no Moviki. A sua live tem um link pr&oacute;prio: d&aacute; pra mandar no grupo da rua, no status, na lista de transmiss&atilde;o e pro cliente que perguntou ontem. Dez pessoas que j&aacute; te conhecem valem mais que mil desconhecidos.</p>
+      </div>
+      <div class="avCard">
+        <h3>&ldquo;N&atilde;o sei falar na c&acirc;mera.&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">Voc&ecirc; n&atilde;o precisa ser apresentador &mdash; precisa mostrar o que j&aacute; sabe fazer. Descreva o produto como descreve no balc&atilde;o. O que prende n&atilde;o &eacute; o seu texto: &eacute; o produto de perto e a sua resposta &agrave; pergunta de quem est&aacute; assistindo.</p>
+      </div>
+      <div class="avCard">
+        <h3>&ldquo;Meu celular &eacute; simples.&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">Roda no navegador do celular, sem app e sem instala&ccedil;&atilde;o. N&atilde;o precisa de ilumina&ccedil;&atilde;o, microfone nem trip&eacute;. Se o seu aparelho tira foto e abre a internet, ele transmite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLANOS ================= -->
+<section class="avSec avSec--alt" id="planos">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">O que vem em cada plano</h2>
+      <p class="avLead">A live come&ccedil;a no Pr&oacute;. As ferramentas que fecham a venda dentro da transmiss&atilde;o ficam no Enterprise.</p>
+    </div>
+
+    <div class="avTabBox">
+      <table class="avTab">
+        <thead>
+          <tr><th>Na live</th><th>Pr&oacute;</th><th>Enterprise</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Transmitir do celular</td><td>at&eacute; 60 min</td><td>at&eacute; 3 h</td></tr>
+          <tr><td>Sacolinha de produtos na tela</td><td>5 itens</td><td>20 itens</td></tr>
+          <tr><td>Produto em destaque, com link</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Chat com modera&ccedil;&atilde;o e filtro</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Contagem de quem est&aacute; assistindo</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Selo AO VIVO na p&aacute;gina do neg&oacute;cio</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Agendar live e avisar clientes</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Bot&atilde;o &ldquo;Quero este&rdquo; abrindo seu WhatsApp</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td><b>Pix dentro da live, na sua conta</b></td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Oferta rel&acirc;mpago com tempo e estoque reais</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Pedidos pagos na hora, avisados no chat</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Cupom por tempo assistindo</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Brinde aos primeiros pedidos</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Fila de quem tocou em &ldquo;Quero&rdquo;</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>&ldquo;Estou aqui agora&rdquo; com Como chegar</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Dados ao vivo e resumo por produto</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Corte de 60 s para Reels e status</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="avMuted" style="margin-top:14px">Durante os 30 dias gr&aacute;tis, a live funciona em n&iacute;vel Pr&oacute;. O Pix dentro da live &eacute; recurso Enterprise.</p>
+
+    <div class="avCtas">
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_planos">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+      <a class="avBtn avBtn--s" href="/premium.html" data-ev="aovivo_ver_premium">Ver o plano Pr&oacute;</a>
+      <a class="avBtn avBtn--s" href="/enterprise.html" data-ev="aovivo_ver_enterprise">Ver o Enterprise</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIANCA ================= -->
+<section class="avSec">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">O que a gente <em>n&atilde;o</em> faz</h2>
+      <p class="avLead">Confian&ccedil;a se constr&oacute;i mais r&aacute;pido pelo que a ferramenta se recusa a fazer do que pelo que ela promete.</p>
+    </div>
+    <div class="avRec" style="margin-top:26px">
+      <div class="avCard">
+        <h3 class="avH3">Seu dinheiro n&atilde;o passa por n&oacute;s</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O Pix cai numa conta aberta no seu nome, no seu CPF ou CNPJ. O Moviki n&atilde;o fica com o dinheiro da sua venda em nenhum momento.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Sua live n&atilde;o &eacute; gravada</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Nenhum v&iacute;deo seu fica guardado em servidor do Moviki. O &uacute;nico arquivo que existe &eacute; o corte que voc&ecirc; escolher gravar, e ele fica no seu celular.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">N&uacute;mero na tela &eacute; n&uacute;mero contado</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Presen&ccedil;a, estoque e pedidos s&atilde;o reais. Escassez inventada &eacute; propaganda enganosa, e a ferramenta simplesmente n&atilde;o permite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="avSec avSec--alt" id="duvidas">
+  <div class="avWrap">
+    <div class="avCentro"><h2 class="avH2">D&uacute;vidas de quem ainda n&atilde;o fez a primeira</h2></div>
+
+    <div class="avFaq">
+      <details open>
+        <summary>Preciso instalar algum aplicativo?</summary>
+        <p>N&atilde;o. A transmiss&atilde;o abre no navegador do seu celular, pelo pr&oacute;prio painel do Moviki. Quem assiste tamb&eacute;m n&atilde;o instala nada: recebe um link e entra.</p>
+      </details>
+      <details>
+        <summary>A live j&aacute; funciona no teste gr&aacute;tis?</summary>
+        <p>Sim. Durante os 30 dias gr&aacute;tis, sem cart&atilde;o, a live roda em n&iacute;vel Pr&oacute;: at&eacute; 60 minutos de transmiss&atilde;o e 5 produtos na sacolinha. O Pix dentro da live &eacute; recurso Enterprise.</p>
+      </details>
+      <details>
+        <summary>Como o cliente paga?</summary>
+        <p>No Enterprise, ele toca no produto e paga por Pix sem sair da live: aparece o QR, o pagamento &eacute; confirmado automaticamente e o valor cai na conta aberta no seu nome. No Pr&oacute;, o bot&atilde;o &ldquo;Quero este&rdquo; abre o seu WhatsApp com a mensagem j&aacute; pronta.</p>
+      </details>
+      <details>
+        <summary>Preciso de quantos seguidores?</summary>
+        <p>Nenhum. N&atilde;o existe m&iacute;nimo. A sua live tem link pr&oacute;prio e a p&aacute;gina do seu neg&oacute;cio ganha o selo AO VIVO enquanto voc&ecirc; estiver transmitindo. Chamar a sua audi&ecirc;ncia continua sendo com voc&ecirc; &mdash; e a Academia ensina como.</p>
+      </details>
+      <details>
+        <summary>E se a internet cair no meio?</summary>
+        <p>A transmiss&atilde;o tenta se reconectar sozinha. Se a live ficar sem sinal por alguns minutos, ela &eacute; considerada encerrada e o selo AO VIVO some da sua p&aacute;gina. Basta entrar ao vivo de novo.</p>
+      </details>
+      <details>
+        <summary>Funciona para quem n&atilde;o tem ponto fixo?</summary>
+        <p>Funciona &mdash; foi feito pensando em quem se move. No Enterprise, o bot&atilde;o &ldquo;Estou aqui agora&rdquo; coloca o &ldquo;Como chegar&rdquo; dentro da pr&oacute;pria transmiss&atilde;o, com a sua localiza&ccedil;&atilde;o daquele momento.</p>
+      </details>
+      <details>
+        <summary>Vender ao vivo garante mais vendas?</summary>
+        <p>N&atilde;o existe garantia, e desconfie de quem prometer. O que o Modo Live faz &eacute; tirar os obst&aacute;culos entre a d&uacute;vida do cliente e o pagamento: ele v&ecirc; o produto de perto, pergunta, recebe a resposta e paga no mesmo lugar. O resultado depende do seu produto, do seu pre&ccedil;o e de quantas pessoas voc&ecirc; chamar.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="avSec">
+  <div class="avWrap">
+    <div class="avFinal">
+      <span class="avTag"><span class="avPonto"></span> Modo Live</span>
+      <h2 style="margin-top:16px">Amanh&atilde; voc&ecirc; vai produzir de novo.<br>A diferen&ccedil;a &eacute; <em style="font-style:normal;color:var(--mv-ciano)">quem vai ver</em>.</h2>
+      <p class="avLead" style="max-width:640px;margin-inline:auto">Ative o teste de 30 dias, monte a sacolinha da sua primeira live e abra a c&acirc;mera. Sem cart&atilde;o, sem fidelidade e sem instalar nada.</p>
+      <div class="avCtas">
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_final">Come&ccedil;ar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--s" href="/comerciantes.html" data-ev="aovivo_conhecer">Conhecer o Moviki inteiro</a>
+      </div>
+      <p class="avMuted" style="margin-top:6px">O Modo Live est&aacute; em libera&ccedil;&atilde;o gradual para os neg&oacute;cios cadastrados.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RODAPE ================= -->
+<footer class="avFoot">
+  <div class="avWrap">
+    <div class="avFootGrid">
+      <div>
+        <a class="avBrand" href="/">
+          <img src="logo.png" alt="Moviki" onerror="this.style.display='none';var t=document.getElementById('brandtxt2');if(t)t.style.display='inline-flex'">
+          <span id="brandtxt2" style="display:none">mo<b>viki</b></span>
+        </a>
+        <p class="avMuted" style="margin-top:12px;max-width:320px">O Moviki coloca o seu neg&oacute;cio no mapa e, agora, no ar. Para quem tem ponto fixo, para quem se move e para quem atende onde o cliente est&aacute;.</p>
+      </div>
+      <div>
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="/comerciantes.html">Para o seu neg&oacute;cio</a></li>
+          <li><a href="/aovivo">Modo Live</a></li>
+          <li><a href="/premium.html">Plano Pr&oacute;</a></li>
+          <li><a href="/enterprise.html">Enterprise</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Parceiros</h4>
+        <ul>
+          <li><a href="/parceiros.html">Programa de parceiros</a></li>
+          <li><a href="/parceiros-ganhos.html">Como funcionam os ganhos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a href="https://app.moviki.com.br">Entrar no painel</a></li>
+          <li><a href="/regras-da-live.html">Regras da live</a></li>
+          <li><a href="/termos.html">Termos de uso</a></li>
+          <li><a href="/privacidade.html">Privacidade</a></li>
+          <li><a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="avLegal">
+      EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA &middot; CNPJ 68.289.841/0001-02 &middot;
+      Rua Visconde do Rio Branco, 1488, Conj. 909, Centro, Curitiba/PR, CEP 80.420-210 &middot;
+      (41) 2018-6848.<br>
+      O Moviki fornece a ferramenta de transmiss&atilde;o e de venda. A oferta, o pre&ccedil;o, a entrega e o cumprimento
+      do que for anunciado na live s&atilde;o responsabilidade do pr&oacute;prio lojista, nos termos do C&oacute;digo de Defesa do Consumidor.
+      O Moviki n&atilde;o promete resultado de vendas nem realiza sorteios.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* menu */
+function avMenu(abrir){
+  var m=document.getElementById('avMenu');
+  if(!m)return;
+  m.classList.toggle('on',!!abrir);
+  document.body.style.overflow=abrir?'hidden':'';
+  var b=document.querySelector('.avBurger');
+  if(b)b.setAttribute('aria-expanded',abrir?'true':'false');
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')avMenu(false); });
+
+/* player em fachada: o iframe do YouTube so nasce no clique.
+   Sem miniatura externa de proposito — assim a pagina NAO depende de img-src
+   para i.ytimg.com. O que a CSP do dominio precisa liberar e apenas:
+   frame-src https://www.youtube-nocookie.com
+   Sem isso, o video nao abre e NAO da erro visivel. */
+var AV_YT='n2nmTfGY_mo';
+function avAbrirVideo(){
+  var cx=document.getElementById('avPlayer');
+  if(!cx||cx.dataset.on==='1')return;
+  cx.dataset.on='1';
+  var f=document.createElement('iframe');
+  f.src='https://www.youtube-nocookie.com/embed/'+AV_YT+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  f.title='Filme do Modo Live do Moviki';
+  f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  f.setAttribute('allowfullscreen','');
+  f.referrerPolicy='strict-origin-when-cross-origin';
+  cx.innerHTML='';
+  cx.appendChild(f);
+  cx.style.cursor='default';
+  try{ if(window.mvEv) window.mvEv('video_play',{video:'filme_hero',pagina:'aovivo'}); }catch(e){}
+}
+</script>
+
+<script>
+/* ===== MEDICAO — mesmo padrao de comerciantes.html, parceiros.html e enterprise.html.
+   page_view e cta_painel saem sozinhos do mvmetrica.js. O VALOR de data-ev e o
+   nome do CTA; o evento enviado e sempre cta_click. ===== */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+    if (!a) return;
+    try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'aovivo' }); } catch(err){}
+  }, true);
+  /* Veio de um link de parceiro (/p/apelido)? Registra a origem uma vez. */
+  try {
+    var ref = (new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    if (ref.length >= 3 && window.mvEv) window.mvEv('chegou_por_indicacao', { ref: ref, destino: 'aovivo' });
+  } catch(err){}
+})();
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Preciso instalar algum aplicativo para fazer live no Moviki?","acceptedAnswer":{"@type":"Answer","text":"Nao. A transmissao abre no navegador do celular, pelo painel do Moviki. Quem assiste tambem nao instala nada: recebe um link e entra."}},
+{"@type":"Question","name":"A live funciona no teste gratis do Moviki?","acceptedAnswer":{"@type":"Answer","text":"Sim. Durante os 30 dias gratis, sem cartao, a live roda em nivel Pro: ate 60 minutos de transmissao e 5 produtos na sacolinha. O Pix dentro da live e recurso Enterprise."}},
+{"@type":"Question","name":"Como o cliente paga durante a live?","acceptedAnswer":{"@type":"Answer","text":"No Enterprise, por Pix dentro da propria live, com o valor caindo na conta aberta no nome do lojista. No Pro, o botao Quero este abre o WhatsApp do lojista com a mensagem pronta."}},
+{"@type":"Question","name":"Preciso de quantos seguidores para vender ao vivo?","acceptedAnswer":{"@type":"Answer","text":"Nenhum. Nao existe minimo de seguidores. A live tem link proprio e a pagina do negocio ganha o selo AO VIVO durante a transmissao."}},
+{"@type":"Question","name":"Vender ao vivo garante mais vendas?","acceptedAnswer":{"@type":"Answer","text":"Nao existe garantia. O Modo Live remove obstaculos entre a duvida do cliente e o pagamento; o resultado depende do produto, do preco e de quantas pessoas o lojista chamar."}}
+]}
+</script>
+</body>
+</html>
