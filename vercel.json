@@ -17,6 +17,14 @@
       "destination": "/live.html"
     },
     {
+      "source": "/aovivo",
+      "destination": "/aovivo.html"
+    },
+    {
+      "source": "/regras-da-live",
+      "destination": "/regras-da-live.html"
+    },
+    {
       "source": "/:slug([A-Za-z0-9_-]{3,40})",
       "destination": "/api/og?slug=:slug"
     }
@@ -25,10 +33,22 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=()" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        }
       ]
     }
   ],
