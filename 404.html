@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-14-compra1 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-14-compra2 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -581,7 +581,7 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .pgTot .v{font-size:32px;font-weight:800;color:var(--mv-ok);letter-spacing:-.5px;}
 .pgTot .l{font-size:12.5px;color:var(--mv-txt-3);margin-top:3px;}
 .pgQr{background:#fff;border-radius:var(--mv-r);padding:12px;width:230px;max-width:100%;margin:0 auto 14px;}
-.pgQr img{display:block;width:100%;height:auto;}
+.pgQr img,.pgQr canvas{display:block;width:100%;height:auto;}
 .pgCopia{background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px;
   font-size:11.5px;color:var(--mv-txt-3);word-break:break-all;max-height:88px;overflow:auto;line-height:1.5;}
 .pgCopiar{margin-top:10px;width:100%;min-height:52px;border:none;border-radius:var(--mv-r);cursor:pointer;
@@ -1117,6 +1117,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   </div>
 </div>
 
+<!-- Gerador de QR do proprio Moviki. Script classico e local: a CSP nao
+     deixa carregar biblioteca de fora, e o QR do Pix nao pode depender de
+     terceiro nenhum. Precisa vir ANTES do modulo, que e deferido. -->
+<script src="/mvqr.js"></script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
@@ -1131,7 +1136,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-14-compra1';
+  window.MOVIKI_VERSAO='2026-09-14-compra2';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2256,6 +2261,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
        direto o servidor manda o copia-e-cola, que é o que funciona no
        celular: ninguém aponta a câmera para a própria tela. */
     if(p.imagem)h+='<div class="pgQr"><img src="data:image/png;base64,'+esc(String(p.imagem))+'" alt="QR Code do Pix"></div>';
+    else h+='<div class="pgQr" id="pgQrBox" style="display:none"><canvas id="pgQrCv" aria-label="QR Code do Pix"></canvas></div>';
 
     h+='<div class="pgCopia" id="pgCopia">'+esc(String(p.copiaCola||''))+'</div>'+
        '<button class="pgCopiar" type="button" onclick="copiarPix()" id="btnCopiar">Copiar código Pix</button>';
@@ -2279,8 +2285,24 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(w)h+='<a class="pgWpp" href="https://wa.me/55'+w+'?text='+encodeURIComponent('Olá! Fiz um pedido pelo Moviki no valor de '+fmtReal(PEDIDO.total))+'" target="_blank" rel="noopener">Falar no WhatsApp</a>';
 
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
+    desenharQr(p);
     const inp=el('pdArquivo'); if(inp)inp.addEventListener('change',function(){lerComprovante(this);});
     iniciarPolling();
+  }
+  /* O QR e desenhado do COPIA-E-COLA que o servidor mandou, pelo gerador do
+     proprio Moviki (mvqr.js). A pagina nao monta payload de Pix — ela so
+     desenha o que ja veio pronto. Se o gerador nao carregar ou o texto nao
+     couber, a caixa some e o copia-e-cola continua fazendo o trabalho. */
+  function desenharQr(p){
+    if(p.imagem)return;
+    const cx=el('pgQrBox'), cv=el('pgQrCv');
+    if(!cx||!cv||!window.mvQR||!p.copiaCola)return;
+    try{
+      const q=window.mvQR(String(p.copiaCola));
+      if(!q)return;
+      window.mvQRDesenhar(cv,q,460,'#ffffff','#0b1220');
+      cx.style.display='';
+    }catch(e){}
   }
   window.copiarPix=function(){
     const t=(PEDIDO&&PEDIDO.pix&&PEDIDO.pix.copiaCola)||'';
