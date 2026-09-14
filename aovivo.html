@@ -136,10 +136,9 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 .avCheck{flex:0 0 21px;width:21px;height:21px;border-radius:50%;margin-top:1px;
   background:rgba(37,227,155,.16);border:1px solid rgba(37,227,155,.5);color:var(--mv-ok);
   display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
-.avFoto{position:relative;justify-self:center;width:100%;max-width:392px}
-.avFoto img{border-radius:var(--mv-r-xl);width:auto;max-width:100%;max-height:min(620px,66vh);margin-inline:auto}
-.avFoto::after{content:"";position:absolute;inset:-8% -6% -4%;z-index:-1;border-radius:50%;
-  background:radial-gradient(closest-side,rgba(0,150,255,.3),transparent 72%);filter:blur(6px)}
+.avFoto{position:relative;justify-self:center;width:100%;max-width:430px}
+.avFoto img{width:auto;max-width:100%;max-height:min(760px,80vh);margin-inline:auto}
+/* o brilho em volta do aparelho vem da propria arte, em PNG/WebP com alfa */
 .avFotoNota{font-size:11.5px;color:var(--mv-txt-3);text-align:center;margin-top:10px;line-height:1.5}
 
 /* ---------- antes x depois ---------- */
@@ -164,6 +163,11 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
     linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px) 0 0/46px 46px,
     #071223}
 .avVideo iframe{width:100%;height:100%;border:0;display:block}
+.avVideo--v{aspect-ratio:9/16;max-width:min(330px,78vw);margin-inline:auto}
+.soMob{display:none}
+.avTrocar{margin:14px auto 0;background:none;border:0;cursor:pointer;
+  font-size:13.5px;font-weight:600;color:var(--mv-txt-3);text-decoration:underline;text-underline-offset:3px}
+.avTrocar:hover{color:var(--mv-ciano)}
 .avVideo__c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:16px;text-align:center;padding:20px}
 .avPlay{width:78px;height:78px;border-radius:50%;border:0;cursor:pointer;background:var(--mv-grad);
@@ -263,6 +267,13 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
   .avHero{padding-top:18px}
   .avHero h1{font-size:clamp(27px,7.4vw,34px)}
 }
+@media(max-width:760px){
+  /* No celular toca o corte vertical de 60 s; o filme de 2:38 fica a um toque
+     de distancia. Video horizontal longo em tela de celular e abandono. */
+  .soMob{display:block}
+  .soDesk{display:none}
+  em.soMob,span.soMob{display:inline}
+}
 @media(max-width:640px){
   .avNav{height:62px}
   .avDuplo,.avObj,.avPassos,.avRec{grid-template-columns:minmax(0,1fr)}
@@ -273,7 +284,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-13-aovivo3';</script>
+<script>window.MOVIKI_VERSAO='2026-09-13-aovivo6';</script>
 </head>
 
 <body>
@@ -340,7 +351,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
     <div class="avFoto">
       <picture>
         <source srcset="livehero.webp" type="image/webp">
-        <img src="livehero.jpg" width="880" height="1320" alt="Celular transmitindo ao vivo pelo Moviki: selo AO VIVO, contador de quem est&aacute; assistindo, produto fixado com pre&ccedil;o e confirma&ccedil;&atilde;o de pagamento por Pix." fetchpriority="high" decoding="async">
+        <img src="livehero.png" width="700" height="1244" alt="Celular transmitindo ao vivo pelo Moviki: selo AO VIVO, contador de quem est&aacute; assistindo, produto fixado com pre&ccedil;o e confirma&ccedil;&atilde;o de pagamento por Pix." fetchpriority="high" decoding="async">
       </picture>
       <p class="avFotoNota">Ilustra&ccedil;&atilde;o da tela do Moviki &mdash; os n&uacute;meros s&atilde;o exemplo. Na live de verdade, tudo o que aparece na tela &eacute; contado.</p>
     </div>
@@ -382,20 +393,23 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 <section class="avSec" id="filme">
   <div class="avWrap">
     <div class="avCentro" style="margin-bottom:26px">
-      <h2 class="avH2">Entenda o Modo Live <em>em poucos minutos</em></h2>
-      <p class="avLead">Sem jarg&atilde;o e sem tutorial. &Eacute; a hist&oacute;ria de um dia de trabalho que quase n&atilde;o acontece &mdash; e do que muda quando a vitrine passa a falar.</p>
+      <h2 class="avH2">Entenda o Modo Live <em class="soDesk">em poucos minutos</em><em class="soMob">em 1 minuto</em></h2>
+      <p class="avLead soDesk">Sem jarg&atilde;o e sem tutorial. &Eacute; a hist&oacute;ria de um dia de trabalho que quase n&atilde;o acontece &mdash; e do que muda quando a vitrine passa a falar.</p>
+      <p class="avLead soMob">Sem jarg&atilde;o e sem tutorial. Um minuto para ver o que muda quando a vitrine passa a falar.</p>
     </div>
 
     <div class="avVideo" id="avPlayer" onclick="avAbrirVideo()">
       <div class="avVideo__c" id="avFachada">
-        <span class="avTag"><span class="avPonto"></span> Filme do Modo Live</span>
-        <button class="avPlay" type="button" aria-label="Assistir ao filme do Modo Live" data-ev="aovivo_play">
+        <span class="avTag"><span class="avPonto"></span> <span class="soDesk">Filme do Modo Live</span><span class="soMob">Moviki ao vivo &middot; 1 min</span></span>
+        <button class="avPlay" type="button" aria-label="Assistir ao v&iacute;deo do Modo Live" data-ev="aovivo_play">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
         </button>
-        <p class="avVideo__t">Vender ao vivo pelo celular, sem loja e sem est&uacute;dio</p>
+        <p class="avVideo__t soDesk">Vender ao vivo pelo celular, sem loja e sem est&uacute;dio</p>
+        <p class="avVideo__t soMob">Mostre. Responda. Venda em tempo real.</p>
         <p class="avVideo__s">O v&iacute;deo s&oacute; carrega quando voc&ecirc; toca em assistir.</p>
       </div>
     </div>
+    <button class="avTrocar soMob" type="button" data-ev="aovivo_filme_completo" onclick="avAbrirVideo(AV_FILME)">Prefere a hist&oacute;ria inteira? Ver o filme completo &middot; 2:38</button>
   </div>
 </section>
 
@@ -708,13 +722,29 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape')avMenu(fals
    para i.ytimg.com. O que a CSP do dominio precisa liberar e apenas:
    frame-src https://www.youtube-nocookie.com
    Sem isso, o video nao abre e NAO da erro visivel. */
-var AV_YT='n2nmTfGY_mo';
-function avAbrirVideo(){
+var AV_FILME='n2nmTfGY_mo';   /* 2:38, 16:9  — a historia inteira */
+var AV_CURTO='3Q5b0Q0PPh4';   /* 60 s, 9:16  — corte vertical, canal Moviki App */
+function avPecaDaVez(){
+  return (window.matchMedia && window.matchMedia('(max-width:760px)').matches) ? AV_CURTO : AV_FILME;
+}
+/* o palco nasce vertical no celular para nao deixar tarja preta em volta do corte */
+(function(){
+  function ajustar(){
+    var cx=document.getElementById('avPlayer');
+    if(!cx||cx.dataset.on==='1')return;
+    cx.classList.toggle('avVideo--v', avPecaDaVez()===AV_CURTO);
+  }
+  ajustar();
+  window.addEventListener('resize',ajustar);
+})();
+function avAbrirVideo(id){
   var cx=document.getElementById('avPlayer');
   if(!cx||cx.dataset.on==='1')return;
+  var vid = (typeof id==='string' && id) ? id : avPecaDaVez();
   cx.dataset.on='1';
+  cx.classList.toggle('avVideo--v', vid===AV_CURTO);
   var f=document.createElement('iframe');
-  f.src='https://www.youtube-nocookie.com/embed/'+AV_YT+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  f.src='https://www.youtube-nocookie.com/embed/'+vid+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
   f.title='Filme do Modo Live do Moviki';
   f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
   f.setAttribute('allowfullscreen','');
@@ -722,7 +752,7 @@ function avAbrirVideo(){
   cx.innerHTML='';
   cx.appendChild(f);
   cx.style.cursor='default';
-  try{ if(window.mvEv) window.mvEv('video_play',{video:'filme_hero',pagina:'aovivo'}); }catch(e){}
+  try{ if(window.mvEv) window.mvEv('video_play',{video:(vid===AV_CURTO?'corte_vertical_60s':'filme_hero'),pagina:'aovivo'}); }catch(e){}
 }
 </script>
 
