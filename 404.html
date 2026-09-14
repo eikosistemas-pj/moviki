@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-11-live1 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-14-compra1 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://www.googletagmanager.com https://www.google-analytics.com https://i.ytimg.com; connect-src 'self' https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://www.googletagmanager.com https://www.google-analytics.com https://i.ytimg.com; connect-src 'self' https://moviki-robo.vercel.app https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#060d18">
@@ -520,6 +520,96 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .dica .dX svg{width:15px;height:15px;}
 
 /* ---------- FOLHA (cardápio completo / mapa cheio / mais) ---------- */
+
+/* =====================================================================
+   CARDÁPIO COMPRÁVEL — 14/09/2026
+   Só aparece quando checkout_publico/{uid}.ativo === true. Sem isso, nada
+   nesta seção chega a existir na tela: o cardápio segue igual ao de sempre.
+   ===================================================================== */
+.addBtn{margin-top:10px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:44px;border:none;border-radius:var(--mv-r);cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;
+  color:#04121f;background:linear-gradient(135deg,var(--mv-ok),#12b981);transition:.16s;}
+.addBtn:hover{filter:brightness(1.06);}
+.addBtn:disabled{opacity:.55;cursor:default;filter:none;}
+.addBtn svg{width:17px;height:17px;}
+.itemPub.comFoto .addBtn{margin:0 13px 13px;width:calc(100% - 26px);}
+.semPreco{margin-top:8px;font-size:12px;color:var(--mv-txt-3);}
+
+/* barra da sacola, presa no rodapé da folha do cardápio */
+.sacolaBar{flex:0 0 auto;display:none;align-items:center;gap:11px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--mv-linha);background:var(--mv-surf);}
+.sacolaBar.on{display:flex;}
+.sacolaBar .sInfo{flex:1;min-width:0;}
+.sacolaBar .sQtd{font-size:12px;color:var(--mv-txt-3);}
+.sacolaBar .sTot{font-size:17px;font-weight:700;color:var(--mv-ok);}
+.sacolaBar .sIr{flex:0 0 auto;border:none;border-radius:var(--mv-r);cursor:pointer;font-family:inherit;font-weight:700;
+  font-size:14.5px;color:#04121f;background:var(--mv-grad);padding:13px 20px;min-height:48px;}
+
+/* linhas da sacola na folha de pedido */
+.sacLinha{display:flex;align-items:center;gap:10px;background:var(--mv-surf);border:1px solid var(--mv-linha);
+  border-radius:var(--mv-r);padding:10px 12px;margin-bottom:9px;}
+.sacLinha .sNome{flex:1;min-width:0;font-size:14px;font-weight:600;overflow-wrap:anywhere;}
+.sacLinha .sUn{font-size:12px;color:var(--mv-txt-3);}
+.sacPasso{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+.sacPasso button{width:32px;height:32px;border-radius:9px;border:1px solid var(--mv-linha);background:var(--mv-campo);
+  color:var(--mv-txt);font-size:17px;font-weight:700;cursor:pointer;line-height:1;font-family:inherit;}
+.sacPasso span{min-width:20px;text-align:center;font-weight:700;font-size:14px;}
+.sacTotal{display:flex;align-items:center;justify-content:space-between;padding:13px 0 4px;font-size:16px;font-weight:700;}
+.sacTotal b{color:var(--mv-ok);font-size:19px;}
+
+/* formulário do pedido */
+.pdBloco{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:15px 14px;margin-top:14px;}
+.pdBloco h4{font-size:14.5px;font-weight:700;margin-bottom:11px;}
+.pdCampo{margin-bottom:11px;}
+.pdCampo label{display:block;font-size:12.5px;color:var(--mv-txt-3);margin-bottom:5px;}
+.pdCampo input,.pdCampo textarea{width:100%;background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:11px;
+  padding:12px 13px;color:var(--mv-txt);font-size:15px;font-family:inherit;resize:vertical;}
+.pdCampo input:focus,.pdCampo textarea:focus{outline:none;border-color:var(--ciano);}
+.pdEnt{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.pdEnt button{min-height:46px;border-radius:var(--mv-r);border:1px solid var(--mv-linha);background:var(--mv-campo);
+  color:var(--mv-txt-2);font-family:inherit;font-weight:600;font-size:13.5px;cursor:pointer;}
+.pdEnt button.on{border-color:var(--mv-ok);color:var(--mv-ok);background:rgba(37,227,155,.1);}
+.pdAceite{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--mv-txt-2);margin-top:4px;line-height:1.5;}
+.pdAceite input{margin-top:3px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--mv-ok);}
+.pdEnviar{margin-top:15px;width:100%;min-height:54px;border:none;border-radius:var(--mv-r);cursor:pointer;
+  font-family:inherit;font-weight:700;font-size:16px;color:#04121f;background:var(--mv-grad);}
+.pdEnviar:disabled{opacity:.6;cursor:default;}
+.pdAviso{margin-top:11px;font-size:13px;color:var(--mv-erro);min-height:18px;text-align:center;}
+
+/* tela de pagamento */
+.pgTot{text-align:center;padding:6px 0 14px;}
+.pgTot .v{font-size:32px;font-weight:800;color:var(--mv-ok);letter-spacing:-.5px;}
+.pgTot .l{font-size:12.5px;color:var(--mv-txt-3);margin-top:3px;}
+.pgQr{background:#fff;border-radius:var(--mv-r);padding:12px;width:230px;max-width:100%;margin:0 auto 14px;}
+.pgQr img{display:block;width:100%;height:auto;}
+.pgCopia{background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px;
+  font-size:11.5px;color:var(--mv-txt-3);word-break:break-all;max-height:88px;overflow:auto;line-height:1.5;}
+.pgCopiar{margin-top:10px;width:100%;min-height:52px;border:none;border-radius:var(--mv-r);cursor:pointer;
+  font-family:inherit;font-weight:700;font-size:15.5px;color:#04121f;background:var(--mv-grad);}
+.pgConfere{margin-top:14px;background:rgba(255,176,32,.09);border:1px solid rgba(255,176,32,.36);border-radius:var(--mv-r);padding:13px 14px;}
+.pgConfere h4{font-size:13.5px;font-weight:700;color:var(--mv-alerta);margin-bottom:8px;}
+.pgConfere .lin{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:3px 0;}
+.pgConfere .lin span{color:var(--mv-txt-3);flex:0 0 auto;}
+.pgConfere .lin b{text-align:right;overflow-wrap:anywhere;font-weight:600;}
+.pgConfere p{font-size:12px;color:var(--mv-txt-2);margin-top:9px;line-height:1.5;}
+.pgPaguei{margin-top:15px;width:100%;min-height:52px;border:1px solid var(--mv-ok);border-radius:var(--mv-r);cursor:pointer;
+  font-family:inherit;font-weight:700;font-size:15px;color:var(--mv-ok);background:rgba(37,227,155,.1);}
+.pgPaguei:disabled{opacity:.6;cursor:default;}
+.pgAnexo{margin-top:11px;font-size:12.5px;color:var(--mv-txt-3);text-align:center;}
+.pgAnexo button{background:none;border:none;color:var(--ciano);font-family:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;padding:0;}
+.pgPrev{margin-top:10px;border-radius:var(--mv-r);overflow:hidden;border:1px solid var(--mv-linha);}
+.pgPrev img{display:block;width:100%;height:auto;max-height:200px;object-fit:contain;background:var(--mv-campo);}
+.pgStatus{margin-top:15px;text-align:center;font-size:13.5px;color:var(--mv-txt-2);line-height:1.6;}
+.pgStatus.ok{color:var(--mv-ok);font-weight:600;}
+.pgStatus.ruim{color:var(--mv-erro);}
+.pgPasso{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12.5px;color:var(--mv-txt-3);margin-bottom:12px;}
+.pgPasso i{width:7px;height:7px;border-radius:50%;background:var(--mv-linha-forte);display:inline-block;}
+.pgPasso i.on{background:var(--mv-ok);}
+.pgWpp{margin-top:13px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border-radius:var(--mv-r);
+  text-decoration:none;font-weight:700;font-size:14.5px;color:#03251a;background:linear-gradient(135deg,#25e39b,#12b981);}
+.pgRetomar{margin:0 0 12px;width:100%;min-height:46px;border:1px solid var(--ciano);border-radius:var(--mv-r);cursor:pointer;
+  font-family:inherit;font-weight:600;font-size:13.5px;color:var(--ciano);background:rgba(0,212,255,.08);}
+
 .folha{position:fixed;inset:0;z-index:1600;background:var(--mv-bg);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.22,.9,.3,1);}
 .folha.on{transform:translateY(0);}
 .fTopo{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top)) 14px 12px;border-bottom:1px solid var(--mv-linha);flex:0 0 auto;}
@@ -931,6 +1021,30 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     <h2>Cardápio</h2>
   </div>
   <div class="fCorpo" id="corpoCardapio"></div>
+  <!-- Barra da sacola — 14/09/2026. Fica presa no rodapé da folha do cardápio
+       e só aparece com item dentro. Fora do .fCorpo de propósito: dentro dele
+       ela subiria junto com a rolagem e sumiria da vista no meio da lista. -->
+  <div class="sacolaBar" id="sacolaBar">
+    <div class="sInfo">
+      <div class="sQtd" id="sacolaQtd">0 itens</div>
+      <div class="sTot" id="sacolaTotal">R$ 0,00</div>
+    </div>
+    <button class="sIr" type="button" onclick="abrirPedido()">Fazer pedido</button>
+  </div>
+</div>
+
+<!-- ======================= PEDIDO (cardápio comprável) =======================
+     Uma folha só, três telas: revisão da sacola, dados do comprador e
+     pagamento. Telas separadas em folhas diferentes fariam o comprador
+     perder o pedido ao voltar — aqui o botão de voltar é sempre o mesmo. -->
+<div class="folha" id="folhaPedido">
+  <div class="fTopo">
+    <button class="cbtn" type="button" onclick="fecharPedido()" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+    </button>
+    <h2 id="pedidoTitulo">Seu pedido</h2>
+  </div>
+  <div class="fCorpo" id="corpoPedido"></div>
 </div>
 
 <div class="folha" id="folhaMapa">
@@ -1017,7 +1131,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-11-live1';
+  window.MOVIKI_VERSAO='2026-09-14-compra1';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1838,7 +1952,17 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   }
 
   /* ============ cardápio completo (folha) ============ */
-  function produtoHtml(p,mostrarFotos){
+  /* Botao de comprar. Sai vazio quando o negocio nao vende: o cardapio
+     continua exatamente como era antes desta entrega. */
+  const SVG_ADD='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+  function botaoComprar(p,ci,pi){
+    if(!podeComprar()||typeof ci!=='number'||typeof pi!=='number')return '';
+    const pr=precoNumPub(p.preco);
+    if(!(pr>0))return '<div class="semPreco">Este item não é vendido pelo site — chame no WhatsApp.</div>';
+    return '<button class="addBtn" type="button" onclick="mvAdd('+ci+','+pi+')">'+SVG_ADD+'Adicionar</button>';
+  }
+  function produtoHtml(p,mostrarFotos,ci,pi){
+    const comprar=botaoComprar(p,ci,pi);
     const preco=p.preco?('<span class="pr">'+esc(fmtPreco(p.preco))+'</span>'):'';
     const ac=p.acabando?'<span class="acabando">ACABANDO!</span>':'';
     const desc=(p.descricao&&String(p.descricao).trim())?('<div class="desc">'+esc(String(p.descricao).trim())+'</div>'):'';
@@ -1848,9 +1972,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       const capa='<div class="fotoCapa">'+fotoInteira(fotos[0],p.nome||'foto',true)+'</div>';
       let mini='';
       if(fotos.length>1){ mini='<div class="miniFotos">'+fotos.map((u,idx)=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" referrerpolicy="no-referrer" class="'+(idx===0?'ativa':'')+'" onclick="trocarCapa(this)">').join('')+'</div>'; }
-      return '<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+'</div>'+mini+'</div>';
+      return '<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+'</div>'+mini+comprar+'</div>';
     }
-    return '<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+'</div>';
+    return '<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+comprar+'</div>';
   }
   function categoriasValidas(){ return (cardapioAtual||[]).map((c,i)=>({c:c,i:i})).filter(o=>o.c&&(o.c.categoria||(o.c.produtos&&o.c.produtos.length))); }
   function gradeCategorias(){
@@ -1871,8 +1995,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const c=(cardapioAtual||[])[i]; if(!c)return;
     let h='<button class="voltarCat" type="button" onclick="voltarCategorias()">‹ Categorias</button>';
     h+='<div class="catTitulo">'+esc(c.categoria||'Itens')+'</div>';
-    const prods=(c.produtos||[]).filter(x=>x&&x.nome);
-    h+=prods.length?prods.map(x=>produtoHtml(x,mostrarFotosAtual)).join(''):'<div class="vazioMod">Sem itens nesta categoria.</div>';
+    /* O indice tem que ser o da lista ORIGINAL: o filter renumera, e o
+       pedido apontaria para outro produto. */
+    const prods=(c.produtos||[]).map((x,pi)=>({x:x,pi:pi})).filter(o=>o.x&&o.x.nome);
+    h+=prods.length?prods.map(o=>produtoHtml(o.x,mostrarFotosAtual,i,o.pi)).join(''):'<div class="vazioMod">Sem itens nesta categoria.</div>';
     const box=el('corpoCardapio'); box.innerHTML=h; box.scrollTop=0;
   };
   window.voltarCategorias=function(){ const box=el('corpoCardapio'); box.innerHTML=gradeCategorias(); box.scrollTop=0; };
@@ -1881,9 +2007,407 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     cardapioAtual=liberaConteudo()?(dadosNeg.cardapio||[]):[];
     mostrarFotosAtual=liberaFotos();
     el('folhaCardapio').querySelector('h2').textContent='Cardápio';
-    el('corpoCardapio').innerHTML=gradeCategorias();
+    el('corpoCardapio').innerHTML=(pedidoGuardado()?'<button class="pgRetomar" type="button" onclick="retomarPedido()">Ver o pedido que voce ja fez aqui</button>':'')+gradeCategorias();
+    pintarSacola();
     abrirFolha('folhaCardapio');
     ev('cardapio_aberto',{}); mvContar('cardapio');
+  };
+
+
+  /* =====================================================================
+     CARDÁPIO COMPRÁVEL — 14/09/2026 (Fase 1 do Financeiro)
+     -------------------------------------------------------------------
+     O QUE ISTO FAZ
+     Deixa o cliente montar uma sacola no cardápio, mandar o pedido e pagar
+     no Pix DO LOJISTA. O dinheiro não passa pelo Moviki em momento nenhum.
+
+     O QUE ELE NÃO FAZ, DE PROPÓSITO
+     - Não calcula preço. O navegador diz O QUE e QUANTOS; quem soma é o
+       servidor, lendo o cardápio do lojista (lib/checkout.js). O preço que
+       aparece aqui é só vitrine: forjá-lo no F12 não muda um centavo da
+       cobrança.
+     - Não monta o código Pix. O copia-e-cola vem pronto do servidor. Montar
+       payload de Pix no navegador é entregar o ataque de QR trocado de
+       bandeja.
+     - Não escreve NADA no Firestore. Tudo passa por api/pedido.js.
+
+     O INTERRUPTOR
+     Só existe tela de compra se checkout_publico/{uid}.ativo === true — o
+     espelho que o robô grava quando o lojista liga a venda na aba
+     Financeiro. Negócio sem isso vê o cardápio exatamente como via ontem.
+     ===================================================================== */
+  const MV_ROBO='https://moviki-robo.vercel.app';
+  let COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada'};
+  let SACOLA=[], PEDIDO=null, PD_TIMER=null, PD_COMPROV=null, PD_ENT='retirada', PD_ENVIANDO=false;
+
+  /* Espelho EXATO do precoNum do servidor. Se divergir, o botão aparece em
+     item que o servidor recusa — e o cliente leva "produto indisponível"
+     depois de preencher tudo. */
+  function precoNumPub(v){
+    const t=String(v==null?'':v).replace(/^R\$\s*/i,'').trim();
+    if(!/^\d{1,5}([.,]\d{1,2})?$/.test(t))return NaN;
+    return Math.round(parseFloat(t.replace(',','.'))*100)/100;
+  }
+  function podeComprar(){
+    return COMPRA.ativo===true && liberaConteudo() && !(dadosNeg&&dadosNeg.vendaAtiva===false);
+  }
+  async function carregarCheckout(uid){
+    try{
+      const s=await getDoc(doc(db,'checkout_publico',uid));
+      const d=s.exists()?s.data():null;
+      COMPRA={
+        ativo:!!(d&&d.ativo===true),
+        modo:String((d&&d.modo)||''),
+        minimo:Number((d&&d.minimo)||0)||0,
+        entrega:String((d&&d.entrega)||'retirada')
+      };
+    }catch(e){ COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada'}; }
+    PD_ENT=(COMPRA.entrega==='entrega')?'entrega':'retirada';
+  }
+
+  /* ---------------- sacola ---------------- */
+  function chaveItem(ci,pi){ return ci+':'+pi; }
+  function itemDoCardapio(ci,pi){
+    const c=(cardapioAtual||[])[ci]; if(!c)return null;
+    const p=(c.produtos||[])[pi]; if(!p||!p.nome)return null;
+    const preco=precoNumPub(p.preco);
+    if(!(preco>0))return null;
+    return {nome:String(p.nome),preco:preco,sku:String(p.sku||'')};
+  }
+  window.mvAdd=function(ci,pi){
+    const it=itemDoCardapio(ci,pi); if(!it)return;
+    const k=chaveItem(ci,pi);
+    const ja=SACOLA.find(x=>x.k===k);
+    if(ja){ if(ja.qtd<10)ja.qtd++; }
+    else SACOLA.push({k:k,ci:ci,pi:pi,nome:it.nome,preco:it.preco,sku:it.sku,qtd:1});
+    pintarSacola();
+    ev('sacola_add',{});
+  };
+  window.mvQtd=function(k,d){
+    const i=SACOLA.findIndex(x=>x.k===k); if(i<0)return;
+    SACOLA[i].qtd+=d;
+    if(SACOLA[i].qtd<1)SACOLA.splice(i,1);
+    else if(SACOLA[i].qtd>10)SACOLA[i].qtd=10;
+    pintarSacola();
+    if(el('folhaPedido').classList.contains('on')){ if(SACOLA.length)telaDados(); else fecharPedido(); }
+  };
+  function totalSacola(){ return Math.round(SACOLA.reduce((s,x)=>s+x.preco*x.qtd,0)*100)/100; }
+  function qtdSacola(){ return SACOLA.reduce((s,x)=>s+x.qtd,0); }
+  function pintarSacola(){
+    const b=el('sacolaBar'); if(!b)return;
+    const n=qtdSacola();
+    b.classList.toggle('on',n>0&&podeComprar());
+    if(!n)return;
+    el('sacolaQtd').textContent=n+(n===1?' item':' itens');
+    el('sacolaTotal').textContent=fmtReal(totalSacola());
+  }
+
+  /* ---------------- folha do pedido ---------------- */
+  window.fecharPedido=function(){
+    fecharFolha('folhaPedido');
+    if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;}
+  };
+  window.abrirPedido=function(){
+    if(!SACOLA.length||!podeComprar())return;
+    telaDados();
+    abrirFolha('folhaPedido');
+    ev('pedido_aberto',{});
+  };
+  function passos(n){
+    return '<div class="pgPasso"><i class="'+(n>=1?'on':'')+'"></i><i class="'+(n>=2?'on':'')+'"></i><i class="'+(n>=3?'on':'')+'"></i></div>';
+  }
+  function linhasSacola(){
+    return SACOLA.map(x=>
+      '<div class="sacLinha"><div class="sNome">'+esc(x.nome)+
+      '<div class="sUn">'+fmtReal(x.preco)+' cada</div></div>'+
+      '<div class="sacPasso">'+
+        '<button type="button" onclick="mvQtd(\''+esc(x.k)+'\',-1)" aria-label="Menos um">−</button>'+
+        '<span>'+x.qtd+'</span>'+
+        '<button type="button" onclick="mvQtd(\''+esc(x.k)+'\',1)" aria-label="Mais um">+</button>'+
+      '</div></div>'
+    ).join('');
+  }
+  function telaDados(){
+    el('pedidoTitulo').textContent='Seu pedido';
+    const tot=totalSacola();
+    const falta=COMPRA.minimo>0&&tot<COMPRA.minimo;
+    const ent=COMPRA.entrega;
+    const podeRetirar=(ent==='retirada'||ent==='ambos');
+    const podeEntregar=(ent==='entrega'||ent==='ambos');
+    if(podeRetirar&&!podeEntregar)PD_ENT='retirada';
+    if(podeEntregar&&!podeRetirar)PD_ENT='entrega';
+
+    let h=passos(1);
+    h+=linhasSacola();
+    h+='<div class="sacTotal"><span>Total</span><b>'+fmtReal(tot)+'</b></div>';
+    if(falta)h+='<div class="pdAviso">Pedido mínimo de '+fmtReal(COMPRA.minimo)+' neste negócio.</div>';
+
+    h+='<div class="pdBloco"><h4>Seus dados</h4>'+
+       '<div class="pdCampo"><label>Nome completo</label><input id="pdNome" type="text" maxlength="60" autocomplete="name" placeholder="Nome e sobrenome"></div>'+
+       '<div class="pdCampo"><label>WhatsApp com DDD</label><input id="pdWpp" type="tel" inputmode="numeric" maxlength="15" autocomplete="tel" placeholder="41999998888"></div>'+
+       '<div class="pdCampo"><label>CPF</label><input id="pdCpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></div>'+
+       '</div>';
+
+    if(podeRetirar||podeEntregar){
+      h+='<div class="pdBloco"><h4>Como você quer receber</h4><div class="pdEnt">';
+      if(podeRetirar)h+='<button type="button" id="pdBtnRet" class="'+(PD_ENT==='retirada'?'on':'')+'" onclick="mvEntrega(\'retirada\')">Retirar no local</button>';
+      if(podeEntregar)h+='<button type="button" id="pdBtnEnt" class="'+(PD_ENT==='entrega'?'on':'')+'" onclick="mvEntrega(\'entrega\')">Entrega combinada</button>';
+      h+='</div><div class="pdCampo" id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+
+         '<label>Endereço da entrega</label><textarea id="pdEnd" rows="2" maxlength="140" placeholder="Rua, número, bairro e ponto de referência"></textarea></div>';
+      h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega é combinada direto com o negócio pelo WhatsApp. O Moviki não faz entrega.</div>';
+      h+='</div>';
+    }
+
+    h+='<div class="pdBloco"><label class="pdAceite"><input type="checkbox" id="pdAceite">'+
+       '<span>Concordo que este pedido é feito direto com <b>'+esc((dadosNeg&&dadosNeg.nome)||'o negócio')+'</b>, que é quem vende, cobra e entrega. '+
+       'Autorizo o uso do meu nome, WhatsApp e CPF para identificar este pedido.</span></label></div>';
+
+    h+='<button class="pdEnviar" type="button" id="pdEnviar" onclick="enviarPedido()"'+(falta?' disabled':'')+'>Gerar o Pix</button>';
+    h+='<div class="pdAviso" id="pdAviso"></div>';
+
+    const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
+  }
+  window.mvEntrega=function(t){
+    PD_ENT=t;
+    const r=el('pdBtnRet'), e=el('pdBtnEnt'), cx=el('pdEndBox');
+    if(r)r.classList.toggle('on',t==='retirada');
+    if(e)e.classList.toggle('on',t==='entrega');
+    if(cx)cx.style.display=(t==='entrega')?'':'none';
+  };
+
+  function erroPedido(cod,extra){
+    const m={
+      dados:'Não consegui ler seus dados. Confira e tente de novo.',
+      nome:'Escreva seu nome e sobrenome.',
+      cpf:'Esse CPF não confere. Confira os números.',
+      whatsapp:'WhatsApp com DDD, só números. Ex: 41999998888.',
+      endereco:'Escreva o endereço da entrega.',
+      aceite:'Marque o aceite para continuar.',
+      produto:'Um item do seu pedido saiu do cardápio. Atualize a página.',
+      sem_preco:'Um item do seu pedido está sem preço definido.',
+      minimo:'Pedido mínimo de '+fmtReal((extra&&extra.minimo)||COMPRA.minimo)+' neste negócio.',
+      freio:'Muitos pedidos ao mesmo tempo. Tente de novo em alguns minutos.',
+      indisponivel:'As vendas deste negócio estão fechadas neste momento.',
+      fora:'As vendas estão fechadas neste momento.',
+      live_fora:'As vendas estão fechadas neste momento.',
+      esgotado:'Esse item acabou de esgotar.',
+      chave:'O recebimento deste negócio está com problema. Chame no WhatsApp.',
+      config:'O recebimento deste negócio está com problema. Chame no WhatsApp.',
+      comprovante:'Imagem inválida. Mande uma foto ou print do comprovante.',
+      comprovante_grande:'Imagem muito grande. Tente outra foto.',
+      modo:'Esse pedido não aceita este aviso.',
+      nao_encontrado:'Não achei esse pedido.'
+    };
+    return m[cod]||'Não consegui concluir agora. Tente de novo.';
+  }
+
+  async function apiPedido(payload){
+    const r=await fetch(MV_ROBO+'/api/pedido',{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+    });
+    const j=await r.json().catch(()=>({}));
+    return {http:r.status,j:j||{}};
+  }
+
+  window.enviarPedido=async function(){
+    if(PD_ENVIANDO)return;
+    const av=el('pdAviso'); av.textContent='';
+    const nome=(el('pdNome').value||'').trim();
+    const wpp=(el('pdWpp').value||'').replace(/\D/g,'').replace(/^55(?=\d{10,11}$)/,'');
+    const cpf=(el('pdCpf').value||'').replace(/\D/g,'');
+    const end=el('pdEnd')?(el('pdEnd').value||'').trim():'';
+    if(nome.split(' ').filter(Boolean).length<2){av.textContent=erroPedido('nome');return;}
+    if(wpp.length!==10&&wpp.length!==11){av.textContent=erroPedido('whatsapp');return;}
+    if(cpf.length!==11){av.textContent=erroPedido('cpf');return;}
+    if(PD_ENT==='entrega'&&end.length<5){av.textContent=erroPedido('endereco');return;}
+    if(!el('pdAceite').checked){av.textContent=erroPedido('aceite');return;}
+
+    const btn=el('pdEnviar'); const rot=btn.textContent;
+    PD_ENVIANDO=true; btn.disabled=true; btn.textContent='Gerando...';
+    try{
+      const {j}=await apiPedido({
+        acao:'compra_criar', origem:'cardapio', lojistaUid:negocioUid,
+        nome:nome, whatsapp:wpp, cpf:cpf,
+        entrega:PD_ENT, detalhe:end, aceite:true,
+        itens:SACOLA.map(x=>({sku:x.sku,nome:x.nome,qtd:x.qtd}))
+      });
+      if(!j.ok){ av.textContent=erroPedido(j.erro,j); PD_ENVIANDO=false; btn.disabled=false; btn.textContent=rot; return; }
+      PEDIDO=j; PD_COMPROV=null;
+      guardarPedido(j.pedidoId,j.chave);
+      ev('pedido_criado',{modo:j.modo||''}); mvContar('cardapio');
+      telaPagamento();
+    }catch(e){
+      av.textContent='Sem conexão com o servidor. Tente de novo.';
+    }
+    PD_ENVIANDO=false; btn.disabled=false; btn.textContent=rot;
+  };
+
+  /* ---------------- pagamento ---------------- */
+  function telaPagamento(){
+    if(!PEDIDO)return;
+    el('pedidoTitulo').textContent='Pague com Pix';
+    const p=PEDIDO.pix||{};
+    const rec=p.recebedor||null;
+    let h=passos(2);
+    h+='<div class="pgTot"><div class="v">'+fmtReal(PEDIDO.total)+'</div>'+
+       '<div class="l">'+(PEDIDO.centavos?'Pague o valor EXATO — os centavos identificam o seu pedido':'Valor total do pedido')+'</div></div>';
+
+    /* QR só quando o servidor mandou a imagem pronta (modo Asaas). No Pix
+       direto o servidor manda o copia-e-cola, que é o que funciona no
+       celular: ninguém aponta a câmera para a própria tela. */
+    if(p.imagem)h+='<div class="pgQr"><img src="data:image/png;base64,'+esc(String(p.imagem))+'" alt="QR Code do Pix"></div>';
+
+    h+='<div class="pgCopia" id="pgCopia">'+esc(String(p.copiaCola||''))+'</div>'+
+       '<button class="pgCopiar" type="button" onclick="copiarPix()" id="btnCopiar">Copiar código Pix</button>';
+
+    if(rec){
+      h+='<div class="pgConfere"><h4>Confira antes de pagar</h4>'+
+         '<div class="lin"><span>Recebedor</span><b>'+esc(String(rec.nome||''))+'</b></div>'+
+         (rec.documento?'<div class="lin"><span>CPF/CNPJ</span><b>'+esc(String(rec.documento))+'</b></div>':'')+
+         (rec.chave?'<div class="lin"><span>Chave Pix</span><b>'+esc(String(rec.chave))+'</b></div>':'')+
+         '<p>O aplicativo do seu banco mostra esse mesmo nome antes de confirmar. Se aparecer outro nome, <b>não pague</b> e avise o negócio.</p></div>';
+    }
+
+    h+='<button class="pgPaguei" type="button" onclick="jaPaguei()" id="btnPaguei">Já paguei</button>'+
+       '<div class="pgAnexo">Ajuda o negócio a confirmar mais rápido: '+
+       '<button type="button" onclick="mvAnexo()">anexar o comprovante</button>'+
+       '<input type="file" id="pdArquivo" accept="image/*" style="display:none">'+
+       '</div><div id="pgPrev"></div>'+
+       '<div class="pgStatus" id="pgStatus">Assim que o negócio confirmar o pagamento, esta tela avisa. Pode deixar aberta.</div>';
+
+    const w=wppDaUnidade();
+    if(w)h+='<a class="pgWpp" href="https://wa.me/55'+w+'?text='+encodeURIComponent('Olá! Fiz um pedido pelo Moviki no valor de '+fmtReal(PEDIDO.total))+'" target="_blank" rel="noopener">Falar no WhatsApp</a>';
+
+    const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
+    const inp=el('pdArquivo'); if(inp)inp.addEventListener('change',function(){lerComprovante(this);});
+    iniciarPolling();
+  }
+  window.copiarPix=function(){
+    const t=(PEDIDO&&PEDIDO.pix&&PEDIDO.pix.copiaCola)||'';
+    if(!t)return;
+    const b=el('btnCopiar');
+    const feito=()=>{ if(b){const r=b.textContent;b.textContent='Código copiado!';setTimeout(()=>{b.textContent=r;},2200);} };
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(feito,()=>{prompt('Copie o código Pix:',t);});
+    else prompt('Copie o código Pix:',t);
+    ev('pix_copiado',{});
+  };
+  window.mvAnexo=function(){ const i=el('pdArquivo'); if(i){i.value='';i.click();} };
+
+  /* Comprovante entra reduzido: o servidor recusa acima de ~1,7 MB e foto de
+     celular passa fácil disso. Reduzir aqui evita o erro depois de esperar o
+     upload inteiro. */
+  function lerComprovante(inp){
+    const f=inp.files&&inp.files[0]; if(!f)return;
+    if(!/^image\//.test(f.type)){el('pgStatus').textContent='Mande uma foto ou print do comprovante.';return;}
+    const fr=new FileReader();
+    fr.onload=function(){
+      const img=new Image();
+      img.onload=function(){
+        const lado=1200;
+        const esc2=Math.min(1,lado/Math.max(img.naturalWidth,img.naturalHeight)||1);
+        const cv=document.createElement('canvas');
+        cv.width=Math.max(1,Math.round(img.naturalWidth*esc2));
+        cv.height=Math.max(1,Math.round(img.naturalHeight*esc2));
+        const x=cv.getContext('2d');
+        x.fillStyle='#ffffff'; x.fillRect(0,0,cv.width,cv.height);
+        x.drawImage(img,0,0,cv.width,cv.height);
+        let q=0.82, saida=cv.toDataURL('image/jpeg',q);
+        while(saida.length>1300000&&q>0.4){ q-=0.12; saida=cv.toDataURL('image/jpeg',q); }
+        PD_COMPROV=saida;
+        el('pgPrev').innerHTML='<div class="pgPrev"><img src="'+saida+'" alt="comprovante"></div>';
+        el('pgStatus').textContent='Comprovante pronto. Toque em "Já paguei" para enviar.';
+      };
+      img.onerror=function(){ el('pgStatus').textContent='Não consegui abrir essa imagem. Tente outra.'; };
+      img.src=fr.result;
+    };
+    fr.onerror=function(){ el('pgStatus').textContent='Não consegui ler o arquivo.'; };
+    fr.readAsDataURL(f);
+  }
+  window.jaPaguei=async function(){
+    if(!PEDIDO)return;
+    const b=el('btnPaguei'), st=el('pgStatus');
+    b.disabled=true; const rot=b.textContent; b.textContent='Enviando...';
+    try{
+      const corpo={acao:'compra_paguei',pedidoId:PEDIDO.pedidoId,chave:PEDIDO.chave};
+      if(PD_COMPROV)corpo.comprovanteBase64=PD_COMPROV;
+      const {j}=await apiPedido(corpo);
+      if(j.ok){
+        st.className='pgStatus ok';
+        st.textContent='Aviso enviado. O negócio vai conferir o pagamento e confirmar.';
+        b.textContent='Aviso enviado';
+        ev('pedido_avisado',{});
+      }else{
+        st.className='pgStatus ruim'; st.textContent=erroPedido(j.erro);
+        b.disabled=false; b.textContent=rot;
+      }
+    }catch(e){
+      st.className='pgStatus ruim'; st.textContent='Sem conexão. Tente de novo.';
+      b.disabled=false; b.textContent=rot;
+    }
+  };
+
+  const PD_ROTULO={
+    aguardando:'Aguardando o pagamento.',
+    conferindo:'Pagamento em conferência pelo negócio.',
+    pago:'Pagamento confirmado! O negócio já está preparando.',
+    entregue:'Pedido entregue. Bom proveito!',
+    recusado:'O negócio não confirmou este pagamento. Chame no WhatsApp.',
+    expirado:'Este pedido expirou. Se você pagou, chame o negócio no WhatsApp — o pagamento ainda pode ser confirmado.',
+    cancelado:'Pedido cancelado.',
+    estornado:'Pagamento estornado.'
+  };
+  function iniciarPolling(){
+    if(PD_TIMER)clearInterval(PD_TIMER);
+    PD_TIMER=setInterval(consultarStatus,8000);
+  }
+  async function consultarStatus(){
+    if(!PEDIDO){ if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;} return; }
+    try{
+      const {j}=await apiPedido({acao:'compra_status',pedidoId:PEDIDO.pedidoId,chave:PEDIDO.chave});
+      if(!j.ok)return;
+      const st=el('pgStatus'); if(!st)return;
+      if(j.status==='aguardando')return;
+      st.className='pgStatus'+(j.status==='pago'||j.status==='entregue'?' ok':(j.status==='recusado'||j.status==='estornado'?' ruim':''));
+      st.textContent=PD_ROTULO[j.status]||'';
+      if(j.status==='pago'||j.status==='entregue'){
+        el('pedidoTitulo').textContent='Pedido confirmado';
+        const b=el('btnPaguei'); if(b){b.style.display='none';}
+        SACOLA=[]; pintarSacola(); esquecerPedido();
+        if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;}
+      }
+      if(j.status==='recusado'||j.status==='cancelado'||j.status==='estornado'){
+        esquecerPedido();
+        if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;}
+      }
+    }catch(e){}
+  }
+
+  /* Retomar o pedido: o comprador sai da página para abrir o banco e volta.
+     Sem isso ele perde o código Pix e o pedido fica órfão no painel do
+     lojista. Guarda só id e chave — nenhum dado pessoal. */
+  function chaveLocal(){ return 'mv_pd_'+negocioUid; }
+  function guardarPedido(id,chave){
+    try{ localStorage.setItem(chaveLocal(),JSON.stringify({id:id,chave:chave,em:Date.now()})); }catch(e){}
+  }
+  function esquecerPedido(){ try{ localStorage.removeItem(chaveLocal()); }catch(e){} }
+  function pedidoGuardado(){
+    try{
+      const d=JSON.parse(localStorage.getItem(chaveLocal())||'null');
+      if(!d||!d.id||!d.chave)return null;
+      if(Date.now()-(d.em||0)>86400000){ esquecerPedido(); return null; }
+      return d;
+    }catch(e){ return null; }
+  }
+  window.retomarPedido=async function(){
+    const d=pedidoGuardado(); if(!d)return;
+    const {j}=await apiPedido({acao:'compra_status',pedidoId:d.id,chave:d.chave});
+    if(!j.ok){ esquecerPedido(); return; }
+    el('pedidoTitulo').textContent='Seu pedido';
+    const box=el('corpoPedido');
+    box.innerHTML=passos(3)+'<div class="pgStatus'+(j.status==='pago'||j.status==='entregue'?' ok':'')+'">'+
+      esc(PD_ROTULO[j.status]||'')+'</div>';
+    abrirFolha('folhaPedido');
+    if(j.status==='pago'||j.status==='entregue'||j.status==='recusado')esquecerPedido();
   };
 
   /* ============ folhas ============ */
@@ -2433,6 +2957,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     negocioUid=uid;
     ouvirLive(uid);
     await carregarPlano(uid);
+    await carregarCheckout(uid);
     carregarAvaliacoesPub(uid);
     mvVisita();
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
@@ -2455,6 +2980,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     negocioUid=ownerUid;
     ouvirLive(ownerUid);
     await carregarPlano(ownerUid);
+    await carregarCheckout(ownerUid);
     carregarAvaliacoesPub(ownerUid);
     mvVisita();
     onSnapshot(doc(db,'negocios',ownerUid),(snap)=>{
@@ -2510,6 +3036,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(el('vp').classList.contains('on'))return fecharVideo();
     if(el('lb').classList.contains('on'))return fecharFoto();
     if(el('gaveta').classList.contains('on'))return fecharGaveta();
+    if(el('folhaPedido').classList.contains('on'))return fecharPedido();
     ['folhaCardapio','folhaMapa','folhaMais'].forEach(id=>{if(el(id).classList.contains('on'))fecharFolha(id);});
     if(!el('modalAv').classList.contains('escondido'))fecharAvaliar();
   });
