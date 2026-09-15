@@ -121,17 +121,18 @@ async function lerDoc(caminho, token) {
 /* O 404.html vai junto no pacote da funcao (includeFiles no vercel.json).
    Se por qualquer motivo nao estiver la, busca no proprio dominio — assim uma
    mudanca de layout da Vercel nao derruba a pagina publica inteira. */
-async function lerCasca(host) {
+async function lerCasca(host, arquivo) {
+  const nome = arquivo || '404.html';
   const tentativas = [
-    path.join(process.cwd(), '404.html'),
-    path.join(__dirname, '..', '404.html'),
-    path.join(__dirname, '404.html')
+    path.join(process.cwd(), nome),
+    path.join(__dirname, '..', nome),
+    path.join(__dirname, nome)
   ];
   for (const p of tentativas) {
     try { return fs.readFileSync(p, 'utf8'); } catch (e) {}
   }
   try {
-    const r = await fetch('https://' + host + '/404.html');
+    const r = await fetch('https://' + host + '/' + nome);
     if (r.ok) return await r.text();
   } catch (e) {}
   return null;
@@ -164,25 +165,63 @@ function tags(o) {
   return linhas.join('\n');
 }
 
-/* Troca o <title>Moviki</title> da casca pelo bloco completo. O 404.html tem
-   exatamente um <title> e ele e literal — se um dia deixar de ser, o fallback
-   injeta logo depois do <head>. */
+/* Troca o <title> da casca pelo bloco completo. As duas cascas tem exatamente
+   um <title> literal — se um dia deixar de ser, o fallback injeta logo depois
+   do <head>.
+
+   DUAS ARMADILHAS, as duas ja custaram cartao quebrado em teste:
+
+   1) O live.html NAO e limpo como o 404.html: ele traz <meta name="description">
+      e <meta name="robots" content="noindex"> proprias, escritas a mao. Injetar
+      por cima deixava DUAS descriptions no mesmo head, e qual delas o robo do
+      WhatsApp usa depende de quem le primeiro — ou seja, sorte. limpar() apaga
+      as tags concorrentes ANTES da injecao. So mexe no trecho do <head> anterior
+      ao primeiro <script>/<style>, pra nunca tocar em texto dentro de codigo.
+
+   2) String.replace interpreta $&, $` e $' DENTRO do texto de substituicao. O
+      bloco carrega nome e descricao escritos pelo LOJISTA: um titulo de live com
+      "$'" cuspia o resto do arquivo dentro da tag. Por isso o replace recebe uma
+      FUNCAO — funcao nao expande nada. */
+function limpar(html) {
+  const corte = html.search(/<script|<style/i);
+  const fim = corte > 0 ? corte : html.length;
+  const cabeca = html.slice(0, fim).replace(
+    /[ \t]*<(?:meta|link)\b[^>]*\b(?:name|property|rel)\s*=\s*["']?(?:description|robots|canonical|og:[a-z:]+|twitter:[a-z:]+)["']?[^>]*>\s*\n?/gi,
+    ''
+  );
+  return cabeca + html.slice(fim);
+}
+
 function injetar(html, bloco) {
-  if (/<title>[^<]*<\/title>/.test(html)) return html.replace(/<title>[^<]*<\/title>/, bloco);
-  return html.replace(/<head(\s[^>]*)?>/i, m => m + '\n' + bloco);
+  const casca = limpar(html);
+  if (/<title>[^<]*<\/title>/.test(casca)) return casca.replace(/<title>[^<]*<\/title>/, () => bloco);
+  return casca.replace(/<head(\s[^>]*)?>/i, m => m + '\n' + bloco);
 }
 
 module.exports = async (req, res) => {
   const host = (req.headers['x-forwarded-host'] || req.headers.host || 'moviki.com.br').split(',')[0].trim();
   let slug = '';
+  let ehLive = false;
   try {
     const u = new URL(req.url, 'https://' + host);
     slug = limpaSlug(u.searchParams.get('slug') || u.pathname.replace(/^\/+/, ''));
+    /* 15/09/2026 — A PREVIA DO LINK DA LIVE.
+       Ate aqui /live/:slug ia direto para live.html, que nao tem uma unica
+       meta og. O link que o produto MAIS quer que seja compartilhado (o botao
+       "Avisar clientes" existe so para isso) chegava pelado no WhatsApp:
+       sem imagem, sem nome, sem descricao — enquanto o link da pagina do
+       negocio, que passa por aqui, chega com cartao completo.
+       Agora a rota passa por esta funcao com live=1, e a casca servida e a
+       live.html em vez da 404.html. */
+    ehLive = u.searchParams.get('live') === '1' || /^\/+live\//.test(u.pathname);
   } catch (e) {}
 
   /* O token sai junto com a leitura da casca: em requisicao fria isso poupa
      uma ida de rede inteira do orcamento de ~10s da funcao. */
-  const [casca, token] = await Promise.all([lerCasca(host), gauth.tokenLeitura()]);
+  const [casca, token] = await Promise.all([
+    lerCasca(host, ehLive ? 'live.html' : '404.html'),
+    gauth.tokenLeitura()
+  ]);
   const via = token ? 'sa' : 'key';
   if (!casca) {                       // nunca derrubar a pagina por causa de preview
     res.statusCode = 302;
@@ -191,7 +230,16 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const generico = {
+  const generico = ehLive ? {
+    titulo: 'Ao vivo no Moviki',
+    descricao: 'Entre na transmissão, veja os produtos e fale com quem está vendendo.',
+    url: BASE + '/live/' + slug,
+    imagem: OG_PADRAO,
+    imagemAlt: 'Moviki',
+    indexar: false,            // live nunca se indexa: some do ar e o resultado morre
+    negocio: false,
+    jsonld: null
+  } : {
     titulo: 'Moviki — ' + SLOGAN,
     descricao: 'Encontre negócios itinerantes no mapa, em tempo real: food trucks, carrinhos, feirantes e quiosques.',
     url: BASE + '/' + slug,
@@ -218,10 +266,11 @@ module.exports = async (req, res) => {
   }
   if (!achou || !uid) return responder(res, injetar(casca, tags(generico)), 404, via);
 
-  const [neg, ass, resumo] = await Promise.all([
+  const [neg, ass, resumo, estLive] = await Promise.all([
     lerDoc('negocios/' + uid, token),
     lerDoc('assinaturas/' + uid, token),
-    lerDoc('negocios/' + uid + '/resumo/avaliacoes', token)
+    lerDoc('negocios/' + uid + '/resumo/avaliacoes', token),
+    ehLive ? lerDoc('negocios/' + uid + '/estado/live', token) : Promise.resolve(null)
   ]);
   if (!neg) return responder(res, injetar(casca, tags(generico)), 404, via);
 
@@ -280,6 +329,31 @@ module.exports = async (req, res) => {
     };
   }
 
+  /* --- A PREVIA DA LIVE ---
+     Nao afirma "esta ao vivo AGORA": o cartao fica guardado no aplicativo de
+     quem recebeu por muito tempo depois que a transmissao acabou, e a CDN
+     ainda guarda a resposta. Um cartao que promete live no ar para quem abre
+     duas horas depois e pior do que um cartao neutro. O que entra e o TITULO
+     que o lojista escreveu, que descreve o que ele vai mostrar e continua
+     verdadeiro. Cache curto pelo mesmo motivo: o titulo muda a cada live. */
+  if (ehLive) {
+    const tituloLive = estLive ? txt(estLive.titulo) : '';
+    const bloco = tags({
+      titulo: nome + ' — ao vivo no Moviki',
+      descricao: corta(
+        (tituloLive ? tituloLive + '. ' : '') +
+        'Entre na transmissão de ' + nome +
+        ', veja os produtos e fale com quem está vendendo.', 180),
+      url: BASE + '/live/' + slug,
+      imagem: imagem,
+      imagemAlt: nome,
+      indexar: false,
+      negocio: false,
+      jsonld: null
+    });
+    return responder(res, injetar(casca, bloco), 200, via, true);
+  }
+
   /* PORTAO DE QUALIDADE (nao confundir com trava de plano).
      Preview SEMPRE funciona — e o que o lojista compartilha no WhatsApp.
      Indexacao no Google exige pagina com conteudo de verdade: nome, ponto no
@@ -307,7 +381,7 @@ module.exports = async (req, res) => {
   return responder(res, injetar(casca, bloco), 200, via);
 };
 
-function responder(res, html, status, via) {
+function responder(res, html, status, via, curto) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   /* Diagnostico sem console: "sa" = conta de servico (pronto para enforcement),
@@ -315,9 +389,13 @@ function responder(res, html, status, via) {
   res.setHeader('X-Moviki-Firestore', via || 'key');
   /* CDN guarda 5 min e serve stale por 24 h enquanto revalida: o caso comum
      nao le o Firestore. Lojista que troca a foto ve o preview novo em minutos. */
-  res.setHeader('Cache-Control', status === 200
-    ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'
-    : 'public, max-age=0, s-maxage=60');
+  /* curto = previa de LIVE: o titulo da transmissao muda a cada live, e uma
+     previa de 5 minutos mostraria o titulo da live anterior. */
+  res.setHeader('Cache-Control', status !== 200
+    ? 'public, max-age=0, s-maxage=60'
+    : (curto
+        ? 'public, max-age=0, s-maxage=60, stale-while-revalidate=300'
+        : 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'));
   if (status !== 200) res.setHeader('X-Robots-Tag', 'noindex');
   res.end(html);
 }
