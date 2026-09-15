@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-15-sessao1 -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -353,6 +353,10 @@ svg{display:block}
   function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
   function linkOk(u){return typeof u==='string'&&u.length<=500&&/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}(\/|$|\?)/i.test(u);}
   function whepOk(u){return typeof u==='string'&&/^https:\/\/customer-[a-z0-9]+\.cloudflarestream\.com\/[a-f0-9]{32}\/webRTC\/play$/.test(u);}
+  /* estado da SESSAO, escrito so pelo servidor. Comeca vazio: enquanto ele nao
+     chega, a pagina mostra "nenhuma live agora" — falha fechada. */
+  let ses={};
+  function whepDaSessao(){ return whepOk(ses.whep) ? ses.whep : ''; }
   function fmtPreco(v){var s=String(v==null?'':v).trim();if(!s)return '';var t=s.replace(/^R\$\s*/i,'').trim();if(/^\d{1,5}([.,]\d{1,2})?$/.test(t)){var n=parseFloat(t.replace(',','.'));if(!isNaN(n))return 'R$ '+n.toFixed(2).replace('.',',');}return 'R$ '+t;}
   function toast(t){const x=el('toast');x.textContent=t;x.classList.remove('escondido');clearTimeout(toast._t);toast._t=setTimeout(()=>x.classList.add('escondido'),2600);}
   function ms(t){if(!t)return 0;if(typeof t.toMillis==='function')return t.toMillis();if(typeof t==='number')return t;const p=Date.parse(t);return isNaN(p)?0:p;}
@@ -394,6 +398,17 @@ svg{display:block}
         aplicarEstado();},()=>{});
       onSnapshot(doc(db,'live_bloqueios',uid),b=>{const d=b.exists()?b.data():null;bloqueado=!!(d&&(!d.ate||ms(d.ate)>Date.now()));aplicarEstado();},()=>{});
       onSnapshot(doc(db,'negocios',uid,'estado','live'),snap=>{est=snap.exists()?(snap.data()||{}):{};aplicarEstado();},()=>fora('Não deu para carregar','Tente de novo em instantes.'));
+      /* 15/09/2026 — A AUTORIDADE MUDOU DE DOCUMENTO.
+         `estado/live` e escrito pelo lojista e continua sendo: ele traz o
+         CONTEUDO (titulo, sacola, produto em destaque, oferta, cupom).
+         Quem diz se a live esta no ar, e DE ONDE VEM O VIDEO, e o servidor, em
+         `live_sessoes/{uid}` — colecao da RAIZ, `write: if false`. Da raiz, e
+         nao subcolecao de negocios/{uid}, porque regra do Firestore nao tem
+         "deny": o curinga de negocios daria a escrita de volta ao lojista.
+         Sem isso, um lojista qualquer escrevia no proprio estado o `whep` de
+         uma live alheia (negocios/* e read:true) e retransmitia a imagem do
+         outro na propria pagina, com o proprio WhatsApp e o proprio Pix. */
+      onSnapshot(doc(db,'live_sessoes',uid),snap=>{ses=snap.exists()?(snap.data()||{}):{};aplicarEstado();},()=>{});
     }catch(e){fora('Não deu para carregar','Tente de novo em instantes. Se continuar, o problema é do nosso lado.');}
   })();
 
@@ -407,10 +422,17 @@ svg{display:block}
   }
 
   function vivoDeVerdade(){
-    /* O estudio carimba `pulso` a cada 45 s. Aba fechada sem "Encerrar" deixa
-       ativa:true para tras — sem este teste a pagina mostraria AO VIVO para
-       sempre. 3 min sem pulso = acabou. */
-    return est.ativa===true && whepOk(est.whep) && (Date.now()-ms(est.pulso))<180000;
+    /* TUDO aqui vem de `estado/liveSessao`, escrito so pelo servidor:
+       - `ativa` e o servidor quem liga e desliga (inclusive no teto de minutos
+         do plano e no encerramento pela moderacao);
+       - `whep` e o endereco que o api/live.js obteve do Cloudflare para ESTE
+         negocio — nao um endereco que o lojista digitou;
+       - o pulso de 45 s tambem passa pelo servidor. 3 min sem pulso = acabou,
+         que e o que cobre a aba fechada sem "Encerrar".
+       Nada de `est.*` entra nesta decisao. */
+    if(ses.encerradaPor==='moviki')return false;
+    const pulsoMs=ms(ses.pulsoEm)||Number(ses.pulsoMs)||0;
+    return ses.ativa===true && whepOk(ses.whep) && (Date.now()-pulsoMs)<180000;
   }
 
   function aplicarEstado(){
@@ -429,7 +451,7 @@ svg{display:block}
         el('foAgTit').textContent=ag.titulo||'';
         el('btnAgenda').href=linkAgenda(ag); el('btnAgenda').classList.remove('escondido');
       }else{
-        fora('', est.fim?'Esta live terminou. Obrigado por acompanhar!':'Nenhuma live agora. Veja a página do negócio para saber onde ele está.');
+        fora('', (ses.fimEm||ses.encerradaPor)?'Esta live terminou. Obrigado por acompanhar!':'Nenhuma live agora. Veja a página do negócio para saber onde ele está.');
       }
       return;
     }
@@ -478,7 +500,9 @@ svg{display:block}
       };
       await p.setLocalDescription(await p.createOffer());
       await esperarIce(p);
-      const r=await fetch(est.whep,{method:'POST',headers:{'Content-Type':'application/sdp'},body:p.localDescription.sdp});
+      const endereco=whepDaSessao();
+      if(!endereco){tentando=false;el('aguardando').classList.add('escondido');return;}
+      const r=await fetch(endereco,{method:'POST',headers:{'Content-Type':'application/sdp'},body:p.localDescription.sdp});
       if(!r.ok)throw new Error('whep '+r.status);
       await p.setRemoteDescription({type:'answer',sdp:await r.text()});
     }catch(e){
