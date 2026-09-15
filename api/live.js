@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-15-sessao1 | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-15-b5 | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -234,11 +234,46 @@ function periodoDaAssinatura(f) {
   return (f.periodo && f.periodo.stringValue) || '';
 }
 
-/* Abre a sessao no robo (Admin SDK). O segredo compartilhado vive em
-   LIVE_SEGREDO, cadastrado NOS DOIS projetos com a mesma string. */
+/* ===========================================================================
+   O FREIO — achado B5 da auditoria de 15/09
+
+   Este arquivo nao tinha limite de chamadas. Um lojista rodando `iniciar` em
+   laco fazia, a cada erro de cache, um GET da LISTA INTEIRA de entradas do
+   Cloudflare. Estourado o teto do token da conta, o Cloudflare responde 429 e
+   **NENHUM lojista consegue comecar uma live** — um uid derrubando o Modo Live
+   inteiro, com a fatura do Firestore subindo junto.
+
+   Duas barreiras, nesta ordem:
+     1. AQUI, em memoria da instancia: a rajada do mesmo processo morre sem
+        custar leitura nenhuma;
+     2. no robo (`live_reservar`, em live_throttle/{uid}): contador duravel que
+        pega a rajada espalhada por varias instancias frias da Vercel — que a
+        barreira 1, sozinha, nao pegaria.
+
+   E as duas rodam ANTES do Cloudflare.
+=========================================================================== */
+const MEM_JANELA_MS = 20000;        // 1 iniciar a cada 20 s por uid, por instancia
+let memFreio = new Map();           // uid -> quando a ultima passou
+
+function freioMemoria(uid) {
+  const agora = Date.now();
+  /* Limpeza barata: a instancia e efemera, mas um laco com uid variavel faria o
+     mapa crescer. Acima de 500, joga fora o que ja venceu. */
+  if (memFreio.size > 500) {
+    for (const [k, v] of memFreio) if (agora - v > MEM_JANELA_MS) memFreio.delete(k);
+    if (memFreio.size > 2000) memFreio = new Map();
+  }
+  const ultimo = memFreio.get(uid) || 0;
+  if (agora - ultimo < MEM_JANELA_MS) return true;      // barrado
+  memFreio.set(uid, agora);
+  return false;
+}
+
+/* Fala com o robo (Admin SDK). O segredo compartilhado vive em LIVE_SEGREDO,
+   cadastrado NOS DOIS projetos com a mesma string. */
 const ROBO_URL = process.env.ROBO_URL || 'https://moviki-robo.vercel.app/api/pontos';
 
-async function abrirSessaoNoRobo(dados) {
+async function chamarRobo(acao, dados) {
   const segredo = process.env.LIVE_SEGREDO || '';
   if (segredo.length < 20) {
     console.error('live: LIVE_SEGREDO ausente ou curta — live nao abre (falha fechada)');
@@ -250,13 +285,13 @@ async function abrirSessaoNoRobo(dados) {
     const r = await fetch(ROBO_URL, {
       method: 'POST', signal: ctrl.signal,
       headers: { 'Content-Type': 'application/json', 'x-moviki-live': segredo },
-      body: JSON.stringify({ acao: 'live_abrir', dados }),
+      body: JSON.stringify({ acao, dados }),
     });
     clearTimeout(t);
     const j = await r.json().catch(() => null);
     if (!r.ok || !j) {
-      console.error('live: robo recusou a sessao', r.status, j && j.erro);
-      return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota };
+      console.error('live: robo recusou', acao, r.status, j && j.erro);
+      return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota, escala: j && j.escala, teto: j && j.teto };
     }
     return j;
   } catch (e) {
@@ -315,8 +350,17 @@ function enderecos(ent) {
   return { whip, whep, entradaId: (ent && ent.uid) || '' };
 }
 
-async function entradaDoLojista(uid) {
+async function entradaDoLojista(uid, idConhecido) {
   const nome = 'mv-' + uid;
+  /* CAMINHO BARATO: o robo guarda o id da entrada em live_sessoes/{uid}. Com
+     ele, uma leitura direta (`GET /live_inputs/{id}`) resolve — e a listagem da
+     conta inteira, que era a chamada cara do achado B5, deixa de acontecer no
+     caminho normal. So cai na listagem quem nunca fez live. */
+  if (idConhecido && /^[a-f0-9]{16,64}$/i.test(idConhecido)) {
+    const direto = await cf('/live_inputs/' + idConhecido, { method: 'GET' });
+    const e = direto && enderecos(direto);
+    if (e) return e;
+  }
   const achado = await acharEntrada(nome);
   if (achado === null) return null;               // Cloudflare fora: nao cria duplicata
   let ent = null;
@@ -376,6 +420,11 @@ module.exports = async (req, res) => {
   if (corpo.acao !== 'iniciar') return responder(res, 400, { erro: 'acao' });
   if (!process.env.CF_ACCOUNT_ID || !process.env.CF_STREAM_TOKEN) return responder(res, 503, { erro: 'config' });
 
+  /* BARREIRA 1 — memoria desta instancia. Nao custa leitura nenhuma. */
+  if (freioMemoria(uid)) {
+    return responder(res, 429, { erro: 'freio', mensagem: 'Espere alguns segundos antes de tentar de novo.' });
+  }
+
   /* ---- portas de seguranca, todas lidas NO SERVIDOR ---- */
   const [bl, ac, es, te] = await Promise.all([
     lerDoc('live_bloqueios/' + uid),
@@ -416,7 +465,27 @@ module.exports = async (req, res) => {
     if (p) return responder(res, 403, { erro: 'conteudo', termo: p.termo, grupo: p.grupo, texto: t.slice(0, 60) });
   }
 
-  const e = await entradaDoLojista(uid);
+  /* BARREIRA 2 — freio duravel e cota, no robo, ANTES do Cloudflare.
+     Contar a cota so depois (como era ate aqui) deixava a entrada do Cloudflare
+     ja criada quando a cota estava estourada. */
+  const reserva = await chamarRobo('live_reservar', { uid, periodo: periodoDaAssinatura(a.doc) });
+  if (!reserva.ok) {
+    if (reserva.erro === 'cota') {
+      return responder(res, 403, {
+        erro: 'cota', usadas: reserva.usadas || 0, cota: reserva.cota || 0,
+        mensagem: 'Voce ja usou as lives do periodo de teste. Assinando, a quantidade deixa de ter limite.',
+      });
+    }
+    if (reserva.erro === 'freio') {
+      return responder(res, 429, {
+        erro: 'freio', escala: reserva.escala || '', teto: reserva.teto || 0,
+        mensagem: 'Muitas tentativas seguidas. Espere um pouco e tente de novo.',
+      });
+    }
+    return responder(res, 503, { erro: 'sessao', mensagem: 'Nao consegui abrir a live agora. Tente de novo.' });
+  }
+
+  const e = await entradaDoLojista(uid, reserva.entradaId);
   if (!e) return responder(res, 502, { erro: 'cloudflare' });
 
   /* ---- A SESSAO NASCE NO SERVIDOR ----
@@ -435,24 +504,20 @@ module.exports = async (req, res) => {
      FALHA FECHADA: se o robo nao confirmar, a live NAO comeca. Sessao sem dono
      no servidor e exatamente o buraco que estamos fechando — melhor o lojista
      ver "tente de novo" do que voltar a ter um estado que so ele escreve. */
-  const sessao = await abrirSessaoNoRobo({
+  const sessao = await chamarRobo('live_abrir', {
     uid, whep: e.whep, entradaId: e.entradaId,
     nivel: nivel.nivel, limiteMin: nivel.limiteMin,
     periodo: periodoDaAssinatura(a.doc),
+    jaReservado: true,          /* a cota ja andou no live_reservar */
   });
   if (!sessao.ok) {
-    if (sessao.erro === 'cota') {
-      return responder(res, 403, {
-        erro: 'cota', usadas: sessao.usadas || 0, cota: sessao.cota || 0,
-        mensagem: 'Voce ja usou as lives do periodo de teste. Assinando, a quantidade deixa de ter limite.',
-      });
-    }
     return responder(res, 503, { erro: 'sessao', mensagem: 'Nao consegui abrir a live agora. Tente de novo.' });
   }
 
   return responder(res, 200, {
     ok: true, nivel: nivel.nivel, limiteMin: nivel.limiteMin, sacolaMax: nivel.sacolaMax,
     ferramentas: nivel.ferramentas, whip: e.whip, whep: e.whep,
-    sessaoId: sessao.sessaoId || '', restam: (sessao.restam == null ? null : sessao.restam), cota: sessao.cota || null,
+    sessaoId: sessao.sessaoId || '',
+    restam: (reserva.restam == null ? null : reserva.restam), cota: reserva.cota || null,
   });
 };
