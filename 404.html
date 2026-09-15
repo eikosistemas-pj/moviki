@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-15-compra3 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-15-compra4 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -526,7 +526,44 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
    Só aparece quando checkout_publico/{uid}.ativo === true. Sem isso, nada
    nesta seção chega a existir na tela: o cardápio segue igual ao de sempre.
    ===================================================================== */
+/* =====================================================================
+   CARDAPIO EM LINHA — 15/09/2026
+   A foto grande ocupando a largura inteira funcionava no celular e virava um
+   item por tela no computador. O formato que o cliente ja conhece de aplicativo
+   de delivery e a LINHA: texto a esquerda, miniatura a direita, e duas colunas
+   quando a tela permite. A foto continua inteira (sem corte) dentro da
+   miniatura, com o fundo desfocado atras — a mesma regra de 31/08.
+   ===================================================================== */
+#corpoCardapio,#corpoPedido{max-width:1080px;margin:0 auto;width:100%;}
+/* O topo da folha acompanha a mesma coluna do conteudo: centralizado embaixo e
+   colado na esquerda em cima e um desalinhamento que salta aos olhos no
+   computador. */
+#folhaCardapio .fTopo>*,#folhaPedido .fTopo>*{flex-shrink:0;}
+#folhaCardapio .fTopo,#folhaPedido .fTopo{max-width:1108px;margin:0 auto;width:100%;}
+#folhaPedido .fTopo{max-width:668px;}
+/* Numa linha de duas colunas os cartoes tem alturas diferentes; sem isto o
+   botao de um fica no meio do cartao e o do outro embaixo. */
+.itemPub{display:flex;flex-direction:column;}
+.itemPub .addBox{margin-top:auto;padding-top:10px;}
+#corpoPedido{max-width:640px;}
+.sacolaBar{justify-content:center;}
+.sacolaBar .sInterno{display:flex;align-items:center;gap:11px;width:100%;max-width:1080px;}
+.itemGrade{display:grid;grid-template-columns:1fr;gap:11px;}
+.itemLinha{display:flex;gap:12px;align-items:flex-start;}
+.itemTxt{flex:1;min-width:0;}
+.itemThumb{position:relative;flex:0 0 auto;width:104px;height:104px;border-radius:12px;overflow:hidden;
+  background:var(--mv-campo);border:1px solid var(--mv-linha);display:flex;align-items:center;justify-content:center;}
+.itemThumb img{position:relative;z-index:1;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;cursor:zoom-in;}
+.itemThumb img.mvFundo{position:absolute;z-index:0;inset:0;width:100%;height:100%;max-width:none;max-height:none;
+  object-fit:cover;filter:blur(14px) saturate(1.1);opacity:.55;cursor:default;}
+.thumbMais{position:absolute;z-index:2;right:5px;bottom:5px;background:rgba(4,12,22,.82);border:1px solid var(--mv-linha);
+  color:var(--mv-txt-2);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:var(--mv-r-pill);pointer-events:none;}
+.miniFotos.ocultas{display:none;}
 .addBox{margin-top:10px;}
+@media(min-width:760px){
+  .itemGrade{grid-template-columns:1fr 1fr;gap:12px;}
+  .itemThumb{width:116px;height:116px;}
+}
 .itemPub.comFoto .addBox{margin:0 13px 13px;}
 /* Passo de quantidade dentro do proprio item: o cliente ajusta sem abrir a
    sacola. O subtotal fica do lado direito — e o unico numero que responde a
@@ -668,14 +705,16 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .voltarCat{background:var(--mv-campo);border:1px solid var(--mv-linha);color:var(--ciano);font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--mv-r-pill);cursor:pointer;margin-bottom:12px;}
 .catTitulo{font-size:18px;font-weight:700;margin-bottom:12px;}
 .itemPub{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:12px 13px;margin-bottom:10px;}
-.itemPub.comFoto{padding:0;overflow:hidden;}
+.itemPub.comFoto{padding:12px 13px;overflow:hidden;}
 .itemPub .fotoCapa{position:relative;min-height:190px;background:var(--mv-campo);overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .itemPub .fotoCapa img{position:relative;z-index:1;display:block;max-width:100%;width:auto;height:auto;max-height:min(62vh,440px);object-fit:contain;cursor:zoom-in;}
 .itemPub .itemInfo{padding:12px 13px;}
 .itemPub .itemTopo{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-.itemPub .nm{font-size:15px;font-weight:600;flex:1;min-width:0;overflow-wrap:anywhere;}
-.itemPub .pr{font-size:15px;font-weight:700;color:var(--mv-ok);}
-.itemPub .desc{font-size:13px;color:var(--mv-txt-3);margin-top:5px;overflow-wrap:anywhere;}
+.itemPub .nm{font-size:15px;font-weight:600;min-width:0;overflow-wrap:anywhere;}
+.itemPub .pr{font-size:15.5px;font-weight:700;color:var(--mv-ok);margin-top:7px;}
+.itemPub .pr.semVenda{color:var(--mv-txt-2);font-weight:600;}
+.itemPub .desc{font-size:13px;color:var(--mv-txt-3);margin-top:5px;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 .itemPub .acabando{background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.4);color:#ff8b96;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:var(--mv-r-pill);}
 .miniFotos{display:flex;gap:7px;padding:0 13px 13px;}
 .miniFotos img{width:52px;height:52px;border-radius:9px;object-fit:contain;background:var(--mv-campo);border:1px solid var(--mv-linha);cursor:pointer;opacity:.62;}
@@ -1038,11 +1077,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
        e só aparece com item dentro. Fora do .fCorpo de propósito: dentro dele
        ela subiria junto com a rolagem e sumiria da vista no meio da lista. -->
   <div class="sacolaBar" id="sacolaBar">
-    <div class="sInfo">
-      <div class="sQtd" id="sacolaQtd">0 itens</div>
-      <div class="sTot" id="sacolaTotal">R$ 0,00</div>
+    <div class="sInterno">
+      <div class="sInfo">
+        <div class="sQtd" id="sacolaQtd">0 itens</div>
+        <div class="sTot" id="sacolaTotal">R$ 0,00</div>
+      </div>
+      <button class="sIr" type="button" onclick="abrirPedido()">Fazer pedido</button>
     </div>
-    <button class="sIr" type="button" onclick="abrirPedido()">Fazer pedido</button>
   </div>
 </div>
 
@@ -1149,7 +1190,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-15-compra3';
+  window.MOVIKI_VERSAO='2026-09-15-compra4';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2011,18 +2052,28 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   }
   function produtoHtml(p,mostrarFotos,ci,pi){
     const comprar=botaoComprar(p,ci,pi);
-    const preco=p.preco?('<span class="pr">'+esc(fmtPreco(p.preco))+'</span>'):'';
+    /* Preco que o servidor nao aceita nao sai em verde: verde na tela inteira
+       significa "da para comprar", e aqui nao da. */
+    const vendavel=podeComprar()&&precoNumPub(p.preco)>0;
+    const preco=p.preco?('<div class="pr'+(podeComprar()&&!vendavel?' semVenda':'')+'">'+esc(fmtPreco(p.preco))+'</div>'):'';
     const ac=p.acabando?'<span class="acabando">ACABANDO!</span>':'';
     const desc=(p.descricao&&String(p.descricao).trim())?('<div class="desc">'+esc(String(p.descricao).trim())+'</div>'):'';
     let fotos=[];
     if(mostrarFotos&&Array.isArray(p.fotos))fotos=p.fotos.filter(fotoOk).slice(0,3);
+    let thumb='', guardadas='';
     if(fotos.length){
-      const capa='<div class="fotoCapa">'+fotoInteira(fotos[0],p.nome||'foto',true)+'</div>';
-      let mini='';
-      if(fotos.length>1){ mini='<div class="miniFotos">'+fotos.map((u,idx)=>'<img src="'+esc(u)+'" alt="'+esc(p.nome||'foto')+'" loading="lazy" referrerpolicy="no-referrer" class="'+(idx===0?'ativa':'')+'" onclick="trocarCapa(this)">').join('')+'</div>'; }
-      return '<div class="itemPub comFoto">'+capa+'<div class="itemInfo"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+'</div>'+mini+comprar+'</div>';
+      const mais=fotos.length>1?('<span class="thumbMais">+'+(fotos.length-1)+'</span>'):'';
+      thumb='<div class="itemThumb">'+fotoInteira(fotos[0],p.nome||'foto',true)+mais+'</div>';
+      /* As outras fotos ficam no DOM, escondidas: e delas que o visor monta a
+         navegacao do produto (lbGrupo le .miniFotos img). Escondidas com
+         display:none e loading="lazy", o navegador nao baixa nenhuma delas ate
+         o cliente abrir a foto. */
+      guardadas='<div class="miniFotos ocultas">'+fotos.map(u=>'<img src="'+esc(u)+'" alt="" loading="lazy" referrerpolicy="no-referrer">').join('')+'</div>';
     }
-    return '<div class="itemPub"><div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+preco+'</div>'+desc+comprar+'</div>';
+    return '<div class="itemPub'+(fotos.length?' comFoto':'')+'">'+
+      '<div class="itemLinha"><div class="itemTxt">'+
+        '<div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+'</div>'+desc+preco+
+      '</div>'+thumb+'</div>'+guardadas+comprar+'</div>';
   }
   function categoriasValidas(){ return (cardapioAtual||[]).map((c,i)=>({c:c,i:i})).filter(o=>o.c&&(o.c.categoria||(o.c.produtos&&o.c.produtos.length))); }
   function gradeCategorias(){
@@ -2046,7 +2097,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     /* O indice tem que ser o da lista ORIGINAL: o filter renumera, e o
        pedido apontaria para outro produto. */
     const prods=(c.produtos||[]).map((x,pi)=>({x:x,pi:pi})).filter(o=>o.x&&o.x.nome);
-    h+=prods.length?prods.map(o=>produtoHtml(o.x,mostrarFotosAtual,i,o.pi)).join(''):'<div class="vazioMod">Sem itens nesta categoria.</div>';
+    h+=prods.length
+      ?('<div class="itemGrade">'+prods.map(o=>produtoHtml(o.x,mostrarFotosAtual,i,o.pi)).join('')+'</div>')
+      :'<div class="vazioMod">Sem itens nesta categoria.</div>';
     const box=el('corpoCardapio'); box.innerHTML=h; box.scrollTop=0;
   };
   window.voltarCategorias=function(){ const box=el('corpoCardapio'); box.innerHTML=gradeCategorias(); box.scrollTop=0; };
