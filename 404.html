@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-14-compra2 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-15-compra3 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -526,13 +526,26 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
    Só aparece quando checkout_publico/{uid}.ativo === true. Sem isso, nada
    nesta seção chega a existir na tela: o cardápio segue igual ao de sempre.
    ===================================================================== */
-.addBtn{margin-top:10px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+.addBox{margin-top:10px;}
+.itemPub.comFoto .addBox{margin:0 13px 13px;}
+/* Passo de quantidade dentro do proprio item: o cliente ajusta sem abrir a
+   sacola. O subtotal fica do lado direito — e o unico numero que responde a
+   pergunta "quanto ja tem aqui". */
+.qtdBox{display:flex;align-items:center;gap:10px;background:var(--mv-campo);border:1px solid var(--mv-ok);
+  border-radius:var(--mv-r);padding:6px 11px;min-height:48px;}
+.qtdBox button{width:36px;height:36px;flex:0 0 auto;border:none;border-radius:10px;cursor:pointer;font-family:inherit;
+  font-size:20px;font-weight:800;line-height:1;color:#04121f;background:linear-gradient(135deg,var(--mv-ok),#12b981);
+  display:inline-flex;align-items:center;justify-content:center;}
+.qtdBox button:hover{filter:brightness(1.06);}
+.qtdBox button svg{width:16px;height:16px;}
+.qNum{min-width:24px;text-align:center;font-weight:800;font-size:16.5px;}
+.qSub{margin-left:auto;font-weight:700;font-size:14.5px;color:var(--mv-ok);}
+.addBtn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:7px;
   min-height:44px;border:none;border-radius:var(--mv-r);cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;
   color:#04121f;background:linear-gradient(135deg,var(--mv-ok),#12b981);transition:.16s;}
 .addBtn:hover{filter:brightness(1.06);}
 .addBtn:disabled{opacity:.55;cursor:default;filter:none;}
 .addBtn svg{width:17px;height:17px;}
-.itemPub.comFoto .addBtn{margin:0 13px 13px;width:calc(100% - 26px);}
 .semPreco{margin-top:8px;font-size:12px;color:var(--mv-txt-3);}
 
 /* barra da sacola, presa no rodapé da folha do cardápio */
@@ -1136,7 +1149,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-14-compra2';
+  window.MOVIKI_VERSAO='2026-09-15-compra3';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1960,11 +1973,41 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   /* Botao de comprar. Sai vazio quando o negocio nao vende: o cardapio
      continua exatamente como era antes desta entrega. */
   const SVG_ADD='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+  const SVG_LIXO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+  /* Enquanto o item nao esta na sacola, um botao. Depois que entra, o passo de
+     quantidade toma o lugar dele NO PROPRIO ITEM: sem isso o cliente clica
+     "Adicionar" varias vezes sem enxergar quantas ja pediu, e so descobre na
+     tela seguinte. No 1, o menos vira lixeira — "menos" ali removeria o item
+     sem avisar. */
+  function htmlControle(ci,pi){
+    const it=SACOLA.find(x=>x.k===chaveItem(ci,pi));
+    if(!it)return '<button class="addBtn" type="button" onclick="mvAdd('+ci+','+pi+')">'+SVG_ADD+'Adicionar</button>';
+    return '<div class="qtdBox">'+
+      '<button type="button" onclick="mvAddQtd('+ci+','+pi+',-1)" aria-label="'+(it.qtd===1?'Tirar do pedido':'Tirar um')+'">'+(it.qtd===1?SVG_LIXO:'\u2212')+'</button>'+
+      '<span class="qNum" aria-live="polite">'+it.qtd+'</span>'+
+      '<button type="button" onclick="mvAddQtd('+ci+','+pi+',1)" aria-label="Mais um">+</button>'+
+      '<span class="qSub">'+fmtReal(Math.round(it.preco*it.qtd*100)/100)+'</span>'+
+    '</div>';
+  }
+  function pintarBotao(ci,pi){
+    const b=el('ab_'+ci+'_'+pi);
+    if(b)b.innerHTML=htmlControle(ci,pi);
+  }
+  /* Usado quando a sacola muda por fora do clique no item — pagamento
+     confirmado, por exemplo. Sem isso o cardapio continuaria mostrando "2" num
+     item que ja foi pago e saiu da sacola. */
+  function pintarTodosBotoes(){
+    const todos=document.querySelectorAll('#corpoCardapio [id^="ab_"]');
+    for(let i=0;i<todos.length;i++){
+      const m=/^ab_(\d+)_(\d+)$/.exec(todos[i].id);
+      if(m)todos[i].innerHTML=htmlControle(Number(m[1]),Number(m[2]));
+    }
+  }
   function botaoComprar(p,ci,pi){
     if(!podeComprar()||typeof ci!=='number'||typeof pi!=='number')return '';
     const pr=precoNumPub(p.preco);
     if(!(pr>0))return '<div class="semPreco">Este item não é vendido pelo site — chame no WhatsApp.</div>';
-    return '<button class="addBtn" type="button" onclick="mvAdd('+ci+','+pi+')">'+SVG_ADD+'Adicionar</button>';
+    return '<div class="addBox" id="ab_'+ci+'_'+pi+'">'+htmlControle(ci,pi)+'</div>';
   }
   function produtoHtml(p,mostrarFotos,ci,pi){
     const comprar=botaoComprar(p,ci,pi);
@@ -2085,15 +2128,26 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const ja=SACOLA.find(x=>x.k===k);
     if(ja){ if(ja.qtd<10)ja.qtd++; }
     else SACOLA.push({k:k,ci:ci,pi:pi,nome:it.nome,preco:it.preco,sku:it.sku,qtd:1});
+    pintarBotao(ci,pi);
     pintarSacola();
     ev('sacola_add',{});
   };
-  window.mvQtd=function(k,d){
-    const i=SACOLA.findIndex(x=>x.k===k); if(i<0)return;
-    SACOLA[i].qtd+=d;
-    if(SACOLA[i].qtd<1)SACOLA.splice(i,1);
-    else if(SACOLA[i].qtd>10)SACOLA[i].qtd=10;
+  /* Um so caminho para mexer na quantidade, chamado dos dois lugares (item do
+     cardapio e linha da sacola). Duas contas separadas viravam dois jeitos de
+     a tela e o total discordarem. */
+  function mudarQtd(k,d){
+    const i=SACOLA.findIndex(x=>x.k===k); if(i<0)return null;
+    const alvo=SACOLA[i];
+    const nova=alvo.qtd+d;
+    if(nova<1)SACOLA.splice(i,1);
+    else alvo.qtd=Math.min(10,nova);
+    pintarBotao(alvo.ci,alvo.pi);
     pintarSacola();
+    return alvo;
+  }
+  window.mvAddQtd=function(ci,pi,d){ mudarQtd(chaveItem(ci,pi),d); };
+  window.mvQtd=function(k,d){
+    if(!mudarQtd(k,d))return;
     if(el('folhaPedido').classList.contains('on')){ if(SACOLA.length)telaDados(); else fecharPedido(); }
   };
   function totalSacola(){ return Math.round(SACOLA.reduce((s,x)=>s+x.preco*x.qtd,0)*100)/100; }
@@ -2394,7 +2448,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(j.status==='pago'||j.status==='entregue'){
         el('pedidoTitulo').textContent='Pedido confirmado';
         const b=el('btnPaguei'); if(b){b.style.display='none';}
-        SACOLA=[]; pintarSacola(); esquecerPedido();
+        SACOLA=[]; pintarSacola(); pintarTodosBotoes(); esquecerPedido();
         if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;}
       }
       if(j.status==='recusado'||j.status==='cancelado'||j.status==='estornado'){
