@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-15-b5 | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-15-b5a | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -252,21 +252,32 @@ function periodoDaAssinatura(f) {
 
    E as duas rodam ANTES do Cloudflare.
 =========================================================================== */
-const MEM_JANELA_MS = 20000;        // 1 iniciar a cada 20 s por uid, por instancia
-let memFreio = new Map();           // uid -> quando a ultima passou
+/* AJUSTE de 15/09, depois do teste no ar: a versao anterior era 1 tentativa a
+   cada 20 s, seca. O teste real pegou o caso legitimo — live de 10 segundos,
+   encerrou, tentou de novo e levou freio. Reabrir depois de encerrar e uso
+   normal, nao laco.
+   Agora a janela permite um PEQUENO SURTO (2 tentativas) antes de segurar, e o
+   `live_fechar` zera o contador de minuto do lado do robo. O laco continua
+   morrendo: a 3a tentativa seguida ja para aqui, de graca. */
+const MEM_JANELA_MS = 20000;        // janela do surto, por uid, por instancia
+const MEM_SURTO = 2;                // tentativas livres dentro da janela
+let memFreio = new Map();           // uid -> { desde, n }
 
 function freioMemoria(uid) {
   const agora = Date.now();
   /* Limpeza barata: a instancia e efemera, mas um laco com uid variavel faria o
      mapa crescer. Acima de 500, joga fora o que ja venceu. */
   if (memFreio.size > 500) {
-    for (const [k, v] of memFreio) if (agora - v > MEM_JANELA_MS) memFreio.delete(k);
+    for (const [k, v] of memFreio) if (agora - v.desde > MEM_JANELA_MS) memFreio.delete(k);
     if (memFreio.size > 2000) memFreio = new Map();
   }
-  const ultimo = memFreio.get(uid) || 0;
-  if (agora - ultimo < MEM_JANELA_MS) return true;      // barrado
-  memFreio.set(uid, agora);
-  return false;
+  const r = memFreio.get(uid);
+  if (!r || (agora - r.desde) > MEM_JANELA_MS) {
+    memFreio.set(uid, { desde: agora, n: 1 });
+    return 0;                                          // livre
+  }
+  if (r.n < MEM_SURTO) { r.n++; return 0; }            // ainda no surto
+  return Math.max(1, Math.ceil((MEM_JANELA_MS - (agora - r.desde)) / 1000));
 }
 
 /* Fala com o robo (Admin SDK). O segredo compartilhado vive em LIVE_SEGREDO,
@@ -421,8 +432,12 @@ module.exports = async (req, res) => {
   if (!process.env.CF_ACCOUNT_ID || !process.env.CF_STREAM_TOKEN) return responder(res, 503, { erro: 'config' });
 
   /* BARREIRA 1 — memoria desta instancia. Nao custa leitura nenhuma. */
-  if (freioMemoria(uid)) {
-    return responder(res, 429, { erro: 'freio', mensagem: 'Espere alguns segundos antes de tentar de novo.' });
+  const esperaMem = freioMemoria(uid);
+  if (esperaMem) {
+    return responder(res, 429, {
+      erro: 'freio', esperaSeg: esperaMem,
+      mensagem: 'Espere ' + esperaMem + ' segundos antes de tentar de novo.',
+    });
   }
 
   /* ---- portas de seguranca, todas lidas NO SERVIDOR ---- */
@@ -479,6 +494,7 @@ module.exports = async (req, res) => {
     if (reserva.erro === 'freio') {
       return responder(res, 429, {
         erro: 'freio', escala: reserva.escala || '', teto: reserva.teto || 0,
+        esperaSeg: reserva.esperaSeg || 60,
         mensagem: 'Muitas tentativas seguidas. Espere um pouco e tente de novo.',
       });
     }
