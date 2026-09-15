@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-12-beta1 | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-15-sessao1 | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -227,6 +227,45 @@ function nivelDaAssinatura(f) {
   return null;
 }
 
+/* Periodo da assinatura, para a cota do teste gratis saber quem e quem.
+   Mesma leitura que nivelDaAssinatura ja fez — nao custa chamada nova. */
+function periodoDaAssinatura(f) {
+  if (!f) return '';
+  return (f.periodo && f.periodo.stringValue) || '';
+}
+
+/* Abre a sessao no robo (Admin SDK). O segredo compartilhado vive em
+   LIVE_SEGREDO, cadastrado NOS DOIS projetos com a mesma string. */
+const ROBO_URL = process.env.ROBO_URL || 'https://moviki-robo.vercel.app/api/pontos';
+
+async function abrirSessaoNoRobo(dados) {
+  const segredo = process.env.LIVE_SEGREDO || '';
+  if (segredo.length < 20) {
+    console.error('live: LIVE_SEGREDO ausente ou curta — live nao abre (falha fechada)');
+    return { ok: false, erro: 'config' };
+  }
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 6000);
+  try {
+    const r = await fetch(ROBO_URL, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json', 'x-moviki-live': segredo },
+      body: JSON.stringify({ acao: 'live_abrir', dados }),
+    });
+    clearTimeout(t);
+    const j = await r.json().catch(() => null);
+    if (!r.ok || !j) {
+      console.error('live: robo recusou a sessao', r.status, j && j.erro);
+      return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota };
+    }
+    return j;
+  } catch (e) {
+    clearTimeout(t);
+    console.error('live: robo nao respondeu', String(e));
+    return { ok: false, erro: 'rede' };
+  }
+}
+
 /* ---------------- 3. Cloudflare Stream ---------------- */
 async function cf(caminho, opcoes) {
   const conta = process.env.CF_ACCOUNT_ID, tok = process.env.CF_STREAM_TOKEN;
@@ -270,7 +309,10 @@ function enderecos(ent) {
   if (!whip || !whep) return null;
   if (!/^https:\/\/customer-[a-z0-9]+\.cloudflarestream\.com\/[A-Za-z0-9]+\/webRTC\/publish$/.test(whip)) return null;
   if (!/^https:\/\/customer-[a-z0-9]+\.cloudflarestream\.com\/[a-f0-9]{32}\/webRTC\/play$/.test(whep)) return null;
-  return { whip, whep };
+  /* 15/09/2026: o id da entrada sobe junto. Sem ele, encerrar uma live obriga a
+     listar a conta inteira do Cloudflare e a adivinhar pelo meta.name — que foi
+     como nasceram as entradas duplicadas do achado B6. */
+  return { whip, whep, entradaId: (ent && ent.uid) || '' };
 }
 
 async function entradaDoLojista(uid) {
@@ -376,8 +418,41 @@ module.exports = async (req, res) => {
 
   const e = await entradaDoLojista(uid);
   if (!e) return responder(res, 502, { erro: 'cloudflare' });
+
+  /* ---- A SESSAO NASCE NO SERVIDOR ----
+     Ate 15/09/2026 quem escrevia "estou no ar" e "toque este video" era o
+     navegador do lojista, em negocios/{uid}/estado/live — documento que ele
+     escreve livremente. Com isso, um lojista em teste gratis copiava o `whep`
+     de uma live de verdade (negocios/* e read:true) e retransmitia a imagem
+     alheia na propria pagina, com o proprio WhatsApp e o proprio Pix, sem
+     aceite, sem beta e sem filtro (auditoria de 15/09, achado A2).
+
+     Agora o endereco do video e o estado "no ar" sao gravados pelo ROBO, em
+     estado/liveSessao, que nas regras e `write: if false` para o cliente. Esta
+     funcao aqui nao grava nada: a conta de servico e so de leitura, de
+     proposito, e continua assim.
+
+     FALHA FECHADA: se o robo nao confirmar, a live NAO comeca. Sessao sem dono
+     no servidor e exatamente o buraco que estamos fechando — melhor o lojista
+     ver "tente de novo" do que voltar a ter um estado que so ele escreve. */
+  const sessao = await abrirSessaoNoRobo({
+    uid, whep: e.whep, entradaId: e.entradaId,
+    nivel: nivel.nivel, limiteMin: nivel.limiteMin,
+    periodo: periodoDaAssinatura(a.doc),
+  });
+  if (!sessao.ok) {
+    if (sessao.erro === 'cota') {
+      return responder(res, 403, {
+        erro: 'cota', usadas: sessao.usadas || 0, cota: sessao.cota || 0,
+        mensagem: 'Voce ja usou as lives do periodo de teste. Assinando, a quantidade deixa de ter limite.',
+      });
+    }
+    return responder(res, 503, { erro: 'sessao', mensagem: 'Nao consegui abrir a live agora. Tente de novo.' });
+  }
+
   return responder(res, 200, {
     ok: true, nivel: nivel.nivel, limiteMin: nivel.limiteMin, sacolaMax: nivel.sacolaMax,
-    ferramentas: nivel.ferramentas, whip: e.whip, whep: e.whep
+    ferramentas: nivel.ferramentas, whip: e.whip, whep: e.whep,
+    sessaoId: sessao.sessaoId || '', restam: (sessao.restam == null ? null : sessao.restam), cota: sessao.cota || null,
   });
 };
