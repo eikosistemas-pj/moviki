@@ -14,7 +14,7 @@
     },
     {
       "source": "/live/:slug",
-      "destination": "/live.html"
+      "destination": "/api/og?slug=:slug&live=1"
     },
     {
       "source": "/aovivo",
@@ -62,7 +62,7 @@
   ],
   "functions": {
     "api/og.js": {
-      "includeFiles": "404.html"
+      "includeFiles": "{404,live}.html"
     }
   }
 }
