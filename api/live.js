@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-15-b5a | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-16-b4a | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -361,6 +361,52 @@ function enderecos(ent) {
   return { whip, whep, entradaId: (ent && ent.uid) || '' };
 }
 
+/* ---- B4 (16/09/2026): a entrada do Cloudflare vive UMA live ----
+   Ate aqui a entrada era criada uma vez por lojista e "reaproveitada para
+   sempre". Como o WHEP e publico — ele precisa ser, quem assiste e anonimo —
+   qualquer visitante copiava o endereco do JS da pagina e ficava com a chave
+   de TODAS as lives futuras daquele lojista, para sempre, sem passar pela
+   pagina, sem chat, sem aceite e sem denuncia.
+   Agora toda live comeca com entrada NOVA: a anterior e apagada antes. Custa
+   duas chamadas ao Cloudflare por live iniciada (DELETE + POST), atras do
+   freio de 3/min do B5.
+   O que isto fecha e o que isto NAO fecha:
+   - fecha a reutilizacao eterna: o endereco vazado morre na proxima live, e
+     entre uma live e outra nao ha publisher, logo nao ha minuto faturado;
+   - NAO fecha o abuso DURANTE a transmissao. Para isso seria preciso
+     requireSignedURLs + token por espectador, e o endpoint que emite o token
+     seria publico do mesmo jeito: o atacante pediria N tokens. O que contem
+     prejuizo ali e teto de gasto no Cloudflare e alerta, que e configuracao,
+     nao codigo. */
+async function apagarEntrada(uid, idConhecido) {
+  let id = (idConhecido && /^[a-f0-9]{16,64}$/i.test(idConhecido)) ? idConhecido : '';
+  if (!id) {
+    const achado = await acharEntrada('mv-' + uid);
+    if (achado === null) return null;             // Cloudflare fora: nao segue
+    id = achado || '';
+  }
+  if (!id) return '';                             // nunca fez live: nada a apagar
+  const del = await cf('/live_inputs/' + id, { method: 'DELETE' });
+  if (del === null) return null;
+  if (listaCache.mapa) delete listaCache.mapa['mv-' + uid];
+  return id;
+}
+
+async function entradaNovaDoLojista(uid, idConhecido) {
+  const nome = 'mv-' + uid;
+  if (await apagarEntrada(uid, idConhecido) === null) return null;
+  let ent = await cf('/live_inputs', {
+    method: 'POST',
+    body: JSON.stringify({ meta: { name: nome }, recording: { mode: 'off' } })
+  });
+  if (!ent || !ent.uid) return null;
+  if (listaCache.mapa) listaCache.mapa[nome] = ent.uid;
+  if (!enderecos(ent)) ent = await cf('/live_inputs/' + ent.uid, { method: 'GET' });
+  return enderecos(ent);
+}
+
+/* Mantida para o caminho que NAO inicia live nenhuma (nada hoje) e como
+   referencia do desenho antigo. Nao e mais usada pelo `iniciar`. */
 async function entradaDoLojista(uid, idConhecido) {
   const nome = 'mv-' + uid;
   /* CAMINHO BARATO: o robo guarda o id da entrada em live_sessoes/{uid}. Com
@@ -501,7 +547,7 @@ module.exports = async (req, res) => {
     return responder(res, 503, { erro: 'sessao', mensagem: 'Nao consegui abrir a live agora. Tente de novo.' });
   }
 
-  const e = await entradaDoLojista(uid, reserva.entradaId);
+  const e = await entradaNovaDoLojista(uid, reserva.entradaId);
   if (!e) return responder(res, 502, { erro: 'cloudflare' });
 
   /* ---- A SESSAO NASCE NO SERVIDOR ----
