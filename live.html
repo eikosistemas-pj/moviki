@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-15-filtro -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-presenca -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -317,7 +317,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-15-filtro';
+  window.MOVIKI_VERSAO='2026-09-16-presenca';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -541,9 +541,14 @@ svg{display:block}
      Um documento por aba, carimbado a cada 60 s. Quem conta e o estudio do
      lojista, uma vez a cada 30 s, e publica o numero em estado/live — cada
      espectador nao precisa contar ninguem. */
+  /* B7 (16/09/2026): a presenca durava DOIS DIAS no banco.
+     O estudio so conta quem bateu nos ultimos 100 s — os outros dois dias de
+     documento nao serviam a ninguem e so davam volume a quem quisesse encher
+     a colecao. Dez minutos cobrem com folga a contagem e a aba que dormiu. */
+  const PRESENCA_VIDA_MS=600000;
   function ligarPresenca(){
     const bater=()=>{ if(document.visibilityState!=='visible'||!noAr)return;
-      setDoc(doc(db,'negocios',uid,'livepresenca',sid),{em:serverTimestamp(),expiraEm:Timestamp.fromMillis(Date.now()+2*86400000)}).catch(()=>{}); };
+      setDoc(doc(db,'negocios',uid,'livepresenca',sid),{em:serverTimestamp(),expiraEm:Timestamp.fromMillis(Date.now()+PRESENCA_VIDA_MS)}).catch(()=>{}); };
     bater(); clearInterval(presencaT); presencaT=setInterval(bater,60000);
   }
   function pararPresenca(){clearInterval(presencaT);presencaT=null;}
