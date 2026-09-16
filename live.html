@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-chatqr -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-chatqr2 -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -321,7 +321,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-16-chatqr';
+  window.MOVIKI_VERSAO='2026-09-16-chatqr2';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -359,6 +359,36 @@ svg{display:block}
     if(/[a-z][a-z0-9+.\-]*:\/\//.test(n))return true;
     if(/(^|[^a-z0-9])www\./.test(n))return true;
     return /[a-z0-9\-]{2,}\.(com\.br|com|br|net|org|io|me|app|xyz|shop|store|site|online|link|gg|tv|co|info|biz|club|live|vip|top|fun|page|dev|ru|cn)(\/|$|[^a-z0-9])/.test(n);
+  }
+  /* ---------- MODERACAO DE OFENSA NO CHAT (16/09/2026) ----------
+     SEPARADA de `mvProibido` DE PROPOSITO. `mvProibido` diz o que nao pode
+     ser VENDIDO e roda tambem no nome de produto, oferta, cupom e sacolinha:
+     palavrao ali dentro impediria o lojista de cadastrar 'galinha caipira'.
+     Esta lista diz o que nao pode ser DITO e roda SO no chat — texto e nome,
+     de qualquer autor, o dono da live inclusive.
+     Alem do texto normalizado, confere uma copia COMPACTA (sem separadores)
+     para pegar p.u.t.a e f-o-d-a, e colapsa letra repetida (puuuta). */
+  const MV_CHAT=["abre as pernas","abusar sexualmente","abuso sexual","aleijada","aleijado","aliciamento de menor","anus","aposta","apostas","arrombada","arrombado","assedio sexual","asshole","babaca","baiana preguiçosa","baiano preguiçoso","baitola","bater punheta","bet","bicha","bichinha","biscate","bitch","blowjob","boceta","boiola","boquete","bosta","buceta","bugre","bullshit","bunduda","cabeca chata","cabelo de bombril","cabron","cabrona","caca niquel","cacete","cachorra","cadela","canalha","caralho","cartao clonado","casa de aposta","casino","cassino","chama no privado para droga","chama no privado pra droga","chifruda","chifrudo","chinga tu madre","chupa meu pau","chupa minha rola","chupada","clitoris","clonar cartao","cocaina","cock","comprovante falso","cono","conta roubada","conteudo +18","conteudo adulto","conteudo sexual infantil","corna","corno","cornuda","cornudo","corre de droga","corta os pulsos","crack","crente nojenta","crente nojento","crente safada","crente safado","cretina","cretino","crioulo","crlh","crystal meth","csam","cu","cunt","debil mental","deixa eu te comer","desgracada","desgracado","deveria se matar","dick","dinheiro falso","documento falso","ecstasy","ejaculacao","ejacular","entrega de droga","erecao","ereto","escrota","escroto","estuprar","estupro","excitada","excitado","exploracao sexual infantil","fag","faggot","fck","fcku","fdp","fica pelada","fica pelado","filha da puta","filho da puta","filme porno","foda","foda se","fodase","fodendo","foder","fodida","fodido","fornecedor de droga","fortune tiger","foto intima de menor","fracassada","fracassado","fuck","fucked","fucker","fucking","fuder","go die","gozar","gozo","grooming","hackear conta","handjob","haxixe","hentai","heroina","hija de puta","hijo de puta","horny","i will kill you","idiota","imbecil","inutil","jogo do tigrinho","jogo valendo dinheiro","judeu safado","judia safada","ketamina","kill yourself","krl","krlh","kys","lanca perfume","lazarenta","lazarento","lsd","macaca","macaco","maconha","macumbeira","macumbeiro","mama aqui","mamar","manda foto intima","manda foto pelada","manda foto pelado","manda nude","manda nudes","marica","maricon","masturbacao","masturbar","mata ela","mata ele","mata voce mesma","mata voce mesmo","mdma","melhor morrer","merda","merece morrer","metanfetamina","mierda","miseravel","molestacao","molestar sexualmente","mongoloide","mostra a buceta","mostra a bunda","mostra a rola","mostra o cu","mostra o peito","mostra os peitos","motherfucker","muculmana terrorista","muculmano terrorista","mulherzinha","negra imunda","negra suja","negro imundo","negro sujo","nigga","nigger","nojenta","nojento","nordestina burra","nordestina preguiçosa","nordestino burro","nordestino preguiçoso","nude","nude de menor","nudes","nudes de menor","ordinaria","ordinario","orgasm","orgasmo","otaria","otario","palhaca","palhaco","pau no cu","peitao","peituda","pendeja","pendejo","penetracao","penetrar","penis","perereca","phishing","pilantra","piranha","pix falso","pnc","polla","porn","porno","pornografia","pornografia infantil","pornografica","pornografico","porra","pqp","preta imunda","preta suja","preto imundo","preto sujo","priquito","pula dai","punheta","pussy","puta","puta barata","puta que pariu","putinha","puto","que peitao","que rabao","quero te comer","rabao","rabuda","rameira","retard","retardada","retardadinha","retardadinho","retardado","roleta","saco escrotal","safada","safado","sapatao","sapatona","se fode","se joga","se mata","semen","senha roubada","senta em mim","senta no meu pau","sex tape","sexo anal","sexo com menor","sexo explicito","sexo oral","sexo sem consentimento","sexo vaginal","sexualizar menor","shit","siririca","skunk","slots","slut","son of a bitch","suck my dick","te mato","tesao","testiculo","testiculos","tesuda","tesudo","tira a roupa","tnc","toma no cu","tomar no cu","tomara que morra","traficante","trafico","tranny","transar","traveco","trepar","trouxa","vadia","vagabunda","vagabundo","vagina","vai morrer","vai se foder","vai se fuder","vai se matar","vai tomar no cu","vem transar","vende po","vendo cocaina","vendo maconha","verga","verme","vete a la mierda","viadao","viadinho","viado","video porno","violencia sexual","vou atirar em voce","vou te arrebentar","vou te bater","vou te comer","vou te cortar","vou te dar um tiro","vou te esfaquear","vou te espancar","vou te estuprar","vou te explodir","vou te matar","vou te quebrar","vou te queimar","vsf","vtnc","whore","xana","xota","xoxota","xxx"];
+  function mvOfensa(s){
+    let n=mvNormaliza(s).replace(/([a-z])\1{2,}/g,'$1');
+    /* p.u.t.a / f-o-d-a / p u t a: mvNormaliza ja virou ' p u t a ', entao
+       basta juntar as sequencias de letras soltas. Feito assim, e nao pela
+       compactacao do texto inteiro, 'disputa' nunca vira 'puta'. */
+    const j=n.replace(/(?:[a-z0-9] ){2,}[a-z0-9](?= )/g,(m)=>m.split(' ').join(''));
+    const c=n.replace(/[^a-z0-9]+/g,'');
+    const ofuscado=/(?:[a-z0-9] ){2,}[a-z0-9] /.test(n);
+    for(const t of MV_CHAT){
+      if(n.includes(' '+t+' '))return t;
+      if(j.includes(' '+t+' '))return t;
+      /* texto escrito letra-por-letra ('v.a.i t.o.m.a.r n.o c.u') perde as
+         fronteiras de palavra: ali, e so ali, o termo inteiro sem espaco e
+         procurado dentro da copia compacta. */
+      if(ofuscado&&c.includes(t.split(' ').join('')))return t;
+      /* substring na copia compacta so em termo de 6+ sem espaco: com menos
+         que isso, 'puta' acharia 'disputa' e 'cu' acharia 'cuscuz'. */
+      if(t.length>=6&&t.indexOf(' ')<0&&c.includes(t))return t;
+    }
+    return '';
   }
   function mvProibido(s){
     let n=mvNormaliza(s);
@@ -599,6 +629,8 @@ svg{display:block}
       s.forEach(d=>{const m=d.data()||{};if(mvProibido(m.texto)||mvProibido(m.nome))return;
         /* link so do dono — inclusive no que ja estava gravado */
         if(m.tipo!=='dono'&&(mvTemLink(m.texto)||mvTemLink(m.nome)))return;
+        /* ofensa vale para todo autor, o dono inclusive */
+        if(mvOfensa(m.texto)||mvOfensa(m.nome))return;
         const x=document.createElement('div');
         x.className='msg'+(m.tipo==='quero'?' quero':'')+(m.tipo==='dono'?' dono':'')+(m.tipo==='venda'?' venda':'');
         x.innerHTML='<b>'+esc(m.nome||'')+'</b>'+(m.tipo==='quero'?'quer: ':'')+(m.tipo==='venda'?'comprou ':'')+esc(m.texto||'');
@@ -614,7 +646,7 @@ svg{display:block}
     if(n.length<2){toast('Escreva pelo menos 2 letras.');return;}
     /* B8: o nome tambem e conteudo. Barrar aqui evita gravar o que a tela vai
        esconder depois — e o visitante entende na hora por que nao passou. */
-    if(mvProibido(n)||mvTemLink(n)){toast('Esse nome tem um termo que não é permitido na live.');return;}
+    if(mvProibido(n)||mvTemLink(n)||mvOfensa(n)){toast('Esse nome tem um termo que não é permitido na live.');return;}
     try{localStorage.setItem('mv_live_nome',n.slice(0,30));}catch(_){}
     el('folhaNome').classList.add('escondido'); const f=depoisDoNome; depoisDoNome=null; if(f)f();
   });
@@ -633,6 +665,7 @@ svg{display:block}
     if(Date.now()-ultimoEnvio<3000){toast('Calma, espere uns segundinhos.');return;}
     if(mvProibido(t)){toast('Essa mensagem tem um termo que não é permitido na live.');return;}
     if(mvTemLink(t)){toast('Link não é permitido no chat. Só o vendedor pode mandar endereço aqui.');return;}
+    if(mvOfensa(t)){toast('Essa mensagem não passou na moderação da live.');return;}
     ultimoEnvio=Date.now(); el('txtMsg').value='';
     try{await gravarChat('msg',t);ev('live_chat',{slug});}catch(_){toast('Não foi. Tente de novo.');el('txtMsg').value=t;}
   });
