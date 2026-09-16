@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-15-sessao1 -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-15-filtro -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -317,7 +317,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-12-beta1';
+  window.MOVIKI_VERSAO='2026-09-15-filtro';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -350,7 +350,25 @@ svg{display:block}
   }
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function ev(n,p){try{if(window.mvEv)window.mvEv(n,p||{});}catch(_){}}
-  function fotoOk(u){return typeof u==='string'&&/^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);}
+  /* ---------------------------------------------------------------------
+     C5 — INJECAO DE CSS PELO CAMPO `foto` (auditoria de 15/09)
+     A validacao antiga so olhava o COMECO da URL: o resto podia ter aspa e
+     parentese. A foto era montada por TEXTO, dentro de um atributo `style`, e
+     o `esc()` virava `&quot;` — que o parser do HTML DECODIFICA de volta para
+     aspa dentro do atributo. O `url()` fechava e o resto do campo virava CSS:
+     dava para cobrir a tela inteira de quem assiste, INCLUSIVE O QR DO PIX.
+     Duas travas, nao uma:
+       1. a URL nao pode ter aspa, parentese, espaco, barra invertida nem sinal
+          de menor/maior — e o dominio agora e ancorado de verdade;
+       2. a foto deixou de passar por texto: entra pelo CSSOM, onde nao existe
+          parser de HTML para decodificar coisa nenhuma.
+     --------------------------------------------------------------------- */
+  function fotoOk(u){
+    if(typeof u!=='string'||u.length>500)return false;
+    if(/["'()\\\s<>]/.test(u))return false;
+    return /^https:\/\/([a-z0-9-]+\.)*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);
+  }
+  function porFoto(e,u){ try{ if(e&&fotoOk(u))e.style.backgroundImage='url("'+u+'")'; }catch(_){} }
   function linkOk(u){return typeof u==='string'&&u.length<=500&&/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}(\/|$|\?)/i.test(u);}
   function whepOk(u){return typeof u==='string'&&/^https:\/\/customer-[a-z0-9]+\.cloudflarestream\.com\/[a-f0-9]{32}\/webRTC\/play$/.test(u);}
   /* estado da SESSAO, escrito so pelo servidor. Comeca vazio: enquanto ele nao
@@ -538,7 +556,18 @@ svg{display:block}
     const q=query(collection(db,'negocios',uid,'livechat'),where('criadoEm','>=',Timestamp.fromMillis(chatDesdeMs)),orderBy('criadoEm','desc'),limit(30));
     chatDes=onSnapshot(q,s=>{
       const box=el('chat'); box.innerHTML='';
-      s.forEach(d=>{const m=d.data()||{};if(m.tipo!=='venda'&&mvProibido(m.texto))return;const x=document.createElement('div');
+      /* -----------------------------------------------------------------
+         B8 — O TIPO 'venda' ESCAPAVA DO FILTRO (auditoria de 15/09)
+         Era `if(m.tipo!=='venda' && mvProibido(...))`: tudo que fosse `venda`
+         entrava sem passar por nada. O visitante nao consegue criar esse tipo
+         (a regra so aceita 'msg' e 'quero'), mas O LOJISTA CONSEGUE — ele
+         escreve na propria livechat pelo curinga de `negocios/{uid}`. Dava
+         "Ana comprou <termo proibido>", em destaque, com prova social de uma
+         venda que nunca existiu.
+         E o NOME nunca passou por filtro nenhum, em tipo algum: 30 caracteres
+         livres na tela de todo mundo.
+         Agora: todo tipo passa, e nome e texto passam. */
+      s.forEach(d=>{const m=d.data()||{};if(mvProibido(m.texto)||mvProibido(m.nome))return;const x=document.createElement('div');
         x.className='msg'+(m.tipo==='quero'?' quero':'')+(m.tipo==='dono'?' dono':'')+(m.tipo==='venda'?' venda':'');
         x.innerHTML='<b>'+esc(m.nome||'')+'</b>'+(m.tipo==='quero'?'quer: ':'')+(m.tipo==='venda'?'comprou ':'')+esc(m.texto||'');
         box.appendChild(x);});
@@ -551,12 +580,16 @@ svg{display:block}
   el('btnSalvarNome').addEventListener('click',()=>{
     const n=el('campoNome').value.replace(/\s+/g,' ').trim();
     if(n.length<2){toast('Escreva pelo menos 2 letras.');return;}
+    /* B8: o nome tambem e conteudo. Barrar aqui evita gravar o que a tela vai
+       esconder depois — e o visitante entende na hora por que nao passou. */
+    if(mvProibido(n)){toast('Esse nome tem um termo que não é permitido na live.');return;}
     try{localStorage.setItem('mv_live_nome',n.slice(0,30));}catch(_){}
     el('folhaNome').classList.add('escondido'); const f=depoisDoNome; depoisDoNome=null; if(f)f();
   });
   let ultimoEnvio=0;
   async function gravarChat(tipo,texto){
     const nome=meuNome(); if(!nome)return false;
+    if(mvProibido(nome)||mvProibido(texto))return false;   /* B8: nada sai sem filtro */
     await addDoc(collection(db,'negocios',uid,'livechat'),{nome:nome.slice(0,30),texto:String(texto).slice(0,140),tipo,criadoEm:serverTimestamp(),expiraEm:Timestamp.fromMillis(Date.now()+30*86400000)});
     return true;
   }
@@ -596,13 +629,15 @@ svg{display:block}
       h+='<a class="btnLink" data-link="1" href="'+esc(p.link)+'" target="_blank" rel="noopener nofollow">'+SVG_LINK+'Ver em '+esc(host)+'</a>';}
     return h;
   }
-  function fotoDiv(p){return fotoOk(p.foto)?'<div class="cpFoto" style="background-image:url(&quot;'+esc(p.foto)+'&quot;)"></div>':'<div class="cpFoto">'+SVG_PRATO+'</div>';}
+  /* Sem `style=` no texto: a foto entra depois, pelo CSSOM (ver C5). */
+  function fotoDiv(p){return fotoOk(p.foto)?'<div class="cpFoto" data-mvfoto="1"></div>':'<div class="cpFoto">'+SVG_PRATO+'</div>';}
   function pintarProduto(){
     const p=est.fixado, box=el('cardProduto');
     if(!p||!p.nome||mvProibido(p.nome)){box.classList.add('escondido');box._chave='';return;}
     const chave=JSON.stringify([p,ofertaAtiva()?1:0,cupomLiberado(),pixAtivo]);
     if(box._chave===chave)return; box._chave=chave;
     box.innerHTML=fotoDiv(p)+'<div class="cpInfo"><span class="cpSelo">EM DESTAQUE</span><div class="cpNome">'+esc(p.nome)+'</div><div class="cpPreco">'+precoTexto(p)+'</div></div><div class="cpBtns">'+blocoBotoes(p)+'</div>';
+    porFoto(box.querySelector('[data-mvfoto]'),p.foto);
     box.classList.remove('escondido'); ligarCliques(box,p);
   }
   function sacolaLista(){const s=Array.isArray(est.sacola)?est.sacola:[];return s.filter(x=>x&&x.nome&&!mvProibido(x.nome)).slice(0,nivel==='enterprise'?20:5);}
@@ -611,6 +646,7 @@ svg{display:block}
     const l=el('listaSacola'); l.innerHTML='';
     s.forEach(p=>{const d=document.createElement('div');d.className='itSacola'+(est.fixado&&est.fixado.nome===p.nome?' ativo':'');
       d.innerHTML=fotoDiv(p)+'<div class="cpInfo"><div class="cpNome">'+esc(p.nome)+'</div><div class="cpPreco">'+precoTexto(p)+'</div></div><div class="cpBtns">'+blocoBotoes(p)+'</div>';
+      porFoto(d.querySelector('[data-mvfoto]'),p.foto);
       l.appendChild(d); ligarCliques(d,p);});
   }
   function ligarCliques(box,p){
@@ -631,7 +667,23 @@ svg{display:block}
      So aparecem se o PLANO do negocio for Enterprise — conferido aqui, no
      documento de assinatura que so o robo escreve. Estado forjado pelo
      proprio lojista de outro plano nao pinta nada. */
-  function ofertaAtiva(){const o=est.oferta;return nivel==='enterprise'&&o&&o.nome&&ms(o.fimEm)>Date.now()?o:null;}
+  /* -------------------------------------------------------------------
+     B9 — OFERTA, CUPOM E BRINDE NAO PASSAVAM POR FILTRO NENHUM
+     `fixado` e `sacola` sempre passaram por `mvProibido`. Estes tres, nao —
+     nem aqui, nem no varredor do painel do dono, e o servidor so confere
+     titulo e produtos UMA VEZ, no `iniciar`: a oferta entra depois.
+     Ou seja, o caminho mais curto para por conteudo proibido na live era
+     justamente a FAIXA DE MAIOR DESTAQUE DA TELA — entrar limpo e lancar a
+     oferta em seguida.
+     Agora os tres passam pelo mesmo filtro do resto, e o que nao passa
+     simplesmente nao aparece.
+     ------------------------------------------------------------------- */
+  function ofertaLimpa(o){
+    if(!o||!o.nome)return null;
+    if(mvProibido(o.nome))return null;
+    return o;
+  }
+  function ofertaAtiva(){const o=ofertaLimpa(est.oferta);return nivel==='enterprise'&&o&&ms(o.fimEm)>Date.now()?o:null;}
   function pintarEnterprise(){
     const ent=nivel==='enterprise';
     const o=ofertaAtiva(); el('faixaOferta').classList.toggle('escondido',!o);
@@ -641,8 +693,9 @@ svg{display:block}
       el('ofEstoqueBox').classList.toggle('escondido',!(tot>0));
       if(tot>0){const r=tot-vend;el('ofEstoque').textContent=r>0?('Restam '+r+' de '+tot):'Esgotado';el('ofBarra').style.width=Math.round(vend/tot*100)+'%';}
     }
-    const b=est.brinde; el('faixaBrinde').classList.toggle('escondido',!(ent&&b&&b.texto));
-    if(ent&&b&&b.texto)el('brTxt').textContent=(b.primeiros?'Para os '+b.primeiros+' primeiros pedidos: ':'Brinde: ')+b.texto;
+    const b=est.brinde, bOk=ent&&b&&b.texto&&!mvProibido(b.texto);   /* B9 */
+    el('faixaBrinde').classList.toggle('escondido',!bOk);
+    if(bOk)el('brTxt').textContent=(b.primeiros?'Para os '+b.primeiros+' primeiros pedidos: ':'Brinde: ')+b.texto;
     const temLocal=ent&&est.local===true&&typeof neg.lat==='number'&&typeof neg.lng==='number';
     el('faixaLocal').classList.toggle('escondido',!temLocal);
     if(temLocal)el('lnkRota').href='https://www.google.com/maps/dir/?api=1&destination='+neg.lat+','+neg.lng;
@@ -659,9 +712,13 @@ svg{display:block}
      cupom e o lojista, na conversa. */
   let assistidoS=0;
   setInterval(()=>{const v=el('vid');if(noAr&&document.visibilityState==='visible'&&v.srcObject&&!v.paused){assistidoS++;if(assistidoS%5===0)pintarCupom();}},1000);
-  function cupomLiberado(){const c=est.cupom;if(nivel!=='enterprise'||!c||!c.codigo)return '';return assistidoS>=Number(c.minutos||0)*60?String(c.codigo):'';}
+  /* B9: cupom so existe se o texto E o codigo passarem pelo filtro. O codigo
+     vai para o WhatsApp do lojista e para a area de transferencia — e mais
+     exposto que o resto, nao menos. */
+  function cupomOk(c){ return !!(c&&c.codigo&&!mvProibido(c.codigo)&&!mvProibido(c.texto||'')); }
+  function cupomLiberado(){const c=est.cupom;if(nivel!=='enterprise'||!cupomOk(c))return '';return assistidoS>=Number(c.minutos||0)*60?String(c.codigo):'';}
   function pintarCupom(){
-    const c=est.cupom, ok=nivel==='enterprise'&&c&&c.codigo;
+    const c=est.cupom, ok=nivel==='enterprise'&&cupomOk(c);   /* B9 */
     el('cupomBox').classList.toggle('escondido',!ok); if(!ok)return;
     el('cuTxt').textContent=c.texto||'Desconto especial';
     const falta=Math.max(0,Number(c.minutos||0)*60-assistidoS);
