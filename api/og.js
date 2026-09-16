@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-09-04-og-sa | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-09-15-og-live | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
