@@ -284,7 +284,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-16-aovivo8-publica';</script>
+<script>window.MOVIKI_VERSAO='2026-09-16-vitrinelive';</script>
 </head>
 
 <body>
@@ -414,7 +414,16 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </section>
 
 <!-- ================= COMO FUNCIONA ================= -->
-<section class="avSec avSec--alt" id="comofunciona">
+
+  <!-- ================= AO VIVO AGORA (16/09/2026) =================
+       O bloco so aparece quando ha alguem transmitindo; vazio, ele some
+       sozinho. Ate hoje nenhuma pagina publica do Moviki mostrava quem esta
+       no ar: a live so era descoberta pelo link que o lojista mandava, e o
+       Moviki nao entregava um unico espectador. -->
+  <div id="mvAoVivo" style="display:none"></div>
+  <script src="/mvaovivo.js" defer></script>
+
+  <section class="avSec avSec--alt" id="comofunciona">
   <div class="avWrap">
     <div class="avCentro">
       <h2 class="avH2">Tr&ecirc;s toques e voc&ecirc; <em>est&aacute; no ar</em></h2>
