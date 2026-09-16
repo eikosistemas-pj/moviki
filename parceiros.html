@@ -273,7 +273,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-16-parceirolive';
+window.MOVIKI_VERSAO = '2026-09-16-parceirolive2';
 
 /* ===== VIDEO DE VENDA DO PROGRAMA =====
    Escreva aqui o trecho depois de youtu.be/ quando o video existir. Deixe
@@ -317,6 +317,33 @@ window.MOVIKI_VIDEO_PARCEIRO = '';
     var ref = (new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
     if (ref.length >= 3 && window.mvEv) window.mvEv('chegou_por_indicacao', { ref: ref, destino: 'parceiro' });
   } catch(err){}
+
+  /* ===== REPASSE DO ?ref= E DO UTM PARA O CADASTRO - 2026-09-16-parceirolive2.
+     ISTO ERA UM BURACO DE DINHEIRO, nao de medicao. A pagina ja registrava o
+     evento de "chegou por indicacao" e, no clique, mandava para um endereco
+     FIXO do cadastro: o apelido de quem convidou morria ali, e o upline dos
+     niveis 2 e 3 nunca era gravado. Quem indicou perdia o bonus sem saber.
+     O seja-parceiro.html sempre soube ler ?ref= da URL; faltava alguem
+     entregar o valor a ele. O utm_* vai junto, senao a visita chega no
+     destino sem dizer de onde veio. */
+  try{
+    var q = new URLSearchParams(location.search);
+    var r2 = (q.get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    var utms = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    var temUtm = utms.some(function(k){ return q.get(k); });
+    if (r2.length >= 3 || temUtm) {
+      var links = document.querySelectorAll('a[href*="seja-parceiro.html"]');
+      for (var i=0; i<links.length; i++){
+        var u = new URL(links[i].getAttribute('href'), location.href);
+        if (r2.length >= 3 && !u.searchParams.get('ref')) u.searchParams.set('ref', r2);
+        utms.forEach(function(k){
+          var v = q.get(k);
+          if (v && !u.searchParams.get(k)) u.searchParams.set(k, v.slice(0,80));
+        });
+        links[i].setAttribute('href', u.toString());
+      }
+    }
+  }catch(err){}
 })();
 </script>
 </body></html>

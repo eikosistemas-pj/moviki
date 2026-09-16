@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Programa de Parceiros | Moviki</title>
-<meta name="description" content="Indique comerciantes pro Moviki e receba 15% da mensalidade de cada um que assinar pelo seu link, enquanto ele for cliente pagante. Grátis pra participar.">
+<meta name="description" content="Indique comerciantes pro Moviki e receba 15% da mensalidade de cada um que assinar pelo seu link, enquanto ele for cliente pagante. Você indica a plataforma que põe o negócio no mapa e em vídeo ao vivo. Grátis pra participar.">
 <link rel="canonical" href="https://www.moviki.com.br/parceiros-ganhos.html">
 
 <meta property="og:type" content="website">
@@ -175,7 +175,25 @@
   .aviso{max-width:680px;margin:0 auto;background:rgba(255,255,255,.03);border:1px solid var(--linha,rgba(0,212,255,.16));border-left:3px solid var(--ciano,#00D4FF);border-radius:12px;padding:16px 18px;font-size:13px;line-height:1.6;color:#b9c8da}
   .aviso b{color:#e6eefb}
   .aviso a{color:var(--ciano,#00D4FF);text-decoration:underline}
+  /* ===== 2026-09-16-parceirolive ===== */
+  .steps.tres{grid-template-columns:repeat(3,1fr)}
+  .vidBox{max-width:620px;margin:40px auto 0}
+  .vidCapa{position:relative;display:block;border-radius:18px;overflow:hidden;border:1px solid var(--linha);background:#08131f;aspect-ratio:16/9;cursor:pointer}
+  .vidCapa img{width:100%;height:100%;object-fit:cover;display:block}
+  .vidCapa .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .vidCapa .play span{width:70px;height:70px;border-radius:50%;background:linear-gradient(90deg,var(--ciano),var(--azul));color:#00121f;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;box-shadow:0 12px 34px rgba(0,102,255,.45)}
+  .vidBox iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:18px;display:block}
+  .vidLegenda{font-size:13px;color:var(--texto2);text-align:center;margin-top:10px}
+  .kits{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px}
+  .kit{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:24px}
+  .kit b{display:block;font-size:16.5px;font-weight:700;margin-bottom:5px}
+  .kit p{color:var(--texto2);font-size:14.5px}
+  .selo{max-width:760px;margin:44px auto 0;background:var(--card);border:1px solid var(--linha);border-radius:20px;padding:30px;text-align:center}
+  .selo p{color:var(--texto2);font-size:15.5px;margin-top:10px}
+  .selo .lk{display:inline-block;margin-top:14px;font-size:14px;color:var(--ciano);border:1px dashed rgba(0,212,255,.35);border-radius:999px;padding:8px 16px}
+  .aulaNota{max-width:620px;margin:22px auto 0;text-align:center;font-size:13.5px;color:var(--texto2);line-height:1.6}
   @media(max-width:820px){
+    .steps.tres,.kits{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr 1fr}
     .mutual,.cmp{grid-template-columns:1fr}
     .guards{grid-template-columns:1fr}
@@ -214,6 +232,22 @@
 
     <a class="btn" href="#comecar" data-ev="hero_comecar">Quero meu link de indicação</a>
     <p class="reassure">Grátis pra participar · sem meta · você sai quando quiser</p>
+
+    <p class="sub" style="margin-top:30px">O que você indica: a plataforma que põe o negócio <b style="color:var(--texto)">no mapa em tempo real</b> e deixa ele <b style="color:var(--texto)">vender ao vivo, em vídeo</b>, pra quem está por perto. Feira, food truck, loja de bairro, serviço que vai até o cliente.</p>
+
+    <!-- VIDEO DE VENDA DO PROGRAMA - 2026-09-16-parceirolive.
+         Nasce ESCONDIDO. So aparece quando o id do YouTube for escrito na
+         constante MOVIKI_VIDEO_PARCEIRO, la embaixo. Enquanto o video nao
+         existir, nada aparece e nada quebra - mesmo padrao das videoaulas.
+         Fachada: a capa e uma imagem; o iframe do youtube-nocookie so entra
+         DEPOIS do clique. A pagina nao chama o YouTube a toa. -->
+    <div class="vidBox" id="vidBox" style="display:none">
+      <div class="vidCapa" id="vidCapa" data-ev="video_parceiro_play">
+        <img id="vidThumb" src="" alt="Assista: como funciona o Programa de Parceiros" loading="lazy" decoding="async">
+        <div class="play"><span>&#9654;</span></div>
+      </div>
+      <p class="vidLegenda">2 minutos: como a comissão nasce, o que você divulga e o que o programa não é.</p>
+    </div>
   </div>
 </section>
 
@@ -223,11 +257,30 @@
     <p class="kicker">Como funciona</p>
     <h2>Do seu link ao seu Pix, em 4 passos</h2>
     <div class="steps">
-      <div class="step"><div class="n">1</div><h3>Pegue seu link</h3><p>No seu painel você tem um link exclusivo, só seu. É por ele que a gente sabe que a indicação veio de você.</p></div>
+      <div class="step"><div class="n">1</div><h3>Pegue seu link</h3><p>Depois de aprovado e das aulas, seu painel libera um link exclusivo, só seu. É por ele que a gente sabe que a indicação veio de você.</p></div>
       <div class="step"><div class="n">2</div><h3>Compartilhe</h3><p>Manda pra donos de negócio que você conhece — no WhatsApp, no Instagram, pessoalmente. Uma mensagem já vem pronta.</p></div>
       <div class="step"><div class="n">3</div><h3>Ele começa a usar</h3><p>O negócio se cadastra pelo seu link e assina um plano. A partir daí, ele fica marcado como seu.</p></div>
       <div class="step"><div class="n">4</div><h3>Você recebe</h3><p>A cada mensalidade que ele pagar, 15% entra como comissão pra você. Acompanha tudo no painel e saca no Pix a partir de R$ 20.</p></div>
     </div>
+  </div>
+</section>
+
+<!-- COMO VOCE ENTRA - 2026-09-16-parceirolive.
+     Faltava o "antes". A pagina comecava em "Pegue seu link", que na vida real
+     e o passo 4: antes dele existem o cadastro, a analise e as aulas, e nenhuma
+     das duas landings avisava. Quem descobre a trava depois de se cadastrar
+     abandona; quem sabe antes chega preparado. -->
+<section>
+  <div class="wrap">
+    <p class="kicker">Antes de tudo isso</p>
+    <h2>Como você entra no programa</h2>
+    <p class="lead">Três passos, e só então o seu link nasce. É de graça e não tem meta.</p>
+    <div class="steps tres">
+      <div class="step"><div class="n">1</div><h3>Cadastro</h3><p>Nome, e-mail, chave Pix e o apelido do seu link. Leva um minuto.</p></div>
+      <div class="step"><div class="n">2</div><h3>Análise</h3><p>Todo cadastro passa por aprovação. Você recebe um e-mail quando for aprovado.</p></div>
+      <div class="step"><div class="n">3</div><h3>Aulas do programa</h3><p>Curtas, dentro do painel. Explicam como a comissão nasce e o que pode e o que não pode ser dito ao divulgar. <b>A aba de Divulgação abre quando você termina.</b></p></div>
+    </div>
+    <p class="aulaNota">As aulas existem por causa da lei: conteúdo que gera comissão é publicidade, e o que você publica responde junto com a gente. Quem passa por elas divulga sem correr risco — e sem inventar número que a gente teria de desmentir depois.</p>
   </div>
 </section>
 
@@ -260,11 +313,15 @@
         <ul>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#ffcf4d" opacity=".18"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#ffcf4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <div><b>Fica fácil de achar</b><br><span>O negócio dele aparece no mapa pros clientes bem na hora.</span></div>
+            <div><b>Fica fácil de achar</b><br><span>O negócio dele aparece no mapa pros clientes bem na hora, com página própria e cardápio.</span></div>
           </li>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#ffcf4d" opacity=".18"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#ffcf4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <div><b>Começa grátis</b><br><span>30 dias pra testar sem pagar nada, sem cartão.</span></div>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#ffcf4d" opacity=".18"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#ffcf4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><b>Vende ao vivo</b><br><span>Ele transmite em vídeo do próprio celular, com a lista de produtos do lado, e quem está assistindo pede na hora.</span></div>
           </li>
           <li>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#ffcf4d" opacity=".18"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#ffcf4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -354,6 +411,27 @@
   </div>
 </section>
 
+<!-- O QUE VOCE RECEBE + VERIFICACAO - 2026-09-16-parceirolive -->
+<section>
+  <div class="wrap">
+    <p class="kicker">Você não começa do zero</p>
+    <h2>O que já vem pronto no seu painel</h2>
+    <p class="lead">Sem custo, sem precisar produzir nada por conta própria.</p>
+    <div class="kits">
+      <div class="kit"><b>Artes e legendas prontas</b><p>Posts, stories e panfletos separados por ramo de comércio, com a legenda já escrita e o seu link inserido na hora em que você copia.</p></div>
+      <div class="kit"><b>Seu crachá de parceiro</b><p>Com QR Code e a sua foto. Serve para se apresentar a um comerciante que nunca te viu na vida.</p></div>
+      <div class="kit"><b>Extrato por comerciante</b><p>Cada comissão aparece com o nome de quem gerou e a data. Nada de saldo que ninguém sabe de onde veio.</p></div>
+      <div class="kit"><b>Saque por Pix</b><p>A partir de R$ 20, direto na chave que você cadastrou. O pedido sai do próprio painel.</p></div>
+    </div>
+
+    <div class="selo">
+      <h2 style="font-size:23px">Qualquer comerciante pode conferir quem você é</h2>
+      <p>Todo parceiro aprovado tem uma página pública de verificação, com seu nome e sua foto. O comerciante abre pelo seu QR Code e o próprio Moviki confirma que você é parceiro de verdade. É o que separa você de quem bate na porta dizendo representar alguma empresa.</p>
+      <span class="lk">moviki.com.br/v/seuapelido</span>
+    </div>
+  </div>
+</section>
+
 <!-- CTA FINAL -->
 <section class="final" id="comecar">
   <div class="wrap">
@@ -387,13 +465,78 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-08-27-conformidade';
+window.MOVIKI_VERSAO = '2026-09-16-parceirolive';
+
+/* ===== VIDEO DE VENDA DO PROGRAMA =====
+   Escreva aqui o trecho depois de youtu.be/ quando o video existir. Deixe
+   vazio e o bloco inteiro continua invisivel - nenhuma tela quebrada, nenhum
+   player preto. Trocar este valor e a UNICA coisa necessaria para publicar o
+   video; o resto da pagina nao muda. */
+window.MOVIKI_VIDEO_PARCEIRO = '';
+
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
     if (!a) return;
     try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'parceiros-ganhos' }); } catch(err){}
   }, true);
+
+  /* ===== REPASSE DO ?ref= E DO UTM PARA O CADASTRO - 2026-09-16-parceirolive.
+     ISTO ERA UM BURACO DE DINHEIRO, nao de medicao. Esta pagina e a canonica
+     do programa: e o link que um parceiro manda para convidar outro. Se ela
+     for aberta com ?ref=<apelido> e o visitante clicar no botao, o endereco
+     do cadastro era FIXO - o apelido de quem convidou morria no clique e o
+     upline dos niveis 2 e 3 nunca era gravado. Quem indicou perdia o bonus
+     sem nunca saber por que.
+     O seja-parceiro.html ja sabe ler ?ref= da URL; o que faltava era alguem
+     entregar o valor para ele. Repassamos tambem o utm_*, senao a visita
+     chega no destino sem dizer de onde veio. */
+  try{
+    var q = new URLSearchParams(location.search);
+    var ref = (q.get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    var utms = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    var temUtm = utms.some(function(k){ return q.get(k); });
+    if (ref.length >= 3) {
+      try { if (window.mvEv) window.mvEv('chegou_por_indicacao', { ref: ref, destino: 'parceiros_ganhos' }); } catch(err){}
+    }
+    if (ref.length >= 3 || temUtm) {
+      var links = document.querySelectorAll('a[href*="seja-parceiro.html"]');
+      for (var i=0; i<links.length; i++){
+        var u = new URL(links[i].getAttribute('href'), location.href);
+        if (ref.length >= 3 && !u.searchParams.get('ref')) u.searchParams.set('ref', ref);
+        utms.forEach(function(k){
+          var v = q.get(k);
+          if (v && !u.searchParams.get(k)) u.searchParams.set(k, v.slice(0,80));
+        });
+        links[i].setAttribute('href', u.toString());
+      }
+    }
+  }catch(err){}
+
+  /* Video: so monta se houver id. A capa vem do proprio YouTube; o iframe
+     nasce APOS o clique, entao a pagina nao chama o YouTube a toa e nao
+     depende dele para abrir. */
+  try {
+    var vid = (window.MOVIKI_VIDEO_PARCEIRO||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,20);
+    if (vid.length >= 8) {
+      var box = document.getElementById('vidBox');
+      var capa = document.getElementById('vidCapa');
+      var thumb = document.getElementById('vidThumb');
+      if (box && capa && thumb) {
+        thumb.src = 'https://i.ytimg.com/vi/' + vid + '/maxresdefault.jpg';
+        thumb.onerror = function(){ this.onerror=null; this.src='https://i.ytimg.com/vi/' + vid + '/hqdefault.jpg'; };
+        box.style.display = 'block';
+        capa.addEventListener('click', function(){
+          var f = document.createElement('iframe');
+          f.src = 'https://www.youtube-nocookie.com/embed/' + vid + '?autoplay=1&rel=0&modestbranding=1';
+          f.setAttribute('title','Programa de Parceiros Moviki');
+          f.setAttribute('allow','accelerometer; autoplay; encrypted-media; picture-in-picture');
+          f.setAttribute('allowfullscreen','');
+          capa.replaceWith(f);
+        }, { once:true });
+      }
+    }
+  } catch(err){}
 })();
 </script>
 </body>
