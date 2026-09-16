@@ -839,7 +839,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-16-preco1';</script>
+<script>window.MOVIKI_VERSAO='2026-09-16-preco2';</script>
 </head>
 
 <body class="mv">
@@ -1421,8 +1421,15 @@ a{color:inherit}
         </div>
         <div class="lp-plano">
           <h3>Enterprise</h3><p class="desc">Pra quem tem mais de um ponto.</p>
-          <div class="preco">R$ 129,90</div><div class="ciclo">/mês · até 3 unidades</div>
+          <div class="preco">R$ 129,90</div>
+          <!-- 16/09/2026 - o Enterprise NAO tem plano anual (so mensal no lib/asaas.js,
+               porque cada ponto extra e uma assinatura mensal separada). Sem estes dois
+               spans o card ficava com "/mes" embaixo do toggle "Anual", ao lado de
+               "R$ 399/ano" e "R$ 699/ano" - e o plano de maior ticket parecia o mais caro
+               dos tres por uma margem absurda. Aqui a ausencia e dita, e como vantagem. -->
+          <div class="ciclo"><span data-ciclo-mensal>/mês · até 3 unidades</span><span data-ciclo-anual hidden>/mês · até 3 unidades</span></div>
           <ul><li>Tudo do Premium</li><li><b>Pix dentro da própria live</b></li><li>Live de até 3 h e sacolinha de 20 produtos</li><li>Várias unidades no mapa</li><li>Relatório consolidado</li><li>Marca própria na página pública</li></ul>
+          <p class="mv-muted" data-ciclo-anual hidden style="margin:0 0 14px;font-size:12.5px">O Enterprise é sempre mensal: você paga mês a mês e cancela quando quiser, sem 12 meses de fidelidade.</p>
           <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="/enterprise.html" data-ev="cta_plano_enterprise">Conhecer o Enterprise</a>
         </div>
       </div>
