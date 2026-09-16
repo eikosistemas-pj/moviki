@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-csp1 -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-chatqr -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="/mvmetrica.js"></script>
+<script src="/mvqr.js"></script>
 <style>
 :root{
   --mv-ciano:#00D4FF;--mv-azul:#0066FF;--mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
@@ -279,6 +280,9 @@ svg{display:block}
   </div>
   <div id="ckPix" class="escondido">
     <img class="ckQr" id="ckQr" alt="QR Code do Pix">
+    <!-- QR desenhado aqui quando o modo de pagamento nao devolve imagem
+         pronta (chave Pix do proprio lojista). Ver mvqr.js. -->
+    <canvas class="ckQr escondido" id="ckQrC" width="440" height="440" aria-label="QR Code do Pix"></canvas>
     <div class="ckTotal"><span id="ckPixProd"></span><span id="ckPixTotal"></span></div>
     <div class="ckCod" id="ckCod"></div>
     <button type="button" class="btnGrad" id="ckCopiar" style="width:100%;margin-top:10px">Copiar código Pix</button>
@@ -317,7 +321,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-16-csp1';
+  window.MOVIKI_VERSAO='2026-09-16-chatqr';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -341,6 +345,21 @@ svg{display:block}
   const MV_LEET={'0':'o','@':'a','4':'a','1':'i','!':'i','3':'e','$':'s'};
   /* digito vira letra so ENTRE letras (c0caina -> cocaina), sem estragar bet365 */
   function mvNormaliza(s){return (' '+String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/([a-z])([0@41!3$]+)(?=[a-z]|[^a-z0-9]|$)/g,(m,a,d)=>a+d.split('').map(c=>MV_LEET[c]).join('')).replace(/[^a-z0-9]+/g,' ')+' ');}
+  /* ---------- LINK NO CHAT (16/09/2026) ----------
+     O chat nao tinha barreira nenhuma para endereco. Numa live de venda,
+     todo mundo que esta ali ja veio com intencao de pagar — e um link
+     colado por um espectador e o vetor mais barato de golpe que existe.
+     Quem PODE mandar link e o dono da live (tipo 'dono', escrito pelo
+     estudio autenticado; a regra do Firestore so deixa o visitante criar
+     'msg' e 'quero'). Vale no ENVIO e na LEITURA: mensagem gravada antes
+     desta correcao tambem para de aparecer. */
+  function mvTemLink(s){
+    const n=String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/\s*\.\s*/g,'.').replace(/\s*[\(\[]?(?:ponto|dot)[\)\]]?\s*/g,'.');
+    if(/[a-z][a-z0-9+.\-]*:\/\//.test(n))return true;
+    if(/(^|[^a-z0-9])www\./.test(n))return true;
+    return /[a-z0-9\-]{2,}\.(com\.br|com|br|net|org|io|me|app|xyz|shop|store|site|online|link|gg|tv|co|info|biz|club|live|vip|top|fun|page|dev|ru|cn)(\/|$|[^a-z0-9])/.test(n);
+  }
   function mvProibido(s){
     let n=mvNormaliza(s);
     MV_TERMOS.excecoes.forEach(e=>{n=n.split(' '+e+' ').join(' ');});
@@ -557,7 +576,12 @@ svg{display:block}
   /* ================= chat ================= */
   function ouvirChat(){
     pararChat();
-    chatDesdeMs=ms(est.inicio)||Date.now()-3600000;
+    /* CORRECAO 16/09/2026: era `ms(est.inicio)||Date.now()-3600000`. O campo
+       `inicio` sumiu de `estado/live` no b5b de 15/09, entao caia sempre no
+       fallback de UMA HORA — e a live nova abria mostrando o chat da live
+       anterior. A janela agora comeca no inicio da SESSAO do servidor.
+       Sem sessao, comeca AGORA: chat vazio e melhor que chat de outra live. */
+    chatDesdeMs=ms(ses.inicioEm)||Number(ses.inicioMs)||Date.now();
     const q=query(collection(db,'negocios',uid,'livechat'),where('criadoEm','>=',Timestamp.fromMillis(chatDesdeMs)),orderBy('criadoEm','desc'),limit(30));
     chatDes=onSnapshot(q,s=>{
       const box=el('chat'); box.innerHTML='';
@@ -572,7 +596,10 @@ svg{display:block}
          E o NOME nunca passou por filtro nenhum, em tipo algum: 30 caracteres
          livres na tela de todo mundo.
          Agora: todo tipo passa, e nome e texto passam. */
-      s.forEach(d=>{const m=d.data()||{};if(mvProibido(m.texto)||mvProibido(m.nome))return;const x=document.createElement('div');
+      s.forEach(d=>{const m=d.data()||{};if(mvProibido(m.texto)||mvProibido(m.nome))return;
+        /* link so do dono — inclusive no que ja estava gravado */
+        if(m.tipo!=='dono'&&(mvTemLink(m.texto)||mvTemLink(m.nome)))return;
+        const x=document.createElement('div');
         x.className='msg'+(m.tipo==='quero'?' quero':'')+(m.tipo==='dono'?' dono':'')+(m.tipo==='venda'?' venda':'');
         x.innerHTML='<b>'+esc(m.nome||'')+'</b>'+(m.tipo==='quero'?'quer: ':'')+(m.tipo==='venda'?'comprou ':'')+esc(m.texto||'');
         box.appendChild(x);});
@@ -587,7 +614,7 @@ svg{display:block}
     if(n.length<2){toast('Escreva pelo menos 2 letras.');return;}
     /* B8: o nome tambem e conteudo. Barrar aqui evita gravar o que a tela vai
        esconder depois — e o visitante entende na hora por que nao passou. */
-    if(mvProibido(n)){toast('Esse nome tem um termo que não é permitido na live.');return;}
+    if(mvProibido(n)||mvTemLink(n)){toast('Esse nome tem um termo que não é permitido na live.');return;}
     try{localStorage.setItem('mv_live_nome',n.slice(0,30));}catch(_){}
     el('folhaNome').classList.add('escondido'); const f=depoisDoNome; depoisDoNome=null; if(f)f();
   });
@@ -605,6 +632,7 @@ svg{display:block}
     if(!meuNome()){pedirNome(()=>el('formMsg').requestSubmit());return;}
     if(Date.now()-ultimoEnvio<3000){toast('Calma, espere uns segundinhos.');return;}
     if(mvProibido(t)){toast('Essa mensagem tem um termo que não é permitido na live.');return;}
+    if(mvTemLink(t)){toast('Link não é permitido no chat. Só o vendedor pode mandar endereço aqui.');return;}
     ultimoEnvio=Date.now(); el('txtMsg').value='';
     try{await gravarChat('msg',t);ev('live_chat',{slug});}catch(_){toast('Não foi. Tente de novo.');el('txtMsg').value=t;}
   });
@@ -781,10 +809,24 @@ svg{display:block}
     try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}
     ev('live_pix_gerado',{slug,valor:r.total});
     el('ckForm').classList.add('escondido'); el('ckPix').classList.remove('escondido');
-    el('ckQr').src=r.pix.imagem?'data:image/png;base64,'+r.pix.imagem:''; el('ckQr').classList.toggle('escondido',!r.pix.imagem);
+    /* QR SEMPRE NA TELA (16/09/2026). No modo Asaas o banco devolve a
+       imagem pronta; no modo chave-Pix-do-lojista nao vem imagem nenhuma e
+       a tela ficava so com o copia-e-cola — inutil para quem vai pagar do
+       celular de outra pessoa. Sem imagem, o QR e desenhado aqui a partir
+       do proprio copia-e-cola, com o gerador da casa (mvqr.js). */
+    desenharQrPix(r.pix.imagem||'', r.pix.copiaCola||'');
     el('ckCod').textContent=r.pix.copiaCola; el('ckPixProd').textContent=(r.qtd>1?r.qtd+'x ':'')+r.produto; el('ckPixTotal').textContent=brl(r.total);
     esperarPagamento();
   };
+  function desenharQrPix(imagem, copiaCola){
+    const img=el('ckQr'), cv=el('ckQrC');
+    if(imagem){img.src='data:image/png;base64,'+imagem;img.classList.remove('escondido');cv.classList.add('escondido');return;}
+    img.removeAttribute('src'); img.classList.add('escondido');
+    let q=null; try{q=(typeof window.mvQR==='function')?window.mvQR(copiaCola):null;}catch(_){q=null;}
+    if(!q){cv.classList.add('escondido');return;}
+    try{window.mvQRDesenhar(cv,q,440,'#ffffff','#000000');cv.classList.remove('escondido');}
+    catch(_){cv.classList.add('escondido');}
+  }
   el('ckCopiar').onclick=async()=>{try{await navigator.clipboard.writeText(el('ckCod').textContent);toast('Código copiado. Cole no app do banco em Pix copia e cola.');}catch(_){toast('Segure o código para copiar.');}};
   function esperarPagamento(){
     clearInterval(ckPoll); const t0=Date.now();
