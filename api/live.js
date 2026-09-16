@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-16-teto2 | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-16-teto3 | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -400,6 +400,27 @@ async function chamarRobo(acao, dados) {
   }
 }
 
+/* Um lugar so decide se a proxima live e barrada — e o painel do dono mostra
+   exatamente este veredito, com o motivo. Ate 16/09 a trava era invisivel
+   quando NAO disparava, e um teste com teto de 1 minuto passava sem que
+   ninguem soubesse por que: a medicao vinha zerada, e `0 >= 1` e falso.
+   A trava estava certa; a tela e que nao contava.
+
+   `mes` e a medicao da analytics do Cloudflare, que NAO e tempo real: ela
+   demora alguns minutos e, com volume pequeno, arredonda para zero. Este teto
+   e uma parede de CONTA MENSAL, com atraso de minutos — nao e um freio de
+   transmissao. Quem corta na hora e a chave-mestra. */
+async function vereditoTeto(termos) {
+  const teto = Number(termos.tetoMinutosMes || 0);
+  const ciclo = Number(termos.cicloDia || 1);
+  if (!(teto > 0)) return { barra: false, motivo: 'sem_teto', teto: 0, mes: 0, ciclo: ciclo, desde: '', erro: '' };
+  const c = await medirConsumo(ciclo);
+  if (c.erro) return { barra: false, motivo: 'medicao_falhou', teto: teto, mes: c.mes || 0, ciclo: ciclo, desde: c.desde || '', erro: c.erro };
+  if (c.mes >= teto) return { barra: true, motivo: 'teto_atingido', teto: teto, mes: c.mes, ciclo: ciclo, desde: c.desde || '', erro: '' };
+  if (!c.mes) return { barra: false, motivo: 'medicao_zerada', teto: teto, mes: 0, ciclo: ciclo, desde: c.desde || '', erro: '' };
+  return { barra: false, motivo: 'abaixo_do_teto', teto: teto, mes: c.mes, ciclo: ciclo, desde: c.desde || '', erro: '' };
+}
+
 /* ---------------- 3. Cloudflare Stream ---------------- */
 async function cf(caminho, opcoes) {
   const conta = process.env.CF_ACCOUNT_ID, tok = process.env.CF_STREAM_TOKEN;
@@ -544,10 +565,15 @@ module.exports = async (req, res) => {
     const t0 = await lerDoc('configuracoes/liveTermos');
     const teto = Number((t0.doc && t0.doc.tetoMinutosMes) || 0);
     const cicloDia = Number((t0.doc && t0.doc.cicloDia) || 1);
+    /* mede SEMPRE, mesmo sem teto: o card existe para mostrar o numero, e
+       vereditoTeto() nao mede quando o teto e zero. O cache faz a segunda
+       chamada sair de graca. */
     const c = await medirConsumo(cicloDia);
+    const v = await vereditoTeto(t0.doc || {});
     return responder(res, 200, {
       ok: true, mes: c.mes, semana: c.semana, erro: c.erro || '',
       medidoEm: c.em || 0, teto: teto, cicloDia: cicloDia, desde: c.desde || '',
+      barra: v.barra === true, motivo: v.motivo,
       /* US$ 1 por 1.000 minutos entregues, preco publico do Stream. O
          armazenamento e cobrado a parte e nao entra nesta conta: as lives do
          Moviki sao criadas com recording desligado. */
@@ -610,18 +636,16 @@ module.exports = async (req, res) => {
     return responder(res, 403, { erro: 'desligada', mensagem: 'As transmissoes ao vivo estao temporariamente desligadas para manutencao.' });
   }
 
-  /* TETO DE VIDEO DO MES. Teto ausente ou zero = sem teto. Falha ABERTA: se a
-     medicao nao respondeu, `erro` vem preenchido e a live segue. */
-  const tetoMin = Number((te.doc && te.doc.tetoMinutosMes) || 0);
-  if (tetoMin > 0) {
-    const consumo = await medirConsumo(Number((te.doc && te.doc.cicloDia) || 1));
-    if (!consumo.erro && consumo.mes >= tetoMin) {
-      console.log('live: teto de video do mes atingido', consumo.mes, '/', tetoMin);
-      return responder(res, 403, {
-        erro: 'teto_video',
-        mensagem: 'As transmissoes ao vivo estao pausadas ate o proximo ciclo. Tente novamente mais tarde.',
-      });
-    }
+  /* TETO DE VIDEO DO CICLO. Quem decide e vereditoTeto(), a MESMA funcao que
+     responde ao painel do dono — para a tela nunca dizer uma coisa e o
+     servidor fazer outra. */
+  const vt = await vereditoTeto(te.doc || {});
+  if (vt.barra) {
+    console.log('live: teto de video atingido', vt.mes, '/', vt.teto);
+    return responder(res, 403, {
+      erro: 'teto_video',
+      mensagem: 'As transmissoes ao vivo estao pausadas ate o proximo ciclo. Tente novamente mais tarde.',
+    });
   }
 
   /* Lista de liberacao (beta fechado). Regra: lista VAZIA ou ausente = live
