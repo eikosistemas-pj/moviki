@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-16-capavideo | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-16-videocompra | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -420,6 +420,82 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
   font-size:12.5px;font-weight:600;line-height:1.3;color:#fff;overflow-wrap:anywhere;
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
   text-shadow:0 1px 6px rgba(0,0,0,.75);}
+
+/* ---------- VIDEO COMPRAVEL (16/09/2026) ----------
+   O lojista marca ate 4 itens do cardapio dentro de cada video. Nada disto
+   existe na tela quando o video nao tem item marcado, quando a venda esta
+   desligada ou quando o item marcado sumiu do cardapio: a pagina volta a ser,
+   byte por byte, a de antes desta entrega.
+   Nenhum preco sai daqui para o servidor -- o botao reaproveita a MESMA
+   sacola do cardapio compravel, e quem soma continua sendo lib/checkout.js. */
+.vdSacola{position:absolute;top:8px;right:8px;z-index:3;display:inline-flex;align-items:center;gap:4px;
+  background:linear-gradient(135deg,var(--ciano),#0aa2ff);border-radius:var(--mv-r-pill);
+  padding:3px 8px;font-size:10px;font-weight:800;color:#04121f;letter-spacing:.2px;}
+.vdSacola svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.2;flex:0 0 auto;}
+/* Com a faixa de compra a caixa fica mais alta que a tela em celular baixo.
+   Duas linhas resolvem, e nenhuma delas muda o visor sem itens:
+   - rolagem no fundo escuro (o visor era sempre do tamanho da tela);
+   - align-items:flex-start + margin:auto 0 no filho. Centralizar por
+     align-items:center corta o TOPO do conteudo quando ele nao cabe, e o
+     pedaco cortado fica inalcancavel -- nao ha como rolar para cima. */
+#vp{overflow-y:auto;align-items:flex-start;}
+#vp .vpBox{margin:auto 0;}
+.vpBox.comItens{max-width:min(880px,calc(44vh * 1.7778));}
+.vpBox.comItens.vert{max-width:min(300px,calc(44vh * 0.5625));}
+/* tela alta aguenta o video maior sem empurrar a barra do total para fora */
+@media(min-height:780px){
+  .vpBox.comItens{max-width:min(880px,calc(54vh * 1.7778));}
+  .vpBox.comItens.vert{max-width:min(340px,calc(54vh * 0.5625));}
+}
+/* Instagram e TikTok nao tocam embutidos. Quando o video tem item marcado, o
+   cartao passa a abrir o visor mesmo assim: sem isso o cliente sai da pagina
+   no clique e a compra nunca acontece. */
+.vpQuadro .vpCapa{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5;}
+.vpFora{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:11px;padding:18px;text-align:center;
+  background:linear-gradient(to top,rgba(3,8,16,.93),rgba(3,8,16,.62));}
+.vpFora .vpForaTx{font-size:13px;color:var(--mv-txt-2);}
+.vpFora .vpForaBt{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--mv-grad);color:#04121f;font-weight:800;font-size:14px;text-decoration:none;
+  padding:12px 20px;border-radius:var(--mv-r);white-space:nowrap;}
+.vpItens{margin-top:11px;}
+.vpItens .vcTit{font-size:12.5px;font-weight:700;color:#eaf6ff;margin-bottom:8px;}
+.vcTrilho{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.vcTrilho::-webkit-scrollbar{display:none;}
+.vcCard{flex:0 0 auto;width:132px;background:var(--mv-surf);border:1px solid var(--mv-linha);
+  border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:5px;}
+.vcFoto{position:relative;width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;
+  background:var(--mv-campo);display:flex;align-items:center;justify-content:center;}
+.vcFoto img{width:100%;height:100%;object-fit:cover;}
+.vcFoto .vcSemFoto svg{width:22px;height:22px;color:var(--mv-txt-3);}
+.vcNome{font-size:12.5px;font-weight:600;line-height:1.3;color:var(--mv-txt);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.vcPreco{font-size:13.5px;font-weight:800;color:var(--mv-ok);}
+.vcBt{width:100%;border:none;border-radius:10px;cursor:pointer;font-family:inherit;
+  font-weight:800;font-size:12.5px;padding:9px 0;background:var(--mv-grad);color:#04121f;}
+.vcQtd{display:flex;align-items:center;justify-content:space-between;gap:6px;
+  background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:10px;padding:4px;}
+.vcQtd button{width:28px;height:28px;border-radius:8px;border:none;cursor:pointer;
+  background:var(--mv-surf-2);color:var(--mv-txt);font-family:inherit;font-size:15px;font-weight:800;}
+.vcQtd span{font-size:13.5px;font-weight:800;color:var(--mv-txt);}
+/* sticky: a barra do total nunca sai da vista, mesmo com o visor rolando.
+   Sem isso, em celular baixo o "Fazer pedido" nascia abaixo da dobra e o
+   cliente precisava descobrir sozinho que a tela rolava. */
+.vpBarra{display:none;align-items:center;gap:11px;margin-top:11px;
+  position:sticky;bottom:calc(4px + env(safe-area-inset-bottom));z-index:5;
+  background:var(--mv-surf);border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r);padding:10px 12px;
+  box-shadow:0 8px 24px rgba(3,8,16,.55);}
+/* celular baixo: a foto do item sai e o cartao vira linha. Quatro fotos de
+   114px empurravam o botao de pedido para fora da tela. */
+@media(max-height:700px){
+  .vcCard{width:150px;}
+  .vcFoto{display:none;}
+}
+.vpBarra .vpbInfo{flex:1;min-width:0;display:flex;flex-direction:column;}
+.vpBarra .vpbInfo span{font-size:12px;color:var(--mv-txt-3);}
+.vpBarra .vpbInfo b{font-size:16px;color:var(--mv-ok);white-space:nowrap;}
+.vpBarra .vpbIr{flex:0 0 auto;border:none;border-radius:var(--mv-r);cursor:pointer;font-family:inherit;
+  font-weight:800;font-size:13.5px;padding:11px 16px;background:var(--mv-grad);color:#04121f;white-space:nowrap;}
 
 /* ---------- VISOR DE VIDEO (YouTube dentro da pagina) ----------
    Duas formas de moldura: em pe (Shorts) e deitada (video normal). Uma
@@ -1168,6 +1244,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   <div class="vpBox" id="vpBox">
     <div class="vpQuadro" id="vpQuadro"></div>
     <div class="vpTit" id="vpTit"></div>
+    <!-- Itens marcados neste video (16/09/2026). Nasce vazio e escondido: sem
+         item marcado, ou com a venda desligada, nada disto chega a existir. -->
+    <div class="vpItens" id="vpItens" style="display:none"></div>
+    <div class="vpBarra" id="vpBarra"></div>
   </div>
 </div>
 
@@ -1190,7 +1270,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-16-capavideo';
+  window.MOVIKI_VERSAO='2026-09-16-videocompra';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1764,7 +1844,31 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      ===================================================================== */
   const VD_MAX=6;
   var VD_LISTA=[];
+  /* Ate 4 itens do cardapio marcados no video (16/09/2026). Guardados DENTRO
+     do item de `videos`, como a capa: campo novo solto em negocios/{uid}
+     cairia fora do hasOnly da regra e faria TODO o "Salvar tudo" do painel
+     ser negado. Dentro do array a regra so confere "e lista, ate 6". */
+  const VC_MAX=4;
+  function lerItensMarcados(v){
+    if(!v||typeof v==='string')return [];
+    const a=Array.isArray(v.itens)?v.itens:[];
+    const out=[];
+    for(let i=0;i<a.length&&out.length<VC_MAX;i++){
+      const x=a[i]; if(!x||typeof x!=='object')continue;
+      const sk=String(x.s||'').trim().slice(0,40);
+      const nm=String(x.n||'').trim().slice(0,60);
+      if(!sk&&!nm)continue;
+      out.push({s:sk,n:nm});
+    }
+    return out;
+  }
   function vidInfo(v){
+    const o=vidInfoBase(v);
+    if(!o)return null;
+    o.its=lerItensMarcados(v);
+    return o;
+  }
+  function vidInfoBase(v){
     if(!v)return null;
     const cru=String((typeof v==='string')?v:(v.url||'')).trim();
     if(!/^https:\/\//i.test(cru))return null;
@@ -1813,9 +1917,16 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     } else if(v.p==='yt'){
       capa+='<img class="vdThumb" src="https://i.ytimg.com/vi/'+esc(v.id)+'/hqdefault.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">';
     }
-    const dentro=capa+'<div class="vdVeu"></div><span class="vdPlay">'+IC.playCheio+'</span>'+selo+tit;
-    /* YouTube toca aqui; Instagram e TikTok exigem o app/site deles. */
-    if(v.p==='yt'){
+    /* selo de "da para comprar aqui dentro". So nasce se o item marcado
+       EXISTE no cardapio de agora e tem preco que o servidor aceita. */
+    const nIt=vcResolver(v.its).length;
+    const seloVc=nIt?('<span class="vdSacola">'+SVG_SACOLA+nIt+'</span>'):'';
+    const dentro=capa+'<div class="vdVeu"></div><span class="vdPlay">'+IC.playCheio+'</span>'+selo+seloVc+tit;
+    /* YouTube toca aqui; Instagram e TikTok exigem o app/site deles -- MAS,
+       quando o video tem item comprável, o cartao passa a abrir o visor, com a
+       capa, a faixa de compra e o botao de assistir no app. Sem isso o clique
+       manda o cliente para fora da pagina antes de ele poder comprar. */
+    if(v.p==='yt'||nIt){
       return '<button class="vdCard" type="button" onclick="abrirVideo('+i+')" aria-label="Ver o vídeo'+(v.t?': '+esc(v.t):'')+'">'+dentro+'</button>';
     }
     return '<a class="vdCard" href="'+esc(v.url)+'" target="_blank" rel="noopener nofollow" data-ev="video_'+v.p+'" aria-label="Abrir o vídeo no '+esc(VD_NOME[v.p])+'">'+dentro+'</a>';
@@ -1841,28 +1952,135 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(ct)ct.textContent='';
     tr.innerHTML=VD_LISTA.map(cartaoVideo).join('');
   }
+  /* =====================================================================
+     COMPRA DENTRO DO VIDEO -- 16/09/2026
+     ---------------------------------------------------------------------
+     O QUE ELE NAO FAZ, DE PROPOSITO
+     - Nao tem sacola propria. Reaproveita a SACOLA do cardapio compravel:
+       duas sacolas seriam dois totais e dois jeitos de a tela mentir.
+     - Nao calcula preco para o servidor. O botao manda O QUE e QUANTOS pelo
+       mesmo caminho de sempre (lib/checkout.js). Preco na tela e vitrine.
+     - Nao inventa contador no Firestore. `metricas/{uid}/dias` tem hasOnly
+       fechado na regra publicada: campo novo ali seria NEGADO calado. A
+       medicao desta entrega e so GA4 ate a regra do contador subir.
+     ===================================================================== */
+  const SVG_SACOLA='<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+  var VC_ATUAL=[];
+  function vcSemAcento(s){return String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();}
+  /* Resolve o item marcado contra o cardapio DE AGORA. Casa por sku primeiro e
+     por nome depois -- a MESMA ordem do acharNoCardapio do servidor. Ordem
+     diferente aqui pintaria um preco e cobraria outro.
+     Item apagado, sem preco numerico ou fora do plano simplesmente nao volta:
+     botao que compra nada nao chega a existir. */
+  function vcResolver(its){
+    if(!Array.isArray(its)||!its.length||!dadosNeg||!liberaConteudo())return [];
+    const cats=Array.isArray(dadosNeg.cardapio)?dadosNeg.cardapio:[];
+    const achados=[];
+    its.forEach(function(ref){
+      for(let ci=0;ci<cats.length;ci++){
+        const ps=(cats[ci]&&Array.isArray(cats[ci].produtos))?cats[ci].produtos:[];
+        for(let pi=0;pi<ps.length;pi++){
+          const p=ps[pi]; if(!p||!p.nome)continue;
+          const bateSku=!!ref.s&&String(p.sku||'')===ref.s;
+          const bateNome=!ref.s&&!!ref.n&&vcSemAcento(p.nome)===vcSemAcento(ref.n);
+          if(!bateSku&&!bateNome)continue;
+          const pr=precoNumPub(p.preco);
+          if(!(pr>0))return;
+          const fts=(liberaFotos()&&Array.isArray(p.fotos))?p.fotos.filter(fotoOk):[];
+          achados.push({ci:ci,pi:pi,nome:String(p.nome),preco:pr,foto:fts.length?fts[0]:''});
+          return;
+        }
+      }
+    });
+    return achados;
+  }
+  function vcCard(o){
+    const img=o.foto
+      ? '<img src="'+esc(o.foto)+'" alt="" loading="lazy" referrerpolicy="no-referrer">'
+      : '<div class="vcSemFoto">'+IC.cardapio+'</div>';
+    const it=SACOLA.find(x=>x.k===(o.ci+':'+o.pi));
+    const bt=it
+      ? '<div class="vcQtd"><button type="button" onclick="vcQtd('+o.ci+','+o.pi+',-1)" aria-label="Tirar um">\u2212</button><span aria-live="polite">'+it.qtd+'</span><button type="button" onclick="vcQtd('+o.ci+','+o.pi+',1)" aria-label="Mais um">+</button></div>'
+      : '<button class="vcBt" type="button" onclick="vcAdd('+o.ci+','+o.pi+')">Comprar</button>';
+    return '<div class="vcCard"><div class="vcFoto">'+img+'</div>'+
+           '<div class="vcNome">'+esc(o.nome)+'</div>'+
+           '<div class="vcPreco">'+esc(fmtReal(o.preco))+'</div>'+bt+'</div>';
+  }
+  function vcBarra(){
+    const b=el('vpBarra'); if(!b)return;
+    const aberto=el('vp')&&el('vp').classList.contains('on');
+    const n=qtdSacola();
+    /* VC_ATUAL na condicao NAO e redundancia: sem ele, quem ja tinha item na
+       sacola abria um video SEM produto marcado e via a barra de pedido ali,
+       num video que nao vende nada. Video sem item marcado continua sendo o
+       visor de ontem, com sacola cheia ou vazia. */
+    const mostra=aberto&&n>0&&VC_ATUAL.length>0&&podeComprar();
+    b.style.display=mostra?'flex':'none';
+    if(!mostra){b.innerHTML='';return;}
+    b.innerHTML='<div class="vpbInfo"><span>'+n+(n===1?' item':' itens')+'</span><b>'+esc(fmtReal(totalSacola()))+'</b></div>'+
+                '<button class="vpbIr" type="button" onclick="vcIrPedido()">Fazer pedido</button>';
+  }
+  function vcPintar(){
+    const cx=el('vpItens'); if(!cx)return;
+    if(!VC_ATUAL.length){cx.innerHTML='';cx.style.display='none';vcBarra();return;}
+    cx.style.display='';
+    cx.innerHTML='<div class="vcTit">Comprar o que aparece no vídeo</div>'+
+                 '<div class="vcTrilho">'+VC_ATUAL.map(vcCard).join('')+'</div>';
+    vcBarra();
+  }
+  window.vcAdd=function(ci,pi){ mvAdd(ci,pi); ev('video_compra_add',{}); };
+  window.vcQtd=function(ci,pi,d){ mvAddQtd(ci,pi,d); };
+  /* Fecha o visor e entrega o cliente no MESMO fluxo de pedido de sempre. Uma
+     segunda tela de pagamento so para o video seria outra superficie de
+     dinheiro para auditar. */
+  window.vcIrPedido=function(){
+    if(!qtdSacola()||!podeComprar())return;
+    ev('video_compra_pedido',{});
+    fecharVideo();
+    abrirCardapio();
+    abrirPedido();
+  };
+
   window.abrirVideo=function(i){
-    const v=VD_LISTA[i]; if(!v||v.p!=='yt')return;
+    const v=VD_LISTA[i]; if(!v)return;
+    VC_ATUAL=podeComprar()?vcResolver(v.its):[];
+    /* video de fora do YouTube so abre o visor quando ha o que comprar nele --
+       sem item marcado, o cartao continua sendo o link de sempre. */
+    if(v.p!=='yt'&&!VC_ATUAL.length)return;
     const cx=el('vpBox'), q=el('vpQuadro');
     cx.classList.toggle('vert',!!v.vert);
-    /* playsinline: sem ele o iPhone joga o video pra tela cheia do sistema e
-       sai da pagina. rel=0 corta a vitrine de "videos parecidos" no fim --
-       nao se manda o cliente do lojista pro concorrente. */
-    q.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id)+
-      '?rel=0&modestbranding=1&playsinline=1&autoplay=1" title="'+esc(v.t||'Vídeo do negócio')+
-      '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen'+
-      ' referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
+    cx.classList.toggle('comItens',VC_ATUAL.length>0);
+    if(v.p==='yt'){
+      /* playsinline: sem ele o iPhone joga o video pra tela cheia do sistema e
+         sai da pagina. rel=0 corta a vitrine de "videos parecidos" no fim --
+         nao se manda o cliente do lojista pro concorrente. */
+      q.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(v.id)+
+        '?rel=0&modestbranding=1&playsinline=1&autoplay=1" title="'+esc(v.t||'Vídeo do negócio')+
+        '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen'+
+        ' referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>';
+    }else{
+      const rede=esc(VD_NOME[v.p]||'aplicativo');
+      const capa=v.capa?('<img class="vpCapa" src="'+esc(v.capa)+'" alt="" aria-hidden="true" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'):'';
+      q.innerHTML=capa+'<div class="vpFora">'+
+        '<span class="vpForaTx">Este vídeo abre no '+rede+'.<br>Você pode pedir por aqui mesmo.</span>'+
+        '<a class="vpForaBt" href="'+esc(v.url)+'" target="_blank" rel="noopener nofollow" data-ev="video_'+v.p+'">Assistir no '+rede+'</a>'+
+      '</div>';
+    }
     el('vpTit').textContent=v.t||'';
     el('vp').classList.add('on');
     document.body.style.overflow='hidden';
-    ev('video_abriu',{rede:'yt'});
+    vcPintar();
+    ev('video_abriu',{rede:v.p});
   };
   window.fecharVideo=function(){
     /* apagar o iframe e OBRIGATORIO: fechar so a caixa deixa o audio tocando
        por tras da pagina, e o cliente nao acha onde desligar. */
     const q=el('vpQuadro'); if(q)q.innerHTML='';
-    const cx=el('vpBox'); if(cx)cx.classList.remove('vert');
+    const cx=el('vpBox'); if(cx){cx.classList.remove('vert');cx.classList.remove('comItens');}
     const t=el('vpTit'); if(t)t.textContent='';
+    VC_ATUAL=[];
+    const fi=el('vpItens'); if(fi){fi.innerHTML='';fi.style.display='none';}
+    const fb=el('vpBarra'); if(fb){fb.innerHTML='';fb.style.display='none';}
     el('vp').classList.remove('on');
     document.body.style.overflow='';
   };
@@ -2223,10 +2441,14 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const b=el('sacolaBar'); if(!b)return;
     const n=qtdSacola();
     b.classList.toggle('on',n>0&&podeComprar());
+    vcRepintar();
     if(!n)return;
     el('sacolaQtd').textContent=n+(n===1?' item':' itens');
     el('sacolaTotal').textContent=fmtReal(totalSacola());
   }
+  /* A faixa do video mostra quantidade e total. Sem repintar aqui, tirar um
+     item pela folha do pedido deixaria o video mostrando o numero antigo. */
+  function vcRepintar(){ try{ if(el('vp')&&el('vp').classList.contains('on'))vcPintar(); }catch(_){} }
 
   /* ---------------- folha do pedido ---------------- */
   window.fecharPedido=function(){
