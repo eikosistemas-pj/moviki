@@ -14,6 +14,59 @@
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <link rel="icon" href="/favicon512.png">
+<!-- DADOS ESTRUTURADOS — plano Enterprise
+     Ate 16/09/2026 o site nao tinha nenhuma marcacao fora do FAQPage da
+     /aovivo. Sem isso o Google le a pagina como texto solto: nao sabe que
+     ha uma empresa por tras, quais sao os planos nem quanto custam. -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "SoftwareApplication",
+   "name": "Moviki Enterprise",
+   "applicationCategory": "BusinessApplication",
+   "operatingSystem": "Web, Android, iOS",
+   "url": "https://www.moviki.com.br/enterprise.html",
+   "inLanguage": "pt-BR",
+   "description": "Plano com Pix dentro da própria live, ferramentas de venda da transmissão e vários pontos no mapa num cadastro só.",
+   "publisher": {
+    "@id": "https://www.moviki.com.br/#organizacao"
+   },
+   "offers": [
+    {
+     "@type": "Offer",
+     "name": "Enterprise mensal",
+     "price": "99.90",
+     "priceCurrency": "BRL",
+     "url": "https://www.moviki.com.br/enterprise.html",
+     "description": "Até 3 pontos inclusos; ponto extra R$ 19,90 por mês.",
+     "availability": "https://schema.org/InStock",
+     "category": "subscription"
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://www.moviki.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Enterprise",
+     "item": "https://www.moviki.com.br/enterprise.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+
 <script src="/mvmetrica.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -149,7 +202,7 @@
 
 <footer><div class="wrap">
   Moviki · O mapa inteligente dos negócios em movimento · <a href="tel:+554120186848" data-ev="telefone_rodape">(41) 2018-6848</a><br>
-  <a href="https://moviki.com.br">moviki.com.br</a> · <a href="/termos.html" data-ev="termos">Termos</a> · <a href="/privacidade.html" data-ev="privacidade">Privacidade</a>
+  <a href="https://www.moviki.com.br">moviki.com.br</a> · <a href="/termos.html" data-ev="termos">Termos</a> · <a href="/privacidade.html" data-ev="privacidade">Privacidade</a>
 </div></footer>
 
 <script>

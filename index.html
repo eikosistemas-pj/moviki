@@ -39,6 +39,127 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+
+<!-- DADOS ESTRUTURADOS — home
+     Ate 16/09/2026 o site nao tinha nenhuma marcacao fora do FAQPage da
+     /aovivo. Sem isso o Google le a pagina como texto solto: nao sabe que
+     ha uma empresa por tras, quais sao os planos nem quanto custam. -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://www.moviki.com.br/#organizacao",
+   "name": "Moviki",
+   "legalName": "EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA",
+   "taxID": "68.289.841/0001-02",
+   "url": "https://www.moviki.com.br/",
+   "logo": "https://www.moviki.com.br/logo.png",
+   "image": "https://www.moviki.com.br/ogmoviki.jpg",
+   "description": "Plataforma onde o pequeno e médio comerciante é encontrado no mapa em tempo real e vende ao vivo pela câmera do celular, com Pix caindo direto na conta dele.",
+   "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua Visconde do Rio Branco, 1488, Conj. 909",
+    "addressLocality": "Curitiba",
+    "addressRegion": "PR",
+    "postalCode": "80420-210",
+    "addressCountry": "BR"
+   },
+   "contactPoint": [
+    {
+     "@type": "ContactPoint",
+     "telephone": "+55-41-2018-6848",
+     "email": "suporte@moviki.com.br",
+     "contactType": "customer support",
+     "areaServed": "BR",
+     "availableLanguage": "Portuguese"
+    }
+   ],
+   "sameAs": [
+    "https://instagram.com/moviki.oficial",
+    "https://facebook.com/profile.php?id=61592924561303",
+    "https://youtube.com/@app.moviki"
+   ]
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://www.moviki.com.br/#site",
+   "url": "https://www.moviki.com.br/",
+   "name": "Moviki",
+   "inLanguage": "pt-BR",
+   "publisher": {
+    "@id": "https://www.moviki.com.br/#organizacao"
+   }
+  },
+  {
+   "@type": "SoftwareApplication",
+   "@id": "https://www.moviki.com.br/#aplicativo",
+   "name": "Moviki",
+   "applicationCategory": "BusinessApplication",
+   "operatingSystem": "Web, Android, iOS",
+   "url": "https://www.moviki.com.br/",
+   "inLanguage": "pt-BR",
+   "description": "Coloque o negócio no mapa em tempo real, transmita ao vivo pela câmera do celular e receba por Pix direto na sua conta, sem comissão por venda.",
+   "publisher": {
+    "@id": "https://www.moviki.com.br/#organizacao"
+   },
+   "featureList": [
+    "Localização em tempo real no mapa",
+    "Página pública própria com link curto",
+    "Cardápio digital com fotos",
+    "Venda ao vivo pela câmera do celular (Modo Live)",
+    "Pagamento por Pix direto na conta do lojista",
+    "Promoções e agenda de eventos",
+    "Programa de parceiros com comissão recorrente"
+   ],
+   "offers": [
+    {
+     "@type": "Offer",
+     "name": "Básico",
+     "price": "0",
+     "priceCurrency": "BRL",
+     "url": "https://www.moviki.com.br/",
+     "description": "Pino no mapa em tempo real, página pública e link próprio.",
+     "availability": "https://schema.org/InStock",
+     "category": "subscription"
+    },
+    {
+     "@type": "Offer",
+     "name": "Pró",
+     "price": "37.90",
+     "priceCurrency": "BRL",
+     "url": "https://www.moviki.com.br/comerciantes.html",
+     "description": "Cardápio, promoções, eventos e desempenho completo.",
+     "availability": "https://schema.org/InStock",
+     "category": "subscription"
+    },
+    {
+     "@type": "Offer",
+     "name": "Premium",
+     "price": "49.90",
+     "priceCurrency": "BRL",
+     "url": "https://www.moviki.com.br/premium.html",
+     "description": "Modo Live, venda pelo cardápio com Pix, fotos e vídeos, logo no pino.",
+     "availability": "https://schema.org/InStock",
+     "category": "subscription"
+    },
+    {
+     "@type": "Offer",
+     "name": "Enterprise",
+     "price": "99.90",
+     "priceCurrency": "BRL",
+     "url": "https://www.moviki.com.br/enterprise.html",
+     "description": "Pix dentro da live, ferramentas de venda da transmissão e vários pontos.",
+     "availability": "https://schema.org/InStock",
+     "category": "subscription"
+    }
+   ]
+  }
+ ]
+}
+</script>
+
   <link rel="stylesheet" href="movikiui.css">
   <script src="/mvmetrica.js"></script>
 

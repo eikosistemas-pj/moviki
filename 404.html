@@ -1026,7 +1026,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     <div class="abaConteudo" id="abaConteudo"></div>
   </section>
 
-  <a class="credito" href="https://moviki.com.br" target="_blank" rel="noopener" data-ev="credito_moviki">
+  <a class="credito" href="https://www.moviki.com.br" target="_blank" rel="noopener" data-ev="credito_moviki">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
     feito com moviki
   </a>
@@ -1297,7 +1297,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   const params=new URLSearchParams(window.location.search);
   const demoOn=params.get('demo')==='1';
 
-  function mostrarTela(t,x,link,pose){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://moviki.com.br">Conhecer o Moviki</a>':'');try{var v=el('telaVik');v.src='/icones-premium/vik-'+(pose||'neutro')+'.webp';v.classList.add('on');el('tela').classList.add('comVik');}catch(e){}el('tela').classList.remove('escondido');}
+  function mostrarTela(t,x,link,pose){el('telaTitulo').textContent=t;el('telaTexto').innerHTML=x+(link?'<br><a href="https://www.moviki.com.br">Conhecer o Moviki</a>':'');try{var v=el('telaVik');v.src='/icones-premium/vik-'+(pose||'neutro')+'.webp';v.classList.add('on');el('tela').classList.add('comVik');}catch(e){}el('tela').classList.remove('escondido');}
   function esconderTela(){el('tela').classList.add('escondido');}
 
   function liberaConteudo(){return planoAtual==='pro'||planoAtual==='premium'||planoAtual==='enterprise';}
@@ -2732,7 +2732,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   /* ============ compartilhar / avaliar ============ */
   window.voltarSite=function(){
     if(history.length>1)history.back();
-    else window.location.href='https://moviki.com.br';
+    else window.location.href='https://www.moviki.com.br';
   };
   window.compartilhar=async function(){
     const url=window.location.href;

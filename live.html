@@ -491,7 +491,7 @@ svg{display:block}
   function linkAgenda(ag){
     const i=new Date(ms(ag.em)), f=new Date(ms(ag.em)+3600000);
     const z=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
-    const url='https://moviki.com.br/live/'+slug;
+    const url='https://www.moviki.com.br/live/'+slug;
     return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Live: '+(neg&&neg.nome||'Moviki')+(ag.titulo?' — '+ag.titulo:''))+
       '&dates='+z(i)+'/'+z(f)+'&details='+encodeURIComponent('Assista em '+url)+'&location='+encodeURIComponent(url);
   }
@@ -735,7 +735,7 @@ svg{display:block}
 
   /* ================= compartilhar ================= */
   el('btnCompartilhar').addEventListener('click',async()=>{
-    const url='https://moviki.com.br/live/'+slug+'?utm_source=live&utm_medium=compartilhar';
+    const url='https://www.moviki.com.br/live/'+slug+'?utm_source=live&utm_medium=compartilhar';
     const t=(neg&&neg.nome?neg.nome:'Negócio')+' está ao vivo no Moviki';
     ev('live_compartilhar',{slug});
     try{if(navigator.share){await navigator.share({title:t,text:t,url});return;}}catch(_){return;}
