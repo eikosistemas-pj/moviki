@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-presenca -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-csp1 -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#060d18">
 <meta name="robots" content="noindex">
@@ -317,7 +317,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-16-presenca';
+  window.MOVIKI_VERSAO='2026-09-16-csp1';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
