@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-16-b4a | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-16-teto | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -50,6 +50,78 @@ const PROJ = 'moviki-app';
 const BASE_REST = 'https://firestore.googleapis.com/v1/projects/' + PROJ + '/databases/(default)/documents';
 const CERTS = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
 const CF_API = 'https://api.cloudflare.com/client/v4/accounts/';
+const CF_GRAPHQL = 'https://api.cloudflare.com/client/v4/graphql';
+
+/* ================= TETO DE VIDEO (16/09/2026) =================
+   O Cloudflare Stream NAO tem teto de gasto. "Budget alerts" existem em
+   Manage Account > Billing > Billable Usage, mas a propria documentacao diz
+   que sao informativos: nao pausam nem limitam nada. O preco e por minuto
+   ENTREGUE (US$ 1 por 1.000), ou seja, espectadores x duracao. Uma live de
+   3 horas com 500 conexoes custa US$ 90 — e nao precisa ser ataque: basta dar
+   certo.
+   Entao a parede e aqui. O consumo real vem da analytics do proprio
+   Cloudflare (dataset streamMinutesViewedAdaptiveGroups), medido no maximo
+   uma vez a cada 15 minutos por instancia, e comparado com o teto que o dono
+   escreve no painel (configuracoes/liveTermos.tetoMinutosMes).
+   Teto ausente ou zero = SEM teto, igual a lista do beta vazia.
+
+   ESTA TRAVA FALHA ABERTA, DE PROPOSITO — e a unica do projeto que falha
+   assim. Se a analytics nao responder, a live COMECA. Derrubar a
+   transmissao de todo mundo porque uma API de RELATORIO esteve fora seria
+   trocar um risco de conta por uma parada de produto. O painel do dono
+   mostra quando a medicao esta velha; a chave-mestra continua sendo o botao
+   de emergencia.
+
+   O token precisa da permissao Account Analytics, alem de Stream Editar. Sem
+   ela a medicao volta com erro e o painel diz exatamente isso. */
+const CONSUMO_TTL_MS = 900000;
+let consumoCache = { em: 0, mes: 0, semana: 0, erro: 'nunca' };
+
+function diaUTC(d) { return new Date(d).toISOString().slice(0, 10); }
+
+async function medirConsumo() {
+  if (consumoCache.em && Date.now() - consumoCache.em < CONSUMO_TTL_MS) return consumoCache;
+  const conta = process.env.CF_ACCOUNT_ID, tok = process.env.CF_STREAM_TOKEN;
+  if (!conta || !tok) { consumoCache = { em: Date.now(), mes: 0, semana: 0, erro: 'config' }; return consumoCache; }
+  const agora = new Date();
+  const primeiro = diaUTC(Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), 1));
+  const amanha = diaUTC(Date.now() + 86400000);
+  const seteDias = diaUTC(Date.now() - 6 * 86400000);
+  const query = 'query($t:string!,$m:Date,$s:Date,$f:Date){viewer{accounts(filter:{accountTag:$t}){'
+    + 'mes:streamMinutesViewedAdaptiveGroups(filter:{date_geq:$m,date_lt:$f},limit:1){sum{minutesViewed}}'
+    + 'semana:streamMinutesViewedAdaptiveGroups(filter:{date_geq:$s,date_lt:$f},limit:1){sum{minutesViewed}}'
+    + '}}}';
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 6000);
+  try {
+    const r = await fetch(CF_GRAPHQL, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, variables: { t: conta, m: primeiro, s: seteDias, f: amanha } }),
+    });
+    clearTimeout(t);
+    const j = await r.json().catch(() => null);
+    const erros = j && j.errors;
+    if (!r.ok || (erros && erros.length)) {
+      const txt = JSON.stringify(erros || j || {}).slice(0, 300);
+      console.error('live: analytics', r.status, txt);
+      const semPerm = /authentic|permission|not authorized|forbidden/i.test(txt) || r.status === 403;
+      consumoCache = { em: Date.now(), mes: consumoCache.mes, semana: consumoCache.semana,
+                       erro: semPerm ? 'sem_permissao' : 'analytics' };
+      return consumoCache;
+    }
+    const c = j && j.data && j.data.viewer && j.data.viewer.accounts && j.data.viewer.accounts[0];
+    const somar = (lista) => (Array.isArray(lista) ? lista : [])
+      .reduce((n, x) => n + (Number(x && x.sum && x.sum.minutesViewed) || 0), 0);
+    consumoCache = { em: Date.now(), mes: somar(c && c.mes), semana: somar(c && c.semana), erro: '' };
+    return consumoCache;
+  } catch (e) {
+    clearTimeout(t);
+    console.error('live: analytics falhou', String(e));
+    consumoCache = { em: Date.now(), mes: consumoCache.mes, semana: consumoCache.semana, erro: 'rede' };
+    return consumoCache;
+  }
+}
 const ACEITE_VERSAO = '1.0';   // mudou o texto das Regras da Live -> sobe aqui, no estudio e na pagina de regras
 
   /* ---- FILTRO DE CONTEUDO DA LIVE — 11/09/2026 ----
@@ -447,6 +519,25 @@ module.exports = async (req, res) => {
   if (!uid) return responder(res, 401, { erro: 'token' });
 
   /* ---- acoes do DONO do Moviki ---- */
+  /* ---- o dono pergunta quanto de video ja foi entregue no mes ---- */
+  if (corpo.acao === 'adm_consumo') {
+    const adm0 = await lerDoc('admins/' + encodeURIComponent(uid));
+    if (adm0.erro) return responder(res, 503, { erro: adm0.erro });
+    if (!adm0.doc) return responder(res, 403, { erro: 'nao_admin' });
+    if (corpo.agora === true) consumoCache = { em: 0, mes: consumoCache.mes, semana: consumoCache.semana, erro: consumoCache.erro };
+    const c = await medirConsumo();
+    const t0 = await lerDoc('configuracoes/liveTermos');
+    const teto = Number((t0.doc && t0.doc.tetoMinutosMes) || 0);
+    return responder(res, 200, {
+      ok: true, mes: c.mes, semana: c.semana, erro: c.erro || '',
+      medidoEm: c.em || 0, teto: teto,
+      /* US$ 1 por 1.000 minutos entregues, preco publico do Stream. O
+         armazenamento e cobrado a parte e nao entra nesta conta: as lives do
+         Moviki sao criadas com recording desligado. */
+      custoUsd: Math.round((c.mes / 1000) * 100) / 100,
+    });
+  }
+
   if (corpo.acao === 'adm_encerrar') {
     const adm = await lerDoc('admins/' + encodeURIComponent(uid));
     if (adm.erro) return responder(res, 503, { erro: adm.erro });
@@ -500,6 +591,20 @@ module.exports = async (req, res) => {
      leitura ja devolveu erro acima. */
   if (te.doc && te.doc.liveDesligada === true) {
     return responder(res, 403, { erro: 'desligada', mensagem: 'As transmissoes ao vivo estao temporariamente desligadas para manutencao.' });
+  }
+
+  /* TETO DE VIDEO DO MES. Teto ausente ou zero = sem teto. Falha ABERTA: se a
+     medicao nao respondeu, `erro` vem preenchido e a live segue. */
+  const tetoMin = Number((te.doc && te.doc.tetoMinutosMes) || 0);
+  if (tetoMin > 0) {
+    const consumo = await medirConsumo();
+    if (!consumo.erro && consumo.mes >= tetoMin) {
+      console.log('live: teto de video do mes atingido', consumo.mes, '/', tetoMin);
+      return responder(res, 403, {
+        erro: 'teto_video',
+        mensagem: 'As transmissoes ao vivo estao pausadas ate o proximo ciclo. Tente novamente mais tarde.',
+      });
+    }
   }
 
   /* Lista de liberacao (beta fechado). Regra: lista VAZIA ou ausente = live
