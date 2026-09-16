@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-16-teto | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-16-teto2 | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -75,16 +75,32 @@ const CF_GRAPHQL = 'https://api.cloudflare.com/client/v4/graphql';
    O token precisa da permissao Account Analytics, alem de Stream Editar. Sem
    ela a medicao volta com erro e o painel diz exatamente isso. */
 const CONSUMO_TTL_MS = 900000;
-let consumoCache = { em: 0, mes: 0, semana: 0, erro: 'nunca' };
+let consumoCache = { em: 0, mes: 0, semana: 0, erro: 'nunca', desde: '', ciclo: 0 };
 
 function diaUTC(d) { return new Date(d).toISOString().slice(0, 10); }
 
-async function medirConsumo() {
-  if (consumoCache.em && Date.now() - consumoCache.em < CONSUMO_TTL_MS) return consumoCache;
+/* O ciclo de faturamento do Cloudflare NAO e o mes-calendario: ele comeca no
+   dia em que a conta assinou (na conta do Moviki, dia 12). Medir de 01 ate
+   hoje deixaria o teto 11 dias fora de fase com a fatura — nos primeiros dias
+   do mes o contador zerava enquanto o dinheiro continuava correndo.
+   O dia da virada fica em configuracoes/liveTermos.cicloDia (padrao 1), e o
+   dono ve e edita esse numero no painel. Teto de 28 para nao quebrar em
+   fevereiro. */
+function inicioDoCiclo(diaVirada) {
+  const d = Math.max(1, Math.min(28, Number(diaVirada) || 1));
+  const hoje = new Date();
+  let ano = hoje.getUTCFullYear(), mes = hoje.getUTCMonth();
+  if (hoje.getUTCDate() < d) { mes -= 1; if (mes < 0) { mes = 11; ano -= 1; } }
+  return diaUTC(Date.UTC(ano, mes, d));
+}
+
+async function medirConsumo(cicloDia) {
+  const ciclo = Math.max(1, Math.min(28, Number(cicloDia) || 1));
+  /* trocar o dia do ciclo muda a janela: a medicao antiga nao vale mais */
+  if (consumoCache.em && consumoCache.ciclo === ciclo && Date.now() - consumoCache.em < CONSUMO_TTL_MS) return consumoCache;
   const conta = process.env.CF_ACCOUNT_ID, tok = process.env.CF_STREAM_TOKEN;
-  if (!conta || !tok) { consumoCache = { em: Date.now(), mes: 0, semana: 0, erro: 'config' }; return consumoCache; }
-  const agora = new Date();
-  const primeiro = diaUTC(Date.UTC(agora.getUTCFullYear(), agora.getUTCMonth(), 1));
+  if (!conta || !tok) { consumoCache = { em: Date.now(), mes: 0, semana: 0, erro: 'config', desde: '', ciclo: ciclo }; return consumoCache; }
+  const primeiro = inicioDoCiclo(ciclo);
   const amanha = diaUTC(Date.now() + 86400000);
   const seteDias = diaUTC(Date.now() - 6 * 86400000);
   const query = 'query($t:string!,$m:Date,$s:Date,$f:Date){viewer{accounts(filter:{accountTag:$t}){'
@@ -107,18 +123,18 @@ async function medirConsumo() {
       console.error('live: analytics', r.status, txt);
       const semPerm = /authentic|permission|not authorized|forbidden/i.test(txt) || r.status === 403;
       consumoCache = { em: Date.now(), mes: consumoCache.mes, semana: consumoCache.semana,
-                       erro: semPerm ? 'sem_permissao' : 'analytics' };
+                       erro: semPerm ? 'sem_permissao' : 'analytics', desde: primeiro, ciclo: ciclo };
       return consumoCache;
     }
     const c = j && j.data && j.data.viewer && j.data.viewer.accounts && j.data.viewer.accounts[0];
     const somar = (lista) => (Array.isArray(lista) ? lista : [])
       .reduce((n, x) => n + (Number(x && x.sum && x.sum.minutesViewed) || 0), 0);
-    consumoCache = { em: Date.now(), mes: somar(c && c.mes), semana: somar(c && c.semana), erro: '' };
+    consumoCache = { em: Date.now(), mes: somar(c && c.mes), semana: somar(c && c.semana), erro: '', desde: primeiro, ciclo: ciclo };
     return consumoCache;
   } catch (e) {
     clearTimeout(t);
     console.error('live: analytics falhou', String(e));
-    consumoCache = { em: Date.now(), mes: consumoCache.mes, semana: consumoCache.semana, erro: 'rede' };
+    consumoCache = { em: Date.now(), mes: consumoCache.mes, semana: consumoCache.semana, erro: 'rede', desde: primeiro, ciclo: ciclo };
     return consumoCache;
   }
 }
@@ -524,13 +540,14 @@ module.exports = async (req, res) => {
     const adm0 = await lerDoc('admins/' + encodeURIComponent(uid));
     if (adm0.erro) return responder(res, 503, { erro: adm0.erro });
     if (!adm0.doc) return responder(res, 403, { erro: 'nao_admin' });
-    if (corpo.agora === true) consumoCache = { em: 0, mes: consumoCache.mes, semana: consumoCache.semana, erro: consumoCache.erro };
-    const c = await medirConsumo();
+    if (corpo.agora === true) consumoCache = { em: 0, mes: consumoCache.mes, semana: consumoCache.semana, erro: consumoCache.erro, desde: consumoCache.desde, ciclo: 0 };
     const t0 = await lerDoc('configuracoes/liveTermos');
     const teto = Number((t0.doc && t0.doc.tetoMinutosMes) || 0);
+    const cicloDia = Number((t0.doc && t0.doc.cicloDia) || 1);
+    const c = await medirConsumo(cicloDia);
     return responder(res, 200, {
       ok: true, mes: c.mes, semana: c.semana, erro: c.erro || '',
-      medidoEm: c.em || 0, teto: teto,
+      medidoEm: c.em || 0, teto: teto, cicloDia: cicloDia, desde: c.desde || '',
       /* US$ 1 por 1.000 minutos entregues, preco publico do Stream. O
          armazenamento e cobrado a parte e nao entra nesta conta: as lives do
          Moviki sao criadas com recording desligado. */
@@ -597,7 +614,7 @@ module.exports = async (req, res) => {
      medicao nao respondeu, `erro` vem preenchido e a live segue. */
   const tetoMin = Number((te.doc && te.doc.tetoMinutosMes) || 0);
   if (tetoMin > 0) {
-    const consumo = await medirConsumo();
+    const consumo = await medirConsumo(Number((te.doc && te.doc.cicloDia) || 1));
     if (!consumo.erro && consumo.mes >= tetoMin) {
       console.log('live: teto de video do mes atingido', consumo.mes, '/', tetoMin);
       return responder(res, 403, {
