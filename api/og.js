@@ -60,7 +60,11 @@ const API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAjr0QED8JfHvIb1UtsM0CWHDX
 /* Dominio canonico. O site responde TAMBEM em www.moviki.com.br, e a canonical
    nao pode seguir o host da requisicao: dois hosts com canonical diferente e
    exatamente o conteudo duplicado que a canonical existe pra evitar. Sempre BASE. */
-const BASE = 'https://moviki.com.br';
+/* www, nunca o apex. Na Vercel o apex esta como "Redirects to www": esta
+   constante monta o canonical, o og:url e o @id do JSON-LD de TODA pagina de
+   negocio. Apontando para o apex, cada canonical do site indicava uma URL que
+   responde 301 — o Google segue, mas gasta rastreamento e dilui o sinal. */
+const BASE = 'https://www.moviki.com.br';
 const OG_PADRAO = BASE + '/ogmoviki.jpg';
 const SLOGAN = 'O mapa inteligente dos negócios em movimento.';
 
