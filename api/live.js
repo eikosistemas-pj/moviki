@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-16-teto3 | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-16-tetoplano | repo: moviki (site publico)
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -675,12 +675,22 @@ module.exports = async (req, res) => {
   /* BARREIRA 2 — freio duravel e cota, no robo, ANTES do Cloudflare.
      Contar a cota so depois (como era ate aqui) deixava a entrada do Cloudflare
      ja criada quando a cota estava estourada. */
-  const reserva = await chamarRobo('live_reservar', { uid, periodo: periodoDaAssinatura(a.doc) });
+  const reserva = await chamarRobo('live_reservar', { uid, periodo: periodoDaAssinatura(a.doc), nivel: nivel.nivel });
   if (!reserva.ok) {
     if (reserva.erro === 'cota') {
       return responder(res, 403, {
         erro: 'cota', usadas: reserva.usadas || 0, cota: reserva.cota || 0,
         mensagem: 'Voce ja usou as lives do periodo de teste. Assinando, a quantidade deixa de ter limite.',
+      });
+    }
+    /* 16/09/2026 — teto de minutos de VIDEO do plano (espectadores x duracao),
+       diferente do relogio da live. Recusado aqui, antes do Cloudflare. */
+    if (reserva.erro === 'teto_video') {
+      return responder(res, 403, {
+        erro: 'teto_video', usadoMin: reserva.usadoMin || 0, tetoMin: reserva.tetoMin || 0,
+        mensagem: 'Seu plano atingiu o limite de minutos de video deste ciclo (' +
+                  (reserva.usadoMin || 0) + ' de ' + (reserva.tetoMin || 0) + ' min). ' +
+                  'O limite conta espectadores x duracao e renova no proximo ciclo.',
       });
     }
     if (reserva.erro === 'freio') {
