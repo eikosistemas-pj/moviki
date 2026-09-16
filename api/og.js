@@ -54,6 +54,7 @@
 const fs = require('fs');
 const path = require('path');
 const gauth = require('../lib/gauth');
+const seo = require('../lib/seo');
 
 const PROJ = 'moviki-app';
 const API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw';
@@ -377,7 +378,11 @@ module.exports = async (req, res) => {
     url: BASE + '/' + slug,
     imagem: imagem,
     imagemAlt: 'Foto de ' + nome,
-    indexar: completo,
+    /* 16/09/2026 — o portao acima pergunta "a pagina esta preenchida?".
+       Este pergunta "isto e um negocio de verdade?". Slug de teste e e-mail
+       digitado no campo do apelido passavam no primeiro. A regra mora em
+       lib/seo.js porque o api/sitemap.js precisa da MESMA resposta. */
+    indexar: completo && seo.indexavelPeloSlug(slug),
     negocio: true,
     jsonld: ld
   });

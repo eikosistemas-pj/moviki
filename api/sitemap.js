@@ -44,6 +44,7 @@
 'use strict';
 
 const gauth = require('../lib/gauth');
+const seo = require('../lib/seo');
 
 const PROJ = 'moviki-app';
 const API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw';
@@ -134,6 +135,10 @@ async function negocios(token) {
     const f = d.fields;
     const slug = txt(f.slug);
     if (!slugOk(slug) || vistos[slug.toLowerCase()]) continue;
+    /* Mesma pergunta que o og.js faz antes de escrever o meta robots. Se as
+       duas divergirem, o Search Console enche de "Enviada, mas marcada como
+       noindex" — por isso a regra vive em lib/seo.js, nao aqui. */
+    if (!seo.indexavelPeloSlug(slug)) continue;
     if (!indexavel(f)) continue;
     vistos[slug.toLowerCase()] = 1;
     /* updateTime vem do proprio Firestore — nao depende de o painel gravar um
