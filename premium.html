@@ -3,11 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Moviki Premium — sua marca no mapa, não mais um pino igual</title>
+<title>Moviki Premium — venda ao vivo e receba por Pix</title>
 <script src="/mvmetrica.js"></script>
-<meta name="description" content="No Premium sua logo aparece no pino do mapa, sua página ganha a cor da sua marca, suas fotos vão pro ar e o cardápio, promoções e eventos ficam liberados. A partir de R$ 41,58/mês.">
-<meta property="og:title" content="Moviki Premium — sua marca no mapa">
-<meta property="og:description" content="Seu pino deixa de ser mais um ponto igual e passa a ser o seu negócio.">
+<meta name="description" content="O Premium libera o Modo Live — transmitir e vender pela câmera do celular — e o cardápio que recebe por Pix direto na sua conta, além da sua logo no pino do mapa e das fotos dos produtos. A partir de R$ 41,58/mês.">
+<link rel="canonical" href="https://www.moviki.com.br/premium.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.moviki.com.br/premium.html">
+<meta property="og:title" content="Moviki Premium — venda ao vivo e receba por Pix">
+<meta property="og:description" content="Transmita ao vivo pela câmera do celular, venda pelo cardápio com Pix na sua conta e ganhe a sua marca no pino do mapa.">
+<meta property="og:image" content="https://www.moviki.com.br/favicon512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
 <link rel="icon" href="https://moviki.com.br/favicon512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -160,6 +166,7 @@
     .precoLinha td:first-child{font-size:12px;padding-left:10px}
   }
 </style>
+<script>window.MOVIKI_VERSAO='2026-09-16-livecommerce1';</script>
 </head>
 <body>
 
@@ -172,14 +179,73 @@
 <!-- HERO -->
 <section class="hero"><div class="wrap">
   <div class="selo">⚡ Ativação imediata no seu painel</div>
-  <h1>No mapa, quem tem marca<br><span>é notado.</span></h1>
-  <p>Hoje o seu ponto é <b>mais um pino igual</b> no meio de vários. No Premium ele vira <b>o seu negócio</b>: sua logo no pino, sua cor na página, suas fotos no ar. É o que faz o cliente parar o dedo na tela — e clicar em você.</p>
+  <h1>O plano em que o seu negócio<br><span>começa a vender.</span></h1>
+  <p>O Premium liga as duas coisas que tiram o seu negócio da vitrine: <b>o Modo Live</b>, pra você transmitir e vender pela câmera do celular, e <b>o cardápio que recebe por Pix</b> direto na sua conta. Junto vem o pacote de marca — sua logo no pino, sua cor na página, suas fotos no ar.</p>
   <div class="ctas">
     <a class="btn btn-prim pulsa" href="https://app.moviki.com.br?plano=premium&periodo=mensal">✨ Quero ser Premium agora</a>
     <a class="btn btn-ghost" href="#comparar">Comparar os planos</a>
   </div>
   <div class="micro">A partir de <b>R$ 41,58/mês</b> no plano anual · cerca de R$ 1,39 por dia</div>
 
+</div></section>
+
+<!-- O QUE SÓ O PREMIUM FAZ — 16/09/2026.
+     Esta pagina vendia so marca e imagem. Desde 14/09 o Premium e o plano que
+     libera o Modo Live e o cardapio compravel; sem isso aqui, a landing que
+     recebe o trafego pago falava de um produto que nao existe mais sozinho.
+     Travas conferidas no codigo: api/live.js (live = premium e enterprise) e
+     lib/checkout.js (cardapio compravel = premium e enterprise; Pix dentro da
+     live = enterprise). -->
+<section><div class="wrap">
+  <h2>O que <span>só o Premium</span> faz</h2>
+  <p class="lead">No Pró o cliente vê o seu cardápio. No Premium ele compra nele — e assiste você vender ao vivo.</p>
+  <div class="grid">
+    <div class="card"><div class="ico"><img src="/icones-premium/live.png" alt="Modo Live" loading="lazy" onerror="mvIco(this,'','🔴')"></div><h3>Modo Live: venda pela câmera</h3><p>Você transmite do próprio celular, direto do painel, sem instalar nada. O produto fica fixo na tela com o preço, o cliente pergunta no chat e você responde na hora. Até 1 hora por transmissão e 5 produtos na sacolinha.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/pix.png" alt="Cardápio que vende com Pix" loading="lazy" onerror="mvIco(this,'','💸')"></div><h3>Cardápio que vende, com Pix</h3><p>O cliente monta o pedido no seu cardápio e paga por Pix na mesma tela. O dinheiro cai direto na sua chave — sem gateway, sem tarifa por venda e sem passar pela conta do Moviki. Pedido mínimo de R$ 5.</p><span class="tag">EXCLUSIVO PREMIUM</span></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/chat.png" alt="Pedido organizado" loading="lazy" onerror="mvIco(this,'','📥')"></div><h3>O pedido chega pronto</h3><p>Nome, WhatsApp, itens e se é retirada ou entrega, na aba Financeiro do painel. Você confere o pagamento no seu banco e confirma. <b>Receber por Pix dentro da própria live</b> é recurso do Enterprise.</p></div>
+  </div>
+  <div class="ctas" style="margin-top:28px"><a class="btn btn-prim pulsa" href="https://app.moviki.com.br?plano=premium&periodo=mensal">Quero vender ao vivo</a></div>
+</div></section>
+
+<!-- DOR -->
+<section class="dor"><div class="wrap">
+  <h2>O que está acontecendo agora sem o Premium</h2>
+  <p class="lead">Não é falta de cliente. É falta de motivo pra ele clicar em você e não no pino do lado.</p>
+  <div class="grid">
+    <div class="card"><div class="ico"><img src="/icones-premium/dorpino.png" alt="Pino cinza sem identidade" loading="lazy" onerror="mvIco(this,'dor-pino.png','😐')"></div><h3>Você é um ponto azul</h3><p>Seu pino é idêntico ao de todo mundo. Quem abre o mapa não tem como saber que ali é você antes de clicar — e na maioria das vezes ele não clica.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/dorfoto.png" alt="Produto sem foto" loading="lazy" onerror="mvIco(this,'dor-foto.png','🙈')"></div><h3>Seus produtos não aparecem</h3><p>Sem foto, o cliente lê "porção de camarão" e segue o dedo. Comida, roupa e serviço se vendem pelo olho: sem imagem, não dá vontade.</p></div>
+    <div class="card"><div class="ico"><img src="/icones-premium/dormarca.png" alt="Marca apagada" loading="lazy" onerror="mvIco(this,'dor-marca.png','🌫️')"></div><h3>Sua marca some</h3><p>Você investiu em logo, cor, identidade — e na hora que mais importa, quando o cliente está decidindo onde ir, nada disso aparece.</p></div>
+  </div>
+</div></section>
+
+<!-- ANTES x DEPOIS -->
+<section><div class="wrap">
+  <h2>A mesma tela. <span>Dois resultados.</span></h2>
+  <p class="lead">Essa é literalmente a única diferença que o cliente vê no mapa antes de decidir.</p>
+  <div class="versus">
+    <div class="vsBox">
+      <div class="vsRot">SEM PREMIUM</div>
+      <svg viewBox="0 0 160 160" width="130" height="130" aria-hidden="true">
+        <path d="M80 145c0 0-42-40-42-68a42 42 0 1 1 84 0c0 28-42 68-42 68z" fill="#3c5a80"/>
+        <circle cx="80" cy="76" r="15" fill="#16304f"/>
+      </svg>
+      <div class="vsTxt">"Deve ser um lanche qualquer."<br>O cliente passa reto.</div>
+    </div>
+    <div class="vsBox bom">
+      <div class="vsRot">COM PREMIUM</div>
+      <svg viewBox="0 0 160 160" width="130" height="130" aria-hidden="true">
+        <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#0066FF"/></linearGradient>
+        <clipPath id="cl2"><circle cx="80" cy="72" r="28"/></clipPath></defs>
+        <circle class="anel" cx="80" cy="72" r="16" fill="none" stroke="#00D4FF" stroke-width="2"/>
+        <path d="M80 148c0 0-44-42-44-71a44 44 0 1 1 88 0c0 29-44 71-44 71z" fill="url(#g2)"/>
+        <circle cx="80" cy="72" r="29" fill="#04101e"/>
+        <g clip-path="url(#cl2)"><rect x="52" y="44" width="56" height="56" fill="#fff"/>
+        <text x="80" y="85" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="32" fill="#0066FF">M</text></g>
+        <circle cx="80" cy="72" r="29" fill="none" stroke="#fff" stroke-width="2.5"/>
+      </svg>
+      <div class="vsTxt">"Opa, é o pessoal do caldo!"<br><b>O cliente clica.</b></div>
+    </div>
+  </div>
   <div class="palcoMapa">
     <svg viewBox="0 0 640 320" role="img" aria-label="Mapa com vários pinos iguais e um pino com a logo do negócio em destaque">
       <defs>
@@ -229,47 +295,6 @@
   </div>
 </div></section>
 
-<!-- DOR -->
-<section class="dor"><div class="wrap">
-  <h2>O que está acontecendo agora sem o Premium</h2>
-  <p class="lead">Não é falta de cliente. É falta de motivo pra ele clicar em você e não no pino do lado.</p>
-  <div class="grid">
-    <div class="card"><div class="ico"><img src="/icones-premium/dorpino.png" alt="Pino cinza sem identidade" loading="lazy" onerror="mvIco(this,'dor-pino.png','😐')"></div><h3>Você é um ponto azul</h3><p>Seu pino é idêntico ao de todo mundo. Quem abre o mapa não tem como saber que ali é você antes de clicar — e na maioria das vezes ele não clica.</p></div>
-    <div class="card"><div class="ico"><img src="/icones-premium/dorfoto.png" alt="Produto sem foto" loading="lazy" onerror="mvIco(this,'dor-foto.png','🙈')"></div><h3>Seus produtos não aparecem</h3><p>Sem foto, o cliente lê "porção de camarão" e segue o dedo. Comida, roupa e serviço se vendem pelo olho: sem imagem, não dá vontade.</p></div>
-    <div class="card"><div class="ico"><img src="/icones-premium/dormarca.png" alt="Marca apagada" loading="lazy" onerror="mvIco(this,'dor-marca.png','🌫️')"></div><h3>Sua marca some</h3><p>Você investiu em logo, cor, identidade — e na hora que mais importa, quando o cliente está decidindo onde ir, nada disso aparece.</p></div>
-  </div>
-</div></section>
-
-<!-- ANTES x DEPOIS -->
-<section><div class="wrap">
-  <h2>A mesma tela. <span>Dois resultados.</span></h2>
-  <p class="lead">Essa é literalmente a única diferença que o cliente vê no mapa antes de decidir.</p>
-  <div class="versus">
-    <div class="vsBox">
-      <div class="vsRot">SEM PREMIUM</div>
-      <svg viewBox="0 0 160 160" width="130" height="130" aria-hidden="true">
-        <path d="M80 145c0 0-42-40-42-68a42 42 0 1 1 84 0c0 28-42 68-42 68z" fill="#3c5a80"/>
-        <circle cx="80" cy="76" r="15" fill="#16304f"/>
-      </svg>
-      <div class="vsTxt">"Deve ser um lanche qualquer."<br>O cliente passa reto.</div>
-    </div>
-    <div class="vsBox bom">
-      <div class="vsRot">COM PREMIUM</div>
-      <svg viewBox="0 0 160 160" width="130" height="130" aria-hidden="true">
-        <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#0066FF"/></linearGradient>
-        <clipPath id="cl2"><circle cx="80" cy="72" r="28"/></clipPath></defs>
-        <circle class="anel" cx="80" cy="72" r="16" fill="none" stroke="#00D4FF" stroke-width="2"/>
-        <path d="M80 148c0 0-44-42-44-71a44 44 0 1 1 88 0c0 29-44 71-44 71z" fill="url(#g2)"/>
-        <circle cx="80" cy="72" r="29" fill="#04101e"/>
-        <g clip-path="url(#cl2)"><rect x="52" y="44" width="56" height="56" fill="#fff"/>
-        <text x="80" y="85" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="800" font-size="32" fill="#0066FF">M</text></g>
-        <circle cx="80" cy="72" r="29" fill="none" stroke="#fff" stroke-width="2.5"/>
-      </svg>
-      <div class="vsTxt">"Opa, é o pessoal do caldo!"<br><b>O cliente clica.</b></div>
-    </div>
-  </div>
-</div></section>
-
 <!-- BENEFÍCIOS -->
 <section><div class="wrap">
   <h2>Tudo o que você liga <span>hoje mesmo</span></h2>
@@ -293,7 +318,7 @@
 <!-- COMPARATIVO -->
 <section id="comparar"><div class="wrap">
   <h2>Compare os planos</h2>
-  <p class="lead">A diferença entre o Pró e o Premium é uma só, e é a mais importante: <b>a sua marca e as suas imagens</b>.</p>
+  <p class="lead">Do Pró pro Premium mudam duas coisas: <b>você passa a vender</b> — ao vivo e pelo cardápio — <b>e a sua marca aparece</b>.</p>
   <div class="tabelaWrap">
     <table>
       <thead>
@@ -308,6 +333,9 @@
         <tr><td>Cardápio completo</td><td class="nao">—</td><td class="sim">✓</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
         <tr><td>Promoções</td><td class="nao">—</td><td class="sim">✓</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
         <tr><td>Eventos e agenda</td><td class="nao">—</td><td class="sim">✓</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
+        <tr><td><b>Modo Live: transmitir e vender ao vivo</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
+        <tr><td><b>Cardápio que vende, com Pix na sua conta</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
+        <tr><td><b>Receber por Pix dentro da live</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest nao">—</td><td class="sim">✓</td></tr>
         <tr><td><b>Sua logo no pino do mapa</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
         <tr><td><b>Cor da sua marca na página</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
         <tr><td><b>Fotos dos produtos (até 3 por item)</b></td><td class="nao">—</td><td class="nao">—</td><td class="dest sim">✓</td><td class="sim">✓</td></tr>
@@ -320,7 +348,7 @@
       </tbody>
     </table>
   </div>
-  <p class="lead" style="margin-top:22px;margin-bottom:20px">Do Pró pro Premium são <b>R$ 12,00 por mês</b> — R$ 0,40 por dia — pra ligar tudo o que faz o cliente escolher você.</p>
+  <p class="lead" style="margin-top:22px;margin-bottom:20px">Do Pró pro Premium são <b>R$ 12,00 por mês</b> — R$ 0,40 por dia — pra sair da vitrine e passar a vender.</p>
   <div class="ctas"><a class="btn btn-prim pulsa" href="https://app.moviki.com.br?plano=premium&periodo=mensal">Quero o Premium</a></div>
 </div></section>
 
@@ -367,7 +395,9 @@
 <section><div class="wrap">
   <h2>Perguntas rápidas</h2>
   <div style="max-width:720px;margin:0 auto">
-    <details open><summary>Assinei, quando minha logo aparece no mapa?</summary><p>Na hora. Se você já subiu a logo na aba <b>Localização</b> do painel, ela entra no ar assim que o pagamento é confirmado. Se ainda não subiu, é só enviar e ajustar o enquadramento — leva menos de um minuto.</p></details>
+    <details open><summary>A live e o Pix no cardápio entram no Pró?</summary><p>Não. Os dois são do <b>Premium</b> e do <b>Enterprise</b>. Durante os 30 dias de teste grátis a live já vem liberada, no nível Premium — se depois do teste você assinar o Pró, ela sai. Receber por Pix <b>dentro da live</b> é só no Enterprise.</p></details>
+    <details><summary>O dinheiro da venda passa pela conta do Moviki?</summary><p>Não. Você cadastra a sua chave Pix na aba Financeiro e o pagamento do cliente vai direto pra ela. Não cobramos comissão por venda. O código de pagamento é montado no nosso servidor com centavos que identificam o pedido no seu extrato, e a tela do cliente mostra o seu nome antes de ele pagar.</p></details>
+    <details><summary>Assinei, quando minha logo aparece no mapa?</summary><p>Na hora. Se você já subiu a logo na aba <b>Localização</b> do painel, ela entra no ar assim que o pagamento é confirmado. Se ainda não subiu, é só enviar e ajustar o enquadramento — leva menos de um minuto.</p></details>
     <details><summary>Posso deixar a logo pronta antes de assinar?</summary><p>Pode. O painel deixa você enviar e ajustar a logo mesmo no plano Básico. Ela fica guardada e entra no mapa no minuto em que o Premium é ativado.</p></details>
     <details><summary>Já sou Pró. Como faço pra subir pro Premium?</summary><p>Pelo próprio painel, em <b>Meu Plano</b>. Você escolhe o Premium e o período — a mudança vale a partir da nova assinatura.</p></details>
     <details><summary>Preciso saber mexer em computador?</summary><p>Não. Tudo funciona pelo celular: você tira a foto, envia, arrasta pra enquadrar e confirma. Sem programa, sem instalação.</p></details>
@@ -399,8 +429,8 @@
 <!-- FINAL -->
 <section><div class="wrap">
   <div class="final">
-    <h2>Seu cliente já está com o mapa aberto.</h2>
-    <p>A única pergunta é se ele vai reconhecer o seu negócio ali no meio — ou clicar no pino do lado.</p>
+    <h2>Seu cliente já está com o celular na mão.</h2>
+    <p>A pergunta é se ele vai só olhar o seu cardápio — ou comprar nele, e te ver vendendo ao vivo.</p>
     <div class="ctas">
       <a class="btn btn-prim pulsa" href="https://app.moviki.com.br?plano=premium&periodo=anual">✨ Ativar meu Premium</a>
       <a class="btn btn-ghost" href="https://wa.me/554120186848?text=Ol%C3%A1!%20Quero%20tirar%20uma%20d%C3%BAvida%20sobre%20o%20Moviki%20Premium." target="_blank" rel="noopener">Tirar uma dúvida</a>
