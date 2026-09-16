@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-chatqr2 -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-paguei -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -287,7 +287,18 @@ svg{display:block}
     <div class="ckCod" id="ckCod"></div>
     <button type="button" class="btnGrad" id="ckCopiar" style="width:100%;margin-top:10px">Copiar código Pix</button>
     <div class="ckEst" id="ckEst">Esperando o pagamento…</div>
-    <p class="nota">Abra o app do seu banco, escolha Pix copia e cola ou leia o QR. Esta tela confirma sozinha quando o pagamento cair.</p>
+    <!-- MODO CHAVE PIX DO LOJISTA (16/09/2026): aqui NAO existe gateway a quem
+         perguntar, entao a tela nunca confirma sozinha. Quem confirma e o
+         lojista, olhando o extrato pelos centavos identificadores. O botao
+         abaixo e o unico caminho que avisa ele. -->
+    <div id="ckPaguei" class="escondido" style="margin-top:10px">
+      <button type="button" class="btnGrad" id="ckBtnPaguei" style="width:100%">Já paguei</button>
+      <label class="nota" for="ckComp" style="display:block;margin-top:8px;cursor:pointer">
+        Se quiser, anexe o comprovante (opcional) — vai direto para o vendedor, não aparece no chat.
+      </label>
+      <input type="file" id="ckComp" accept="image/png,image/jpeg,image/webp" style="width:100%">
+    </div>
+    <p class="nota" id="ckNota">Abra o app do seu banco, escolha Pix copia e cola ou leia o QR. Esta tela confirma sozinha quando o pagamento cair.</p>
   </div>
   <div id="ckOk" class="ckOk escondido">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
@@ -321,7 +332,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-16-chatqr2';
+  window.MOVIKI_VERSAO='2026-09-16-paguei';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -838,7 +849,7 @@ svg{display:block}
       if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
       er.textContent=msg;er.classList.remove('escondido');return;}
     try{localStorage.setItem('mv_ck_dados',JSON.stringify({nome:corpo.nome,wpp:corpo.whatsapp}));}catch(_){}
-    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total};
+    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||''};
     try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}
     ev('live_pix_gerado',{slug,valor:r.total});
     el('ckForm').classList.add('escondido'); el('ckPix').classList.remove('escondido');
@@ -848,6 +859,14 @@ svg{display:block}
        celular de outra pessoa. Sem imagem, o QR e desenhado aqui a partir
        do proprio copia-e-cola, com o gerador da casa (mvqr.js). */
     desenharQrPix(r.pix.imagem||'', r.pix.copiaCola||'');
+    /* O texto muda com o modo: prometer confirmacao automatica onde ela nao
+       existe deixa o comprador olhando a tela ate o Pix vencer — depois de
+       ele ja ter pago. */
+    const ehPixDireto = (r.modo==='pix');
+    el('ckPaguei').classList.toggle('escondido', !ehPixDireto);
+    el('ckNota').textContent = ehPixDireto
+      ? ('Abra o app do banco, use o copia e cola ou leia o QR, e pague o valor EXATO — os centavos identificam o seu pedido. Depois toque em «Já paguei»: '+((neg&&neg.nome)||'o vendedor')+' confere no extrato e libera.')
+      : 'Abra o app do seu banco, escolha Pix copia e cola ou leia o QR. Esta tela confirma sozinha quando o pagamento cair.';
     el('ckCod').textContent=r.pix.copiaCola; el('ckPixProd').textContent=(r.qtd>1?r.qtd+'x ':'')+r.produto; el('ckPixTotal').textContent=brl(r.total);
     esperarPagamento();
   };
@@ -861,6 +880,24 @@ svg{display:block}
     catch(_){cv.classList.add('escondido');}
   }
   el('ckCopiar').onclick=async()=>{try{await navigator.clipboard.writeText(el('ckCod').textContent);toast('Código copiado. Cole no app do banco em Pix copia e cola.');}catch(_){toast('Segure o código para copiar.');}};
+  /* Avisa o lojista. O comprovante e OPCIONAL e vai como anexo privado do
+     pedido — nunca pelo chat, que e publico e nao tem filtro de imagem. */
+  el('ckBtnPaguei').addEventListener('click',async()=>{
+    if(!ckPed)return;
+    const b=el('ckBtnPaguei'); b.disabled=true; const antes=b.textContent; b.textContent='Avisando…';
+    let comprovante='';
+    const f=el('ckComp').files&&el('ckComp').files[0];
+    if(f){
+      if(f.size>1600000){toast('A imagem é grande demais. Mande uma menor ou avise sem anexo.');b.disabled=false;b.textContent=antes;return;}
+      try{comprovante=await new Promise((ok,nao)=>{const fr=new FileReader();fr.onload=()=>ok(String(fr.result||''));fr.onerror=nao;fr.readAsDataURL(f);});}catch(_){comprovante='';}
+    }
+    let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(Object.assign({acao:'compra_paguei',pedidoId:ckPed.id,chave:ckPed.chave},comprovante?{comprovanteBase64:comprovante}:{}))})).json();}catch(_){r=null;}
+    if(!r||!r.ok){b.disabled=false;b.textContent=antes;toast((r&&r.erro==='comprovante_grande')?'A imagem é grande demais.':'Não deu para avisar. Tente de novo.');return;}
+    b.textContent='Vendedor avisado';
+    el('ckEst').textContent='Avisamos '+((neg&&neg.nome)||'o vendedor')+'. Assim que ele conferir no extrato, o pedido é liberado aqui.';
+    ev('live_pix_avisou',{slug});
+  });
   function esperarPagamento(){
     clearInterval(ckPoll); const t0=Date.now();
     ckPoll=setInterval(async()=>{
@@ -869,6 +906,7 @@ svg{display:block}
       if(document.visibilityState!=='visible')return;
       let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({acao:'compra_status',pedidoId:ckPed.id,chave:ckPed.chave})})).json();}catch(_){return;}
       if(r&&r.ok&&(r.status==='pago'||r.status==='entregue')){clearInterval(ckPoll);pago();}
+      else if(r&&r.ok&&r.status==='conferindo'){el('ckEst').textContent='O vendedor está conferindo o seu pagamento.';}
       else if(r&&r.ok&&(r.status==='expirado'||r.status==='cancelado')){clearInterval(ckPoll);el('ckEst').textContent='Este Pix foi cancelado ou venceu. Gere outro se ainda quiser.';}
     },4000);
   }
