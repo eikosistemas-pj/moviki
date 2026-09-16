@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-16-videocompra | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-16-videocompra2 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -446,6 +446,34 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 @media(min-height:780px){
   .vpBox.comItens{max-width:min(880px,calc(54vh * 1.7778));}
   .vpBox.comItens.vert{max-width:min(340px,calc(54vh * 0.5625));}
+}
+/* ---- COMPUTADOR (16/09/2026) ----
+   Num video em pe, a faixa de compra herdava a largura do video: dois cartoes
+   e meio, com o segundo cortado, numa tela que tinha espaco de sobra. Aqui a
+   CAIXA alarga e so o QUADRO do video continua estreito e centralizado -- o
+   video nao cresce, a faixa cabe inteira. */
+@media(min-width:760px){
+  .vpBox.comItens.vert{max-width:620px;}
+  .vpBox.comItens.vert .vpQuadro{max-width:min(320px,calc(54vh * 0.5625));margin-left:auto;margin-right:auto;}
+}
+/* Tela larga: video de um lado, compra do outro. Empilhado, a barra do total
+   ficava por cima do pe dos cartoes numa tela que tinha espaco sobrando ao
+   lado. So a partir de 900px, e so para video em pe. */
+@media(min-width:900px){
+  .vpBox.comItens.vert{max-width:800px;display:grid;
+    grid-template-columns:320px minmax(0,1fr);grid-template-rows:auto auto 1fr;
+    column-gap:20px;align-items:start;}
+  .vpBox.comItens.vert .vpQuadro{grid-column:1;grid-row:1 / span 3;max-width:320px;margin:0;}
+  .vpBox.comItens.vert .vpTit{grid-column:2;grid-row:1;margin-top:0;text-align:left;}
+  .vpBox.comItens.vert .vpItens{grid-column:2;grid-row:2;}
+  .vpBox.comItens.vert .vpBarra{grid-column:2;grid-row:3;align-self:end;position:static;box-shadow:none;}
+  /* na coluna larga os cartoes viram grade 2x2: em trilho, o quarto ficava
+     cortado na borda e sobrava um vao vazio embaixo. */
+  .vpBox.comItens.vert .vcTrilho{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;overflow:visible;}
+  .vpBox.comItens.vert .vcCard{width:auto;}
+  /* foto deitada na grade: quadrada, duas fileiras de cartao nao cabiam em
+     notebook de 800px de altura e a barra do total saia da tela. */
+  .vpBox.comItens.vert .vcFoto{aspect-ratio:4/3;}
 }
 /* Instagram e TikTok nao tocam embutidos. Quando o video tem item marcado, o
    cartao passa a abrir o visor mesmo assim: sem isso o cliente sai da pagina
@@ -1270,7 +1298,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-16-videocompra';
+  window.MOVIKI_VERSAO='2026-09-16-videocompra2';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
