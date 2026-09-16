@@ -203,6 +203,45 @@
     html{scroll-behavior:auto}
     .btn{transition:none}
   }
+
+  /* ===== SIMULADOR DE COMISSAO - 16/09/2026 =====================================
+     Barras que o VISITANTE move. A pagina nao afirma nenhum valor: ela aplica a
+     regra publicada aos numeros que a pessoa escolheu. Por isso todo range comeca
+     em ZERO e a tela abre mostrando R$ 0,00 - se abrisse com um numero ja posto,
+     seria a Moviki afirmando aquele resultado, e ai vira projecao de ganho.
+     Recorrente e bonus unico ficam SEPARADOS de proposito: nao existe caixa
+     somando os tres niveis num numero so, porque nivel 2 e 3 sao pagos uma vez. */
+  .sim{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:22px;margin-top:20px}
+  .simAbas{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+  .simAba{font-family:inherit;font-size:14px;font-weight:700;color:var(--texto2);background:rgba(255,255,255,.04);
+    border:1px solid var(--linha);border-radius:99px;padding:9px 18px;cursor:pointer;display:flex;gap:8px;align-items:baseline}
+  .simAba span{font-size:12px;font-weight:600;color:var(--texto2);opacity:.75}
+  .simAba.ativa{background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.5);color:var(--texto)}
+  .simAba.ativa span{color:var(--ciano);opacity:1}
+  .simLinha{margin-bottom:20px}
+  .simLinha:last-of-type{margin-bottom:0}
+  .simTopo{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:9px}
+  .simTopo .t{font-size:14.5px;color:#c2cfdd;line-height:1.35}
+  .simTopo .t b{color:var(--texto)}
+  .simTopo .v{font-size:19px;font-weight:800;color:var(--verde);white-space:nowrap}
+  .simRange{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;
+    background:rgba(255,255,255,.1);outline:none;cursor:pointer}
+  .simRange::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;border-radius:50%;
+    background:linear-gradient(135deg,var(--ciano),var(--azul));border:3px solid var(--card);cursor:pointer;
+    box-shadow:0 0 0 1px rgba(0,212,255,.5)}
+  .simRange::-moz-range-thumb{width:20px;height:20px;border-radius:50%;
+    background:linear-gradient(135deg,var(--ciano),var(--azul));border:3px solid var(--card);cursor:pointer}
+  .simSub{font-size:12.5px;color:var(--texto2);margin-top:8px;line-height:1.45}
+  .simSaida{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+  .simCx{background:rgba(255,255,255,.03);border:1px solid var(--linha);border-radius:14px;padding:16px}
+  .simCx.rec{border-color:rgba(34,211,154,.35);background:rgba(34,211,154,.06)}
+  .simCx .simRot{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--texto2)}
+  .simCx .simNum{font-size:27px;font-weight:800;letter-spacing:-.8px;margin-top:6px;line-height:1}
+  .simCx.rec .simNum{color:var(--verde)}
+  .simCx .simObs{font-size:12px;color:var(--texto2);margin-top:6px;line-height:1.4}
+  .simNota{font-size:13px;color:var(--texto2);line-height:1.55;margin-top:18px;padding-top:16px;border-top:1px solid var(--linha)}
+  .simNota b{color:var(--texto)}
+  @media(max-width:560px){.simSaida{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -389,6 +428,66 @@
   </div>
 </section>
 
+
+<!-- SIMULADOR DE COMISSAO - 2026-09-16-simulador -->
+<section>
+  <div class="wrap">
+    <p class="kicker">Faça a conta você mesmo</p>
+    <h2>Mexa nas barras e veja a regra aplicada</h2>
+    <p class="lead">Nada aqui é previsão. Você escolhe os números; a página só aplica os percentuais publicados no Regulamento. Comece em zero e arraste.</p>
+
+    <div class="sim">
+      <div class="simAbas" role="group" aria-label="Plano do comerciante indicado">
+        <button type="button" class="simAba ativa" data-simplano="pro">Pró <span>R$ 39,90</span></button>
+        <button type="button" class="simAba" data-simplano="premium">Premium <span>R$ 69,90</span></button>
+        <button type="button" class="simAba" data-simplano="enterprise">Enterprise <span>R$ 129,90</span></button>
+      </div>
+
+      <div class="simLinha">
+        <div class="simTopo">
+          <span class="t">Comerciantes que <b>você</b> indicou e que estão pagando: <b id="simQ1">0</b></span>
+          <span class="v" id="simV1">R$ 0,00</span>
+        </div>
+        <input type="range" class="simRange" id="simN1" min="0" max="55" step="1" value="0" aria-label="Indicados diretos que assinaram e estão pagando">
+        <div class="simSub" id="simS1">15% de cada mensalidade paga, a cada mês em que essa pessoa continuar pagando.</div>
+      </div>
+
+      <div class="simLinha">
+        <div class="simTopo">
+          <span class="t">Indicados <b>dos seus indicados</b> que estão pagando: <b id="simQ2">0</b></span>
+          <span class="v" id="simV2">R$ 0,00</span>
+        </div>
+        <input type="range" class="simRange" id="simN2" min="0" max="36" step="1" value="0" aria-label="Nível 2">
+        <div class="simSub">7,5% <b>uma única vez</b>, no primeiro pagamento de cada um.</div>
+      </div>
+
+      <div class="simLinha">
+        <div class="simTopo">
+          <span class="t">Um nível abaixo, o <b>nível 3</b>, pagando: <b id="simQ3">0</b></span>
+          <span class="v" id="simV3">R$ 0,00</span>
+        </div>
+        <input type="range" class="simRange" id="simN3" min="0" max="36" step="1" value="0" aria-label="Nível 3">
+        <div class="simSub">5% <b>uma única vez</b>, no primeiro pagamento de cada um.</div>
+      </div>
+
+      <div class="simSaida">
+        <div class="simCx rec">
+          <div class="simRot" id="simRotRec">15% recorrente · indicação direta</div>
+          <div class="simNum" id="simRec">R$ 0,00</div>
+          <div class="simObs">Se repete a cada mês em que essas pessoas continuarem pagando. Se alguma cancelar, a parte dela para.</div>
+        </div>
+        <div class="simCx">
+          <div class="simRot">Bônus dos níveis 2 e 3</div>
+          <div class="simNum" id="simBonus">R$ 0,00</div>
+          <div class="simObs">Pago uma vez só, no primeiro pagamento de cada indicado. Não se repete no mês seguinte.</div>
+        </div>
+      </div>
+
+      <p class="simNota" id="simNota"><b>É a regra acima aplicada aos números que você escolheu.</b> Quantas pessoas vão assinar pelo seu link e continuar pagando não depende desta tela — pode ser zero. O Moviki não promete rendimento, retorno ou resultado de nenhum tipo.</p>
+    </div>
+  </div>
+</section>
+
 <!-- AVISO -->
 <section>
   <div class="wrap">
@@ -465,7 +564,71 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-16-parceirolive';
+window.MOVIKI_VERSAO = '2026-09-16-simulador';
+
+/* ===== SIMULADOR DE COMISSAO - 16/09/2026 ===================================
+   Mesma conta do painel do parceiro (parceiro.html, funcao barras), mesma
+   escada de niveis do Regulamento (clausulas 4.6 a 4.11). Se um dia o
+   percentual mudar la, tem que mudar aqui - senao a landing promete uma conta
+   que o robo nao paga.
+   Arredonda a comissao de UMA assinatura antes de multiplicar, para o numero
+   grande bater com a barra. Somar sem arredondar da diferenca de centavos e
+   parece erro de conta. */
+(function(){
+  var PRECO = { pro:39.90, premium:69.90, enterprise:129.90 };
+  var NIVEIS = [
+    { nome:'Bronze', min:1, pct:15 }, { nome:'Prata', min:11, pct:15 },
+    { nome:'Ouro', min:26, pct:16 }, { nome:'Diamante', min:51, pct:17 },
+    { nome:'Esmeralda', min:101, pct:18 }
+  ];
+  var N2 = 0.075, N3 = 0.05;
+  var plano = 'pro';
+  function el(id){ return document.getElementById(id); }
+  if(!el('simN1')) return;
+  /* o range anda de 1 em 1 ate 20 e de 5 em 5 dai pra cima: 200 posicoes num
+     trilho de celular dao menos de 2 pixels por pessoa e ninguem acerta no dedo.
+     O value do input e o INDICE da escala, nao a quantidade. */
+  function escala(teto){ var a=[],i; for(i=0;i<=20&&i<=teto;i++)a.push(i); for(i=25;i<=teto;i+=5)a.push(i); return a; }
+  var ESC = { simN1:escala(200), simN2:escala(100), simN3:escala(100) };
+  function qtd(id){
+    var r=el(id); if(!r) return 0;
+    var i=parseInt(r.value,10); if(isNaN(i)||i<0)i=0;
+    var e=ESC[id]||[]; var v=e[Math.min(i,e.length-1)];
+    return typeof v==='number'?v:0;
+  }
+  function brl(v){ return 'R$ '+(Math.round(v*100)/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function nivel(q){ var a=null,i; for(i=0;i<NIVEIS.length;i++){ if(q>=NIVEIS[i].min) a=NIVEIS[i]; } return a; }
+  function calcular(){
+    var preco = PRECO[plano] || PRECO.pro;
+    var q1=qtd('simN1'), q2=qtd('simN2'), q3=qtd('simN3');
+    function cada(pct){ return Math.round(preco*pct*100)/100; }
+    var nv = nivel(q1);
+    var p1 = nv ? nv.pct/100 : 0.15;
+    var v1 = cada(p1)*q1, v2 = cada(N2)*q2, v3 = cada(N3)*q3;
+    var pct = String(Math.round(p1*100))+'%';
+    el('simQ1').textContent=q1; el('simQ2').textContent=q2; el('simQ3').textContent=q3;
+    el('simV1').textContent=brl(v1); el('simV2').textContent=brl(v2); el('simV3').textContent=brl(v3);
+    el('simRec').textContent=brl(v1); el('simBonus').textContent=brl(v2+v3);
+    el('simRotRec').textContent=pct+' recorrente · indicação direta';
+    el('simS1').innerHTML = (nv && nv.pct>15)
+      ? '<b>'+pct+'</b> de cada mensalidade paga: com '+q1+' comerciantes pagando, você está no nível <b>'+nv.nome+'</b>.'
+      : '15% de cada mensalidade paga, a cada mês em que essa pessoa continuar pagando.';
+  }
+  ['simN1','simN2','simN3'].forEach(function(id){
+    var r=el(id); if(r) r.addEventListener('input',calcular);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.simAba'),function(b){
+    b.addEventListener('click',function(){
+      plano = b.getAttribute('data-simplano') || 'pro';
+      Array.prototype.forEach.call(document.querySelectorAll('.simAba'),function(o){ o.classList.remove('ativa'); });
+      b.classList.add('ativa');
+      calcular();
+      try{ if(window.mvEv) mvEv('simulador_plano',{plano:plano}); }catch(_){}
+    });
+  });
+  calcular();
+})();
+
 
 /* ===== VIDEO DE VENDA DO PROGRAMA =====
    Escreva aqui o trecho depois de youtu.be/ quando o video existir. Deixe
