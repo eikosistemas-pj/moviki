@@ -16,8 +16,8 @@
 
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
-  <title>Moviki · O mapa inteligente dos negócios em movimento</title>
-  <meta name="description" content="Ninguém compra de quem não acha. Coloque seu negócio no mapa, com fotos, cardápio e WhatsApp, e apareça pra quem está perto. 30 dias grátis, sem cartão.">
+  <title>Moviki · Seu negócio no mapa. E em vídeo.</title>
+  <meta name="description" content="Venda em tempo real e fale com quem está perto. Seu negócio no mapa, com cardápio, promoções e venda ao vivo pela câmera do celular. 30 dias grátis, sem cartão e sem comissão por venda.">>
 
   <link rel="icon" href="favicon512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -672,7 +672,7 @@ a{color:inherit}
 }
 @media(prefers-reduced-motion:reduce){.lpv__capa:hover .lpv__play{transform:none}}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-09-video';</script>
+<script>window.MOVIKI_VERSAO='2026-09-16-mapaevideo';</script>
 </head>
 
 <body class="mv">
@@ -685,6 +685,7 @@ a{color:inherit}
       </a>
       <nav class="lp-links">
         <a href="#recursos">Recursos</a>
+        <a href="#aovivo">Modo Live</a>
         <a href="#planos">Planos</a>
         <a href="#paraquem">Para quem é</a>
         <a href="#parceiros">Parceiros</a>
@@ -705,6 +706,7 @@ a{color:inherit}
         <button class="lp-menu__fechar" type="button" aria-label="Fechar menu" onclick="lpMenu(false)">✕</button>
       </div>
       <a class="item" href="#recursos" onclick="lpMenu(false)">Recursos</a>
+      <a class="item" href="#aovivo" onclick="lpMenu(false)">Modo Live</a>
       <a class="item" href="#como" onclick="lpMenu(false)">Como funciona</a>
       <a class="item" href="#divulgacao" onclick="lpMenu(false)">Divulgação grátis</a>
       <a class="item" href="#paraquem" onclick="lpMenu(false)">Para quem é</a>
@@ -720,20 +722,21 @@ a{color:inherit}
   </div>
 
   <!-- ================= HERO ================= -->
-  <section class="lp-hero">
+  <section class="lp-hero" data-sec="hero">
     <div class="mv-container lp-hero-grid">
 
       <!-- coluna 1: texto -->
       <div>
         <span class="mv-tag lp-tag">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2Z"/></svg>
-          Para todo negócio que precisa ser encontrado</span>
-        <h1>Seu cliente saiu<br>pra te procurar.<br><em>Ele te achou?</em></h1>
-        <p class="sub">Ninguém compra de quem não acha. Aqui o seu ponto anda com você — e quem tem ponto fixo ou atende na casa do cliente também aparece pra quem está perto.</p>
+          Para todo negócio que precisa ser encontrado — e vendido</span>
+        <h1>Seu negócio no mapa.<br><em>E em vídeo.</em></h1>
+        <p class="sub">Venda em tempo real e fale com quem está perto. O seu ponto anda com você, o cliente vê onde você está agora — e, quando você quiser, abre a câmera do celular e vende ao vivo.</p>
 
         <ul class="lp-bul">
           <li><img class="ic3d ic3d--p" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Marcou o ponto, todo mundo vê</li>
           <li><img class="ic3d ic3d--p" src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'📋')">Cardápio com foto no celular dele</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">Venda ao vivo, pela câmera do celular</li>
           <li><img class="ic3d ic3d--p" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">Promoção pra encher o dia fraco</li>
           <li><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Ele te chama no WhatsApp num clique</li>
         </ul>
@@ -868,7 +871,7 @@ a{color:inherit}
   </section>
 
   <!-- ================= VÍDEO DE APRESENTAÇÃO ================= -->
-  <section class="lp-sec" id="video">
+  <section class="lp-sec" id="video" data-sec="video">
     <div class="mv-container">
       <div class="lp-tit">
         <h2>Entenda o Moviki <em>em 1 minuto</em></h2>
@@ -913,12 +916,14 @@ a{color:inherit}
   </script>
 
   <!-- ================= RECURSOS ================= -->
-  <section class="lp-sec lp-sec--faixa" id="recursos">
+  <section class="lp-sec lp-sec--faixa" id="recursos" data-sec="recursos">
     <div class="mv-container">
       <div class="lp-tit"><h2>O que muda <em>no seu dia a dia</em></h2></div>
       <div class="lp-rec">
         <div><img class="ic3d ic3d--g" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">
           <h3>Mapa em tempo real</h3><p>Chegou no ponto? Um toque e quem está perto já sabe onde te achar.</p></div>
+        <div><img class="ic3d ic3d--g" src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">
+          <h3>Venda por vídeo</h3><p>Abra a câmera, mostre o produto na mão e receba o pedido ali mesmo. A partir do plano Pró.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'📋')">
           <h3>Cardápio digital</h3><p>Suas fotos e preços no celular do cliente, sem mandar imagem no zap toda vez.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">
@@ -931,8 +936,88 @@ a{color:inherit}
     </div>
   </section>
 
+  <!-- ================= MODO LIVE (16/09/2026) =================
+       A home passou a prometer VIDEO no titulo; esta secao e onde a
+       promessa vira coisa vista. Fica depois de "o que muda no seu dia a
+       dia" de proposito: primeiro a pessoa entende o produto inteiro,
+       depois ve a novidade com peso.
+       O player e fachada - o iframe do YouTube so nasce no clique, entao
+       ter dois players na home nao custa nada ate alguem tocar.
+       A home e VITRINE: quem quiser se cadastrar sai daqui para o app ou
+       para a /aovivo, que e a pagina dedicada do Modo Live. -->
+  <section class="lp-sec" id="aovivo" data-sec="aovivo">
+    <div class="mv-container">
+      <div class="lp-tit">
+        <h2>Venda em tempo real, <em>pela câmera do celular</em></h2>
+        <p>Estar no mapa faz o cliente te achar. O Modo Live resolve o passo seguinte: você mostra o produto na mão, responde a dúvida na hora e quem está assistindo compra ali mesmo.</p>
+      </div>
+
+      <div class="lp-duplo">
+        <div>
+          <div class="lp-rec lp-rec--3" style="margin:0">
+            <div><img class="ic3d ic3d--g" src="icones-premium/foto-produto.png" alt="" loading="lazy" onerror="lpIco(this,'📦')">
+              <h3>O produto fixo na tela</h3><p>Foto, nome e preço sempre à vista. Quem chegou no meio não precisa perguntar quanto custa.</p></div>
+            <div><img class="ic3d ic3d--g" src="icones-premium/chat.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">
+              <h3>A dúvida some na hora</h3><p>A pergunta de um vira resposta para todos. É a conversa do balcão, com todo mundo junto.</p></div>
+            <div><img class="ic3d ic3d--g" src="icones-premium/pix.png" alt="" loading="lazy" onerror="lpIco(this,'💸')">
+              <h3>Pix dentro da transmissão</h3><p>QR na hora e o dinheiro caindo numa conta aberta no seu nome — nunca na conta do Moviki. Plano Enterprise.</p></div>
+          </div>
+          <div class="lp-ctas" style="margin-top:20px">
+            <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_live">Começar grátis</a>
+            <a class="mv-btn mv-btn--fantasma mv-btn--g" href="/aovivo" data-ev="cta_ver_aovivo">Ver o Modo Live ▷</a>
+          </div>
+          <p class="mv-muted" style="margin-top:12px;font-size:13px">Já funciona no teste grátis, em nível Pró. Nenhuma live fica gravada em servidor do Moviki, e o número de quem está assistindo é contado de verdade.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <picture>
+            <source srcset="livehero.webp" type="image/webp">
+            <img src="livehero.png" alt="Celular transmitindo ao vivo pelo Moviki: selo AO VIVO, produto com preço fixo na tela, chat dos clientes e confirmação de pagamento por Pix." width="800" height="1421" loading="lazy" decoding="async" style="width:100%;max-width:320px;height:auto;filter:drop-shadow(0 22px 44px rgba(0,0,0,.55))">
+          </picture>
+          <p class="mv-muted" style="font-size:12px;text-align:center;max-width:320px">Ilustração da tela do Moviki — os números são exemplo. Na live de verdade, tudo o que aparece na tela é contado.</p>
+        </div>
+      </div>
+
+      <div class="lpv" style="margin-top:30px">
+        <div class="lpv__box" id="lpvBoxLive">
+          <button class="lpv__capa" type="button" id="lpvPlayLive"
+                  aria-label="Assistir ao filme do Modo Live">
+            <span class="lpv__play" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+            </span>
+            <span class="lpv__rot">Ver uma live acontecendo</span>
+            <span class="lpv__sub">sem tutorial e sem termo dif&iacute;cil</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  /* Filme do Modo Live. Bloco proprio: o player de cima continua sendo o
+     institucional ("entenda o Moviki") e este mostra a live. Sao duas
+     metades da mesma promessa, cada uma com o seu filme. */
+  (function(){
+    var caixa=document.getElementById('lpvBoxLive'), botao=document.getElementById('lpvPlayLive');
+    if(!caixa||!botao) return;
+    var FILME='n2nmTfGY_mo', CURTO='3Q5b0Q0PPh4';
+    botao.addEventListener('click',function(){
+      var estreito=window.matchMedia('(max-width:640px)').matches;
+      var id=estreito?CURTO:FILME;
+      var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      f.title='Filme do Modo Live do Moviki';
+      f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.setAttribute('allowfullscreen','');
+      f.referrerPolicy='strict-origin-when-cross-origin';
+      caixa.innerHTML=''; caixa.appendChild(f);
+      try{ if(window.mvEv) window.mvEv('video_play',{video:(id===CURTO?'corte_vertical_60s':'filme_hero'),pagina:'home'}); }catch(e){}
+    });
+  })();
+  </script>
+
   <!-- ================= COMO FUNCIONA ================= -->
-  <section class="lp-sec" id="como">
+  <section class="lp-sec" id="como" data-sec="como">
     <div class="mv-container">
       <div class="lp-tit"><h2>Como <em>funciona</em></h2></div>
       <div class="lp-passos">
@@ -949,7 +1034,7 @@ a{color:inherit}
   </section>
 
   <!-- ================= DIVULGAÇÃO NAS REDES DO MOVIKI ================= -->
-  <section class="lp-sec lp-sec--divulga" id="divulgacao">
+  <section class="lp-sec lp-sec--divulga" id="divulgacao" data-sec="divulgacao">
     <div class="mv-container lp-duplo">
       <div>
         <div class="lp-tit lp-tit--esq" style="margin-bottom:6px">
@@ -992,7 +1077,7 @@ a{color:inherit}
   </section>
 
   <!-- ================= PARA QUEM É ================= -->
-  <section class="lp-sec lp-sec--faixa" id="paraquem">
+  <section class="lp-sec lp-sec--faixa" id="paraquem" data-sec="paraquem">
     <div class="mv-container">
       <div class="lp-tit"><h2>Feito para quem vive <em>em movimento</em></h2>
         <p>Do carrinho de lanche ao food truck, todo empreendedor merece ser encontrado.</p></div>
@@ -1008,7 +1093,7 @@ a{color:inherit}
   </section>
 
   <!-- ================= VÁRIAS UNIDADES ================= -->
-  <section class="lp-sec" id="empresas">
+  <section class="lp-sec" id="empresas" data-sec="empresas">
     <div class="mv-container lp-duplo lp-duplo--inv">
       <div>
         <div class="lp-tit lp-tit--esq" style="margin-bottom:20px">
@@ -1034,7 +1119,7 @@ a{color:inherit}
   </section>
 
   <!-- ================= PARCEIROS ================= -->
-  <section class="lp-sec lp-sec--faixa" id="parceiros">
+  <section class="lp-sec lp-sec--faixa" id="parceiros" data-sec="parceiros">
     <div class="mv-container lp-duplo">
       <div>
         <div class="lp-tit lp-tit--esq" style="margin-bottom:20px">
@@ -1058,7 +1143,7 @@ a{color:inherit}
   </section>
 
   <!-- ================= PLANOS ================= -->
-  <section class="lp-sec" id="planos">
+  <section class="lp-sec" id="planos" data-sec="planos">
     <div class="mv-container">
       <div class="lp-tit"><h2>Planos simples e <em>justos</em></h2><p>Comece de graça. Suba de plano quando quiser mais.</p></div>
       <div class="lp-toggle" role="group" aria-label="Ciclo de cobrança">
@@ -1112,14 +1197,15 @@ a{color:inherit}
   </section>
 
   <!-- ================= FAQ ================= -->
-  <section class="lp-sec" id="faq">
+  <section class="lp-sec" id="faq" data-sec="faq">
     <div class="mv-container">
       <div class="lpFaqTopo">
         <div class="lp-tit"><h2>Perguntas <em>frequentes</em></h2></div>
         <img class="lpVik" src="/icones-premium/vik-apontando.webp" alt="" loading="lazy" decoding="async">
       </div>
       <div class="lp-faq">
-        <details><summary>Preciso instalar algum aplicativo?</summary><p>Não. O Moviki funciona pelo navegador do celular. Você monta seu perfil e seus clientes abrem seu link — sem baixar nada.</p></details>
+        <details><summary>Como funciona essa venda por vídeo?</summary><div class="r">É o Modo Live: você transmite pela câmera do próprio celular, direto do painel, sem instalar nada. O cliente entra por um link, vê o produto de perto com o preço fixo na tela, pergunta no chat e compra. Já funciona no teste grátis, em nível Pró. A página <a href="/aovivo">Modo Live</a> explica com calma.</div></details>
+      <details><summary>Preciso instalar algum aplicativo?</summary><p>Não. O Moviki funciona pelo navegador do celular. Você monta seu perfil e seus clientes abrem seu link — sem baixar nada.</p></details>
         <details><summary>Como meus clientes me encontram?</summary><p>Você recebe um link só seu (moviki.com.br/seunome) pra compartilhar no WhatsApp, no Instagram, onde quiser. Ao abrir, o cliente vê sua localização ao vivo, seu cardápio e como chegar até você.</p></details>
         <details><summary>O plano grátis serve mesmo?</summary><p>Serve. O Básico é gratuito pra sempre e já mostra seu negócio no mapa com seu link. Os planos Pró, Premium e Enterprise liberam cardápio, promoções, eventos e recursos extras.</p></details>
         <details><summary>Preciso de cartão pra testar?</summary><p>Não. São 30 dias do plano Pró de graça, sem cartão. Só cadastra e usa.</p></details>
@@ -1353,6 +1439,31 @@ a{color:inherit}
     if (!a) return;
     try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev') }); } catch(err){}
   });
+</script>
+<script>
+/* ===== MEDICAO POR SECAO - 16/09/2026 =====================================
+   A home NAO tinha isto. O relatorio dizia quantos entraram e quantos
+   clicaram, e nao dizia ONDE os outros pararam de rolar. A comerciantes.html
+   ja media assim desde 11/09; agora a home tambem.
+   Dispara uma vez por secao, por visita. Tudo em try/catch: medicao nunca
+   pode derrubar a pagina. ===== */
+(function(){
+  try{
+    var alvos=document.querySelectorAll('[data-sec]');
+    if(!alvos.length || !('IntersectionObserver' in window)) return;
+    var vistas={};
+    var obs=new IntersectionObserver(function(lista){
+      lista.forEach(function(item){
+        if(!item.isIntersecting) return;
+        var nome=item.target.getAttribute('data-sec');
+        if(!nome||vistas[nome]) return;
+        vistas[nome]=1; obs.unobserve(item.target);
+        try{ if(window.mvEv) window.mvEv('secao_vista',{secao:nome,pagina:'home'}); }catch(e){}
+      });
+    },{threshold:0.4});
+    Array.prototype.forEach.call(alvos,function(el){ obs.observe(el); });
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
