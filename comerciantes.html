@@ -281,6 +281,24 @@
       <div class="card"><img class="ic3d" src="/icones-premium/chat.png" alt="" loading="lazy" onerror="mvIco(this,'','💬')"><span class="icEmoji" hidden>💬</span><h3>A dúvida some na hora</h3><p>A pergunta de um vira resposta para todos. É a conversa do balcão, com todo mundo junto.</p></div>
       <div class="card"><img class="ic3d" src="/icones-premium/pix.png" alt="" loading="lazy" onerror="mvIco(this,'','💸')"><span class="icEmoji" hidden>💸</span><h3>Pix dentro da transmissão</h3><p>QR na hora e o dinheiro caindo numa conta aberta no seu nome — nunca na conta do Moviki. Recurso do plano Enterprise.</p></div>
     </div>
+    <!-- O FILME DA LIVE. Mesma fachada do player de cima: o iframe nasce
+         so no clique, entao dois players na pagina nao custam nada ate
+         alguem tocar. Tela estreita recebe o corte de 60 s (9:16), tela
+         larga recebe o filme inteiro (16:9) - video horizontal longo em
+         tela de celular e abandono. -->
+    <div class="lpv" style="margin-top:26px">
+      <div class="lpv__box" id="lpvBoxLive">
+        <button class="lpv__capa" type="button" id="lpvPlayLive"
+                aria-label="Assistir ao filme do Modo Live">
+          <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          <span class="lpv__rot">Ver uma live acontecendo</span>
+          <span class="lpv__sub">sem tutorial e sem termo difícil</span>
+        </button>
+        <iframe id="lpvFrameLive" hidden title="Filme do Modo Live do Moviki"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+    </div>
     <div class="ctas" style="margin-top:22px"><a class="cta" href="/aovivo" data-ev="ver_modo_live">Ver como funciona o Modo Live →</a></div>
     <div class="selo">Já funciona no teste grátis, em nível Pró. Nenhuma live fica gravada em servidor do Moviki, e o número de quem está assistindo é contado de verdade.</div>
   </section>
@@ -357,6 +375,29 @@
 </script>
 
 <script>
+/* Player do FILME DA LIVE - 16/09/2026. Bloco proprio, de proposito: o
+   player de cima continua sendo o institucional do mapa ("como fica a sua
+   pagina") e este aqui mostra a live. Sao duas metades da mesma promessa e
+   cada uma tem o seu filme. Nao mexi no script do primeiro. */
+(function(){
+  var botao=document.getElementById('lpvPlayLive');
+  var quadro=document.getElementById('lpvFrameLive');
+  var caixa=document.getElementById('lpvBoxLive');
+  if(!botao||!quadro||!caixa) return;
+  var FILME='n2nmTfGY_mo';   /* 2:38, 16:9 - a historia inteira */
+  var CURTO='3Q5b0Q0PPh4';   /* 60 s, 9:16 - corte vertical */
+  function estreito(){ return window.matchMedia('(max-width:640px)').matches; }
+  botao.addEventListener('click', function(){
+    var id=estreito()?CURTO:FILME;
+    quadro.setAttribute('src','https://www.youtube-nocookie.com/embed/'+id+
+      '?autoplay=1&rel=0&modestbranding=1&playsinline=1');
+    quadro.hidden=false; botao.hidden=true;
+    try{ if(window.mvEv) window.mvEv('video_play',{video:(id===CURTO?'corte_vertical_60s':'filme_hero'),pagina:'comerciantes'}); }catch(e){}
+  });
+})();
+</script>
+
+<script>
 /* Player do video: o iframe ja esta no HTML, SEM src — nada do YouTube e
    carregado antes do clique. No clique so preenchemos o endereco. Tela estreita
    abre a versao vertical (9:16), tela larga a horizontal (16:9). */
@@ -399,7 +440,7 @@ function mvIco(img,alt2,emoji){
       outros 206 pararam. Dispara uma vez por secao, por visita;
    3) chegou_por_indicacao — quando a visita veio de um link de parceiro.
    Nada aqui pode derrubar a pagina: tudo em try/catch. */
-window.MOVIKI_VERSAO = '2026-09-16-video';
+window.MOVIKI_VERSAO = '2026-09-16-filmelive';
 (function(){
   /* 1) cliques */
   document.addEventListener('click', function(e){
