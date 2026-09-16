@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-16-videocompra2 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-16-selovivo | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1298,7 +1298,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-16-videocompra2';
+  window.MOVIKI_VERSAO='2026-09-16-selovivo';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3329,17 +3329,24 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   let liveOuvindo='';
   function ouvirLive(uid){
     if(!uid||liveOuvindo===uid)return; liveOuvindo=uid;
-    let est=null;
+    let est=null, ses=null;
+    /* CORRECAO 16/09/2026: quem diz se a live esta no ar e `live_sessoes/{uid}`,
+       escrito so pelo Admin SDK, desde o b5b de 15/09. O `estado/live` do
+       lojista grava `ativa:false`, `whep:''` e `pulso:null` de proposito — ler
+       dali deixava o selo AO VIVO escondido em TODA live. O titulo continua
+       vindo de la, porque titulo e conteudo, nao autoridade. */
+    const ms_=(t)=>t&&typeof t.toMillis==='function'?t.toMillis():(typeof t==='number'?t:0);
     const pintar=()=>{
       const a=el('mvAoVivo'); if(!a)return;
-      const p=est&&est.pulso&&est.pulso.toMillis?est.pulso.toMillis():0;
-      const vivo=!!(est&&est.ativa===true&&est.whep&&(Date.now()-p)<180000);
+      const p=ms_(ses&&ses.pulsoEm)||Number((ses&&ses.pulsoMs)||0);
+      const vivo=!!(ses&&ses.ativa===true&&ses.whep&&!ses.encerradaPor&&p&&(Date.now()-p)<180000);
       const sl=(dadosNeg&&dadosNeg.slug)||'';
       if(!vivo||!sl){a.classList.add('escondido');return;}
       a.href='/live/'+encodeURIComponent(sl);
-      el('mvAoVivoTxt').textContent=est.titulo?('AO VIVO · '+String(est.titulo).slice(0,40)):'AO VIVO agora';
+      el('mvAoVivoTxt').textContent=(est&&est.titulo)?('AO VIVO · '+String(est.titulo).slice(0,40)):'AO VIVO agora';
       if(a.classList.contains('escondido')){a.classList.remove('escondido');ev('live_selo_visto',{});}
     };
+    try{onSnapshot(doc(db,'live_sessoes',uid),s=>{ses=s.exists()?s.data():null;pintar();},()=>{});}catch(_){}
     try{onSnapshot(doc(db,'negocios',uid,'estado','live'),s=>{est=s.exists()?s.data():null;pintar();},()=>{});}catch(_){}
     setInterval(pintar,30000); setTimeout(pintar,1500); setTimeout(pintar,4500);
     const a=el('mvAoVivo'); if(a)a.addEventListener('click',()=>ev('live_selo_clique',{}));
