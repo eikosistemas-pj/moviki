@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/vitrine.js | versao 2026-09-04-vitrine1 | repo: moviki (site publico)
+ * MOVIKI api/vitrine.js | versao 2026-09-16-aovivo | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * O og.js nao era o unico pedaco do projeto que fala com o Firestore de fora
@@ -132,6 +132,73 @@ async function elegiveis(token) {
   return saida;
 }
 
+/* ---------- AO VIVO AGORA (16/09/2026) ----------
+   Nenhuma superficie publica do Moviki mostrava quem esta transmitindo. A live
+   so era descoberta pelo link que o proprio lojista mandava — ou seja, o
+   Moviki nao entregava um unico espectador, e "vender para quem esta perto"
+   nao acontecia em lugar nenhum.
+   Esta consulta e o motor da vitrine. Sai daqui, e nao do navegador, por tres
+   motivos: a home nao carrega o SDK do Firebase (ela so o baixa quando alguem
+   encosta na newsletter, para continuar leve — e essa leveza e o funil de
+   aquisicao); o App Check nao entra no caminho; e a resposta fica no cache da
+   CDN, entao mil visitantes na home custam UMA leitura do Firestore.
+   `live_sessoes` e `read: true` na regra, e o cartao (slug, nome, segmento,
+   logo) foi gravado pelo robo na abertura da live — por isso uma consulta so,
+   sem uma leitura de `negocios` por lojista no ar.
+   PULSO: a sessao so conta como no ar com pulso de menos de 3 minutos, igual
+   ao painel do dono. Aba fechada no meio da feira deixaria um "ao vivo" eterno
+   na home — que e pior que nao ter vitrine nenhuma. */
+const PULSO_VALIDO_MS = 180000;
+const TETO_AOVIVO = 60;
+
+function msDe(f) {
+  if (!f) return 0;
+  if (f.timestampValue) { const t = Date.parse(f.timestampValue); return isNaN(t) ? 0 : t; }
+  if (f.integerValue != null) return Number(f.integerValue);
+  if (typeof f.doubleValue === 'number') return f.doubleValue;
+  return 0;
+}
+
+async function aoVivo(token) {
+  const j = await chamar(':runQuery', {
+    structuredQuery: {
+      from: [{ collectionId: 'live_sessoes' }],
+      where: {
+        fieldFilter: {
+          field: { fieldPath: 'ativa' },
+          op: 'EQUAL',
+          value: { booleanValue: true }
+        }
+      },
+      limit: TETO_AOVIVO * 2
+    }
+  }, token);
+  if (!Array.isArray(j)) return null;
+
+  const agora = Date.now();
+  const saida = [];
+  for (const linha of j) {
+    const d = linha && linha.document;
+    if (!d || !d.fields) continue;
+    const f = d.fields;
+    const pulso = Math.max(msDe(f.pulsoEm), msDe(f.pulsoMs));
+    if (!pulso || (agora - pulso) > PULSO_VALIDO_MS) continue;   // fantasma: nao entra
+    const slug = txt(f.slug), nome = txt(f.nome);
+    if (!slug || !nome) continue;            // sem link ou sem nome nao vira cartao
+    const logo = txt(f.logo);
+    saida.push({
+      slug: slug,
+      nome: nome,
+      segmento: txt(f.segmento),
+      logo: fotoOk(logo) ? logo : '',
+      nivel: txt(f.nivel),
+      inicioMs: Math.max(msDe(f.inicioEm), msDe(f.inicioMs)),
+    });
+  }
+  saida.sort((a, b) => b.inicioMs - a.inicioMs);
+  return saida.slice(0, TETO_AOVIVO);
+}
+
 /* Contagem da base inteira. Uma agregacao COUNT custa uma fracao de leitura e
    e o que mantem o diagnostico do robo ("N negocios | M autorizaram") honesto
    sem baixar a base. */
@@ -166,6 +233,32 @@ module.exports = async (req, res) => {
   }
 
   const token = await gauth.tokenLeitura();
+
+  /* ?modo=aovivo -> so a vitrine de lives. Resposta curta, cache curto e
+     ABERTA mesmo com VITRINE_SECRET ligado... nao: o segredo, se existir, vale
+     para tudo, e o bloco acima ja barrou. Aqui so desviamos o trabalho. */
+  if (String((req.query && req.query.modo) || '') === 'aovivo' ||
+      /[?&]modo=aovivo(&|$)/.test(String(req.url || ''))) {
+    const lives = await aoVivo(token);
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    if (!lives) {
+      /* Aqui a falha e ABERTA, ao contrario da vitrine do robo social: uma
+         home que nao consegue listar lives some com o bloco e segue linda. Dar
+         502 para o visitante seria trocar um bloco vazio por um erro na tela. */
+      res.statusCode = 200;
+      res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=10');
+      res.end(JSON.stringify({ atualizado: new Date().toISOString(), total: 0, lives: [], erro: 'firestore' }));
+      return;
+    }
+    res.statusCode = 200;
+    /* 20 s na CDN: uma live dura dezenas de minutos, ninguem precisa de tempo
+       real aqui — e isto e o que faz mil visitantes custarem uma leitura. */
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=20, stale-while-revalidate=60');
+    res.end(JSON.stringify({ atualizado: new Date().toISOString(), total: lives.length, lives: lives }));
+    return;
+  }
+
   const [negocios, base] = await Promise.all([elegiveis(token), totalBase(token)]);
 
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
