@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-15-compra4 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-16-capavideo | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://www.googletagmanager.com https://www.google-analytics.com https://i.ytimg.com; connect-src 'self' https://moviki-robo.vercel.app https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://unpkg.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://*.ibb.co https://www.googletagmanager.com https://www.google-analytics.com https://i.ytimg.com; connect-src 'self' https://moviki-robo.vercel.app https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#060d18">
@@ -1190,7 +1190,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-15-compra4';
+  window.MOVIKI_VERSAO='2026-09-16-capavideo';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1769,19 +1769,28 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const cru=String((typeof v==='string')?v:(v.url||'')).trim();
     if(!/^https:\/\//i.test(cru))return null;
     const tit=String((typeof v==='string')?'':(v.titulo||'')).trim().slice(0,90);
+    /* CAPA ESCOLHIDA PELO LOJISTA -- 16/09/2026.
+       Instagram e TikTok nao entregam miniatura para quem nao e o app deles,
+       entao o cartao desses dois nascia so com a arte de fundo. Agora o
+       lojista escolhe a imagem no painel, e ela vale para qualquer rede.
+       Passa pelo MESMO fotoOk() da galeria: capa e imagem publicada, e o
+       endereco vem de texto guardado no banco -- sem a lista fechada de
+       origens, um `src` qualquer entraria na pagina do cliente dele. */
+    const cp=(typeof v==='string')?'':String(v.capa||'').trim();
+    const capa=fotoOk(cp)?cp:'';
     const nu=cru.split('#')[0];
     let m;
     m=nu.match(/^https:\/\/(?:www\.|m\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{6,20})/i);
-    if(m)return {p:'yt',id:m[1],vert:true,t:tit,url:'https://www.youtube.com/shorts/'+m[1]};
+    if(m)return {capa:capa,p:'yt',id:m[1],vert:true,t:tit,url:'https://www.youtube.com/shorts/'+m[1]};
     m=nu.match(/^https:\/\/(?:www\.|m\.)?youtu\.be\/([A-Za-z0-9_-]{6,20})/i);
-    if(m)return {p:'yt',id:m[1],vert:false,t:tit,url:'https://youtu.be/'+m[1]};
+    if(m)return {capa:capa,p:'yt',id:m[1],vert:false,t:tit,url:'https://youtu.be/'+m[1]};
     m=nu.match(/^https:\/\/(?:www\.|m\.)?youtube\.com\/(?:watch\?(?:[^\s]*&)?v=|embed\/|live\/)([A-Za-z0-9_-]{6,20})/i);
-    if(m)return {p:'yt',id:m[1],vert:false,t:tit,url:'https://www.youtube.com/watch?v='+m[1]};
+    if(m)return {capa:capa,p:'yt',id:m[1],vert:false,t:tit,url:'https://www.youtube.com/watch?v='+m[1]};
     m=nu.match(/^https:\/\/(?:www\.)?instagram\.com\/(?:reels?|p|tv)\/([A-Za-z0-9_-]{5,40})/i);
-    if(m)return {p:'ig',id:m[1],vert:true,t:tit,url:'https://www.instagram.com/reel/'+m[1]+'/'};
+    if(m)return {capa:capa,p:'ig',id:m[1],vert:true,t:tit,url:'https://www.instagram.com/reel/'+m[1]+'/'};
     const semQ=nu.split('?')[0];
     m=semQ.match(/^https:\/\/(?:www\.|vm\.|vt\.)?tiktok\.com\/[A-Za-z0-9@._\/-]{3,120}$/i);
-    if(m)return {p:'tt',id:'',vert:true,t:tit,url:semQ};
+    if(m)return {capa:capa,p:'tt',id:'',vert:true,t:tit,url:semQ};
     return null;
   }
   function listaVideos(d){
@@ -1796,7 +1805,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
        nao vier (video apagado, video privado), o cartao continua bonito em
        vez de virar um retangulo cinza. */
     let capa='<div class="vdArte '+v.p+'">'+IC.filme+'</div>';
-    if(v.p==='yt'){
+    /* ordem: capa escolhida > miniatura do YouTube > arte de fundo. A arte
+       fica SEMPRE embaixo: imagem que nao carrega (video apagado, capa
+       removida do Storage) deixa o cartao bonito em vez de cinza. */
+    if(v.capa){
+      capa+='<img class="vdThumb" src="'+esc(v.capa)+'" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.remove()">';
+    } else if(v.p==='yt'){
       capa+='<img class="vdThumb" src="https://i.ytimg.com/vi/'+esc(v.id)+'/hqdefault.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">';
     }
     const dentro=capa+'<div class="vdVeu"></div><span class="vdPlay">'+IC.playCheio+'</span>'+selo+tit;
