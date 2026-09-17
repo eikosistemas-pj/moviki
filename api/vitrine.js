@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/vitrine.js | versao 2026-09-16-aovivo | repo: moviki (site publico)
+ * MOVIKI api/vitrine.js | versao 2026-09-16-aovivo2 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * O og.js nao era o unico pedaco do projeto que fala com o Firestore de fora
@@ -159,6 +159,39 @@ function msDe(f) {
   return 0;
 }
 
+/* Le UM documento pela REST (GET), sem runQuery. Usado so pelo interruptor da
+   vitrine: uma leitura a cada revalidacao do cache (20 s), nao por visitante. */
+async function lerDoc(caminho, token) {
+  const url = BASE_REST + caminho + (token ? '' : '?key=' + encodeURIComponent(API_KEY));
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const r = await fetch(url, {
+      signal: ctrl.signal,
+      headers: token ? { Authorization: 'Bearer ' + token } : {}
+    });
+    clearTimeout(t);
+    if (!r.ok) return null;
+    const j = await r.json();
+    return (j && j.fields) || null;
+  } catch (e) { clearTimeout(t); return null; }
+}
+
+/* INTERRUPTOR DA VITRINE — 16/09/2026.
+   A vitrine mudou o perfil de risco do Modo Live: ate ela existir, uma live
+   impropria ficava no link que o lojista distribuia; agora ela aparece na HOME
+   do Moviki. A moderacao encerra a live (e ai ela some daqui em 20 s), mas
+   incidente nao espera ninguem estar acordado para subir arquivo.
+   Mesma doutrina da chave-mestra: um campo no banco desliga na hora.
+   `liveDesligada` (a chave-mestra que ja existe) tambem apaga a vitrine — se
+   nao ha live acontecendo, nao pode haver cartaz dizendo que ha. */
+async function vitrineLigada(token) {
+  const f = await lerDoc('/configuracoes/liveTermos', token);
+  if (!f) return true;                       // nao consegui ler: nao inventa parede
+  const off = (k) => !!(f[k] && f[k].booleanValue === true);
+  return !(off('liveDesligada') || off('vitrineDesligada'));
+}
+
 async function aoVivo(token) {
   const j = await chamar(':runQuery', {
     structuredQuery: {
@@ -239,7 +272,8 @@ module.exports = async (req, res) => {
      para tudo, e o bloco acima ja barrou. Aqui so desviamos o trabalho. */
   if (String((req.query && req.query.modo) || '') === 'aovivo' ||
       /[?&]modo=aovivo(&|$)/.test(String(req.url || ''))) {
-    const lives = await aoVivo(token);
+    const ligada = await vitrineLigada(token);
+    const lives = ligada ? await aoVivo(token) : [];
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('X-Robots-Tag', 'noindex');
     if (!lives) {
