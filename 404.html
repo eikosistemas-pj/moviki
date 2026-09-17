@@ -2363,10 +2363,20 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const box=el('corpoCardapio'); box.innerHTML=h; box.scrollTop=0;
   };
   window.voltarCategorias=function(){ const box=el('corpoCardapio'); box.innerHTML=gradeCategorias(); box.scrollTop=0; };
+  /* O cardapio em memoria NAO pode depender de o cliente ter aberto a folha do
+     cardapio. Quem compra dentro do video (17/09/2026) entra pelo cartao do
+     video e nunca passou por `abrirCardapio`: com `cardapioAtual` vazio, o
+     `itemDoCardapio` do mvAdd devolvia null e o botao "Comprar" nao fazia
+     NADA -- item marcado aparecia na tela e o clique morria calado.
+     Agora a lista e sincronizada assim que os dados do negocio sao pintados,
+     e a folha do cardapio so reaproveita a mesma sincronizacao. */
+  function sincronizarCardapio(){
+    cardapioAtual=(dadosNeg&&liberaConteudo())?(dadosNeg.cardapio||[]):[];
+    mostrarFotosAtual=liberaFotos();
+  }
   window.abrirCardapio=function(){
     if(!dadosNeg)return;
-    cardapioAtual=liberaConteudo()?(dadosNeg.cardapio||[]):[];
-    mostrarFotosAtual=liberaFotos();
+    sincronizarCardapio();
     el('folhaCardapio').querySelector('h2').textContent='Cardápio';
     el('corpoCardapio').innerHTML=(pedidoGuardado()?'<button class="pgRetomar" type="button" onclick="retomarPedido()">Ver o pedido que voce ja fez aqui</button>':'')+gradeCategorias();
     pintarSacola();
@@ -3287,6 +3297,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     else el('subNeg').classList.add('escondido');
     atualizarBtnWpp();
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
+    sincronizarCardapio();
     montarRapidos(d); montarOndeInfo(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarVideos(d); montarAbas(d); montarTabbar(d); pintarFav();
     if(demoOn)el('demoAviso').classList.remove('escondido');
   }
