@@ -180,6 +180,7 @@
   .vidBox{max-width:620px;margin:40px auto 0}
   .vidCapa{position:relative;display:block;border-radius:18px;overflow:hidden;border:1px solid var(--linha);background:#08131f;aspect-ratio:16/9;cursor:pointer}
   .vidCapa img{width:100%;height:100%;object-fit:cover;display:block}
+  .vidBox--v{max-width:340px!important}.vidBox--v .vidCapa,.vidBox--v iframe{aspect-ratio:9/16!important}
   .vidCapa .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
   .vidCapa .play span{width:70px;height:70px;border-radius:50%;background:linear-gradient(90deg,var(--ciano),var(--azul));color:#00121f;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;box-shadow:0 12px 34px rgba(0,102,255,.45)}
   .vidBox iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:18px;display:block}
@@ -274,6 +275,17 @@
   .simNota b{color:var(--texto)}
   @media(max-width:560px){.simSaida{grid-template-columns:1fr}}
 </style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoObject",
+ "name":"Parceiro Moviki: indique quem quer vender ao vivo pelo celular e receba comissão",
+ "description":"Como funciona o Programa de Parceiros Moviki e as dúvidas mais comuns antes de entrar. Comissão de 15% de cada mensalidade paga, enquanto o negócio indicado continuar cliente. Os percentuais são a regra de cálculo, não promessa de valor; a comissão só existe sobre assinatura paga e pode ser zero.",
+ "thumbnailUrl":["https://www.moviki.com.br/parceiro-video-capa-16x9.jpg"],
+ "uploadDate":"2026-09-19T00:00:00-03:00",
+ "duration":"PT3M10S",
+ "embedUrl":"https://www.youtube.com/embed/l2gpW5Psszo",
+ "inLanguage":"pt-BR",
+ "publisher":{"@type":"Organization","name":"Moviki","logo":{"@type":"ImageObject","url":"https://www.moviki.com.br/logo.png"}}}
+</script>
 </head>
 <body>
 
@@ -608,7 +620,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-18-parceirosub';
+window.MOVIKI_VERSAO = '2026-09-19-videoparceiro';
 
 /* ===== SIMULADOR DE COMISSAO - 16/09/2026 ===================================
    Mesma conta do painel do parceiro (parceiro.html, funcao barras), mesma
@@ -679,7 +691,8 @@ window.MOVIKI_VERSAO = '2026-09-18-parceirosub';
    vazio e o bloco inteiro continua invisivel - nenhuma tela quebrada, nenhum
    player preto. Trocar este valor e a UNICA coisa necessaria para publicar o
    video; o resto da pagina nao muda. */
-window.MOVIKI_VIDEO_PARCEIRO = '';
+window.MOVIKI_VIDEO_PARCEIRO = 'l2gpW5Psszo';          /* 16:9 - abre no computador */
+window.MOVIKI_VIDEO_PARCEIRO_VERTICAL = 'KKlNYJm4xNI';            /* 9:16 da pagina - abre no celular; vazio = celular abre o 16:9 */
 
 (function(){
   document.addEventListener('click', function(e){
@@ -720,26 +733,33 @@ window.MOVIKI_VIDEO_PARCEIRO = '';
     }
   }catch(err){}
 
-  /* Video: so monta se houver id. A capa vem do proprio YouTube; o iframe
-     nasce APOS o clique, entao a pagina nao chama o YouTube a toa e nao
-     depende dele para abrir. */
+  /* Video - 2026-09-19-videoparceiro. Mesmo padrao da home: tela ate 640px
+     abre o 9:16, tela larga abre o 16:9. Carrega um so, e so depois do clique.
+     Sem id vertical, o celular cai no 16:9. A capa e arquivo do proprio site
+     (a miniatura do YouTube de video vertical vem com tarja). */
   try {
-    var vid = (window.MOVIKI_VIDEO_PARCEIRO||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,20);
-    if (vid.length >= 8) {
+    var limpa = function(x){ return (x||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,20); };
+    var vidH = limpa(window.MOVIKI_VIDEO_PARCEIRO), vidV = limpa(window.MOVIKI_VIDEO_PARCEIRO_VERTICAL);
+    if (vidH.length >= 8) {
       var box = document.getElementById('vidBox');
       var capa = document.getElementById('vidCapa');
       var thumb = document.getElementById('vidThumb');
       if (box && capa && thumb) {
-        thumb.src = 'https://i.ytimg.com/vi/' + vid + '/maxresdefault.jpg';
-        thumb.onerror = function(){ this.onerror=null; this.src='https://i.ytimg.com/vi/' + vid + '/hqdefault.jpg'; };
+        var vertical = window.matchMedia('(max-width:640px)').matches && vidV.length >= 8;
+        var vid = vertical ? vidV : vidH;
+        if (vertical) box.classList.add('vidBox--v');
+        thumb.src = vertical ? '/parceiro-video-capa-9x16.jpg' : '/parceiro-video-capa-16x9.jpg';
+        thumb.onerror = function(){ this.onerror=null; this.src='https://i.ytimg.com/vi/' + vidH + '/hqdefault.jpg'; };
         box.style.display = 'block';
         capa.addEventListener('click', function(){
           var f = document.createElement('iframe');
-          f.src = 'https://www.youtube-nocookie.com/embed/' + vid + '?autoplay=1&rel=0&modestbranding=1';
+          f.src = 'https://www.youtube-nocookie.com/embed/' + vid + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
           f.setAttribute('title','Programa de Parceiros Moviki');
-          f.setAttribute('allow','accelerometer; autoplay; encrypted-media; picture-in-picture');
+          f.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
           f.setAttribute('allowfullscreen','');
+          f.referrerPolicy = 'strict-origin-when-cross-origin';
           capa.replaceWith(f);
+          try { if (window.mvEv) window.mvEv('video_play', { video: 'parceiro_v4', formato: (vertical ? '9x16' : '16x9'), pagina: 'parceiros-ganhos' }); } catch(e){}
         }, { once:true });
       }
     }
