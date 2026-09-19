@@ -815,14 +815,30 @@ a{color:inherit}
    No celular a ordem é texto curto -> vídeo -> lista -> botões: quem chega pelo
    anúncio vê o produto funcionando antes de rolar. `display:contents` deixa os
    dois pedaços do texto participarem do mesmo grid e receberem `order`. */
-.lp-hero .lpv{max-width:520px;margin-inline:auto}
-.lp-heroBaixo{margin-top:26px}
-@media(max-width:900px){
-  .lp-heroTxt{display:contents}
-  .lp-heroTopo{order:1}
-  .lp-heroVid{order:2;margin-top:4px}
-  .lp-heroBaixo{order:3;margin-top:6px}
-  .lp-hero .lpv{max-width:340px}
+/* ===== HERO EM UMA COLUNA — 18/09/2026 =====================================
+   Ordem única em todas as telas: título -> filme na largura do conteúdo ->
+   lista + botões. O filme vira a peça central da dobra. No computador a lista
+   e os botões ficam lado a lado embaixo do filme para não empurrar o
+   "Começar grátis" para longe. No celular o box continua vertical (9:16). */
+.lp-hero-grid.lp-hero-1col{grid-template-columns:minmax(0,1fr)!important;gap:0;align-items:stretch}
+.lp-hero-1col .lp-heroTopo{text-align:center;max-width:860px;margin-inline:auto}
+.lp-hero-1col .lp-tag{justify-content:center;text-align:center}
+.lp-hero-1col h1{font-size:clamp(34px,4.6vw,62px)}
+.lp-hero-1col p.sub{max-width:720px;margin:0 auto 4px}
+.lp-hero-1col .lp-heroVid{margin-top:clamp(22px,3vw,34px)}
+.lp-hero .lpv{max-width:100%;margin-inline:auto}
+.lp-heroBaixo{margin-top:clamp(24px,3vw,38px);display:grid;gap:22px 48px;
+  grid-template-columns:auto auto;justify-content:center;align-items:center}
+.lp-heroBaixo .lp-bul{margin:0}
+.lp-heroAcao{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.lp-heroAcao .lp-ctas{margin:0}
+@media(max-width:960px){
+  .lp-heroBaixo{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+  .lp-heroLista{text-align:center}
+  .lp-heroAcao{align-items:center}
+}
+@media(max-width:640px){
+  .lp-hero .lpv{max-width:360px}
 }
 
 /* ===== CARDÁPIO QUE VENDE ===== */
@@ -839,7 +855,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-16-vitrinelive';</script>
+<script>window.MOVIKI_VERSAO='2026-09-18-herolive';</script>
 </head>
 
 <body class="mv">
@@ -893,51 +909,20 @@ a{color:inherit}
 
   <!-- ================= HERO ================= -->
   <section class="lp-hero" data-sec="hero">
-    <div class="mv-container lp-hero-grid">
+    <div class="mv-container lp-hero-grid lp-hero-1col">
 
-      <!-- coluna 1: texto. Os dois pedacos existem para o celular poder
-           encaixar o video entre a promessa e a lista (ver .lp-heroTxt). -->
-      <div class="lp-heroTxt">
+      <!-- 18/09/2026 - HERO EM UMA COLUNA: titulo -> filme na largura toda ->
+           lista e botoes. O player continua fachada: nada do YouTube carrega
+           antes do clique, entao o tamanho maior nao pesa no carregamento. -->
       <div class="lp-heroTopo">
         <span class="mv-tag lp-tag">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2Z"/></svg>
-          Para todo negócio que precisa ser encontrado — e vendido</span>
-        <h1>Seu negócio no mapa.<br><em>E em vídeo.</em></h1>
-        <p class="sub">Abra a câmera do celular, mostre o produto na mão e receba o pedido ali mesmo. Seu cardápio passa a vender com Pix caindo na sua conta — e quem está perto vê no mapa onde você está agora.</p>
+          Para quem vende na rua, na feira e no balcão</span>
+        <h1>Venda ao vivo pelo celular.<br><em>E apareça no mapa.</em></h1>
+        <p class="sub">Abra a câmera, mostre o produto na mão e responda na hora: quem está assistindo faz o pedido ali mesmo, com Pix caindo na sua conta. E quem está perto vê no mapa onde você está agora — e vai até você.</p>
       </div>
 
-      <div class="lp-heroBaixo">
-        <ul class="lp-bul">
-          <li><img class="ic3d ic3d--p" src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">Venda ao vivo, pela câmera do celular</li>
-          <li><img class="ic3d ic3d--p" src="icones-premium/pix.png" alt="" loading="lazy" onerror="lpIco(this,'💸')">Cardápio que vende, com Pix na sua conta</li>
-          <li><img class="ic3d ic3d--p" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Marcou o ponto, todo mundo vê</li>
-          <li><img class="ic3d ic3d--p" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">Promoção pra encher o dia fraco</li>
-          <li><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Ele te chama no WhatsApp num clique</li>
-        </ul>
 
-        <div class="lp-ctas">
-          <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_hero">Começar grátis</a>
-          <a class="mv-btn mv-btn--fantasma mv-btn--g" href="#como" data-ev="cta_como">Ver como funciona ▷</a>
-        </div>
-
-        <div class="lp-prova" style="margin-top:14px">
-          <img class="ic3d" src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'🏪')">
-          <div><b style="font-size:14.5px">Seja um dos primeiros no mapa</b>
-            <span style="display:block;font-size:12.5px;color:var(--mv-txt-3)">da sua região</span></div>
-        </div>
-
-        <div class="lp-selos">
-          <span>🎁 Teste grátis por 30 dias</span>
-          <span>💳 Sem cartão de crédito</span>
-        </div>
-      </div>
-      </div>
-
-      <!-- coluna 2: O FILME — 16/09/2026.
-           A cena do mapa saiu daqui e virou a secao #mapa, mais abaixo. O
-           reposicionamento poe o VIDEO acima da dobra: e ele que prova a
-           promessa nova. Custo zero no carregamento — a capa e desenhada em
-           CSS e o iframe do YouTube so nasce no clique. -->
       <div class="lp-heroVid">
         <div class="lpv">
           <div class="lpv__box" id="lpvBoxLive">
@@ -951,6 +936,36 @@ a{color:inherit}
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="lp-heroBaixo">
+        <div class="lp-heroLista">
+        <ul class="lp-bul">
+          <li><img class="ic3d ic3d--p" src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">Venda ao vivo, pela câmera do celular</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/pix.png" alt="" loading="lazy" onerror="lpIco(this,'💸')">Cardápio que vende, com Pix na sua conta</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Marcou o ponto, todo mundo vê</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">Promoção pra encher o dia fraco</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Ele te chama no WhatsApp num clique</li>
+        </ul>
+        </div>
+
+        <div class="lp-heroAcao">
+        <div class="lp-ctas">
+          <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_hero">Começar grátis</a>
+          <a class="mv-btn mv-btn--fantasma mv-btn--g" href="#como" data-ev="cta_como">Ver como funciona ▷</a>
+        </div>
+
+        <div class="lp-prova" style="margin-top:14px">
+          <img class="ic3d" src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'🏪')">
+          <div><b style="font-size:14.5px">Seja um dos primeiros no mapa</b>
+            <span style="display:block;font-size:12.5px;color:var(--mv-txt-3)">da sua região</span></div>
+        </div>
+
+        <div class="lp-selos">
+          <span>🎁 30 dias grátis, com o Modo Live liberado</span>
+          <span>💳 Sem cartão de crédito</span>
+        </div>
+      </div>
       </div>
 
     </div>
