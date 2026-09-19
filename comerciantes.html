@@ -1,15 +1,29 @@
-﻿<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html><html lang="pt-BR"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Página do seu negócio: cardápio, mapa e venda ao vivo | Moviki</title>
 <meta name="description" content="Venda em tempo real e fale com quem está perto. O Moviki mostra onde o seu negócio está agora e deixa você vender ao vivo pela câmera do celular. 30 dias grátis, sem cartão e sem comissão por venda.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.moviki.com.br/comerciantes.html">
+<!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/comerciantes.html">
 <meta property="og:title" content="Página do seu negócio: cardápio, mapa e venda ao vivo | Moviki">
 <meta property="og:description" content="Venda em tempo real e fale com quem está perto. Negócio no mapa, cardápio, promoções e venda ao vivo pela câmera do celular. Sem comissão por venda.">
 <meta property="og:image" content="https://www.moviki.com.br/livehero.jpg">
-<meta property="og:url" content="https://www.moviki.com.br/comerciantes.html">
-<meta property="og:type" content="website">
+<meta property="og:image:secure_url" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Venda ao vivo pelo celular com o Moviki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Página do seu negócio: cardápio, mapa e venda ao vivo | Moviki">
+<meta name="twitter:description" content="Venda em tempo real e fale com quem está perto. Negócio no mapa, cardápio, promoções e venda ao vivo pela câmera do celular. Sem comissão por venda.">
+<meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
 <link rel="icon" href="favicon512.png">
+<link rel="preload" as="image" href="/home-video-capa-9x16.jpg" media="(max-width:640px)">
+<link rel="preload" as="image" href="/home-video-capa-16x9.jpg" media="(min-width:641px)">
 <!-- DADOS ESTRUTURADOS — para comerciantes
      Ate 16/09/2026 o site nao tinha nenhuma marcacao fora do FAQPage da
      /aovivo. Sem isso o Google le a pagina como texto solto: nao sabe que
@@ -196,6 +210,69 @@
     .lpv__play svg{width:26px;height:26px}
   }
   @media(prefers-reduced-motion:reduce){.lpv__capa:hover .lpv__play{transform:none}}
+
+  /* ===== 2026-09-19-comerciantes2 =========================================
+     Pagina de chegada do link do parceiro. Mesmo padrao da home e da
+     parceiros-ganhos: filme no topo com capa de verdade, 760px no computador,
+     9:16 de 340px no celular. */
+  .lpv--hero{margin:24px auto 0;max-width:760px}
+  .lpv__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .lpv__box--capa{background:#050b14}
+  .lpv__box--capa::before{display:none}
+  .lpv__box--capa .lpv__rot,.lpv__box--capa .lpv__sub{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media(min-width:641px){.lpv__box--capa .lpv__capa{align-items:flex-start;padding-left:calc(28% - 43px)}}
+  .lpv iframe{z-index:2}
+  .hero .ctas .cta{margin-top:22px}
+  .pill--ref{color:var(--verde);border-color:rgba(37,227,155,.35)}
+  .pill--ref .dot{background:var(--verde);box-shadow:0 0 10px var(--verde)}
+  .pill--ref b{color:#eafff5;text-transform:none;letter-spacing:0}
+  .pill[hidden]{display:none}
+  .garantias{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin-top:14px;font-size:13px;color:var(--suave)}
+  .garantias li{display:flex;align-items:center;gap:6px}
+  .garantias li::before{content:"";width:14px;height:14px;flex:0 0 14px;border-radius:50%;
+    background:var(--verde) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L20.1 8.4 18.7 7z' fill='%23041a10'/%3E%3C/svg%3E") center/11px no-repeat}
+  .garantias b{color:var(--verde)}
+
+  /* Para quem: um cartao por publico. O seletor antigo (.quem div) pegava
+     tambem as divs de dentro e desenhava caixa dentro de caixa. */
+  .quem div{background:none;border:0;border-radius:0;padding:0}
+  .quem>.quemItem{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+  .icQ{width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 7px 16px rgba(0,0,0,.5))}
+  .quemItem .icEmoji{margin:0}
+
+  .card>div h3{margin-top:0}
+  .cards--3{grid-template-columns:repeat(3,1fr)}
+  .card--larga{grid-column:1/-1;display:flex;gap:16px;align-items:center}
+  .card--larga .ic3d{margin:0;flex:0 0 64px}
+
+  section .selo{text-align:center;max-width:600px;margin-left:auto;margin-right:auto}
+  .barraFixa{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(5,11,20,0),rgba(5,11,20,.94) 34%);display:none;justify-content:center;
+    transform:translateY(110%);transition:transform .25s ease}
+  .barraFixa .cta{margin:0;width:100%;max-width:420px;padding:14px 20px;font-size:16px}
+  .barraFixa.on{transform:none}
+
+  @media(max-width:640px){
+    .lpv--hero{max-width:340px;margin-top:20px}
+    .barraFixa{display:flex}
+    body{padding-bottom:0}
+    .rodape{padding-bottom:96px}
+    .garantias{font-size:12.5px;gap:6px 12px}
+    .quem>.quemItem{flex-direction:row;text-align:left;align-items:center;gap:14px;padding:14px}
+    .icQ{width:52px;height:52px;flex:0 0 52px}
+    .cards--3{grid-template-columns:1fr}
+    .cards--lista .card,.cards--3 .card{display:flex;gap:14px;align-items:flex-start;padding:14px}
+    .cards--lista .ic3d,.cards--3 .ic3d{width:52px;height:52px;flex:0 0 52px;margin:2px 0 0}
+    .card h3{font-size:15.5px}
+    .card p{font-size:13.5px}
+    /* Comparacao no celular: rotulo em cima, Google e Moviki lado a lado.
+       Antes cada linha virava um cartao de tres andares. */
+    .comp tr{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;padding:4px 14px 12px}
+    .comp td{padding:3px 0;word-break:normal;overflow-wrap:break-word}
+    .comp td:first-child{grid-column:1/-1;padding:10px 0 4px;font-size:14px}
+    .comp td[data-l]{padding-left:0;padding-top:20px;font-size:13.5px;line-height:1.35}
+    .comp td[data-l]::before{left:0;top:3px;width:auto;font-size:10.5px}
+  }
 </style></head><body>
 
 <div class="wrap"><div class="topo">
@@ -206,26 +283,110 @@
 
 <div class="wrap">
 
-  <!-- ===== HERO — 16/09/2026 ===============================================
-       O posicionamento passou a ser o do panfleto novo: MAPA **E VIDEO**.
-       Ate aqui a pagina vendia so "ser encontrado"; o Modo Live entrou no
-       produto e a promessa acompanhou. A ordem importa: quem se move precisa
-       PRIMEIRO ser achado, e so depois vender ao vivo — por isso o mapa
-       continua na frase, e nao sai dela. -->
+  <!-- ===== HERO — 2026-09-19-comerciantes2 =================================
+       O filme da live subiu para o topo, com a capa de verdade (a mesma arte
+       da home). Quem chega pelo link do parceiro ve o produto funcionando na
+       primeira tela, em vez de um celular ilustrado e depois de 5 rolagens.
+       O celular ilustrado saiu: a capa do filme ja mostra a mesma cena. -->
   <div class="hero" data-sec="hero">
-    <span class="pill"><span class="dot"></span> Para quem vende e precisa ser achado</span>
+    <span class="pill" id="pillPadrao"><span class="dot"></span> Para quem vende e precisa ser achado</span>
+    <span class="pill pill--ref" id="pillRef" hidden><span class="dot"></span> Indicação de <b id="refNome"></b></span>
     <h1>Seu negócio no mapa. <span class="g">E em vídeo.</span></h1>
     <p class="sub">Venda em tempo real e fale com quem está perto. O Moviki mostra onde você está agora — e deixa você abrir a câmera do celular, mostrar o produto na mão e receber o pedido ali mesmo.</p>
-    <div class="ctas"><a class="cta" href="https://app.moviki.com.br/?criar=1" data-ev="comecar_hero">Criar minha página grátis →</a></div>
-    <div class="selo"><b>30 dias do plano Pró, grátis</b> · sem cartão de crédito · cancela quando quiser</div>
-    <div class="heroVisual">
-      <picture>
-        <source srcset="livehero.webp" type="image/webp">
-        <img src="livehero.png" alt="Celular transmitindo ao vivo pelo Moviki: selo AO VIVO, produto com preço fixo na tela, chat dos clientes e confirmação de pagamento por Pix." class="phoneImg" width="800" height="1421" fetchpriority="high" decoding="async">
-      </picture>
-      <p class="selo" style="margin-top:10px">Ilustração da tela do Moviki — os números são exemplo. Na live de verdade, tudo o que aparece na tela é contado.</p>
+
+    <!-- O FILME DA LIVE. O iframe nasce so no clique: nada do YouTube carrega
+         antes. Tela ate 640px recebe o corte de 60 s (9:16) com a capa
+         vertical; tela larga recebe o filme inteiro (16:9). -->
+    <div class="lpv lpv--hero">
+      <div class="lpv__box lpv__box--capa" id="lpvBoxLive">
+        <picture>
+          <source media="(max-width:640px)" srcset="/home-video-capa-9x16.jpg">
+          <img class="lpv__img" src="/home-video-capa-16x9.jpg" alt="" decoding="async" fetchpriority="high" width="1280" height="720">
+        </picture>
+        <button class="lpv__capa" type="button" id="lpvPlayLive"
+                aria-label="Assistir ao filme do Modo Live do Moviki">
+          <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          <span class="lpv__rot">Ver uma live acontecendo</span>
+          <span class="lpv__sub">com legenda &mdash; dá pra assistir sem som</span>
+        </button>
+        <iframe id="lpvFrameLive" hidden title="Filme do Modo Live do Moviki"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
     </div>
+
+    <div class="ctas" id="ctaHero"><a class="cta" href="https://app.moviki.com.br/?criar=1" data-ev="comecar_hero">Criar minha página grátis →</a></div>
+    <ul class="garantias">
+      <li><b>30 dias do plano Pró, grátis</b></li>
+      <li>Sem cartão de crédito</li>
+      <li>Sem comissão por venda</li>
+      <li>Cancela quando quiser</li>
+    </ul>
   </div>
+
+  <section data-sec="paraquem">
+    <h2>Para quem o Moviki é</h2>
+    <p class="lead">Se o seu cliente precisa saber onde você está, ou o que você tem hoje, é para você.</p>
+    <div class="quem">
+      <div class="quemItem"><img class="icQ" src="/icones-premium/foodtruck.png" alt="" loading="lazy" onerror="mvIco(this,'','🚚')"><span class="icEmoji" hidden>🚚</span><div><div class="t">Quem se move</div><div class="e">Food truck, feira, carrinho, quiosque, van, ambulante, entrega, atendimento em casa.</div></div></div>
+      <div class="quemItem"><img class="icQ" src="/icones-premium/loja.png" alt="" loading="lazy" onerror="mvIco(this,'','🏪')"><span class="icEmoji" hidden>🏪</span><div><div class="t">Quem tem ponto fixo</div><div class="e">Salão, barbearia, mercadinho, loja de bairro, oficina, lanchonete, restaurante.</div></div></div>
+      <div class="quemItem"><img class="icQ" src="/icones-premium/porta.png" alt="" loading="lazy" onerror="mvIco(this,'','🛠️')"><span class="icEmoji" hidden>🛠️</span><div><div class="t">Quem presta serviço</div><div class="e">Manicure, eletricista, pedreiro, diarista, costureira, técnico, personal.</div></div></div>
+    </div>
+  </section>
+
+  <!-- ===== O QUE VEM JUNTO — mesmos sete blocos do panfleto, mesma ordem.
+       No celular o cartao virou linha (icone ao lado do texto): a coluna de
+       sete cartoes altos era a parte mais comprida da pagina. -->
+  <section data-sec="oquetem">
+    <h2>O que vem junto</h2>
+    <p class="lead">Tudo dentro de um link só seu — que você manda no WhatsApp, cola na bio do Instagram e imprime no cartão.</p>
+    <div class="cards cards--lista">
+      <div class="card"><img class="ic3d" src="/icones-premium/localizacao.png" alt="" loading="lazy" onerror="mvIco(this,'','📍')"><span class="icEmoji" hidden>📍</span><div><h3>Localização em tempo real</h3><p>Seu negócio visível para quem está perto. Mudou de ponto no meio do dia? Atualiza pelo celular.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/live.png" alt="" loading="lazy" onerror="mvIco(this,'','🔴')"><span class="icEmoji" hidden>🔴</span><div><h3>Venda por vídeo</h3><p>Mostre seus produtos ao vivo e receba pedidos na hora, sem sair da transmissão. Planos Premium e Enterprise — e já dá para testar nos 30 dias grátis.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/link.png" alt="" loading="lazy" onerror="mvIco(this,'','🔗')"><span class="icEmoji" hidden>🔗</span><div><h3>Link próprio</h3><p>moviki.com.br/seunome. Fácil de falar no telefone, fácil de compartilhar nas redes, e é seu.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/cardapio.png" alt="" loading="lazy" onerror="mvIco(this,'','🍽️')"><span class="icEmoji" hidden>🍽️</span><div><h3>Cardápio e preços</h3><p>O que você vende, quanto custa e a foto de cada item. Tudo em um só lugar, atualizado em segundos.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/promocoes.png" alt="" loading="lazy" onerror="mvIco(this,'','📣')"><span class="icEmoji" hidden>📣</span><div><h3>Promoções e eventos</h3><p>Divulgue a oferta do dia e onde você vai estar. Cria e tira quando quiser, sem depender de ninguém.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/whatsapp.png" alt="" loading="lazy" onerror="mvIco(this,'','💬')"><span class="icEmoji" hidden>💬</span><div><h3>WhatsApp e como chegar</h3><p>O cliente vê se você está aberto, chama você direto e abre a rota até onde você está agora.</p></div></div>
+      <div class="card card--larga"><img class="ic3d" src="/icones-premium/zero-comissao.png" alt="" loading="lazy" onerror="mvIco(this,'zerocomissao.png','🚫')"><span class="icEmoji" hidden>🚫</span><div><h3>Sem comissão por venda</h3><p>Você paga a mensalidade e fica com 100% do que vende. O Moviki não entra no meio do seu caixa.</p></div></div>
+    </div>
+  </section>
+
+  <section data-sec="video">
+    <h2>Veja como fica a sua página, em 1 minuto</h2>
+    <p class="lead">O que o seu cliente enxerga quando abre o seu link — sem termo difícil.</p>
+    <div class="lpv">
+      <div class="lpv__box lpv__box--capa" id="lpvBox">
+        <picture>
+          <source media="(max-width:640px)" srcset="/home-entenda-capa-9x16.jpg">
+          <img class="lpv__img" src="/home-entenda-capa-16x9.jpg" alt="" loading="lazy" decoding="async" width="1280" height="720">
+        </picture>
+        <button class="lpv__capa" type="button" id="lpvPlay"
+                aria-label="Assistir ao vídeo de apresentação do Moviki, 1 minuto">
+          <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          <span class="lpv__rot">Assistir agora</span>
+          <span class="lpv__sub">com legenda &mdash; dá pra assistir sem som</span>
+        </button>
+        <iframe id="lpvFrame" hidden title="Entenda o Moviki em 1 minuto"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="ctas"><a class="cta" href="https://app.moviki.com.br/?criar=1" data-ev="comecar_video">Quero a minha página →</a></div>
+  </section>
+
+  <!-- ===== MODO LIVE — o filme foi para o topo; aqui ficam os tres porques
+       e o caminho para a /aovivo. -->
+  <section data-sec="live">
+    <h2>Venda em tempo real, <span class="g">pela câmera do celular</span></h2>
+    <p class="lead">Estar no mapa faz o cliente te achar. O <b>Modo Live</b> resolve o passo seguinte: você abre a câmera, mostra o produto na mão, responde a dúvida na hora — e quem está assistindo compra ali mesmo.</p>
+    <div class="cards cards--3">
+      <div class="card"><img class="ic3d" src="/icones-premium/foto-produto.png" alt="" loading="lazy" onerror="mvIco(this,'fotoproduto.png','📦')"><span class="icEmoji" hidden>📦</span><div><h3>O produto fixo na tela</h3><p>Foto, nome e preço sempre à vista. Quem chegou no meio não precisa perguntar o que é nem quanto custa.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/chat.png" alt="" loading="lazy" onerror="mvIco(this,'','💬')"><span class="icEmoji" hidden>💬</span><div><h3>A dúvida some na hora</h3><p>A pergunta de um vira resposta para todos. É a conversa do balcão, com todo mundo junto.</p></div></div>
+      <div class="card"><img class="ic3d" src="/icones-premium/pix.png" alt="" loading="lazy" onerror="mvIco(this,'','💸')"><span class="icEmoji" hidden>💸</span><div><h3>Pix dentro da transmissão</h3><p>QR na hora e o dinheiro caindo numa conta aberta no seu nome — nunca na conta do Moviki. Recurso do plano Enterprise.</p></div></div>
+    </div>
+    <div class="ctas" style="margin-top:22px"><a class="cta sec" href="/aovivo" data-ev="ver_modo_live">Ver como funciona o Modo Live →</a></div>
+    <div class="selo">O Modo Live é dos planos Premium e Enterprise e já vem no teste grátis, para você experimentar. Nenhuma live fica gravada em servidor do Moviki, e o número de quem está assistindo é contado de verdade.</div>
+  </section>
 
   <section data-sec="google">
     <h2>“Mas eu já apareço no Google.”</h2>
@@ -239,97 +400,13 @@
           <tr><td>Aberto agora?</td><td data-l="No Google">Pelo horário cadastrado</td><td data-l="No Moviki">Você mesmo abre e fecha</td></tr>
           <tr><td>Cardápio com preço</td><td data-l="No Google">Limitado</td><td data-l="No Moviki">Completo, com foto de cada item</td></tr>
           <tr><td>Promoção do dia</td><td data-l="No Google">Não tem</td><td data-l="No Moviki">Cria e tira quando quiser</td></tr>
-          <tr><td>Seu link</td><td data-l="No Google">Endereço longo do mapa</td><td data-l="No Moviki">moviki.com.br/<b>seunome</b></td></tr>
-          <tr><td><b>Vender ao vivo pela câmera</b></td><td data-l="No Google">Não tem</td><td data-l="No Moviki">Tem, a partir do plano Pró</td></tr>
+          <tr><td>Seu link</td><td data-l="No Google">Endereço longo do mapa</td><td data-l="No Moviki">moviki.com.br/<wbr><b>seunome</b></td></tr>
+          <tr><td><b>Vender ao vivo pela câmera</b></td><td data-l="No Google">Não tem</td><td data-l="No Moviki">Tem, nos planos Premium e Enterprise</td></tr>
           <tr><td>Comissão por venda</td><td data-l="No Google">—</td><td data-l="No Moviki">Nenhuma</td></tr>
         </tbody>
       </table>
       <div class="honesto">O Perfil da Empresa no Google é gratuito e vale a pena manter — ele foi feito para quem tem <b>um endereço que não muda</b>. O Moviki foi feito para o dia em que o ponto, o horário ou o cardápio mudam. Os dois convivem bem.</div>
     </div>
-  </section>
-
-  <section data-sec="paraquem">
-    <h2>Para quem o Moviki é</h2>
-    <p class="lead">Se o seu cliente precisa saber onde você está, ou o que você tem hoje, é para você.</p>
-    <div class="quem">
-      <div><div class="t">Quem se move</div><div class="e">Food truck, feira, carrinho, quiosque, van, ambulante, entrega, atendimento em casa.</div></div>
-      <div><div class="t">Quem tem ponto fixo</div><div class="e">Salão, barbearia, mercadinho, loja de bairro, oficina, lanchonete, restaurante.</div></div>
-      <div><div class="t">Quem presta serviço</div><div class="e">Manicure, eletricista, pedreiro, diarista, costureira, técnico, personal.</div></div>
-    </div>
-  </section>
-
-  <section data-sec="video">
-    <h2>Veja como fica, em 1 minuto</h2>
-    <p class="lead">O que o seu cliente enxerga quando abre o seu link — sem termo difícil.</p>
-    <div class="lpv">
-      <div class="lpv__box" id="lpvBox">
-        <button class="lpv__capa" type="button" id="lpvPlay"
-                aria-label="Assistir ao vídeo de apresentação do Moviki, 1 minuto">
-          <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
-          <span class="lpv__rot">Assistir agora</span>
-          <span class="lpv__sub">com legenda &mdash; dá pra assistir sem som</span>
-        </button>
-        <iframe id="lpvFrame" hidden title="Entenda o Moviki em 1 minuto"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="ctas"><a class="cta sec" href="https://app.moviki.com.br/?criar=1" data-ev="comecar_video">Prefiro já criar a minha página</a></div>
-  </section>
-
-  <!-- ===== O QUE VEM JUNTO — 16/09/2026 ====================================
-       Os sete blocos sao os mesmos do panfleto novo, na mesma ordem, com as
-       mesmas palavras. Papel e site tem que dizer a mesma coisa: o lojista
-       recebe o panfleto do parceiro na rua e abre este link em seguida.
-       O icone /icones-premium/live.png passou a existir em 16/09/2026; o
-       onerror com o emoji continua no lugar, de reserva. -->
-  <section data-sec="oquetem">
-    <h2>O que vem junto</h2>
-    <p class="lead">Tudo dentro de um link só seu — que você manda no WhatsApp, cola na bio do Instagram e imprime no cartão.</p>
-    <div class="cards">
-      <div class="card"><img class="ic3d" src="/icones-premium/localizacao.png" alt="" loading="lazy" onerror="mvIco(this,'','📍')"><span class="icEmoji" hidden>📍</span><h3>Localização em tempo real</h3><p>Seu negócio visível para quem está perto. Mudou de ponto no meio do dia? Atualiza pelo celular.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/live.png" alt="" loading="lazy" onerror="mvIco(this,'','🔴')"><span class="icEmoji" hidden>🔴</span><h3>Venda por vídeo</h3><p>Mostre seus produtos ao vivo e receba pedidos na hora, sem sair da transmissão. A partir do plano Pró.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/link.png" alt="" loading="lazy" onerror="mvIco(this,'','🔗')"><span class="icEmoji" hidden>🔗</span><h3>Link próprio</h3><p>moviki.com.br/seunome. Fácil de falar no telefone, fácil de compartilhar nas redes, e é seu.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/cardapio.png" alt="" loading="lazy" onerror="mvIco(this,'','🍽️')"><span class="icEmoji" hidden>🍽️</span><h3>Cardápio e preços</h3><p>O que você vende, quanto custa e a foto de cada item. Tudo em um só lugar, atualizado em segundos.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/promocoes.png" alt="" loading="lazy" onerror="mvIco(this,'','📣')"><span class="icEmoji" hidden>📣</span><h3>Promoções e eventos</h3><p>Divulgue a oferta do dia e onde você vai estar. Cria e tira quando quiser, sem depender de ninguém.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/whatsapp.png" alt="" loading="lazy" onerror="mvIco(this,'','💬')"><span class="icEmoji" hidden>💬</span><h3>WhatsApp e como chegar</h3><p>O cliente vê se você está aberto, chama você direto e abre a rota até onde você está agora.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/zero-comissao.png" alt="" loading="lazy" onerror="mvIco(this,'zerocomissao.png','🚫')"><span class="icEmoji" hidden>🚫</span><h3>Sem comissão por venda</h3><p>Você paga a mensalidade e fica com 100% do que vende. O Moviki não entra no meio do seu caixa.</p></div>
-    </div>
-  </section>
-
-  <!-- ===== MODO LIVE — 16/09/2026 ==========================================
-       Esta faixa existe por um motivo de funil: o parceiro divulga peca de
-       live, a pessoa clica no link dele (/p/apelido) e caia AQUI. Ate 16/09
-       esta pagina nao dizia uma palavra sobre live.
-       Ganhou data-sec proprio: da para medir quantos chegam ate aqui. -->
-  <section data-sec="live">
-    <h2>Venda em tempo real, <span class="g">pela câmera do celular</span></h2>
-    <p class="lead">Estar no mapa faz o cliente te achar. O <b>Modo Live</b> resolve o passo seguinte: você abre a câmera, mostra o produto na mão, responde a dúvida na hora — e quem está assistindo compra ali mesmo.</p>
-    <div class="cards">
-      <div class="card"><img class="ic3d" src="/icones-premium/foto-produto.png" alt="" loading="lazy" onerror="mvIco(this,'fotoproduto.png','📦')"><span class="icEmoji" hidden>📦</span><h3>O produto fixo na tela</h3><p>Foto, nome e preço sempre à vista. Quem chegou no meio não precisa perguntar o que é nem quanto custa.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/chat.png" alt="" loading="lazy" onerror="mvIco(this,'','💬')"><span class="icEmoji" hidden>💬</span><h3>A dúvida some na hora</h3><p>A pergunta de um vira resposta para todos. É a conversa do balcão, com todo mundo junto.</p></div>
-      <div class="card"><img class="ic3d" src="/icones-premium/pix.png" alt="" loading="lazy" onerror="mvIco(this,'','💸')"><span class="icEmoji" hidden>💸</span><h3>Pix dentro da transmissão</h3><p>QR na hora e o dinheiro caindo numa conta aberta no seu nome — nunca na conta do Moviki. Recurso do plano Enterprise.</p></div>
-    </div>
-    <!-- O FILME DA LIVE. Mesma fachada do player de cima: o iframe nasce
-         so no clique, entao dois players na pagina nao custam nada ate
-         alguem tocar. Tela estreita recebe o corte de 60 s (9:16), tela
-         larga recebe o filme inteiro (16:9) - video horizontal longo em
-         tela de celular e abandono. -->
-    <div class="lpv" style="margin-top:26px">
-      <div class="lpv__box" id="lpvBoxLive">
-        <button class="lpv__capa" type="button" id="lpvPlayLive"
-                aria-label="Assistir ao filme do Modo Live">
-          <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
-          <span class="lpv__rot">Ver uma live acontecendo</span>
-          <span class="lpv__sub">sem tutorial e sem termo difícil</span>
-        </button>
-        <iframe id="lpvFrameLive" hidden title="Filme do Modo Live do Moviki"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="ctas" style="margin-top:22px"><a class="cta" href="/aovivo" data-ev="ver_modo_live">Ver como funciona o Modo Live →</a></div>
-    <div class="selo">Já funciona no teste grátis, em nível Pró. Nenhuma live fica gravada em servidor do Moviki, e o número de quem está assistindo é contado de verdade.</div>
   </section>
 
   <section data-sec="passos">
@@ -349,9 +426,10 @@
     <div class="planos">
       <div class="plano"><div class="nome">Básico</div><div class="preco">Grátis</div><div class="desc">Seu ponto no mapa, link próprio e avaliações</div></div>
       <div class="plano destaque"><div class="nome">Pró</div><div class="preco">R$39,90<small>/mês</small></div><div class="desc">Cardápio, promoções, eventos e desempenho</div><span class="tag">30 dias grátis</span></div>
-      <div class="plano"><div class="nome">Premium</div><div class="preco">R$69,90<small>/mês</small></div><div class="desc">Pró + logo no pino, cor da marca e fotos</div></div>
-      <div class="plano"><div class="nome">Enterprise</div><div class="preco">R$129,90<small>/mês</small></div><div class="desc">Vários pontos, WhatsApp por unidade e relatórios</div></div>
+      <div class="plano"><div class="nome">Premium</div><div class="preco">R$69,90<small>/mês</small></div><div class="desc">Pró + <b>Modo Live</b>, logo no pino, cor da marca e fotos</div></div>
+      <div class="plano"><div class="nome">Enterprise</div><div class="preco">R$129,90<small>/mês</small></div><div class="desc">Vários pontos, <b>Pix dentro da live</b> e relatórios</div></div>
     </div>
+    <p class="selo" style="text-align:center"><a href="/premium.html" data-ev="planos_detalhe" style="color:var(--ciano)">Ver o que cada plano inclui →</a></p>
   </section>
 
   <section data-sec="faq">
@@ -359,7 +437,7 @@
     <div class="faq">
       <details><summary>Preciso entender de computador?</summary><div class="r">Não. É tudo pelo celular, na tela grande, em português, com videoaulas curtas dentro do painel explicando cada parte. Se travar, você fala com a gente por dentro do próprio sistema.</div></details>
       <details><summary>E se eu mudar de ponto todo dia?</summary><div class="r">É exatamente para isso que o Moviki existe. Você abre o painel, marca onde está, e a sua página já mostra o ponto novo para quem abrir o link. Não precisa avisar ninguém, não precisa refazer nada.</div></details>
-      <details><summary>Como funciona essa venda por vídeo?</summary><div class="r">É o Modo Live: você transmite pela câmera do próprio celular, direto do painel, sem instalar nada. O cliente entra por um link, vê o produto de perto com o preço fixo na tela, pergunta no chat e compra. Já funciona no teste grátis. A página <a href="/aovivo" data-ev="faq_aovivo">Modo Live</a> explica com calma.</div></details>
+      <details><summary>Como funciona essa venda por vídeo?</summary><div class="r">É o Modo Live: você transmite pela câmera do próprio celular, direto do painel, sem instalar nada. O cliente entra por um link, vê o produto de perto com o preço fixo na tela, pergunta no chat e compra. É dos planos Premium e Enterprise, e já vem no teste grátis para você experimentar. A página <a href="/aovivo" data-ev="faq_aovivo">Modo Live</a> explica com calma.</div></details>
       <details><summary>Vou pagar comissão das minhas vendas?</summary><div class="r">Não. A venda é combinada entre você e o seu cliente, pelo WhatsApp ou pessoalmente. O Moviki cobra só a mensalidade do plano — o que você vende é 100% seu.</div></details>
       <details><summary>Preciso de cartão de crédito para testar?</summary><div class="r">Não. São 30 dias do plano Pró liberados sem cartão. Se não quiser continuar, não faz nada e a conta volta para o plano Básico, que é gratuito e continua com o seu link no ar.</div></details>
       <details><summary>Eu já tenho Instagram e WhatsApp. Isso substitui?</summary><div class="r">Não substitui, organiza. O Instagram mostra o que você postou ontem; o WhatsApp responde um cliente por vez. O link do Moviki responde sozinho, para todos ao mesmo tempo, a pergunta que mais chega: <b>onde você está e o que tem hoje</b>.</div></details>
@@ -368,7 +446,7 @@
     </div>
   </section>
 
-  <div class="final" data-sec="final">
+  <div class="final" data-sec="final" id="blocoFinal">
     <h2>Pronto para o cliente te encontrar hoje?</h2>
     <p class="lead">Seja um dos primeiros da sua cidade. 30 dias do plano Pró para testar sem compromisso, sem cartão.</p>
     <div class="ctas"><a class="cta" href="https://app.moviki.com.br/?criar=1" data-ev="comecar_final">Criar minha página grátis →</a></div>
@@ -379,11 +457,18 @@
     Dúvidas? Chame no Instagram <a href="https://instagram.com/moviki.oficial" data-ev="instagram">@moviki.oficial</a> ou por e-mail <a href="mailto:suporte@moviki.com.br" data-ev="email_suporte">suporte@moviki.com.br</a><br>
     <span class="emp">EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA</span><br>
     CNPJ 68.289.841/0001-02 · Curitiba/PR<br>
-    <span class="legal"><a href="/termos.html" data-ev="termos">Termos de uso</a> · <a href="/privacidade.html" data-ev="privacidade">Política de privacidade</a> · <a href="/premium.html" data-ev="planos_detalhe">Detalhes dos planos</a>
-      <a href="/aovivo" data-ev="rodape_aovivo">Modo Live</a></span>
+    <span class="legal"><a href="/termos.html" data-ev="termos">Termos de uso</a> · <a href="/privacidade.html" data-ev="privacidade">Política de privacidade</a> · <a href="/premium.html" data-ev="planos_detalhe_rodape">Detalhes dos planos</a> · <a href="/aovivo" data-ev="rodape_aovivo">Modo Live</a></span>
   </div>
 
 </div>
+
+<!-- Barra fixa do celular: aparece depois que o botao do topo sai da tela e
+     some quando o bloco final entra. Mesmo link do app: o script de rastreio
+     de parceiro, logo abaixo, carimba o ref nela tambem. -->
+<div class="barraFixa" id="barraFixa" aria-hidden="true">
+  <a class="cta" href="https://app.moviki.com.br/?criar=1" data-ev="comecar_barra" tabindex="-1">Criar minha página grátis →</a>
+</div>
+
 
 <script>
 /* Rastreio de parceiro: se veio ?ref na URL, carrega no(s) botao(oes) que levam ao app.
@@ -469,7 +554,7 @@ function mvIco(img,alt2,emoji){
       outros 206 pararam. Dispara uma vez por secao, por visita;
    3) chegou_por_indicacao — quando a visita veio de um link de parceiro.
    Nada aqui pode derrubar a pagina: tudo em try/catch. */
-window.MOVIKI_VERSAO = '2026-09-16-preco1';
+window.MOVIKI_VERSAO = '2026-09-19-comerciantes2';
 (function(){
   /* 1) cliques */
   document.addEventListener('click', function(e){
@@ -502,6 +587,37 @@ window.MOVIKI_VERSAO = '2026-09-16-preco1';
     var ref = (new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
     if (ref.length >= 3 && window.mvEv) window.mvEv('chegou_por_indicacao', { ref: ref, destino: 'comerciante' });
   } catch(err){}
+})();
+</script>
+<script>
+/* 2026-09-19-comerciantes2 - (1) quem chega pelo link do parceiro ve de quem
+   veio a indicacao: o apelido sai da URL ja limpo (so letra, numero, _ e -) e
+   entra como texto, nunca como HTML. (2) barra fixa do celular. */
+(function(){
+  try{
+    var ref=(new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    if(ref.length>=3){
+      document.getElementById('refNome').textContent='@'+ref;
+      document.getElementById('pillRef').hidden=false;
+      document.getElementById('pillPadrao').hidden=true;
+    }
+  }catch(e){}
+  try{
+    var barra=document.getElementById('barraFixa'), topo=document.getElementById('ctaHero'), fim=document.getElementById('blocoFinal');
+    if(!barra||!topo||!fim) return;
+    var agendado=false, estado=null;
+    function pinta(){
+      agendado=false;
+      var on=topo.getBoundingClientRect().bottom<0 && fim.getBoundingClientRect().top>window.innerHeight*0.9;
+      if(on===estado) return; estado=on;
+      barra.classList.toggle('on',on); barra.setAttribute('aria-hidden',on?'false':'true');
+      var a=barra.querySelector('a'); if(a) a.tabIndex=on?0:-1;
+    }
+    function pede(){ if(!agendado){ agendado=true; requestAnimationFrame(pinta); } }
+    window.addEventListener('scroll',pede,{passive:true});
+    window.addEventListener('resize',pede);
+    pinta();
+  }catch(e){}
 })();
 </script>
 </body></html>
