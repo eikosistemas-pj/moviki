@@ -840,6 +840,20 @@ a{color:inherit}
 @media(max-width:640px){
   .lp-hero .lpv{max-width:360px}
 }
+/* Desktop (18/09/2026): a lista vira uma faixa de 5 cartões na largura do
+   filme e os botões ficam centralizados embaixo, no eixo do vídeo. O celular
+   não muda. */
+@media(min-width:961px){
+  .lp-heroBaixo{grid-template-columns:minmax(0,1fr);justify-items:center;gap:26px}
+  .lp-heroLista{width:100%}
+  .lp-heroBaixo .lp-bul{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;width:100%}
+  .lp-heroBaixo .lp-bul li{flex-direction:column;justify-content:flex-start;text-align:center;gap:10px;
+    padding:18px 14px;border-radius:16px;font-size:14px;line-height:1.45;
+    background:rgba(19,38,61,.55);border:1px solid var(--mv-linha);text-wrap:balance}
+  .lp-heroBaixo .lp-bul li .ic3d{width:40px;height:40px}
+  .lp-heroAcao{align-items:center}
+  .lp-heroAcao .lp-ctas,.lp-heroAcao .lp-selos{justify-content:center}
+}
 
 /* ===== CARDÁPIO QUE VENDE ===== */
 .lp-pix{max-width:820px;margin:26px auto 0}
@@ -855,7 +869,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-18-herolive';</script>
+<script>window.MOVIKI_VERSAO='2026-09-18-herofaixa';</script>
 </head>
 
 <body class="mv">
