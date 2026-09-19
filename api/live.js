@@ -1,5 +1,10 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-16-tetoplano | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-09-19-cotalive | repo: moviki (site publico)
+ *
+ * 19/09/2026: mensagens da cota por lojista. A do teste gratis prometia
+ * "a quantidade deixa de ter limite" — falso desde o teto de minutos por
+ * plano, e promessa escrita e oferta (CDC art. 30). O teto de video passa a
+ * dizer QUANDO a live volta.
  *
  * O QUE ESTE ARQUIVO FAZ
  * E a PORTA do Modo Live. O lojista aperta "Entrar ao vivo" no estudio
@@ -390,7 +395,8 @@ async function chamarRobo(acao, dados) {
     const j = await r.json().catch(() => null);
     if (!r.ok || !j) {
       console.error('live: robo recusou', acao, r.status, j && j.erro);
-      return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota, escala: j && j.escala, teto: j && j.teto };
+      return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota, escala: j && j.escala, teto: j && j.teto,
+               usadoMin: j && j.usadoMin, tetoMin: j && j.tetoMin, viraEm: j && j.viraEm, esperaSeg: j && j.esperaSeg };
     }
     return j;
   } catch (e) {
@@ -680,7 +686,7 @@ module.exports = async (req, res) => {
     if (reserva.erro === 'cota') {
       return responder(res, 403, {
         erro: 'cota', usadas: reserva.usadas || 0, cota: reserva.cota || 0,
-        mensagem: 'Voce ja usou as lives do periodo de teste. Assinando, a quantidade deixa de ter limite.',
+        mensagem: 'Voce ja usou as lives do periodo de teste. Assinando o Premium ou o Enterprise, as lives seguem os limites de minutos de video e de espectadores do plano.',
       });
     }
     /* 16/09/2026 — teto de minutos de VIDEO do plano (espectadores x duracao),
@@ -688,9 +694,11 @@ module.exports = async (req, res) => {
     if (reserva.erro === 'teto_video') {
       return responder(res, 403, {
         erro: 'teto_video', usadoMin: reserva.usadoMin || 0, tetoMin: reserva.tetoMin || 0,
+        viraEm: reserva.viraEm || '',
         mensagem: 'Seu plano atingiu o limite de minutos de video deste ciclo (' +
                   (reserva.usadoMin || 0) + ' de ' + (reserva.tetoMin || 0) + ' min). ' +
-                  'O limite conta espectadores x duracao e renova no proximo ciclo.',
+                  'O limite conta espectadores x duracao' +
+                  (reserva.viraEm ? ' e a proxima live fica liberada em ' + reserva.viraEm + '.' : ' e renova no proximo ciclo.'),
       });
     }
     if (reserva.erro === 'freio') {
