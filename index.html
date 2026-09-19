@@ -829,7 +829,16 @@ a{color:inherit}
 @media(max-width:420px){.lp-hero-1col h1{font-size:32px;letter-spacing:-1.3px}.lp-hero-1col h1 em{font-size:.6em;letter-spacing:-.6px}}
 .lp-hero-1col p.sub{max-width:720px;margin:0 auto 4px}
 .lp-hero-1col .lp-heroVid{margin-top:clamp(18px,2.2vw,26px)}
-.lp-hero .lpv{max-width:100%;margin-inline:auto}
+.lp-hero .lpv{max-width:760px;margin-inline:auto}
+/* Capa de verdade no filme do hero - 2026-09-19-herovideo. A caixa vazia com
+   grade parecia video que nao carregou. 760px (mesma medida do video da
+   parceiros-ganhos) faz titulo e filme inteiros caberem na primeira tela de um
+   computador comum; na largura total o proprio filme saia cortado embaixo.
+   Celular continua 9:16 com capa vertical. */
+.lpv__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.lpv__box--capa::before{display:none}
+@media(min-width:641px){.lpv__box--capa .lpv__capa{align-items:flex-start;padding-left:calc(28% - 43px)}} /* play sobre o celular da capa, fora do titulo */
+.lpv__box--capa .lpv__rot,.lpv__box--capa .lpv__sub{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .lp-heroBaixo{margin-top:clamp(24px,3vw,38px);display:grid;gap:22px 48px;
   grid-template-columns:auto auto;justify-content:center;align-items:center}
 .lp-heroBaixo .lp-bul{margin:0}
@@ -910,7 +919,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-18-vitrinefala';</script>
+<script>window.MOVIKI_VERSAO='2026-09-19-herovideo';</script>
 </head>
 
 <body class="mv">
@@ -980,7 +989,11 @@ a{color:inherit}
 
       <div class="lp-heroVid">
         <div class="lpv">
-          <div class="lpv__box" id="lpvBoxLive">
+          <div class="lpv__box lpv__box--capa" id="lpvBoxLive">
+            <picture>
+              <source media="(max-width:640px)" srcset="/home-video-capa-9x16.jpg">
+              <img class="lpv__img" src="/home-video-capa-16x9.jpg" alt="" decoding="async" fetchpriority="high">
+            </picture>
             <button class="lpv__capa" type="button" id="lpvPlayLive"
                     aria-label="Assistir ao filme do Modo Live do Moviki">
               <span class="lpv__play" aria-hidden="true">
