@@ -192,6 +192,37 @@
   .selo p{color:var(--texto2);font-size:15.5px;margin-top:10px}
   .selo .lk{display:inline-block;margin-top:14px;font-size:14px;color:var(--ciano);border:1px dashed rgba(0,212,255,.35);border-radius:999px;padding:8px 16px}
   .aulaNota{max-width:620px;margin:22px auto 0;text-align:center;font-size:13.5px;color:var(--texto2);line-height:1.6}
+
+  /* ---------- hero 2026-09-18 ---------- */
+  .vidBox--topo{max-width:760px;margin:34px auto 0}
+  .ganho{max-width:760px;margin:40px auto 0}
+  .ganho__tit{font-size:15px;color:var(--texto2);margin:0 0 14px}
+  .ganho__tit b{color:var(--texto)}
+  .ganho__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .ganho__card{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--card);
+    border:1px solid var(--linha);border-radius:18px;padding:20px 12px}
+  .ganho__card--dest{border-color:rgba(0,212,255,.55);box-shadow:0 0 0 1px rgba(0,212,255,.25),0 14px 36px rgba(0,102,255,.25)}
+  .ganho__plano{font-size:13px;font-weight:600;color:var(--texto2);letter-spacing:.3px}
+  .ganho__v{font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.05;white-space:nowrap;
+    background:linear-gradient(90deg,var(--ciano),var(--azul));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ganho__m{font-size:13px;color:var(--texto2)}
+  .ganho__nota{font-size:12.5px;line-height:1.55;color:var(--texto2);opacity:.85;max-width:620px;margin:14px auto 0}
+  .naoPir{display:inline-flex;align-items:center;gap:10px;max-width:620px;margin:22px auto 0;text-align:left;
+    font-size:14px;line-height:1.5;color:var(--texto2);background:rgba(255,255,255,.03);
+    border:1px solid var(--linha);border-radius:14px;padding:12px 16px}
+  .naoPir img{width:28px;height:28px;flex:none}
+  .naoPir b{color:var(--texto)}
+  .naoPir a{color:var(--ciano);font-weight:600;white-space:nowrap}
+  #piramide{scroll-margin-top:72px}
+  .empresa{font-size:12px;color:var(--texto2);opacity:.7;margin:26px auto 0;max-width:620px}
+  @media(max-width:560px){
+    .ganho__grid{gap:8px}
+    .ganho__card{padding:14px 6px;border-radius:14px}
+    .ganho__plano{font-size:11.5px}
+    .ganho__v{font-size:21px}
+    .ganho__m{font-size:11.5px}
+    .btn{padding:16px 26px}
+  }
   @media(max-width:820px){
     .steps.tres,.kits{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr 1fr}
@@ -256,23 +287,17 @@
   </div>
 </header>
 
-<!-- HERO -->
+<!-- HERO — 2026-09-18-parceirohero.
+     Troca a porcentagem abstrata por reais por comerciante (regra, nao
+     previsao), responde o medo de piramide na primeira tela e mostra a
+     empresa por tras. Os valores da faixa sao 15% de PRECO do simulador, com
+     o mesmo arredondamento do moviki-robo (webhook.js). Preco mudou -> mudar
+     aqui, no simulador e no regulamento. -->
 <section class="hero">
   <div class="wrap">
     <span class="eyebrow">Programa de Parceiros Moviki</span>
-    <h1>Indique um negócio.<br><span class="hl">Receba comissão enquanto ele for cliente.</span></h1>
-    <p class="sub">Cada comércio que você indica e que assina um plano gera uma comissão pra você, no seu Pix, a cada mensalidade que ele pagar. Você não vende nada do bolso. Só indica.</p>
-
-    <div class="numbers">
-      <div class="num"><div class="big">15%</div><div class="lab">da mensalidade paga por quem você indicou</div></div>
-      <div class="num"><div class="big">A cada mensalidade</div><div class="lab">enquanto ele continuar pagando</div></div>
-      <div class="num"><div class="big">R$ 0</div><div class="lab">pra entrar e participar</div></div>
-    </div>
-
-    <a class="btn" href="#comecar" data-ev="hero_comecar">Quero meu link de indicação</a>
-    <p class="reassure">Grátis pra participar · sem meta · você sai quando quiser</p>
-
-    <p class="sub" style="margin-top:30px">O que você indica: a plataforma que põe o negócio <b style="color:var(--texto)">no mapa em tempo real</b> e deixa ele <b style="color:var(--texto)">vender ao vivo, em vídeo</b>, pra quem está por perto. Feira, food truck, loja de bairro, serviço que vai até o cliente.</p>
+    <h1>Uma indicação.<br><span class="hl">Comissão todo mês.</span></h1>
+    <p class="sub">Cada comerciante que assinar pelo seu link gera comissão no seu Pix a cada mensalidade que pagar — enquanto continuar cliente. Você não vende nada do bolso. Só indica.</p>
 
     <!-- VIDEO DE VENDA DO PROGRAMA - 2026-09-16-parceirolive.
          Nasce ESCONDIDO. So aparece quando o id do YouTube for escrito na
@@ -280,13 +305,32 @@
          existir, nada aparece e nada quebra - mesmo padrao das videoaulas.
          Fachada: a capa e uma imagem; o iframe do youtube-nocookie so entra
          DEPOIS do clique. A pagina nao chama o YouTube a toa. -->
-    <div class="vidBox" id="vidBox" style="display:none">
+    <div class="vidBox vidBox--topo" id="vidBox" style="display:none">
       <div class="vidCapa" id="vidCapa" data-ev="video_parceiro_play">
         <img id="vidThumb" src="" alt="Assista: como funciona o Programa de Parceiros" loading="lazy" decoding="async">
         <div class="play"><span>&#9654;</span></div>
       </div>
       <p class="vidLegenda">2 minutos: como a comissão nasce, o que você divulga e o que o programa não é.</p>
     </div>
+
+    <div class="ganho">
+      <p class="ganho__tit">Quanto cai no seu Pix, <b>todo mês</b>, por comerciante que pagar o plano:</p>
+      <div class="ganho__grid">
+        <div class="ganho__card"><span class="ganho__plano">Pró</span><span class="ganho__v">R$ 5,99</span><span class="ganho__m">por mês</span></div>
+        <div class="ganho__card ganho__card--dest"><span class="ganho__plano">Premium</span><span class="ganho__v">R$ 10,49</span><span class="ganho__m">por mês</span></div>
+        <div class="ganho__card"><span class="ganho__plano">Enterprise</span><span class="ganho__v">R$ 19,49</span><span class="ganho__m">por mês</span></div>
+      </div>
+      <p class="ganho__nota">São 15% da mensalidade, subindo até 18% conforme quantos clientes seus estão pagando. É a regra de cálculo aplicada a um comerciante — não é previsão nem promessa de ganho.</p>
+    </div>
+
+    <a class="btn" href="#comecar" data-ev="hero_comecar">Quero meu link — leva 1 minuto</a>
+    <p class="reassure">Grátis pra participar · sem meta · você sai quando quiser</p>
+
+    <p class="naoPir"><img src="/icones-premium/alerta.png" alt="" loading="lazy" onerror="this.remove()"><span><b>Não é pirâmide:</b> você só ganha quando o comerciante paga pelo serviço. Entrar é grátis. <a href="#piramide">Veja a diferença</a></span></p>
+
+    <p class="sub" style="margin-top:34px">O que você indica: a novidade que deixa o comerciante <b style="color:var(--texto)">vender ao vivo pelo celular</b> — e <b style="color:var(--texto)">aparecer no mapa</b> pra quem está por perto. Feira, food truck, loja de bairro, serviço que vai até o cliente.</p>
+
+    <p class="empresa">Programa oficial da EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02 · Curitiba/PR</p>
   </div>
 </section>
 
@@ -373,7 +417,7 @@
 </section>
 
 <!-- NÃO É PIRÂMIDE -->
-<section class="pyr">
+<section class="pyr" id="piramide">
   <div class="wrap">
     <p class="kicker">A pergunta que todo mundo faz</p>
     <h2>"Isso não é pirâmide?"</h2>
@@ -564,7 +608,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-16-simulador';
+window.MOVIKI_VERSAO = '2026-09-18-parceirohero';
 
 /* ===== SIMULADOR DE COMISSAO - 16/09/2026 ===================================
    Mesma conta do painel do parceiro (parceiro.html, funcao barras), mesma
