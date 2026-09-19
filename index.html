@@ -866,6 +866,18 @@ a{color:inherit}
   .lp-nav-cta{gap:10px}
 }
 
+/* "O que muda no seu dia a dia" (18/09/2026): 6 cartões numa grade de 5
+   deixavam 1 sozinho na segunda linha. No desktop: 3 x 2, ícone à esquerda,
+   no mesmo desenho dos cartões do Modo Live. Celular não muda. */
+@media(min-width:961px){
+  .lp-rec--dia{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px;max-width:1120px;margin-inline:auto}
+  .lp-rec--dia>div{display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:18px;grid-template-rows:auto 1fr;align-content:start;
+    text-align:left;padding:24px 22px}
+  .lp-rec--dia>div>.ic3d{grid-row:1 / span 2;align-self:start;margin:0;width:56px;height:56px}
+  .lp-rec--dia h3{margin:4px 0 6px}
+  .lp-rec--dia p{align-self:start}
+}
+
 /* ===== MODO LIVE — cartões em lista no desktop (18/09/2026) =====
    Três cartões estreitos ao lado do celular espremiam o texto em 6 linhas e
    deixavam um vão vazio. No desktop viram uma lista: ícone à esquerda, texto
@@ -895,7 +907,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-18-livecards';</script>
+<script>window.MOVIKI_VERSAO='2026-09-18-diacards';</script>
 </head>
 
 <body class="mv">
@@ -1133,11 +1145,11 @@ a{color:inherit}
   <section class="lp-sec lp-sec--faixa" id="recursos" data-sec="recursos">
     <div class="mv-container">
       <div class="lp-tit"><h2>O que muda <em>no seu dia a dia</em></h2></div>
-      <div class="lp-rec">
+      <div class="lp-rec lp-rec--dia">
+        <div><img class="ic3d ic3d--g" src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">
+          <h3>Venda ao vivo</h3><p>Abra a câmera, mostre o produto na mão e receba o pedido ali mesmo. Planos Premium e Enterprise.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">
           <h3>Mapa em tempo real</h3><p>Chegou no ponto? Um toque e quem está perto já sabe onde te achar.</p></div>
-        <div><img class="ic3d ic3d--g" src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">
-          <h3>Venda por vídeo</h3><p>Abra a câmera, mostre o produto na mão e receba o pedido ali mesmo. Planos Premium e Enterprise.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'📋')">
           <h3>Cardápio que vende</h3><p>Suas fotos e preços no celular do cliente — e, no Premium, com botão de comprar e Pix na sua conta.</p></div>
         <div><img class="ic3d ic3d--g" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')">
