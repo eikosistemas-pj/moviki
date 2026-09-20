@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-16-paguei -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-19-lotada -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
@@ -329,10 +329,10 @@ svg{display:block}
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
-  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp }
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-16-paguei';
+  window.MOVIKI_VERSAO='2026-09-19-lotada';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -434,6 +434,25 @@ svg{display:block}
   /* estado da SESSAO, escrito so pelo servidor. Comeca vazio: enquanto ele nao
      chega, a pagina mostra "nenhuma live agora" — falha fechada. */
   let ses={};
+  /* 19/09/2026 — LIVE LOTADA. O plano tem limite de espectadores simultaneos
+     (live_sessoes/{uid}.maxEspectadores, gravado pelo servidor). Quem chega
+     acima dele ve "Live lotada" e NAO grava presenca — senao contaria como
+     espectador e gastaria os minutos do lojista sem ver nada. Quem ja entrou
+     nunca e expulso. A nova tentativa acontece sozinha a cada pulso da live
+     (45 s), com 1 leitura de contagem. Campo ausente = sem limite. */
+  let admitidoEm='', admitindo=false;
+  async function cabeNaLive(){
+    const max=Number(ses.maxEspectadores||0);
+    const chave=String(ses.sessaoId||'');
+    if(!(max>0))return true;
+    if(chave&&admitidoEm===chave)return true;
+    try{
+      const q=query(collection(db,'negocios',uid,'livepresenca'),where('em','>=',Timestamp.fromMillis(Date.now()-100000)));
+      const c=await getCountFromServer(q);
+      if((Number(c.data().count)||0)>=max)return false;
+    }catch(_){ /* nao consegui contar: deixa entrar (o teto de minutos segue valendo) */ }
+    admitidoEm=chave; return true;
+  }
   function whepDaSessao(){ return whepOk(ses.whep) ? ses.whep : ''; }
   function fmtPreco(v){var s=String(v==null?'':v).trim();if(!s)return '';var t=s.replace(/^R\$\s*/i,'').trim();if(/^\d{1,5}([.,]\d{1,2})?$/.test(t)){var n=parseFloat(t.replace(',','.'));if(!isNaN(n))return 'R$ '+n.toFixed(2).replace('.',',');}return 'R$ '+t;}
   function toast(t){const x=el('toast');x.textContent=t;x.classList.remove('escondido');clearTimeout(toast._t);toast._t=setTimeout(()=>x.classList.add('escondido'),2600);}
@@ -533,12 +552,29 @@ svg{display:block}
       }
       return;
     }
-    el('fora').classList.add('escondido');
-    el('pillVivo').classList.remove('escondido');
+    /* so esconde o aviso de "fora" de quem ja esta assistindo: quem ainda
+       vai passar pela conferencia de lotacao nao pode ver a tela piscar */
+    if(noAr){el('fora').classList.add('escondido');el('pillVivo').classList.remove('escondido');}
     el('idSub').textContent=est.titulo||'Ao vivo agora';
     const n=Number(est.assistindo||0);
     el('pillOlho').classList.toggle('escondido',n<3); el('nOlho').textContent=n;
-    if(!noAr){noAr=true;ev('live_assistir',{slug});tocar();ouvirChat();ligarPresenca();}
+    if(!noAr){
+      if(admitindo)return;
+      admitindo=true;
+      cabeNaLive().then(ok=>{
+        admitindo=false;
+        if(noAr||!vivoDeVerdade())return;
+        if(!ok){
+          fora('Live lotada','Esta live chegou ao limite de '+Number(ses.maxEspectadores||0)+' pessoas assistindo ao mesmo tempo. Deixe esta página aberta: assim que abrir uma vaga, você entra sozinho.');
+          ev('live_lotada',{slug});
+          return;
+        }
+        el('fora').classList.add('escondido'); el('pillVivo').classList.remove('escondido');
+        noAr=true;ev('live_assistir',{slug});tocar();ouvirChat();ligarPresenca();
+        pintarProduto(); pintarSacola(); pintarEnterprise();
+      });
+      return;
+    }
     pintarProduto(); pintarSacola(); pintarEnterprise();
   }
 
