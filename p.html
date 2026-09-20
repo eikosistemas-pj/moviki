@@ -1,3 +1,5 @@
+p.html — copiar TUDO abaixo da linha e colar no editor do GitHub (repositorio moviki, arquivo p.html, lapis de editar, Ctrl+A, Delete, Ctrl+V, Commit changes).
+------------------------------------------------------------
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -35,14 +37,29 @@
 <meta name="twitter:description" content="Mostre o que você vende pela câmera do celular e apareça para quem está perto agora. 30 dias grátis, sem cartão.">
 <meta name="twitter:image" content="https://www.moviki.com.br/ogmoviki.jpg">
 <script>
-/* MOVIKI p.html | versao 2026-09-16-previa | redirecionador do link de parceiro /p/apelido
+/* MOVIKI p.html | versao 2026-09-19-linkcriador | redirecionador do link de parceiro /p/apelido e do criador /c/apelido
    NAO carrega Google Analytics de proposito: a pagina redireciona na hora e o GA nao
    teria tempo de enviar nada. Em vez disso, ela CARIMBA o destino com UTM — assim o
    comerciantes.html mede a visita ja sabendo que ela veio de indicacao, e de quem. */
 (function(){
-  var m=location.pathname.match(/\/p\/([^\/?#]+)/);
-  var ref=(m?decodeURIComponent(m[1]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
-  var q='utm_source=parceiro&utm_medium=indicacao&utm_campaign=programa_parceiros'
+  /* 2026-09-19-linkcriador — PADRAO DE LINKS (R - Padrao de links e UTMs).
+     /p/apelido  -> parceiro comum  (utm_source=parceiro, campanha programa_parceiros)
+     /c/apelido  -> criador de conteudo (utm_source=criador, campanha programa_criadores)
+     Os dois gravam o MESMO ref e o MESMO cookie: a comissao nao muda, so o
+     relatorio passa a separar criador de parceiro comum.
+     ?canal=ig|tt|yt|wa|qr|bio|story|dm|grupo (opcional) vira utm_medium, para
+     saber QUAL canal do parceiro trouxe o comerciante. Valor fora da lista e
+     ignorado (fica 'indicacao'). */
+  var m=location.pathname.match(/\/([pc])\/([^\/?#]+)/);
+  var tipo=(m&&m[1]==='c')?'criador':'parceiro';
+  var ref=(m?decodeURIComponent(m[2]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+  var canal='indicacao';
+  try{
+    var cv=(new URLSearchParams(location.search).get('canal')||'').toLowerCase();
+    if(/^(ig|tt|yt|wa|qr|bio|story|dm|grupo)$/.test(cv)) canal=cv;
+  }catch(e){}
+  var q='utm_source='+tipo+'&utm_medium='+canal
+      +'&utm_campaign='+(tipo==='criador'?'programa_criadores':'programa_parceiros')
       +'&utm_content='+encodeURIComponent(ref.length>=3?ref:'sem_ref');
   if(ref.length>=3){
     q+='&ref='+encodeURIComponent(ref);
