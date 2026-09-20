@@ -248,6 +248,16 @@ a{color:inherit}
   border-radius:var(--mv-r);padding:11px 15px}
 .lp-prova .ic3d{width:34px;height:34px}
 .lp-selos{display:flex;gap:8px 16px;flex-wrap:wrap;font-size:12px;color:var(--mv-txt-3);margin-top:13px}
+/* 2026-09-19-selos3d: os dois selos do hero trocaram o emoji por icone 3D com
+   movimento leve (o presente balanca, o cartao inclina). Parado para quem pede
+   menos movimento no sistema. */
+.lp-selos span{display:inline-flex;align-items:center;gap:7px}
+.lpSeloIc{width:26px;height:26px;object-fit:contain;filter:drop-shadow(0 3px 5px rgba(0,0,0,.4))}
+@keyframes lpPresente{0%,78%,100%{transform:rotate(0) scale(1)}82%{transform:rotate(-12deg) scale(1.12)}86%{transform:rotate(10deg) scale(1.12)}90%{transform:rotate(-6deg) scale(1.06)}94%{transform:rotate(0) scale(1)}}
+@keyframes lpCartao{0%,70%,100%{transform:rotate(0) translateY(0)}78%{transform:rotate(-10deg) translateY(-2px)}86%{transform:rotate(4deg) translateY(0)}}
+.lpSeloIc--presente{animation:lpPresente 4.2s ease-in-out infinite;transform-origin:50% 80%}
+.lpSeloIc--cartao{animation:lpCartao 4.8s ease-in-out infinite;animation-delay:-2s;transform-origin:30% 70%}
+@media(prefers-reduced-motion:reduce){.lpSeloIc{animation:none}}
 
 /* ---------- MAPA ISOMÉTRICO ---------- */
 .lp-palco{position:relative;width:100%;max-width:100%;aspect-ratio:1/1;min-height:340px}
@@ -922,7 +932,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-19-herovideo2';</script>
+<script>window.MOVIKI_VERSAO='2026-09-19-selos3d';</script>
 </head>
 
 <body class="mv">
@@ -1033,8 +1043,8 @@ a{color:inherit}
         </div>
 
         <div class="lp-selos">
-          <span>🎁 30 dias grátis, com o Modo Live liberado</span>
-          <span>💳 Sem cartão de crédito</span>
+          <span><img class="lpSeloIc lpSeloIc--presente" src="icones-premium/presente.png" alt="" onerror="this.replaceWith(document.createTextNode('🎁'))">30 dias grátis, com o Modo Live liberado</span>
+          <span><img class="lpSeloIc lpSeloIc--cartao" src="icones-premium/sem-cartao.png" alt="" onerror="this.replaceWith(document.createTextNode('💳'))">Sem cartão de crédito</span>
         </div>
       </div>
       </div>
