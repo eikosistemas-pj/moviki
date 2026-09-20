@@ -1,0 +1,117 @@
+name: Conformidade do texto de comissao
+
+# Regra do projeto (Meta/Google): texto de comissao nao promete dinheiro.
+# Nada de "ganhe", "todo mes", "renda extra", "garantido", "para sempre"
+# perto de comissao ou indicacao. Ate 19/09/2026 isso era conferido na mao
+# e escapou em 4 paginas. Agora roda sozinho a cada subida.
+# Arquivo unico: o verificador vai embutido aqui dentro.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+      - '**.js'
+      - '**.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Procurar texto de comissao fora da regra
+        id: conferir
+        run: |
+          set +e
+          cat > /tmp/conformidade.py <<'PYEOF'
+          # Guarda de conformidade do texto de comissao - 2026-09-19.
+          # Roda sozinha a cada subida de .html/.js (workflow conformidade.yml).
+          # Achou "ganhe", "todo mes", "garantido" etc. perto de comissao/indicacao:
+          # o job fica vermelho, o GitHub manda e-mail e abre uma issue com a lista.
+          # Linha legitima (ex.: clausula juridica) pode levar o texto conformidade:ok
+          # num comentario na mesma linha.
+          import re,sys,os,html
+          # Regra (Meta/Google): texto de COMISSAO nao promete dinheiro. Proibido junto de
+          # comissao/indicacao: ganhe/ganhar/ganha, todo mes/por mes, renda extra,
+          # garantido (fora de negacao), para sempre, dinheiro facil.
+          CTX=re.compile(r'comiss|indica|indiq|parceir|15\s*%|7,5\s*%|b[oô]nus|saque',re.I)
+          DINHEIRO=re.compile(r'comiss|%|b[oô]nus|R\$|dinheiro|recorrente|renda',re.I)
+          BAN=re.compile(r'\bganh(e|ar|ou|a|am)\b|todo[s]?\s+(o[s]?\s+)?m[eê]s(es)?|por\s+m[eê]s|renda\s+(extra|mensal|passiva|garantida)|garantid[oa]s?|(para|pra)\s+sempre|dinheiro\s+f[aá]cil|fique\s+rico',re.I)
+          NEG=re.compile(r'\b(n[aã]o|nem|sem|nunca)\b[^.]{0,40}$',re.I)
+          IGNORAR=('eikoadm01.html',)
+          TAG=re.compile(r'<[^>]+>')
+          achados=[]
+          for raiz,dirs,arqs in os.walk('.'):
+              dirs[:]=[d for d in dirs if d not in ('.git','node_modules','.github')]
+              for a in arqs:
+                  if not a.endswith(('.html','.js','.json')) or a in IGNORAR: continue
+                  p=os.path.join(raiz,a)
+                  try: linhas=open(p,encoding='utf-8',errors='ignore').read().split('\n')
+                  except: continue
+                  emComent=False
+                  for n,l in enumerate(linhas,1):
+                      t=l.strip()
+                      if emComent:
+                          if '*/' in t or '-->' in t: emComent=False
+                          continue
+                      if t.startswith(('//','*','<!--','/*')):
+                          if (t.startswith('/*') and '*/' not in t) or (t.startswith('<!--') and '-->' not in t): emComent=True
+                          continue
+                      if 'conformidade:ok' in l: continue
+                      texto=html.unescape(TAG.sub(' ',l))
+                      for m in BAN.finditer(texto):
+                          antes=texto[max(0,m.start()-160):m.start()]
+                          janela=antes+texto[m.start():m.end()+160]
+                          w=m.group(0).lower()
+                          if NEG.search(antes) and not w.startswith('ganh'): continue
+                          if w.startswith('ganh') and not DINHEIRO.search(janela): continue
+                          if CTX.search(janela):
+                              achados.append(f'{p}:{n}: "{m.group(0)}"  ->  {janela.strip()[:200]}')
+                              break
+          if achados:
+              print('## Texto de comissao fora da regra (Meta/Google)\n')
+              print('\n'.join('- `'+a.replace('`',"'")+'`' for a in achados))
+              print('\nTrocar por: "a cada mensalidade paga", "receba", "indique e receba".')
+              print('Linha legitima (ex.: texto juridico) pode levar o comentario conformidade:ok.')
+              sys.exit(1)
+          print('Conformidade OK: nenhum texto de comissao com ganhe / todo mes / garantido.')
+          PYEOF
+          python3 /tmp/conformidade.py > relatorio.md
+          codigo=$?
+          set -e
+          cat relatorio.md
+          echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
+
+      - name: Abrir ou atualizar a issue de aviso
+        if: steps.conferir.outputs.codigo == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITULO="Conformidade: texto de comissao fora da regra"
+          EXISTENTE=$(gh issue list --state open --search "$TITULO in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTENTE" ]; then
+            gh issue comment "$EXISTENTE" --body-file relatorio.md
+          else
+            gh issue create --title "$TITULO" --body-file relatorio.md
+          fi
+
+      - name: Fechar a issue quando estiver limpo
+        if: steps.conferir.outputs.codigo == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITULO="Conformidade: texto de comissao fora da regra"
+          EXISTENTE=$(gh issue list --state open --search "$TITULO in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTENTE" ]; then
+            gh issue close "$EXISTENTE" --comment "Texto corrigido. Fechado automaticamente."
+          fi
+
+      - name: Deixar o job vermelho se achou
+        if: steps.conferir.outputs.codigo != '0'
+        run: exit 1
