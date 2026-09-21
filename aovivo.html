@@ -190,7 +190,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 .avVideo__t{font-size:clamp(16px,2.2vw,21px);font-weight:800;letter-spacing:-.5px;max-width:560px}
 .avVideo__s{font-size:12.5px;color:var(--mv-txt-3)}
 
-/* ===== PLAYER — 2026-09-21-player1 ======================================
+/* ===== PLAYER — 2026-09-21-player2 ======================================
    O iframe criado no clique NAO herda o gesto do toque em Chrome de Android,
    Safari de iPhone e Chrome de computador com pouco uso do dominio: o player
    abria, ficava PRETO esperando um segundo toque e a pessoa achava que nao
@@ -319,7 +319,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-21-player1';</script>
+<script>window.MOVIKI_VERSAO='2026-09-21-player2';</script>
 </head>
 
 <body>
@@ -782,7 +782,7 @@ function avPecaDaVez(){
   ajustar();
   window.addEventListener('resize',ajustar);
 })();
-/* ===== MECANISMO DO PLAYER — 2026-09-21-player1 =========================
+/* ===== MECANISMO DO PLAYER — 2026-09-21-player2 =========================
    1) o iframe nasce no pointerdown, nao no click: ganha o tempo do toque;
    2) a capa vira "carregando" e so sai quando o player avisa, por
       postMessage, que esta tocando (enablejsapi=1 — nenhum script do
@@ -794,13 +794,41 @@ function avPecaDaVez(){
    o player estava perdendo na tela preta. */
 window.mvPlay=(function(){
   var ORIGEM='https://www.youtube-nocookie.com';
+  var quadros=[];
   function fala(q,msg){ try{ q.contentWindow.postMessage(JSON.stringify(msg),ORIGEM); }catch(e){} }
+  function registra(q){ if(q && quadros.indexOf(q)<0) quadros.push(q); }
+  /* ===== TRAVA DE UM FILME POR VEZ =====
+     Antes, abrir o segundo filme sem fechar o primeiro deixava os dois
+     tocando juntos, um por cima do outro. Isto escuta TODOS os players da
+     pagina e, assim que um comeca a tocar, manda pausar os outros — vale
+     inclusive para o play dado por dentro do proprio YouTube, que o nosso
+     botao nao enxerga. O filme mudo em laco do topo tambem para. */
+  function pausaOutros(menos){
+    for(var k=0;k<quadros.length;k++){
+      var q=quadros[k];
+      if(q!==menos && q.src) fala(q,{event:'command',func:'pauseVideo',args:[]});
+    }
+    var laco=document.getElementById('lpvLoop');
+    if(laco){ try{ laco.pause(); }catch(e){} }
+  }
+  window.addEventListener('message',function(e){
+    if(e.origin!==ORIGEM) return;
+    var d=e.data;
+    if(typeof d==='string'){ try{ d=JSON.parse(d); }catch(err){ return; } }
+    var i=d&&d.info;
+    if(!i||i.playerState!==1) return;
+    var quem=null;
+    for(var k=0;k<quadros.length;k++){ if(quadros[k].contentWindow===e.source){ quem=quadros[k]; break; } }
+    if(quem) pausaOutros(quem);
+  });
   function abrir(o){
     var caixa=o.caixa, quadro=o.quadro;
     if(!caixa||!quadro||caixa.dataset.mvOn==='1') return;
     caixa.dataset.mvOn='1';
     var tocou=false;
     var vid=(typeof o.id==='function')?o.id():o.id;
+    registra(quadro);
+    pausaOutros(quadro);
     caixa.classList.add('mv-carregando');
     if(o.aoAbrir){ try{ o.aoAbrir(vid); }catch(e){} }
     quadro.title=o.titulo||'';
@@ -851,6 +879,7 @@ window.mvPlay=(function(){
   }
   function liga(o){
     if(!o.gatilho||!o.caixa||!o.quadro) return;
+    registra(o.quadro);
     var disparado=false;
     function vai(){ if(disparado) return; disparado=true; abrir(o); }
     o.gatilho.addEventListener('pointerdown',vai);
