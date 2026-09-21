@@ -37,6 +37,8 @@
 <link rel="icon" href="favicon512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="preconnect" href="https://i.ytimg.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="movikiui.css">
 <script src="/mvmetrica.js"></script>
@@ -188,6 +190,28 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 .avVideo__t{font-size:clamp(16px,2.2vw,21px);font-weight:800;letter-spacing:-.5px;max-width:560px}
 .avVideo__s{font-size:12.5px;color:var(--mv-txt-3)}
 
+/* ===== PLAYER — 2026-09-21-player1 ======================================
+   O iframe criado no clique NAO herda o gesto do toque em Chrome de Android,
+   Safari de iPhone e Chrome de computador com pouco uso do dominio: o player
+   abria, ficava PRETO esperando um segundo toque e a pessoa achava que nao
+   tinha funcionado. Agora a fachada nao e apagada no toque — ela vira
+   "carregando" e so sai quando o player avisa que esta tocando. */
+.avVideo iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2}
+.avVideo iframe[hidden]{display:none}
+.avVideo__c{z-index:3}
+.avVideo.mv-carregando .avPlay svg,.avVideo.mv-preso .avPlay svg{display:none}
+.avVideo.mv-carregando .avPlay::after{content:"";width:30px;height:30px;border-radius:50%;
+  border:3px solid rgba(2,19,31,.28);border-top-color:#02131f;animation:mvGira .8s linear infinite}
+.avVideo.mv-preso .avPlay::after{content:"";width:0;height:0;margin-left:5px;
+  border-left:18px solid #02131f;border-top:11px solid transparent;border-bottom:11px solid transparent}
+.avVideo.mv-carregando .avVideo__s::after,.avVideo.mv-preso .avVideo__s::after{
+  display:block;margin-top:8px;font-size:13.5px;font-weight:700;color:#eaf6ff}
+.avVideo.mv-carregando .avVideo__s::after{content:"Carregando o vídeo…"}
+.avVideo.mv-preso .avVideo__s::after{content:"Toque para começar"}
+.avVideo.mv-tocando .avVideo__c{display:none}
+@keyframes mvGira{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.avVideo.mv-carregando .avPlay::after{animation:none}}
+
 /* ---------- passos ---------- */
 .avPassos{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
 .avPasso{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:22px;position:relative}
@@ -295,7 +319,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-16-vitrinelive';</script>
+<script>window.MOVIKI_VERSAO='2026-09-21-player1';</script>
 </head>
 
 <body>
@@ -419,6 +443,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
         <p class="avVideo__t soMob">Mostre. Responda. Venda em tempo real.</p>
         <p class="avVideo__s">O v&iacute;deo s&oacute; carrega quando voc&ecirc; toca em assistir.</p>
       </div>
+      <iframe id="avFrame" hidden title="Filme do Modo Live do Moviki"></iframe>
     </div>
     <button class="avTrocar soMob" type="button" data-ev="aovivo_filme_completo" onclick="avAbrirVideo(AV_FILME)">Prefere a hist&oacute;ria inteira? Ver o filme completo &middot; 2:38</button>
   </div>
@@ -737,7 +762,7 @@ function avMenu(abrir){
 }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape')avMenu(false); });
 
-/* player em fachada: o iframe do YouTube so nasce no clique.
+/* player em fachada: o iframe do YouTube so nasce no toque.
    Sem miniatura externa de proposito — assim a pagina NAO depende de img-src
    para i.ytimg.com. O que a CSP do dominio precisa liberar e apenas:
    frame-src https://www.youtube-nocookie.com
@@ -751,29 +776,115 @@ function avPecaDaVez(){
 (function(){
   function ajustar(){
     var cx=document.getElementById('avPlayer');
-    if(!cx||cx.dataset.on==='1')return;
+    if(!cx||cx.dataset.mvOn==='1')return;
     cx.classList.toggle('avVideo--v', avPecaDaVez()===AV_CURTO);
   }
   ajustar();
   window.addEventListener('resize',ajustar);
 })();
+/* ===== MECANISMO DO PLAYER — 2026-09-21-player1 =========================
+   1) o iframe nasce no pointerdown, nao no click: ganha o tempo do toque;
+   2) a capa vira "carregando" e so sai quando o player avisa, por
+      postMessage, que esta tocando (enablejsapi=1 — nenhum script do
+      YouTube e carregado, a CSP nao muda);
+   3) se em 2,6 s nao tocar (autoplay bloqueado pelo navegador), a capa vira
+      "Toque para comecar" e o toque manda playVideo direto no player.
+   Medicao: video_play continua saindo no toque e video_pronto sai quando o
+   filme comeca de verdade. A diferenca entre os dois numeros e quanta gente
+   o player estava perdendo na tela preta. */
+window.mvPlay=(function(){
+  var ORIGEM='https://www.youtube-nocookie.com';
+  function fala(q,msg){ try{ q.contentWindow.postMessage(JSON.stringify(msg),ORIGEM); }catch(e){} }
+  function abrir(o){
+    var caixa=o.caixa, quadro=o.quadro;
+    if(!caixa||!quadro||caixa.dataset.mvOn==='1') return;
+    caixa.dataset.mvOn='1';
+    var tocou=false;
+    var vid=(typeof o.id==='function')?o.id():o.id;
+    caixa.classList.add('mv-carregando');
+    if(o.aoAbrir){ try{ o.aoAbrir(vid); }catch(e){} }
+    quadro.title=o.titulo||'';
+    quadro.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    quadro.setAttribute('allowfullscreen','');
+    quadro.referrerPolicy='strict-origin-when-cross-origin';
+    quadro.src=ORIGEM+'/embed/'+vid+'?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+    quadro.hidden=false;
+    function pronto(){
+      if(tocou) return; tocou=true;
+      clearTimeout(relogio); clearInterval(bate);
+      window.removeEventListener('message',ouve);
+      caixa.classList.remove('mv-carregando','mv-preso');
+      caixa.classList.add('mv-tocando');
+      if(o.aoTocar){ try{ o.aoTocar(vid); }catch(e){} }
+    }
+    function ouve(e){
+      if(e.origin!==ORIGEM) return;
+      var d=e.data;
+      if(typeof d==='string'){ try{ d=JSON.parse(d); }catch(err){ return; } }
+      var i=d&&d.info;
+      if(!i) return;
+      if(i.playerState===1 || (typeof i.currentTime==='number' && i.currentTime>0.2)) pronto();
+    }
+    window.addEventListener('message',ouve);
+    var voltas=0;
+    var bate=setInterval(function(){
+      voltas++;
+      fala(quadro,{event:'listening',id:1,channel:'widget'});
+      if(voltas>24) clearInterval(bate);
+    },250);
+    var relogio=setTimeout(function(){
+      if(tocou) return;
+      caixa.classList.remove('mv-carregando');
+      caixa.classList.add('mv-preso');
+    },2600);
+    if(o.gatilho){
+      o.gatilho.addEventListener('click',function(){
+        if(!caixa.classList.contains('mv-preso')) return;
+        fala(quadro,{event:'command',func:'playVideo',args:[]});
+        setTimeout(function(){
+          if(tocou) return;
+          caixa.classList.remove('mv-preso');
+          caixa.classList.add('mv-tocando');
+        },900);
+      });
+    }
+  }
+  function liga(o){
+    if(!o.gatilho||!o.caixa||!o.quadro) return;
+    var disparado=false;
+    function vai(){ if(disparado) return; disparado=true; abrir(o); }
+    o.gatilho.addEventListener('pointerdown',vai);
+    o.gatilho.addEventListener('click',function(e){ e.preventDefault(); vai(); });
+    o.gatilho.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); vai(); } });
+  }
+  return {liga:liga,abrir:abrir};
+})();
+
 function avAbrirVideo(id){
   var cx=document.getElementById('avPlayer');
-  if(!cx||cx.dataset.on==='1')return;
-  var vid = (typeof id==='string' && id) ? id : avPecaDaVez();
-  cx.dataset.on='1';
+  var quadro=document.getElementById('avFrame');
+  if(!cx||!quadro||!window.mvPlay) return;
+  var vid=(typeof id==='string'&&id)?id:avPecaDaVez();
   cx.classList.toggle('avVideo--v', vid===AV_CURTO);
-  var f=document.createElement('iframe');
-  f.src='https://www.youtube-nocookie.com/embed/'+vid+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
-  f.title='Filme do Modo Live do Moviki';
-  f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-  f.setAttribute('allowfullscreen','');
-  f.referrerPolicy='strict-origin-when-cross-origin';
-  cx.innerHTML='';
-  cx.appendChild(f);
-  cx.style.cursor='default';
-  try{ if(window.mvEv) window.mvEv('video_play',{video:(vid===AV_CURTO?'corte_vertical_60s':'filme_hero'),pagina:'aovivo'}); }catch(e){}
+  window.mvPlay.abrir({
+    caixa:cx, quadro:quadro, id:vid,
+    gatilho:cx,
+    titulo:'Filme do Modo Live do Moviki',
+    aoAbrir:function(v){
+      cx.style.cursor='default';
+      try{ if(window.mvEv) window.mvEv('video_play',{video:(v===AV_CURTO?'corte_vertical_60s':'filme_hero'),pagina:'aovivo'}); }catch(e){}
+    },
+    aoTocar:function(v){
+      try{ if(window.mvEv) window.mvEv('video_pronto',{video:(v===AV_CURTO?'corte_vertical_60s':'filme_hero'),pagina:'aovivo'}); }catch(e){}
+    }
+  });
 }
+/* o toque comeca no pointerdown, nao no click: o iframe ganha o tempo do
+   dedo descendo, que e onde estavam os primeiros segundos de tela preta. */
+(function(){
+  var cx=document.getElementById('avPlayer');
+  if(cx) cx.addEventListener('pointerdown',function(){ avAbrirVideo(); });
+})();
 </script>
 
 <script>

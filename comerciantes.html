@@ -55,6 +55,8 @@
 
 <script src="/mvmetrica.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="preconnect" href="https://i.ytimg.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -211,6 +213,45 @@
   }
   @media(prefers-reduced-motion:reduce){.lpv__capa:hover .lpv__play{transform:none}}
 
+/* ===== PLAYER — 2026-09-21-player1 ======================================
+   O que estava errado: o iframe criado no clique NAO herda o gesto do toque
+   em Chrome de Android, Safari de iPhone e Chrome de computador com pouco
+   uso do dominio. O YouTube abria, ficava PRETO esperando um segundo toque,
+   e quem estava na pagina achava que nao tinha funcionado.
+   Agora a capa nao e mais apagada no clique: ela vira "carregando" e so sai
+   quando o player avisa que comecou a tocar de verdade. */
+.lpv__box iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2}
+.lpv__box iframe[hidden]{display:none}
+.lpv__box .lpv__capa{z-index:3}
+.lpv__box.mv-carregando .lpv__img,.lpv__box.mv-preso .lpv__img{filter:brightness(.45)}
+.lpv__box.mv-carregando .lpv__play svg,.lpv__box.mv-preso .lpv__play svg{display:none}
+.lpv__box.mv-carregando .lpv__play::after{content:"";width:30px;height:30px;border-radius:50%;
+  border:3px solid rgba(3,18,31,.28);border-top-color:#03121f;animation:mvGira .8s linear infinite}
+.lpv__box.mv-preso .lpv__play::after{content:"";width:0;height:0;margin-left:5px;
+  border-left:18px solid #03121f;border-top:11px solid transparent;border-bottom:11px solid transparent}
+.lpv__box.mv-carregando .lpv__capa::after,.lpv__box.mv-preso .lpv__capa::after{
+  display:block;font-size:13.5px;font-weight:600;color:#eaf6ff;background:rgba(4,12,22,.74);
+  padding:6px 14px;border-radius:999px;line-height:1.3}
+.lpv__box.mv-carregando .lpv__capa::after{content:"Carregando o vídeo…"}
+.lpv__box.mv-preso .lpv__capa::after{content:"Toque para começar"}
+.lpv__box.mv-tocando .lpv__capa,.lpv__box.mv-tocando picture,
+.lpv__box.mv-tocando .lpv__img,.lpv__box.mv-tocando .lpv__loop{display:none}
+@keyframes mvGira{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.lpv__box.mv-carregando .lpv__play::after{animation:none}}
+
+/* Filme mudo em laco no topo, so no computador: da vida a caixa sem carregar
+   nada do YouTube e sem depender de autoplay com som, que todo navegador
+   bloqueia. A arte da capa continua embaixo — se o filme nao carregar, ela
+   fica no lugar e ninguem percebe falta. */
+.lpv__loop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transition:opacity .7s ease;z-index:1;pointer-events:none;filter:brightness(.88)}
+.lpv__loop.on{opacity:1}
+/* sombra suave so atras do botao, para o play nao sumir num quadro claro */
+.lpv__loop.on ~ .lpv__capa{background:radial-gradient(circle at 28% 50%,rgba(3,10,20,.55),transparent 40%)}
+@media(max-width:640px){.lpv__loop.on ~ .lpv__capa{background:none}}
+@media(max-width:640px){.lpv__loop{display:none}}
+@media(prefers-reduced-motion:reduce){.lpv__loop{display:none}}
+
   /* ===== 2026-09-19-comerciantes2 =========================================
      Pagina de chegada do link do parceiro. Mesmo padrao da home e da
      parceiros-ganhos: filme no topo com capa de verdade, 760px no computador,
@@ -273,7 +314,20 @@
     .comp td[data-l]{padding-left:0;padding-top:20px;font-size:13.5px;line-height:1.35}
     .comp td[data-l]::before{left:0;top:3px;width:auto;font-size:10.5px}
   }
-</style></head><body>
+</style><script>
+/* Icone com 2 tentativas de nome (com e sem hifen — o download do navegador as
+   vezes remove o hifen) e, se as duas falharem, some e o emoji do lado
+   aparece. 21/09/2026: esta funcao estava no FIM da pagina, e o onerror de um
+   PNG que falha dispara antes disso — a chamada morria em "mvIco is not
+   defined" e o emoji de reserva nunca aparecia. */
+function mvIco(img,alt2,emoji){
+  if(alt2 && !img.dataset.tentou2){ img.dataset.tentou2='1'; img.src='/icones-premium/'+alt2; return; }
+  var vizinho=img.nextElementSibling;
+  img.hidden=true;
+  if(vizinho && vizinho.classList.contains('icEmoji')){ vizinho.hidden=false; }
+}
+</script>
+</head><body>
 
 <div class="wrap"><div class="topo">
   <img src="logo.png" alt="Moviki" onerror="this.style.display='none';document.getElementById('lt').style.display='block'">
@@ -303,6 +357,10 @@
           <source media="(max-width:640px)" srcset="/home-video-capa-9x16.jpg">
           <img class="lpv__img" src="/home-video-capa-16x9.jpg" alt="" decoding="async" fetchpriority="high" width="1280" height="720">
         </picture>
+        <video class="lpv__loop" id="lpvLoop" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture>
+          <source src="/heroloop.webm" type="video/webm">
+          <source src="/heroloop.mp4" type="video/mp4">
+        </video>
         <button class="lpv__capa" type="button" id="lpvPlayLive"
                 aria-label="Assistir ao filme do Modo Live do Moviki">
           <span class="lpv__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
@@ -489,59 +547,157 @@
 </script>
 
 <script>
-/* Player do FILME DA LIVE - 16/09/2026. Bloco proprio, de proposito: o
-   player de cima continua sendo o institucional do mapa ("como fica a sua
-   pagina") e este aqui mostra a live. Sao duas metades da mesma promessa e
-   cada uma tem o seu filme. Nao mexi no script do primeiro. */
+/* Player do FILME DA LIVE - 16/09/2026, remontado em 21/09/2026. Bloco
+   proprio, de proposito: o player de baixo continua sendo o institucional do
+   mapa ("como fica a sua pagina") e este aqui mostra a live. */
+
+  /* ===== MECANISMO DO PLAYER — 2026-09-21-player1 =========================
+     1) o iframe nasce no pointerdown, nao no click: ganha o tempo do toque;
+     2) a capa vira "carregando" e so sai quando o player avisa, por
+        postMessage, que esta tocando (enablejsapi=1 — nenhum script do
+        YouTube e carregado, a CSP nao muda);
+     3) se em 2,6 s nao tocar (autoplay bloqueado pelo navegador), a capa vira
+        "Toque para comecar" e o toque manda playVideo direto no player.
+     Medicao: video_play continua saindo no toque e video_pronto sai quando o
+     filme comeca de verdade. A diferenca entre os dois numeros e quanta gente
+     o player estava perdendo na tela preta. */
+  window.mvPlay=(function(){
+    var ORIGEM='https://www.youtube-nocookie.com';
+    function fala(q,msg){ try{ q.contentWindow.postMessage(JSON.stringify(msg),ORIGEM); }catch(e){} }
+    function abrir(o){
+      var caixa=o.caixa, quadro=o.quadro;
+      if(!caixa||!quadro||caixa.dataset.mvOn==='1') return;
+      caixa.dataset.mvOn='1';
+      var tocou=false;
+      var vid=(typeof o.id==='function')?o.id():o.id;
+      caixa.classList.add('mv-carregando');
+      if(o.aoAbrir){ try{ o.aoAbrir(vid); }catch(e){} }
+      quadro.title=o.titulo||'';
+      quadro.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      quadro.setAttribute('allowfullscreen','');
+      quadro.referrerPolicy='strict-origin-when-cross-origin';
+      quadro.src=ORIGEM+'/embed/'+vid+'?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+      quadro.hidden=false;
+      function pronto(){
+        if(tocou) return; tocou=true;
+        clearTimeout(relogio); clearInterval(bate);
+        window.removeEventListener('message',ouve);
+        caixa.classList.remove('mv-carregando','mv-preso');
+        caixa.classList.add('mv-tocando');
+        if(o.aoTocar){ try{ o.aoTocar(vid); }catch(e){} }
+      }
+      function ouve(e){
+        if(e.origin!==ORIGEM) return;
+        var d=e.data;
+        if(typeof d==='string'){ try{ d=JSON.parse(d); }catch(err){ return; } }
+        var i=d&&d.info;
+        if(!i) return;
+        if(i.playerState===1 || (typeof i.currentTime==='number' && i.currentTime>0.2)) pronto();
+      }
+      window.addEventListener('message',ouve);
+      var voltas=0;
+      var bate=setInterval(function(){
+        voltas++;
+        fala(quadro,{event:'listening',id:1,channel:'widget'});
+        if(voltas>24) clearInterval(bate);
+      },250);
+      var relogio=setTimeout(function(){
+        if(tocou) return;
+        caixa.classList.remove('mv-carregando');
+        caixa.classList.add('mv-preso');
+      },2600);
+      if(o.gatilho){
+        o.gatilho.addEventListener('click',function(){
+          if(!caixa.classList.contains('mv-preso')) return;
+          fala(quadro,{event:'command',func:'playVideo',args:[]});
+          setTimeout(function(){
+            if(tocou) return;
+            caixa.classList.remove('mv-preso');
+            caixa.classList.add('mv-tocando');
+          },900);
+        });
+      }
+    }
+    function liga(o){
+      if(!o.gatilho||!o.caixa||!o.quadro) return;
+      var disparado=false;
+      function vai(){ if(disparado) return; disparado=true; abrir(o); }
+      o.gatilho.addEventListener('pointerdown',vai);
+      o.gatilho.addEventListener('click',function(e){ e.preventDefault(); vai(); });
+      o.gatilho.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); vai(); } });
+    }
+    return {liga:liga,abrir:abrir};
+  })();
+
 (function(){
-  var botao=document.getElementById('lpvPlayLive');
-  var quadro=document.getElementById('lpvFrameLive');
-  var caixa=document.getElementById('lpvBoxLive');
-  if(!botao||!quadro||!caixa) return;
+  var caixa=document.getElementById('lpvBoxLive'),
+      botao=document.getElementById('lpvPlayLive'),
+      quadro=document.getElementById('lpvFrameLive'),
+      laco=document.getElementById('lpvLoop');
+  if(!caixa||!botao||!quadro||!window.mvPlay) return;
   var FILME='n2nmTfGY_mo';   /* 2:38, 16:9 - a historia inteira */
   var CURTO='3Q5b0Q0PPh4';   /* 60 s, 9:16 - corte vertical */
-  function estreito(){ return window.matchMedia('(max-width:640px)').matches; }
-  botao.addEventListener('click', function(){
-    var id=estreito()?CURTO:FILME;
-    quadro.setAttribute('src','https://www.youtube-nocookie.com/embed/'+id+
-      '?autoplay=1&rel=0&modestbranding=1&playsinline=1');
-    quadro.hidden=false; botao.hidden=true;
-    try{ if(window.mvEv) window.mvEv('video_play',{video:(id===CURTO?'corte_vertical_60s':'filme_hero'),pagina:'comerciantes'}); }catch(e){}
+  function nome(v){ return v===CURTO?'corte_vertical_60s':'filme_hero'; }
+  window.mvPlay.liga({
+    caixa:caixa, gatilho:botao, quadro:quadro,
+    titulo:'Filme do Modo Live do Moviki',
+    id:function(){ return window.matchMedia('(max-width:640px)').matches?CURTO:FILME; },
+    aoAbrir:function(vid){
+      if(laco){ try{ laco.pause(); }catch(e){} }
+      try{ if(window.mvEv) window.mvEv('video_play',{video:nome(vid),pagina:'comerciantes'}); }catch(e){}
+    },
+    aoTocar:function(vid){
+      try{ if(window.mvEv) window.mvEv('video_pronto',{video:nome(vid),pagina:'comerciantes'}); }catch(e){}
+    }
   });
 })();
+
+  /* Filme mudo em laco do topo. So no computador, so se a pessoa nao pediu
+     menos movimento e so se o navegador nao estiver no modo de economia de
+     dados. Entra depois do carregamento da pagina, entao nao disputa com a
+     arte da capa, que continua sendo o que pinta primeiro. */
+  (function(){
+    var v=document.getElementById('lpvLoop');
+    var caixa=document.getElementById('lpvBoxLive');
+    if(!v||!caixa) return;
+    try{
+      if(window.matchMedia('(max-width:640px)').matches) return;
+      if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+      var c=navigator.connection;
+      if(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||''))) return;
+    }catch(e){}
+    v.addEventListener('playing',function(){ v.classList.add('on'); });
+    function liga(){
+      try{ v.preload='auto'; v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
+    }
+    if(document.readyState==='complete') setTimeout(liga,400);
+    else window.addEventListener('load',function(){ setTimeout(liga,400); });
+  })();
 </script>
 
 <script>
-/* Player do video: o iframe ja esta no HTML, SEM src — nada do YouTube e
-   carregado antes do clique. No clique so preenchemos o endereco. Tela estreita
-   abre a versao vertical (9:16), tela larga a horizontal (16:9). */
+/* Player do video de apresentacao. O iframe ja esta no HTML, sem src: nada do
+   YouTube e carregado antes do toque. Tela estreita abre a versao vertical
+   (9:16), tela larga a horizontal (16:9). */
 (function(){
-  var botao=document.getElementById('lpvPlay');
-  var quadro=document.getElementById('lpvFrame');
-  if(!botao||!quadro) return;
+  var caixa=document.getElementById('lpvBox'),
+      botao=document.getElementById('lpvPlay'),
+      quadro=document.getElementById('lpvFrame');
+  if(!caixa||!botao||!quadro||!window.mvPlay) return;
   var HORIZONTAL='f6GN-5B30_o', VERTICAL='Glc3kwYh4cA';
-  botao.addEventListener('click', function(){
-    var estreito=window.matchMedia('(max-width:640px)').matches;
-    var id=estreito?VERTICAL:HORIZONTAL;
-    quadro.setAttribute('src','https://www.youtube-nocookie.com/embed/'+id+
-      '?autoplay=1&rel=0&modestbranding=1&playsinline=1');
-    quadro.hidden=false;
-    botao.hidden=true;
-    try{ if(window.mvEv) window.mvEv('play_video_comerciantes',{formato:estreito?'9x16':'16x9'}); }catch(e){}
+  function formato(v){ return v===VERTICAL?'9x16':'16x9'; }
+  window.mvPlay.liga({
+    caixa:caixa, gatilho:botao, quadro:quadro,
+    titulo:'Entenda o Moviki em 1 minuto',
+    id:function(){ return window.matchMedia('(max-width:640px)').matches?VERTICAL:HORIZONTAL; },
+    aoAbrir:function(vid){
+      try{ if(window.mvEv) window.mvEv('play_video_comerciantes',{formato:formato(vid)}); }catch(e){}
+    },
+    aoTocar:function(vid){
+      try{ if(window.mvEv) window.mvEv('video_pronto',{video:'entenda_1min',pagina:'comerciantes'}); }catch(e){}
+    }
   });
 })();
-</script>
-
-<script>
-/* Icone com 2 tentativas de nome (com e sem hifen — o download do navegador as vezes
-   remove o hifen) e, se as duas falharem, some e o emoji do lado aparece.
-   Desenho que falta nao derruba tela. */
-function mvIco(img,alt2,emoji){
-  if(alt2 && !img.dataset.tentou2){ img.dataset.tentou2='1'; img.src='/icones-premium/'+alt2; return; }
-  var vizinho=img.nextElementSibling;
-  img.hidden=true;
-  if(vizinho && vizinho.classList.contains('icEmoji')){ vizinho.hidden=false; }
-}
 </script>
 
 <script>
@@ -554,7 +710,7 @@ function mvIco(img,alt2,emoji){
       outros 206 pararam. Dispara uma vez por secao, por visita;
    3) chegou_por_indicacao — quando a visita veio de um link de parceiro.
    Nada aqui pode derrubar a pagina: tudo em try/catch. */
-window.MOVIKI_VERSAO = '2026-09-19-comerciantes2';
+window.MOVIKI_VERSAO = '2026-09-21-player1';
 (function(){
   /* 1) cliques */
   document.addEventListener('click', function(e){
