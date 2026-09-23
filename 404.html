@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-23-rodada2 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-23-seguranca | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1292,7 +1292,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function mvWpp(n){let d=String(n||'').replace(/\D/g,'').replace(/^0+/,'');if(d.length>=12&&d.slice(0,2)==='55')d=d.slice(2);return d;}
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, getDocs, query, where, limit, addDoc, increment, serverTimestamp }
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, getDocs, query, where, limit, addDoc, increment, serverTimestamp, writeBatch }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -1303,7 +1303,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-23-rodada2';
+  window.MOVIKI_VERSAO='2026-09-23-seguranca';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3034,13 +3034,20 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const btn=el('mavEnviar');btn.disabled=true;const t=btn.textContent;btn.textContent='Enviando...';
     try{
       const _nm=(el('avNome').value||'').trim();
-      await addDoc(collection(db,'negocios',negocioUid,'avaliacoes'),{nota:notaEscolhida,nome:(_nm.length>=2?_nm:'Cliente').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),criadoEm:serverTimestamp()});
-      /* soma no resumo: 1 escrita. E dele que sai a nota media da pagina. */
-      try{
-        await updateDoc(doc(db,'negocios',negocioUid,'resumo','avaliacoes'),{n:increment(1),soma:increment(notaEscolhida)});
-      }catch(_){
-        try{await setDoc(doc(db,'negocios',negocioUid,'resumo','avaliacoes'),{n:1,soma:notaEscolhida});}catch(__){}
-      }
+      /* 23/09/2026 (seguranca, regras v30): a avaliacao e a soma no resumo vao
+         JUNTAS, numa escrita so, e o resumo aponta a avaliacao que acabou de
+         nascer (ultimaAv). Antes qualquer visitante somava +1 no resumo sem
+         avaliacao nenhuma e derrubava a nota de um concorrente em silencio.
+         A regra agora so aceita +1 se a avaliacao nova existir DEPOIS da
+         escrita e nao existia ANTES, com a mesma nota. */
+      const avRef=doc(collection(db,'negocios',negocioUid,'avaliacoes'));
+      const rsRef=doc(db,'negocios',negocioUid,'resumo','avaliacoes');
+      let temResumo=false; try{ temResumo=(await getDoc(rsRef)).exists(); }catch(_){}
+      const lote=writeBatch(db);
+      lote.set(avRef,{nota:notaEscolhida,nome:(_nm.length>=2?_nm:'Cliente').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),criadoEm:serverTimestamp()});
+      if(temResumo) lote.update(rsRef,{n:increment(1),soma:increment(notaEscolhida),ultimaAv:avRef.id});
+      else lote.set(rsRef,{n:1,soma:notaEscolhida,ultimaAv:avRef.id});
+      await lote.commit();
       try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){}
       av.style.color='#25e39b';av.textContent='Obrigado pela sua avaliação!';
       ev('avaliacao_enviada',{nota:notaEscolhida});
