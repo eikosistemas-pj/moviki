@@ -317,6 +317,9 @@ function nivelDaAssinatura(f) {
   if (plano === 'enterprise') return NIVEIS.enterprise;
   if (plano === 'premium') return NIVEIS.premium;
   if (periodo === 'trial') return NIVEIS.premium;
+  // 23/09/2026: pagou o Pro DURANTE o teste -> segue com o nivel do teste ate o fim dele.
+  const testeAte = f.testeAte && f.testeAte.timestampValue ? Date.parse(f.testeAte.timestampValue) : 0;
+  if (testeAte && testeAte > Date.now()) return NIVEIS.premium;
   return null;
 }
 

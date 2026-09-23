@@ -285,7 +285,9 @@ module.exports = async (req, res) => {
   const ativo = !!(ass && ass.ativo && ass.ativo.booleanValue === true &&
                    (!ass.vence_em || isNaN(vence) || vence > Date.now()));
   const plano = ativo ? (txt(ass.plano) || 'basico') : 'basico';
-  const periodo = ativo ? txt(ass.periodo) : '';
+  // 23/09/2026: pagou durante o teste gratis -> mantem o que o teste da ate o fim dele (testeAte).
+  const testeAteMs = ass && ass.testeAte ? Date.parse(ass.testeAte.timestampValue || '') : NaN;
+  const periodo = ativo ? ((!isNaN(testeAteMs) && testeAteMs > Date.now()) ? 'trial' : txt(ass.periodo)) : '';
   const liberaFotos = plano === 'premium' || plano === 'enterprise' || periodo === 'trial';
   const liberaLogo = plano === 'premium' || plano === 'enterprise';
 
