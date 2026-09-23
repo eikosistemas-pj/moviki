@@ -1,7 +1,7 @@
 /*!
- * MOVIKI api/criadores.js | versao 2026-09-22-criadores1 | repo: moviki (site publico)
+ * MOVIKI api/criadores.js | versao 2026-09-22-criadores2 | repo: moviki (site publico)
  *
- * DUAS PORTAS DO PROGRAMA DE CRIADORES, NUM ARQUIVO SO
+ * TRES PORTAS DO PROGRAMA DE CRIADORES, NUM ARQUIVO SO
  *
  * 1) GET  -> as pecas que podem ir para as redes oficiais do Moviki.
  *    Quem chama: o robo social (moviki-assistente-social, secret CRIADORES_URL).
@@ -19,6 +19,11 @@
  *    O /c/apelido (e o /p/apelido) carimbam utm_source=criador|parceiro e
  *    utm_content=apelido desde 19/09 — o dado ja existe no GA4, so nao havia
  *    como ve-lo por criador. So admin (admins/{uid}, lido no servidor).
+ *
+ * 3) POST {acao:'meu_trafego', idToken, dias} -> as visitas do PROPRIO link,
+ *    para o painel do criador (parceiro.html). O apelido vem do cadastro
+ *    (parceiros/{uid}.slug, lido no servidor) — nunca do corpo do pedido: um
+ *    parceiro nao consegue ver o trafego de outro. So cadastro aprovado.
  *
  * POR QUE AQUI E NAO NO ROBO DO DINHEIRO
  *   Nada disso mexe em dinheiro. A conta de servico do site e SOMENTE LEITURA
@@ -219,7 +224,18 @@ async function pecasLiberadas(token) {
 }
 
 /* ================= 2. POST — trafego por criador (GA4) ================= */
+/* Uma consulta ao GA4 serve todo mundo por 10 min (a mesma instancia da
+   Vercel atende o dono e os criadores). Protege a cota do GA4 de um painel
+   aberto e recarregado varias vezes. */
+let cacheTraf = { quando: 0, dias: 0, r: null };
 async function trafego(dias) {
+  if (cacheTraf.r && cacheTraf.dias >= dias && Date.now() - cacheTraf.quando < 10 * 60 * 1000) return cacheTraf.r;
+  const r = await trafegoGA4(dias);
+  if (r && r.ok) cacheTraf = { quando: Date.now(), dias: dias, r: r };
+  return r;
+}
+
+async function trafegoGA4(dias) {
   const tk = await gauth.tokenAnalytics();
   if (!tk) return { erro: 'sa' };
   const r = await chamar('https://analyticsdata.googleapis.com/v1beta/properties/' + GA4 + ':runReport', {
@@ -227,7 +243,7 @@ async function trafego(dias) {
     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tk },
     body: JSON.stringify({
       dateRanges: [{ startDate: dias + 'daysAgo', endDate: 'today' }],
-      dimensions: [{ name: 'date' }, { name: 'sessionSource' }, { name: 'sessionManualAdContent' }],
+      dimensions: [{ name: 'date' }, { name: 'sessionSource' }, { name: 'sessionManualAdContent' }, { name: 'sessionMedium' }],
       metrics: [{ name: 'sessions' }, { name: 'totalUsers' }],
       dimensionFilter: { filter: { fieldName: 'sessionSource',
         inListFilter: { values: ['criador', 'parceiro'], caseSensitive: false } } },
@@ -238,8 +254,9 @@ async function trafego(dias) {
     const msg = (r.corpo && r.corpo.error && r.corpo.error.message) || ('HTTP ' + r.status);
     return { erro: 'ga4', detalhe: String(msg).slice(0, 300), conta: gauth.emailDaConta() };
   }
-  // { apelido: { 'AAAA-MM-DD': {s: sessoes, u: usuarios, fonte} } }
-  const porRef = {};
+  // porRef:   { apelido: { 'AAAA-MM-DD': {s: sessoes, u: usuarios, criador, parceiro} } }
+  // porCanal: { apelido: { 'AAAA-MM-DD': { canal: sessoes } } }  (canal = ?canal= do link)
+  const porRef = {}, porCanal = {};
   for (const l of (r.corpo && r.corpo.rows) || []) {
     const d = (l.dimensionValues || []).map(x => x.value || '');
     const m = (l.metricValues || []).map(x => Number(x.value) || 0);
@@ -249,8 +266,11 @@ async function trafego(dias) {
     const x = ((porRef[ref] = porRef[ref] || {})[dia] = porRef[ref][dia] || { s: 0, u: 0, criador: 0, parceiro: 0 });
     x.s += m[0]; x.u += m[1];
     x[String(d[1]).toLowerCase() === 'criador' ? 'criador' : 'parceiro'] += m[0];
+    const canal = String(d[3] || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 12) || 'indicacao';
+    const c = ((porCanal[ref] = porCanal[ref] || {})[dia] = porCanal[ref][dia] || {});
+    c[canal] = (c[canal] || 0) + m[0];
   }
-  return { ok: true, porRef };
+  return { ok: true, porRef, porCanal };
 }
 
 /* ================= entrada ================= */
@@ -277,16 +297,27 @@ module.exports = async function (req, res) {
   let corpo = req.body;
   if (typeof corpo === 'string') { try { corpo = JSON.parse(corpo); } catch (e) { corpo = {}; } }
   corpo = corpo || {};
-  if (corpo.acao !== 'trafego') return responder(res, 400, { erro: 'acao' });
+  if (corpo.acao !== 'trafego' && corpo.acao !== 'meu_trafego') return responder(res, 400, { erro: 'acao' });
 
   const uid = await uidDoToken(corpo.idToken);
   if (!uid) return responder(res, 401, { erro: 'token' });
+
+  if (corpo.acao === 'meu_trafego') {
+    const p = await lerDoc('parceiros/' + encodeURIComponent(uid), token);
+    if (!p) return responder(res, 503, { erro: 'leitura' });
+    if (!p.existe || txt(p.f.status) !== 'aprovado') return responder(res, 403, { erro: 'parceiro' });
+    const slug = txt(p.f.slug).toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+    if (!slug) return responder(res, 200, { ok: true, slug: '', porDia: {} });
+    const r = await trafego(400);
+    if (r.erro) return responder(res, 200, { erro: r.erro === 'ga4' ? 'ga4' : r.erro });   // sem detalhe tecnico para o parceiro
+    return responder(res, 200, { ok: true, slug: slug, porDia: (r.porRef && r.porRef[slug]) || {}, porCanal: (r.porCanal && r.porCanal[slug]) || {} });
+  }
+
   const adm = await lerDoc('admins/' + encodeURIComponent(uid), token);
   if (!adm) return responder(res, 503, { erro: 'leitura' });
   if (!adm.existe) return responder(res, 403, { erro: 'admin' });
 
-  const dias = Math.min(400, Math.max(7, Math.floor(Number(corpo.dias) || 180)));
-  const r = await trafego(dias);
+  const r = await trafego(400);
   if (r.erro) return responder(res, 200, r);                       // o painel mostra o aviso
-  return responder(res, 200, { ok: true, dias, porRef: r.porRef });
+  return responder(res, 200, { ok: true, dias: 400, porRef: r.porRef });
 };
