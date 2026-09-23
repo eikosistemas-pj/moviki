@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-16-selovivo | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-23-rodada2 | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1285,6 +1285,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 <script src="/mvqr.js"></script>
 
 <script type="module">
+  /* 23/09/2026: WhatsApp do lojista pode vir com o 55 do pais ("+55 81 9...").
+     Sem tirar, o link virava wa.me/5555... e o botao principal da pagina
+     abria numero invalido. Tira zeros e o 55 da frente quando o numero ja
+     tem DDD + telefone depois dele (12 ou 13 digitos). */
+  function mvWpp(n){let d=String(n||'').replace(/\D/g,'').replace(/^0+/,'');if(d.length>=12&&d.slice(0,2)==='55')d=d.slice(2);return d;}
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, getDocs, query, where, limit, addDoc, increment, serverTimestamp }
@@ -1298,7 +1303,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-16-selovivo';
+  window.MOVIKI_VERSAO='2026-09-23-rodada2';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1434,7 +1439,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     try{const a=await getDoc(doc(db,'assinaturas',uid));const d=a.exists()?a.data():null;
       const ok=d&&d.ativo===true&&(!d.vence_em||d.vence_em.toMillis()>Date.now());
       planoAtual=ok?(d.plano||'basico'):'basico';
-      periodoAtual=ok?(d.periodo||''):'';}
+      /* 23/09/2026: quem pagou DURANTE o teste gratis mantem o que o teste da (fotos) ate o fim dele - testeAte, gravado pelo webhook. */
+      periodoAtual=ok?((d.testeAte&&typeof d.testeAte.toMillis==='function'&&d.testeAte.toMillis()>Date.now())?'trial':(d.periodo||'')):'';}
     catch(e){planoAtual='basico';periodoAtual='';}
   }
 
@@ -2240,7 +2246,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function acoesPromo(titulo){
     const w=wppDaUnidade();
     const msg=encodeURIComponent('Olá! Vi no Moviki e quero a promoção: '+(titulo||'a promoção do dia'));
-    const wpp=w?('<a class="pAcao pedir" href="https://wa.me/55'+w+'?text='+msg+'" target="_blank" rel="noopener" data-ev="wpp_promocao">'+IC.whats+'Pedir esta promoção</a>'):'';
+    const wpp=w?('<a class="pAcao pedir" href="https://wa.me/55'+mvWpp(w)+'?text='+msg+'" target="_blank" rel="noopener" data-ev="wpp_promocao">'+IC.whats+'Pedir esta promoção</a>'):'';
     const card=(cardapioAtual&&cardapioAtual.length)
       ? '<button class="pAcao ver" type="button" onclick="abrirCardapio()">'+IC.cardapio+'Ver no cardápio</button>' : '';
     return (wpp||card)?('<div class="pAcoes">'+wpp+card+'</div>'):'';
@@ -2663,7 +2669,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
        '<div class="pgStatus" id="pgStatus">Assim que o negócio confirmar o pagamento, esta tela avisa. Pode deixar aberta.</div>';
 
     const w=wppDaUnidade();
-    if(w)h+='<a class="pgWpp" href="https://wa.me/55'+w+'?text='+encodeURIComponent('Olá! Fiz um pedido pelo Moviki no valor de '+fmtReal(PEDIDO.total))+'" target="_blank" rel="noopener">Falar no WhatsApp</a>';
+    if(w)h+='<a class="pgWpp" href="https://wa.me/55'+mvWpp(w)+'?text='+encodeURIComponent('Olá! Fiz um pedido pelo Moviki no valor de '+fmtReal(PEDIDO.total))+'" target="_blank" rel="noopener">Falar no WhatsApp</a>';
 
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
     desenharQr(p);
@@ -2833,7 +2839,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       const km=(l.km!=null)?('<div class="pLinha">'+IC.pino+'<span>a '+fmtKm(l.km)+' de você</span></div>'):'';
       const hor=l.horario?('<div class="pLinha">'+IC.relogio+'<span>'+esc(l.horario)+'</span></div>'):'';
       const w=(l.whatsapp||'').replace(/\D/g,'')||((dadosNeg&&dadosNeg.whatsapp)||'').replace(/\D/g,'');
-      const bw=w?('<a class="pBtn wpp" href="https://wa.me/55'+w+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
+      const bw=w?('<a class="pBtn wpp" href="https://wa.me/55'+mvWpp(w)+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
       const br='<a class="pBtn rota" href="https://www.google.com/maps/dir/?api=1&destination='+l.lat+','+l.lng+'" target="_blank" rel="noopener" data-ev="rota_unidade">'+IC.seta+'Como chegar</a>';
       const perto=(i===maisPerto&&locais.length>1)?'<span class="pPerto">mais perto</span>':'';
       return '<div class="pontoCard">'
@@ -2935,7 +2941,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         const hor=l.horario?('<div class="linha">'+IC.relogio+'<span>'+esc(l.horario)+'</span></div>'):'';
         const perto=(i===maisPerto&&locais.length>1)?'<span class="maisPerto">mais perto</span>':'';
         const wppU=wppDaUnidade(i);
-        const btnW=wppU?('<a class="acao wpp" href="https://wa.me/55'+wppU+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
+        const btnW=wppU?('<a class="acao wpp" href="https://wa.me/55'+mvWpp(wppU)+'" target="_blank" rel="noopener" data-ev="wpp_unidade">'+IC.whats+'WhatsApp</a>'):'';
         const btnR='<a class="acao rota" href="https://www.google.com/maps/dir/?api=1&destination='+l.lat+','+l.lng+'" target="_blank" rel="noopener" data-ev="rota_unidade">'+IC.seta+'Como chegar</a>';
         return '<div class="uBig'+(i===localAtivo?' ativa':'')+'" onclick="selecionarLocal('+i+')">'+
           '<div class="uTopo"><div class="uTxt">'+
@@ -3312,7 +3318,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function atualizarBtnWpp(){
     const bw=el('btnWpp'); if(!bw)return;
     const w=wppDaUnidade();
-    if(w){bw.href='https://wa.me/55'+w;bw.classList.remove('escondido');}
+    if(w){bw.href='https://wa.me/55'+mvWpp(w);bw.classList.remove('escondido');}
     else{bw.classList.add('escondido');}
   }
   function pintarLocal(lat,lng,d){

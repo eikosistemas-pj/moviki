@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-19-lotada -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-23-rodada2 -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
@@ -348,7 +348,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-19-lotada';
+  window.MOVIKI_VERSAO='2026-09-23-rodada2';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -483,6 +483,7 @@ svg{display:block}
     const v=ms(a.vence_em); if(v&&v<Date.now())return null;
     if(a.plano==='enterprise')return 'enterprise';
     if(a.plano==='premium'||a.periodo==='trial')return 'premium';
+    if(ms(a.testeAte)>Date.now())return 'premium'; /* 23/09: pagou durante o teste -> nivel do teste ate o fim dele */
     return null;
   }
 
@@ -741,7 +742,7 @@ svg{display:block}
     return '<strong>'+esc(live||base||'')+'</strong>';
   }
   function linkWpp(p){
-    const w=String(neg&&neg.whatsapp||'').replace(/\D/g,''); if(!w)return '';
+    const w=(function(x){x=String(x||'').replace(/\D/g,'').replace(/^0+/,'');return (x.length>=12&&x.slice(0,2)==='55')?x.slice(2):x;})(neg&&neg.whatsapp); /* 23/09: sem o 55 do pais */ if(!w)return '';
     const of=ofertaAtiva(); const naOferta=of&&p&&of.nome===p.nome;
     const preco=fmtPreco(naOferta?of.precoPor:(p.precoLive||p.preco));
     let t='Oi! Vi na sua live no Moviki e quero: '+p.nome+(preco?' ('+preco+')':'')+'.';
@@ -968,7 +969,7 @@ svg{display:block}
     el('ckPix').classList.add('escondido'); el('ckOk').classList.remove('escondido'); el('folhaCompra').classList.remove('escondido');
     const cod=ckPed.id.slice(-6).toUpperCase(), ent_=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
     el('ckOkTxt').textContent='Pedido #'+cod+': '+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+' — '+brl(ckPed.total)+'. '+((neg&&neg.nome)||'O vendedor')+' já vê o seu pedido.';
-    const w=String(neg&&neg.whatsapp||'').replace(/\D/g,'');
+    const w=(function(x){x=String(x||'').replace(/\D/g,'').replace(/^0+/,'');return (x.length>=12&&x.slice(0,2)==='55')?x.slice(2):x;})(neg&&neg.whatsapp); /* 23/09: sem o 55 do pais */
     const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(ent_==='entrega'?'Vamos combinar a entrega?':'Quando posso retirar?');
     el('ckOkWpp').href=w?'https://wa.me/55'+w+'?text='+encodeURIComponent(msg):'#'; el('ckOkWpp').classList.toggle('escondido',!w);
   }
