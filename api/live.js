@@ -327,6 +327,12 @@ function nivelDaAssinatura(f) {
    Mesma leitura que nivelDaAssinatura ja fez — nao custa chamada nova. */
 function periodoDaAssinatura(f) {
   if (!f) return '';
+  /* 23/09 (rodada 3): quem pagou o PRO durante o teste segue com o teste ate o
+     fim dele — nivel E limites do teste (cota de lives, teto, espectadores).
+     Antes ganhava o nivel do teste com os limites do Premium. */
+  const plano = (f.plano && f.plano.stringValue) || '';
+  const testeAte = f.testeAte && f.testeAte.timestampValue ? Date.parse(f.testeAte.timestampValue) : 0;
+  if (plano === 'pro' && testeAte && testeAte > Date.now()) return 'trial';
   return (f.periodo && f.periodo.stringValue) || '';
 }
 
