@@ -44,6 +44,13 @@
 
   /* tipografia */
   --mv-fonte:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+
+  /* movimento (23/09/2026) - ver secao 16 */
+  --mv-ease:cubic-bezier(.2,0,0,1);          /* padrao: muda de estado */
+  --mv-ease-entra:cubic-bezier(.05,.7,.1,1); /* entra na tela: rapido e assenta */
+  --mv-ease-sai:cubic-bezier(.3,0,.8,.15);   /* sai da tela: acelera e some */
+  --mv-dur-micro:120ms; --mv-dur-rapido:180ms; --mv-dur-base:240ms;
+  --mv-dur-medio:320ms; --mv-dur-lento:560ms;
 }
 
 /* ---------- 2. BASE ---------- */
@@ -85,10 +92,13 @@ body.mv-body{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   font-family:inherit;font-weight:700;font-size:15px;line-height:1;
   padding:14px 20px;border-radius:var(--mv-r);border:1px solid transparent;
-  cursor:pointer;text-decoration:none;transition:.16s;white-space:nowrap;
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+  transition:filter var(--mv-dur-rapido) var(--mv-ease),transform var(--mv-dur-micro) var(--mv-ease),scale var(--mv-dur-micro) var(--mv-ease),
+    background-color var(--mv-dur-rapido) var(--mv-ease),border-color var(--mv-dur-rapido) var(--mv-ease),color var(--mv-dur-rapido) var(--mv-ease),box-shadow var(--mv-dur-rapido) var(--mv-ease),
+    opacity var(--mv-dur-rapido) var(--mv-ease);
 }
 .mv-btn:hover{filter:brightness(1.08)}
-.mv-btn:active{transform:translateY(1px)}
+.mv-btn:active{transform:translateY(1px);scale:.97}
 .mv-btn:focus-visible{outline:2px solid var(--mv-ciano);outline-offset:2px}
 .mv-btn--primario{background:var(--mv-grad);color:#04121f;box-shadow:var(--mv-glow)}
 .mv-btn--sucesso{background:linear-gradient(135deg,#2ee6a8,#0fb87f);color:#04121f;box-shadow:0 0 18px rgba(37,227,155,.35)}
@@ -144,7 +154,8 @@ body.mv-body{
 
 /* ---------- 8. FORM ---------- */
 .mv-campo{width:100%;font-family:inherit;font-size:15px;color:var(--mv-txt);
-  background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:14px 15px}
+  background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:var(--mv-r);padding:14px 15px;
+  transition:border-color var(--mv-dur-rapido) var(--mv-ease),box-shadow var(--mv-dur-rapido) var(--mv-ease)}
 .mv-campo::placeholder{color:#6d84a3}
 .mv-campo:focus{outline:none;border-color:var(--mv-ciano);box-shadow:0 0 0 3px rgba(0,212,255,.14)}
 .mv-rotulo{display:block;font-size:12.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
@@ -160,7 +171,8 @@ body.mv-body{
 .mv-nav{display:flex;flex-direction:column;gap:4px}
 .mv-nav__item{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:12px;
   font-size:14.5px;font-weight:600;color:var(--mv-txt-2);text-decoration:none;cursor:pointer;
-  background:transparent;border:1px solid transparent;font-family:inherit;text-align:left;width:100%}
+  background:transparent;border:1px solid transparent;font-family:inherit;text-align:left;width:100%;
+  transition:background-color var(--mv-dur-rapido) var(--mv-ease),color var(--mv-dur-rapido) var(--mv-ease),border-color var(--mv-dur-rapido) var(--mv-ease)}
 .mv-nav__item:hover{background:rgba(255,255,255,.04);color:var(--mv-txt)}
 .mv-nav__item.ativo{background:rgba(0,102,255,.16);border-color:rgba(0,212,255,.35);color:var(--mv-txt);
   box-shadow:inset 0 0 0 1px rgba(0,212,255,.06)}
@@ -174,7 +186,9 @@ body.mv-body{
   padding:8px 6px calc(8px + env(safe-area-inset-bottom));
   grid-template-columns:repeat(5,1fr);align-items:end}
 .mv-tabbar__item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;
-  color:var(--mv-txt-3);background:none;border:0;font-family:inherit;cursor:pointer;padding:6px 2px;text-decoration:none}
+  color:var(--mv-txt-3);background:none;border:0;font-family:inherit;cursor:pointer;padding:6px 2px;text-decoration:none;
+  transition:color var(--mv-dur-rapido) var(--mv-ease),scale var(--mv-dur-micro) var(--mv-ease)}
+.mv-tabbar__item:active{scale:.94}
 .mv-tabbar__item.ativo{color:var(--mv-ciano)}
 .mv-tabbar__ico{font-size:19px;line-height:1}
 .mv-tabbar__fab{width:52px;height:52px;border-radius:50%;background:var(--mv-grad);color:#04121f;
@@ -184,8 +198,11 @@ body.mv-body{
 .mv-grade{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 .mv-ferr{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:10px;
   background:var(--mv-surf-2);border:1px solid var(--mv-linha);border-radius:var(--mv-r);
-  padding:16px 14px;cursor:pointer;font-family:inherit;text-align:left;transition:.16s;color:var(--mv-txt)}
-.mv-ferr:hover{border-color:rgba(0,212,255,.5);transform:translateY(-2px)}
+  padding:16px 14px;cursor:pointer;font-family:inherit;text-align:left;color:var(--mv-txt);
+  transition:border-color var(--mv-dur-rapido) var(--mv-ease),transform var(--mv-dur-base) var(--mv-ease),scale var(--mv-dur-micro) var(--mv-ease)}
+.mv-ferr:active{scale:.97}
+.mv-ferr:hover{border-color:rgba(0,212,255,.5)}
+@media(hover:hover){.mv-ferr:hover{transform:translateY(-2px)}}
 .mv-ferr__ico{width:34px;height:34px;object-fit:contain;font-size:24px}
 .mv-ferr__tit{font-size:14.5px;font-weight:700}
 .mv-ferr__sub{font-size:12.5px;color:var(--mv-txt-3)}
@@ -199,8 +216,10 @@ body.mv-body{
 .mv-secao--faixa{background:var(--mv-bg-2)}
 .mv-recursos{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
 .mv-recurso{background:linear-gradient(180deg,rgba(19,38,61,.8),rgba(12,24,42,.8));
-  border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:24px 20px;text-align:center;transition:.18s}
-.mv-recurso:hover{border-color:rgba(0,212,255,.45);transform:translateY(-3px)}
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:24px 20px;text-align:center;
+  transition:border-color var(--mv-dur-base) var(--mv-ease),transform var(--mv-dur-base) var(--mv-ease)}
+.mv-recurso:hover{border-color:rgba(0,212,255,.45)}
+@media(hover:hover){.mv-recurso:hover{transform:translateY(-3px)}}
 .mv-recurso__ico{font-size:36px;margin-bottom:14px;display:block}
 .mv-passos{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));text-align:center}
 .mv-passo__n{width:34px;height:34px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;
@@ -221,7 +240,7 @@ body.mv-body{
 .mv-oculto{display:none!important}
 .mv-scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .mv-progresso{height:8px;border-radius:var(--mv-r-pill);background:var(--mv-campo);overflow:hidden}
-.mv-progresso>i{display:block;height:100%;background:var(--mv-grad);border-radius:inherit}
+.mv-progresso>i{display:block;height:100%;background:var(--mv-grad);border-radius:inherit;transition:width var(--mv-dur-lento) var(--mv-ease-entra)}
 
 /* ---------- 14. RESPONSIVO ---------- */
 @media(max-width:1180px){
@@ -269,3 +288,37 @@ body.mv-body{
 .mv-negocio__nome{font-size:14px;font-weight:700;line-height:1.25}
 .mv-negocio__meta{font-size:12px;color:var(--mv-txt-3);margin-top:2px}
 .mv-negocio__nota{color:var(--mv-alerta);font-weight:700}
+
+/* ---------- 16. MOTION (23/09/2026) ----------
+   Regras completas no vault: R - Motion principles.
+   - So opacity, transform, translate e scale se animam. Nada de layout.
+   - Entrada usa --mv-ease-entra; saida usa --mv-ease-sai e e mais curta.
+   - O mvmotion.js (carregado pelo mvmetrica.js) faz o resto: entrada de
+     aba/modal/aviso, revelacao por rolagem nas paginas e fade das imagens.
+   - prefers-reduced-motion desliga tudo, inclusive o movimento da pagina. */
+:where(button,[role="button"],.mv-btn){-webkit-tap-highlight-color:transparent}
+@media (prefers-reduced-motion:no-preference){
+  :where(button,[role="button"],input[type="submit"],input[type="button"]):where(:active:not(:disabled):not([aria-disabled="true"])){scale:.97}
+  @view-transition{navigation:auto}
+}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.22s;animation-timing-function:cubic-bezier(.2,0,0,1)}
+:where(a,button,input,select,textarea,summary,[tabindex]:not([tabindex="-1"])):focus-visible{outline:2px solid var(--mv-ciano);outline-offset:2px}
+
+/* esqueleto de carregamento: <div class="mv-skel" style="height:64px"></div> */
+.mv-skel{position:relative;overflow:hidden;background:rgba(255,255,255,.05);border-radius:var(--mv-r-sm)}
+.mv-skel::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:mvSkel 1.3s var(--mv-ease) infinite}
+@keyframes mvSkel{to{transform:translateX(100%)}}
+
+/* entrada pronta para usar a mao: class="mv-entra" (ou mv-entra mv-entra--2 para cascata) */
+@media (prefers-reduced-motion:no-preference){
+  .mv-entra{animation:mvEntra var(--mv-dur-base) var(--mv-ease-entra) both}
+  .mv-entra--2{animation-delay:60ms} .mv-entra--3{animation-delay:120ms} .mv-entra--4{animation-delay:180ms}
+}
+@keyframes mvEntra{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+
+/* acessibilidade: quem pediu menos movimento no aparelho nao ve animacao nenhuma */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms!important;animation-delay:0s!important;animation-iteration-count:1!important;
+    transition-duration:1ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
+}

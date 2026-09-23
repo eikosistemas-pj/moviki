@@ -302,3 +302,20 @@
     } catch (e) {}
   }, true);
 })();
+
+/* ==================================================================== */
+/* MOTION (23/09/2026) - carrega o mvmotion.js (movimento + lazy        */
+/* loading) em toda pagina que ja carrega este arquivo. Nenhum HTML      */
+/* precisa mudar. Sem o mvmotion.js no ar, a pagina segue 100% igual.    */
+/* Chave-mestra do movimento: MV_MOTION_LIGADO no proprio mvmotion.js.   */
+/* ==================================================================== */
+(function () {
+  try {
+    if (window.mvMotion || document.getElementById('mvMotionJs')) return;
+    var s = document.createElement('script');
+    s.id = 'mvMotionJs';
+    s.src = '/mvmotion.js';
+    s.async = true;
+    (document.head || document.documentElement).appendChild(s);
+  } catch (e) {}
+})();
