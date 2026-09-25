@@ -25,6 +25,19 @@
  *
  * PRA LIGAR O GA4: troque a linha MV_GA_ID abaixo pelo ID real (G-XXXXXXXXXX)
  * da propriedade GA4 — a MESMA troca nos dois repos (moviki e moviki-app).
+ *
+ * 24/09/2026 (versao medicao2) — GOOGLE ADS SEM COOKIE DE ANUNCIO + AVISO:
+ *  - O Google Ads mede o resultado IMPORTANDO do GA4 os eventos sign_up e
+ *    purchase (propriedade GA4 vinculada a conta do Google Ads). Nenhuma tag
+ *    do Google Ads e carregada aqui e os sinais de anuncio continuam
+ *    'denied': o que liga o cadastro ao anuncio e o gclid da URL, que o
+ *    url_passthrough carrega de pagina em pagina SEM gravar cookie.
+ *  - Aviso de medicao (LGPD, base legitimo interesse): barra discreta no
+ *    rodape na primeira visita, com "Ok" e "Nao medir". "Nao medir" grava
+ *    mv_medicao=nao no localStorage DESTE dominio e desliga o GA4
+ *    (analytics_storage denied) na hora e nas proximas visitas.
+ *    moviki.com.br/?medicao=escolher reabre a barra (link na politica).
+ *    Nao aparece no painel do dono nem nas telas de live.
  */
 (function () {
   'use strict';
@@ -231,16 +244,26 @@
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = window.gtag || gtag;
 
-  // Consentimento: analytics SIM, anuncio NAO. Desliga sinais de publicidade
-  // de proposito (base legal do site e so medir o proprio funil).
+  // Escolha da pessoa sobre a medicao (aviso no rodape). 'nao' = sem GA4.
+  function lerLocal(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function gravarLocal(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  var MV_MED = 'mv_medicao';
+  var semMedicao = lerLocal(MV_MED) === 'nao';
+
+  // Consentimento: analytics SIM (salvo recusa), anuncio NAO. Desliga sinais
+  // de publicidade de proposito (base legal do site e so medir o proprio funil).
   gtag('consent', 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
     ad_personalization: 'denied',
-    analytics_storage: 'granted',
+    analytics_storage: semMedicao ? 'denied' : 'granted',
     functionality_storage: 'granted',
     security_storage: 'granted'
   });
+  // Com ad_storage negado, o gclid do anuncio do Google nao vira cookie: o
+  // url_passthrough leva ele na URL ate a pagina do cadastro, e o GA4 credita
+  // a campanha. E isso que o Google Ads importa como conversao.
+  gtag('set', 'url_passthrough', true);
 
   gtag('js', new Date());
   gtag('config', MV_GA_ID, {
@@ -281,6 +304,56 @@
       setTimeout(function () { if (!pronto) { pronto = true; resolve(out); } }, 800);
     });
   };
+
+  // ---- aviso de medicao (LGPD) ----
+  (function avisoMedicao() {
+    try {
+      var reabrir = param('medicao') === 'escolher';
+      if (lerLocal(MV_MED) && !reabrir) return;
+      if (/eikoadm01|\/live|aovivo/i.test(location.pathname)) return;
+      function montar() {
+        if (document.getElementById('mvAvisoMed') || !document.body) return;
+        var b = document.createElement('div');
+        b.id = 'mvAvisoMed';
+        b.setAttribute('role', 'region');
+        b.setAttribute('aria-label', 'Aviso de medi\u00e7\u00e3o');
+        b.style.cssText = 'position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));' +
+          'z-index:2147483000;max-width:560px;margin:0 auto;background:#0b1630;color:#eaf6ff;' +
+          'border:1px solid rgba(0,212,255,.35);border-radius:14px;padding:12px 14px;' +
+          'box-shadow:0 10px 30px rgba(0,0,0,.35);font:13px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
+          'display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px';
+        var t = document.createElement('span');
+        t.style.cssText = 'flex:1 1 260px';
+        t.appendChild(document.createTextNode('Usamos um cookie de medi\u00e7\u00e3o (Google Analytics) para entender como o site \u00e9 usado e quais an\u00fancios trazem cadastros. Nenhum cookie de publicidade. '));
+        var l = document.createElement('a');
+        l.href = 'https://moviki.com.br/privacidade.html';
+        l.textContent = 'Pol\u00edtica de privacidade';
+        l.style.cssText = 'color:#00d4ff;text-decoration:underline';
+        t.appendChild(l);
+        function botao(txt, principal, acao) {
+          var x = document.createElement('button');
+          x.type = 'button';
+          x.textContent = txt;
+          x.style.cssText = 'cursor:pointer;border-radius:10px;padding:8px 14px;font:600 13px system-ui,sans-serif;' +
+            (principal ? 'border:0;background:#00d4ff;color:#04121f' : 'border:1px solid rgba(234,246,255,.35);background:transparent;color:#eaf6ff');
+          x.addEventListener('click', function () { acao(); try { b.remove(); } catch (e) { b.parentNode && b.parentNode.removeChild(b); } });
+          return x;
+        }
+        b.appendChild(t);
+        b.appendChild(botao('N\u00e3o medir', false, function () {
+          gravarLocal(MV_MED, 'nao');
+          try { gtag('consent', 'update', { analytics_storage: 'denied' }); } catch (e) {}
+        }));
+        b.appendChild(botao('Ok', true, function () {
+          gravarLocal(MV_MED, 'sim');
+          try { gtag('consent', 'update', { analytics_storage: 'granted' }); } catch (e) {}
+        }));
+        document.body.appendChild(b);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar);
+      else montar();
+    } catch (e) {}
+  })();
 
   // ---- cta_painel por delegacao de clique ----
   // Qualquer clique num link que leve pro painel (app.moviki.com.br) ou que
