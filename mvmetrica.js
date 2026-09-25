@@ -38,6 +38,14 @@
  *    (analytics_storage denied) na hora e nas proximas visitas.
  *    moviki.com.br/?medicao=escolher reabre a barra (link na politica).
  *    Nao aparece no painel do dono nem nas telas de live.
+ *
+ * 25/09/2026 (versao medicao3) — "NAO MEDIR" NAO CARREGA NADA DO GOOGLE:
+ *  - Com mv_medicao=nao o gtag.js nem e baixado (antes baixava e so ficava
+ *    com analytics_storage negado, o que ainda manda sinal sem cookie).
+ *    mvEv e mvSignup viram no-op e mvIds devolve vazio na hora.
+ *  - Se a pessoa reabrir o aviso e tocar em "Ok", o gtag.js carrega ali mesmo.
+ *  - Quem toca em "Nao medir" nesta visita: a medicao para aqui (consentimento
+ *    negado) e, da proxima pagina em diante, o gtag.js nao e mais baixado.
  */
 (function () {
   'use strict';
@@ -272,19 +280,31 @@
 
   // Carrega o gtag.js oficial (assincrono). O mvEv ja funciona antes de chegar,
   // porque empilha no dataLayer e o gtag.js processa a fila ao carregar.
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(MV_GA_ID);
-  (document.head || document.documentElement).appendChild(s);
+  // medicao3: com "Nao medir" escolhido, o gtag.js NAO e baixado.
+  var gtagCarregado = false;
+  function carregarGtag() {
+    if (gtagCarregado) return;
+    gtagCarregado = true;
+    try {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(MV_GA_ID);
+      (document.head || document.documentElement).appendChild(s);
+    } catch (e) {}
+  }
+  function medindo() { return lerLocal(MV_MED) !== 'nao'; }
+  if (!semMedicao) carregarGtag();
 
   // ---- API pro codigo do painel ----
   window.mvEv = function (nome, params) {
+    if (!medindo()) return;
     try { gtag('event', String(nome), params || {}); } catch (e) {}
   };
 
   // sign_up com trava anti-duplicata: um carregamento de pagina cria no maximo
   // uma conta, entao so o primeiro disparo vale.
   window.mvSignup = function (metodo) {
+    if (!medindo()) return;
     if (window._mvSignupSent) return;
     window._mvSignupSent = 1;
     try { gtag('event', 'sign_up', { method: metodo || 'email' }); } catch (e) {}
@@ -296,6 +316,7 @@
   window.mvIds = function () {
     return new Promise(function (resolve) {
       var out = { cid: '', sid: '' }, faltam = 2, pronto = false;
+      if (!medindo() || !gtagCarregado) { resolve(out); return; }
       function fim() { if (!pronto && --faltam <= 0) { pronto = true; resolve(out); } }
       try {
         gtag('get', MV_GA_ID, 'client_id', function (v) { out.cid = v ? String(v) : ''; fim(); });
@@ -347,6 +368,7 @@
         b.appendChild(botao('Ok', true, function () {
           gravarLocal(MV_MED, 'sim');
           try { gtag('consent', 'update', { analytics_storage: 'granted' }); } catch (e) {}
+          carregarGtag();
         }));
         document.body.appendChild(b);
       }
@@ -363,6 +385,7 @@
       var a = ev.target && ev.target.closest ? ev.target.closest('a[href]') : null;
       if (!a) return;
       var href = a.getAttribute('href') || '';
+      if (!medindo()) return;
       if (/app\.moviki\.com\.br/i.test(href) || /[?&]plano=/i.test(href)) {
         var m = href.match(/[?&]plano=([a-z]+)/i);
         gtag('event', 'cta_painel', {
