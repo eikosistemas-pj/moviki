@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-23-rodada2 -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-26-pedidos (entrega por bairro com taxa, CEP, numero e codigo do pedido) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
@@ -20,7 +20,7 @@
 <meta name="twitter:title" content="Ao vivo no Moviki">
 <meta name="twitter:description" content="Transmissão ao vivo de um negócio no Moviki.">
 <meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://www.googletagmanager.com https://www.google-analytics.com; media-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://www.gstatic.com https://moviki-robo.vercel.app https://viacep.com.br https://*.cloudflarestream.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#060d18">
 <meta name="robots" content="noindex">
@@ -30,6 +30,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="/mvmetrica.js"></script>
 <script src="/mvqr.js"></script>
+<script src="/mventrega.js"></script>
 <style>
 :root{
   --mv-ciano:#00D4FF;--mv-azul:#0066FF;--mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
@@ -282,12 +283,15 @@ svg{display:block}
   <div class="fTopo"><h2 id="ckTit">Comprar com Pix</h2><button type="button" class="btnRedondo" data-fecha="folhaCompra" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div id="ckForm">
     <div class="ckLinha"><div class="cpInfo"><div class="cpNome" id="ckProd"></div><div class="cpPreco" id="ckUnit"></div></div><div class="ckQtd"><button type="button" id="ckMenos">−</button><b id="ckQ">1</b><button type="button" id="ckMais">+</button></div></div>
+    <div class="ckTotal escondido" id="ckFreteLin" style="font-size:14px;font-weight:600;margin:0 0 4px"><span>Entrega</span><span id="ckFrete"></span></div>
     <div class="ckTotal"><span>Total</span><span id="ckTotal"></span></div>
     <input class="campo" id="ckNome" maxlength="60" placeholder="Nome e sobrenome" autocomplete="name">
     <div style="display:flex;gap:8px;margin-top:8px"><input class="campo" id="ckWpp" maxlength="16" inputmode="tel" placeholder="WhatsApp com DDD" autocomplete="tel"><input class="campo" id="ckCpf" maxlength="14" inputmode="numeric" placeholder="CPF"></div>
     <span class="ckRot">Como você vai receber?</span>
-    <div class="ckEnt"><label><input type="radio" name="ckEnt" value="retirada" checked> Retirar no local</label><label><input type="radio" name="ckEnt" value="entrega"> Combinar entrega</label></div>
+    <div class="ckEnt"><label id="ckEntRet"><input type="radio" name="ckEnt" value="retirada" checked> Retirar no local</label><label id="ckEntEnt"><input type="radio" name="ckEnt" value="entrega"> <span id="ckEntRot">Combinar entrega</span></label></div>
+    <p class="nota escondido" id="ckRetInfo" style="margin:8px 0 0"></p>
     <input class="campo escondido" id="ckEnd" maxlength="140" placeholder="Endereço ou ponto de referência para a entrega" style="margin-top:8px">
+    <div id="ckEndBox" class="escondido"></div>
     <label class="ckChk"><input type="checkbox" id="ckMostrar"><span>Pode mostrar na live que eu comprei (só o meu primeiro nome).</span></label>
     <label class="ckChk"><input type="checkbox" id="ckAceite"><span>Li e aceito os <a href="/termos.html" target="_blank" rel="noopener" style="color:var(--mv-ciano)">Termos de Uso</a> e a <a href="/privacidade.html" target="_blank" rel="noopener" style="color:var(--mv-ciano)">Política de Privacidade</a>, e autorizo o uso dos meus dados para gerar o Pix e para o vendedor combinar a entrega.</span></label>
     <p class="nota" id="ckAviso"></p>
@@ -320,6 +324,7 @@ svg{display:block}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>
     <h2 style="margin:0 0 6px;font-size:18px">Pagamento confirmado!</h2>
     <p class="nota" id="ckOkTxt" style="margin:0 0 12px"></p>
+    <div id="ckOkCod" class="escondido" style="text-align:center;margin:0 0 12px"></div>
     <a class="btnQuero" id="ckOkWpp" href="#" target="_blank" rel="noopener" style="width:100%">Combinar com o vendedor no WhatsApp</a>
   </div>
 </div></div>
@@ -348,7 +353,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-23-rodada2';
+  window.MOVIKI_VERSAO='2026-09-26-pedidos';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -489,6 +494,7 @@ svg{display:block}
 
   const _m=/^\/+live\/+([^/?#]+)/.exec(decodeURIComponent(location.pathname));
   const slug=((_m&&_m[1])||new URLSearchParams(location.search).get('s')||'').trim().toLowerCase();
+  let CK_CFG={entrega:'ambos',bairros:[]};
   let bloqueado=false,liveDesligada=false,pixAtivo=false,uid='',neg=null,nivel=null,est={},noAr=false,pc=null,tentando=false,chatDes=null,chatDesdeMs=0,presencaT=null;
   const sid=(()=>{try{let s=sessionStorage.getItem('mv_live_sid');if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now()).replace(/-/g,'').slice(0,24);sessionStorage.setItem('mv_live_sid',s);}return s;}catch(_){return String(Date.now());}})();
 
@@ -504,7 +510,7 @@ svg{display:block}
       neg=n.exists()?n.data():{};
       nivel=nivelDe(a&&a.exists()?a.data():null);
       pintarIdentidade();
-      if(nivel==='enterprise')onSnapshot(doc(db,'checkout_publico',uid),c=>{pixAtivo=!!(c.exists()&&c.data().ativo===true);if(noAr){pintarProduto();pintarSacola();}},()=>{});
+      if(nivel==='enterprise')onSnapshot(doc(db,'checkout_publico',uid),c=>{pixAtivo=!!(c.exists()&&c.data().ativo===true);CK_CFG=c.exists()?(c.data()||{}):{entrega:'retirada',bairros:[]};if(noAr){pintarProduto();pintarSacola();}},()=>{});
       onSnapshot(doc(db,'configuracoes','liveTermos'),t=>{const d=t.exists()?(t.data()||{}):{};
         MV_TERMOS_EXTRAS=Array.isArray(d.extras)?d.extras.filter(x=>typeof x==='string').slice(0,300):[];
         liveDesligada=d.liveDesligada===true;
@@ -874,35 +880,75 @@ svg{display:block}
   function precoUnit(p){const of=ofertaAtiva();const t=String((of&&of.nome===p.nome?of.precoPor:(p.precoLive||p.preco))||'').replace(/^R\$\s*/i,'').trim();
     if(!/^\d{1,5}([.,]\d{1,2})?$/.test(t))return NaN;return Math.round(parseFloat(t.replace(',','.'))*100)/100;}
   function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0;}
-  let ckP=null,ckQ=1,ckPoll=null,ckPed=null;
-  const ERR_CK={aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva o endereço ou um ponto de referência.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
+  let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null;
+  const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
+  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
   function abrirCompra(p){
     ckP=p; ckQ=1; clearInterval(ckPoll);
     el('ckForm').classList.remove('escondido'); el('ckPix').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckErro').classList.add('escondido');
     el('ckProd').textContent=p.nome; el('ckAviso').textContent='A venda é feita por '+((neg&&neg.nome)||'este negócio')+' e o Pix vai direto para a conta dele. O CPF é exigido pelo banco para gerar o Pix; o Moviki não guarda o número inteiro.';
     try{const g=JSON.parse(localStorage.getItem('mv_ck_dados')||'{}');if(g.nome)el('ckNome').value=g.nome;if(g.wpp)el('ckWpp').value=g.wpp;}catch(_){}
     if(!el('ckNome').value&&meuNome().includes(' '))el('ckNome').value=meuNome();
+    montarEntrega();
     ckTotal(); el('folhaSacola').classList.add('escondido'); el('folhaCompra').classList.remove('escondido'); ev('live_comprar_abrir',{slug});
   }
-  function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;el('ckTotal').textContent=brl(u*ckQ);}
+  /* 26/09/2026: as opcoes de recebimento seguem a configuracao do lojista
+     (retirada, entrega ou as duas) e a entrega usa o formulario do
+     mventrega.js: CEP, bairro da lista com a taxa. Sem o arquivo, volta o
+     campo de texto de antes. */
+  function montarEntrega(){
+    const m=String((CK_CFG&&CK_CFG.entrega)||'retirada');
+    const podeRet=(m==='retirada'||m==='ambos'), podeEnt=(m==='entrega'||m==='ambos');
+    el('ckEntRet').classList.toggle('escondido',!podeRet); el('ckEntEnt').classList.toggle('escondido',!podeEnt);
+    const rr=document.querySelector('input[name="ckEnt"][value="retirada"]'), re=document.querySelector('input[name="ckEnt"][value="entrega"]');
+    if(podeRet){rr.checked=true;}else{re.checked=true;}
+    const tab=!!(window.mvEnt&&mvEnt.temTabela(CK_CFG));
+    el('ckEntRot').textContent=tab?'Receber em casa':'Combinar entrega';
+    el('ckRetInfo').textContent=CK_CFG&&CK_CFG.retirada?('Retirar em: '+CK_CFG.retirada):'';
+    ckFrete=null;
+    if(window.mvEnt){el('ckEndBox').innerHTML=mvEnt.html(CK_CFG,{p:'ckE',input:'campo'});mvEnt.ligar(CK_CFG,{p:'ckE'},v=>{ckFrete=v;ckTotal();});}
+    trocarEntrega();
+  }
+  function trocarEntrega(){
+    const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
+    const temForm=!!(window.mvEnt&&el('ckECep'));
+    el('ckEndBox').classList.toggle('escondido',!(ent==='entrega'&&temForm));
+    el('ckEnd').classList.toggle('escondido',!(ent==='entrega'&&!temForm));
+    el('ckRetInfo').classList.toggle('escondido',!(ent==='retirada'&&el('ckRetInfo').textContent));
+    ckTotal();
+  }
+  function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;
+    const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;const fr=(ent==='entrega'&&ckFrete!=null)?ckFrete:0;
+    el('ckFreteLin').classList.toggle('escondido',!(ent==='entrega'&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
+    el('ckTotal').textContent=brl(u*ckQ+fr);}
   el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();}};
   el('ckMais').onclick=()=>{const of=ofertaAtiva();const lim=(of&&of.nome===ckP.nome&&Number(of.estoque)>0)?Math.max(1,Number(of.estoque)-Number(of.vendidos||0)):10;if(ckQ<Math.min(10,lim)){ckQ++;ckTotal();}else toast('Limite desta compra.');};
-  document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',()=>el('ckEnd').classList.toggle('escondido',document.querySelector('input[name="ckEnt"]:checked').value!=='entrega')));
+  document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',trocarEntrega));
   el('ckCpf').addEventListener('input',()=>{let d=el('ckCpf').value.replace(/\D/g,'').slice(0,11);el('ckCpf').value=d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');});
   el('ckGerar').onclick=async()=>{
     const b=el('ckGerar'), er=el('ckErro'); er.classList.add('escondido');
     if(!el('ckAceite').checked){er.textContent='Marque que aceita os Termos e a Política de Privacidade.';er.classList.remove('escondido');return;}
     const ent_=document.querySelector('input[name="ckEnt"]:checked').value;
-    const corpo={acao:'compra_criar',lojistaUid:uid,produto:ckP.nome,qtd:ckQ,nome:el('ckNome').value,whatsapp:el('ckWpp').value,cpf:el('ckCpf').value,entrega:ent_,detalhe:el('ckEnd').value,mostrarNome:el('ckMostrar').checked,aceite:true};
+    let detalhe_=el('ckEnd').value, endereco_=null;
+    if(ent_==='entrega'&&window.mvEnt&&el('ckECep')){
+      const L=mvEnt.ler(CK_CFG,{p:'ckE'});
+      if(!L.ok){er.textContent=ERR_CK[L.erro]||'Confira o endereço.';er.classList.remove('escondido');return;}
+      const minE=Number(CK_CFG&&CK_CFG.minimoEntrega)||0;
+      if(minE>0&&precoUnit(ckP)*ckQ<minE){er.textContent='Pedido mínimo para entrega: '+brl(minE)+' em produtos.';er.classList.remove('escondido');return;}
+      detalhe_=L.detalhe; endereco_=L.endereco;
+    }
+    const corpo={acao:'compra_criar',lojistaUid:uid,produto:ckP.nome,qtd:ckQ,nome:el('ckNome').value,whatsapp:el('ckWpp').value,cpf:el('ckCpf').value,entrega:ent_,detalhe:detalhe_,mostrarNome:el('ckMostrar').checked,aceite:true};
+    if(endereco_)corpo.endereco=endereco_;
     b.disabled=true; b.textContent='Gerando o Pix…';
     let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)})).json();}catch(_){r={ok:false,erro:'rede'};}
     b.disabled=false; b.textContent='Gerar Pix';
     if(!r||!r.ok){
       let msg=(r&&r.erro==='asaas')?(r.mensagem||'O banco recusou. Tente de novo.'):(ERR_CK[r&&r.erro]||'Não deu certo. Confira a internet e tente de novo.');
       if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
+      if(r&&r.erro==='minimo_entrega')msg='Pedido mínimo para entrega: '+brl(r.minimo||0)+' em produtos.';
       er.textContent=msg;er.classList.remove('escondido');return;}
     try{localStorage.setItem('mv_ck_dados',JSON.stringify({nome:corpo.nome,wpp:corpo.whatsapp}));}catch(_){}
-    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||''};
+    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||'',numero:r.numero||0,frete:r.frete||0,entrega:r.entrega||ent_};
     try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}
     ev('live_pix_gerado',{slug,valor:r.total});
     el('ckForm').classList.add('escondido'); el('ckPix').classList.remove('escondido');
@@ -958,19 +1004,25 @@ svg{display:block}
       if(Date.now()-t0>30*60000){clearInterval(ckPoll);el('ckEst').textContent='O prazo deste Pix passou. Se você já pagou, fale com o vendedor.';return;}
       if(document.visibilityState!=='visible')return;
       let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({acao:'compra_status',pedidoId:ckPed.id,chave:ckPed.chave})})).json();}catch(_){return;}
-      if(r&&r.ok&&(r.status==='pago'||r.status==='entregue')){clearInterval(ckPoll);pago();}
+      if(r&&r.ok&&CK_PAGOS.indexOf(r.status)>=0){clearInterval(ckPoll);pago(r);}
       else if(r&&r.ok&&r.status==='conferindo'){el('ckEst').textContent='O vendedor está conferindo o seu pagamento.';}
       else if(r&&r.ok&&(r.status==='expirado'||r.status==='cancelado')){clearInterval(ckPoll);el('ckEst').textContent='Este Pix foi cancelado ou venceu. Gere outro se ainda quiser.';}
     },4000);
   }
-  function pago(){
+  function pago(st){
     ev('purchase_live',{slug,valor:ckPed.total});
     try{sessionStorage.removeItem('mv_ck_ped');}catch(_){}
     el('ckPix').classList.add('escondido'); el('ckOk').classList.remove('escondido'); el('folhaCompra').classList.remove('escondido');
-    const cod=ckPed.id.slice(-6).toUpperCase(), ent_=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
+    const num=(st&&st.numero)||ckPed.numero||0;
+    const cod=num?String(num).padStart(4,'0'):ckPed.id.slice(-6).toUpperCase(), ent_=(st&&st.entrega)||ckPed.entrega||(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
+    /* Codigo de 4 digitos (26/09/2026): o comprador mostra na retirada ou
+       para quem entregar. So chega aqui depois do pagamento confirmado. */
+    const cx=el('ckOkCod');
+    if(st&&st.codigo){cx.innerHTML='<div class="nota" style="margin:0">Seu código</div><div style="font-size:30px;font-weight:800;letter-spacing:6px">'+esc(String(st.codigo))+'</div><div class="nota" style="margin:0">'+(ent_==='entrega'?'Mostre para quem entregar.':'Mostre na hora de retirar.')+'</div>';cx.classList.remove('escondido');}
+    else{cx.innerHTML='';cx.classList.add('escondido');}
     el('ckOkTxt').textContent='Pedido #'+cod+': '+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+' — '+brl(ckPed.total)+'. '+((neg&&neg.nome)||'O vendedor')+' já vê o seu pedido.';
     const w=(function(x){x=String(x||'').replace(/\D/g,'').replace(/^0+/,'');return (x.length>=12&&x.slice(0,2)==='55')?x.slice(2):x;})(neg&&neg.whatsapp); /* 23/09: sem o 55 do pais */
-    const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(ent_==='entrega'?'Vamos combinar a entrega?':'Quando posso retirar?');
+    const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(ent_==='entrega'?(ckPed.frete>0?'Aguardo a entrega.':'Vamos combinar a entrega?'):'Quando posso retirar?');
     el('ckOkWpp').href=w?'https://wa.me/55'+w+'?text='+encodeURIComponent(msg):'#'; el('ckOkWpp').classList.toggle('escondido',!w);
   }
   /* Fechou a aba no meio do pagamento e voltou: retoma a espera. */

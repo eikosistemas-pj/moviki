@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://*.ibb.co https://www.googletagmanager.com https://www.google-analytics.com https://i.ytimg.com; connect-src 'self' https://moviki-robo.vercel.app https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://*.tile.openstreetmap.org https://firebasestorage.googleapis.com https://*.firebasestorage.app https://i.ibb.co https://*.ibb.co https://www.googletagmanager.com https://www.google-analytics.com https://i.ytimg.com; connect-src 'self' https://moviki-robo.vercel.app https://viacep.com.br https://*.googleapis.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#060d18">
@@ -1283,6 +1283,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      deixa carregar biblioteca de fora, e o QR do Pix nao pode depender de
      terceiro nenhum. Precisa vir ANTES do modulo, que e deferido. -->
 <script src="/mvqr.js"></script>
+<!-- 26/09/2026: formulario de entrega (CEP, bairro com taxa). Mesmo arquivo da live publica. -->
+<script src="/mventrega.js"></script>
 
 <script type="module">
   /* 23/09/2026: WhatsApp do lojista pode vir com o 55 do pais ("+55 81 9...").
@@ -1303,7 +1305,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-25-leaflet';
+  window.MOVIKI_VERSAO='2026-09-26-pedidos';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2414,8 +2416,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      Financeiro. Negócio sem isso vê o cardápio exatamente como via ontem.
      ===================================================================== */
   const MV_ROBO='https://moviki-robo.vercel.app';
-  let COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada'};
-  let SACOLA=[], PEDIDO=null, PD_TIMER=null, PD_COMPROV=null, PD_ENT='retirada', PD_ENVIANDO=false;
+  let COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:''};
+  let SACOLA=[], PEDIDO=null, PD_TIMER=null, PD_COMPROV=null, PD_ENT='retirada', PD_ENVIANDO=false, PD_FRETE=null;
+  /* Tudo que ja e pagamento confirmado. Desde 26/09/2026 o lojista move o
+     pedido por etapas depois do Pix; a tela nao pode esperar so por 'pago'. */
+  const PD_PAGOS=['pago','separando','pronto','saiu','entregue'];
 
   /* Espelho EXATO do precoNum do servidor. Se divergir, o botão aparece em
      item que o servidor recusa — e o cliente leva "produto indisponível"
@@ -2436,9 +2441,14 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         ativo:!!(d&&d.ativo===true),
         modo:String((d&&d.modo)||''),
         minimo:Number((d&&d.minimo)||0)||0,
-        entrega:String((d&&d.entrega)||'retirada')
+        entrega:String((d&&d.entrega)||'retirada'),
+        bairros:(d&&Array.isArray(d.bairros))?d.bairros.filter(x=>x&&x.nome).slice(0,80):[],
+        minimoEntrega:Number((d&&d.minimoEntrega)||0)||0,
+        prazo:String((d&&d.prazo)||''),
+        cidadeEntrega:String((d&&d.cidadeEntrega)||''),
+        retirada:String((d&&d.retirada)||'')
       };
-    }catch(e){ COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada'}; }
+    }catch(e){ COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:''}; }
     PD_ENT=(COMPRA.entrega==='entrega')?'entrega':'retirada';
   }
 
@@ -2531,7 +2541,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 
     let h=passos(1);
     h+=linhasSacola();
-    h+='<div class="sacTotal"><span>Total</span><b>'+fmtReal(tot)+'</b></div>';
+    h+='<div class="sacTotal" id="pdFreteLin" style="display:none;font-size:14px;font-weight:600;padding-top:8px"><span>Entrega</span><span id="pdFreteVal"></span></div>';
+    h+='<div class="sacTotal"><span>Total</span><b id="pdTotVal">'+fmtReal(tot)+'</b></div>';
     if(falta)h+='<div class="pdAviso">Pedido mínimo de '+fmtReal(COMPRA.minimo)+' neste negócio.</div>';
 
     h+='<div class="pdBloco"><h4>Seus dados</h4>'+
@@ -2543,10 +2554,19 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(podeRetirar||podeEntregar){
       h+='<div class="pdBloco"><h4>Como você quer receber</h4><div class="pdEnt">';
       if(podeRetirar)h+='<button type="button" id="pdBtnRet" class="'+(PD_ENT==='retirada'?'on':'')+'" onclick="mvEntrega(\'retirada\')">Retirar no local</button>';
-      if(podeEntregar)h+='<button type="button" id="pdBtnEnt" class="'+(PD_ENT==='entrega'?'on':'')+'" onclick="mvEntrega(\'entrega\')">Entrega combinada</button>';
-      h+='</div><div class="pdCampo" id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+
-         '<label>Endereço da entrega</label><textarea id="pdEnd" rows="2" maxlength="140" placeholder="Rua, número, bairro e ponto de referência"></textarea></div>';
-      h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega é combinada direto com o negócio pelo WhatsApp. O Moviki não faz entrega.</div>';
+      if(podeEntregar)h+='<button type="button" id="pdBtnEnt" class="'+(PD_ENT==='entrega'?'on':'')+'" onclick="mvEntrega(\'entrega\')">'+(window.mvEnt&&mvEnt.temTabela(COMPRA)?'Receber em casa':'Entrega combinada')+'</button>';
+      h+='</div>';
+      if(podeRetirar&&COMPRA.retirada)h+='<div id="pdRetInfo" style="font-size:12.5px;color:var(--mv-txt-2);line-height:1.5;margin-top:10px;'+(PD_ENT==='retirada'?'':'display:none')+'">Retirar em: <b>'+esc(COMPRA.retirada)+'</b></div>';
+      /* 26/09/2026: formulario de endereco do mventrega.js (CEP, bairro da
+         lista do lojista com a taxa). Se o arquivo nao carregar, volta o
+         campo de texto de antes — a venda nao pode depender dele. */
+      if(window.mvEnt){
+        h+='<div id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+mvEnt.html(COMPRA,{p:'pd',wrap:'pdCampo'})+'</div>';
+      }else{
+        h+='<div class="pdCampo" id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+
+           '<label>Endereço da entrega</label><textarea id="pdEnd" rows="2" maxlength="140" placeholder="Rua, número, bairro e ponto de referência"></textarea></div>';
+      }
+      h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega é feita pelo próprio negócio. O Moviki não faz entrega.</div>';
       h+='</div>';
     }
 
@@ -2558,13 +2578,28 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     h+='<div class="pdAviso" id="pdAviso"></div>';
 
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
+    PD_FRETE=null;
+    if(window.mvEnt&&el('pdCep'))mvEnt.ligar(COMPRA,{p:'pd'},function(v){PD_FRETE=v;pintarTotalPedido();});
+    pintarTotalPedido();
+  }
+  /* Total com a taxa de entrega do bairro escolhido. Vitrine: quem soma de
+     verdade e o servidor. */
+  function pintarTotalPedido(){
+    const tot=totalSacola();
+    const fr=(PD_ENT==='entrega'&&PD_FRETE!=null)?PD_FRETE:0;
+    const lin=el('pdFreteLin'), val=el('pdFreteVal'), tv=el('pdTotVal');
+    if(lin)lin.style.display=(PD_ENT==='entrega'&&PD_FRETE!=null)?'':'none';
+    if(val)val.textContent=fr>0?fmtReal(fr):'grátis';
+    if(tv)tv.textContent=fmtReal(tot+fr);
   }
   window.mvEntrega=function(t){
     PD_ENT=t;
-    const r=el('pdBtnRet'), e=el('pdBtnEnt'), cx=el('pdEndBox');
+    const r=el('pdBtnRet'), e=el('pdBtnEnt'), cx=el('pdEndBox'), ri=el('pdRetInfo');
     if(r)r.classList.toggle('on',t==='retirada');
     if(e)e.classList.toggle('on',t==='entrega');
     if(cx)cx.style.display=(t==='entrega')?'':'none';
+    if(ri)ri.style.display=(t==='retirada')?'':'none';
+    pintarTotalPedido();
   };
 
   function erroPedido(cod,extra){
@@ -2573,7 +2608,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       nome:'Escreva seu nome e sobrenome.',
       cpf:'Esse CPF não confere. Confira os números.',
       whatsapp:'WhatsApp com DDD, só números. Ex: 41999998888.',
-      endereco:'Escreva o endereço da entrega.',
+      endereco:'Escreva a rua e o número da entrega.',
+      cep:'Esse CEP está incompleto. São 8 números.',
+      bairro:'Escolha o bairro da entrega.',
+      bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',
+      sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',
+      so_entrega:'Este negócio só trabalha com entrega.',
+      minimo_entrega:'Pedido mínimo para entrega: '+fmtReal((extra&&extra.minimo)||COMPRA.minimoEntrega)+' em produtos.',
       aceite:'Marque o aceite para continuar.',
       produto:'Um item do seu pedido saiu do cardápio. Atualize a página.',
       sem_preco:'Um item do seu pedido está sem preço definido.',
@@ -2607,11 +2648,18 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const nome=(el('pdNome').value||'').trim();
     const wpp=(el('pdWpp').value||'').replace(/\D/g,'').replace(/^55(?=\d{10,11}$)/,'');
     const cpf=(el('pdCpf').value||'').replace(/\D/g,'');
-    const end=el('pdEnd')?(el('pdEnd').value||'').trim():'';
+    let end=el('pdEnd')?(el('pdEnd').value||'').trim():'';
+    let endObj=null;
     if(nome.split(' ').filter(Boolean).length<2){av.textContent=erroPedido('nome');return;}
     if(wpp.length!==10&&wpp.length!==11){av.textContent=erroPedido('whatsapp');return;}
     if(cpf.length!==11){av.textContent=erroPedido('cpf');return;}
-    if(PD_ENT==='entrega'&&end.length<5){av.textContent=erroPedido('endereco');return;}
+    if(PD_ENT==='entrega'&&window.mvEnt&&el('pdCep')){
+      const L=mvEnt.ler(COMPRA,{p:'pd'});
+      if(!L.ok){av.textContent=erroPedido(L.erro);return;}
+      if(COMPRA.minimoEntrega>0&&totalSacola()<COMPRA.minimoEntrega){av.textContent=erroPedido('minimo_entrega',{minimo:COMPRA.minimoEntrega});return;}
+      endObj=L.endereco; end=L.detalhe;
+    }
+    if(PD_ENT==='entrega'&&!endObj&&end.length<5){av.textContent=erroPedido('endereco');return;}
     if(!el('pdAceite').checked){av.textContent=erroPedido('aceite');return;}
 
     const btn=el('pdEnviar'); const rot=btn.textContent;
@@ -2621,6 +2669,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         acao:'compra_criar', origem:'cardapio', lojistaUid:negocioUid,
         nome:nome, whatsapp:wpp, cpf:cpf,
         entrega:PD_ENT, detalhe:end, aceite:true,
+        ...(endObj&&PD_ENT==='entrega'?{endereco:endObj}:{}),
         itens:SACOLA.map(x=>({sku:x.sku,nome:x.nome,qtd:x.qtd}))
       });
       if(!j.ok){ av.textContent=erroPedido(j.erro,j); PD_ENVIANDO=false; btn.disabled=false; btn.textContent=rot; return; }
@@ -2642,7 +2691,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const rec=p.recebedor||null;
     let h=passos(2);
     h+='<div class="pgTot"><div class="v">'+fmtReal(PEDIDO.total)+'</div>'+
-       '<div class="l">'+(PEDIDO.centavos?'Pague o valor EXATO — os centavos identificam o seu pedido':'Valor total do pedido')+'</div></div>';
+       '<div class="l">'+(PEDIDO.centavos?'Pague o valor EXATO — os centavos identificam o seu pedido':'Valor total do pedido')+'</div>'+
+       (Number(PEDIDO.frete)>0?'<div class="l" style="margin-top:4px">Produtos '+fmtReal(PEDIDO.subtotal)+' + entrega '+fmtReal(PEDIDO.frete)+'</div>':'')+
+       (PEDIDO.numero?'<div class="l" style="margin-top:4px">Pedido nº '+String(PEDIDO.numero).padStart(4,'0')+'</div>':'')+
+       '</div>';
 
     /* QR só quando o servidor mandou a imagem pronta (modo Asaas). No Pix
        direto o servidor manda o copia-e-cola, que é o que funciona no
@@ -2758,16 +2810,28 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   const PD_ROTULO={
     aguardando:'Aguardando o pagamento.',
     conferindo:'Pagamento em conferência pelo negócio.',
-    pago:'Pagamento confirmado! O negócio já está preparando.',
+    pago:'Pagamento confirmado! O negócio já vai preparar o seu pedido.',
+    separando:'O negócio está separando o seu pedido.',
+    pronto:'Seu pedido está pronto para retirar.',
+    saiu:'Seu pedido saiu para entrega.',
     entregue:'Pedido entregue. Bom proveito!',
     recusado:'O negócio não confirmou este pagamento. Chame no WhatsApp.',
     expirado:'Este pedido expirou. Se você pagou, chame o negócio no WhatsApp — o pagamento ainda pode ser confirmado.',
     cancelado:'Pedido cancelado.',
     estornado:'Pagamento estornado.'
   };
-  function iniciarPolling(){
+  function iniciarPolling(ms){
     if(PD_TIMER)clearInterval(PD_TIMER);
-    PD_TIMER=setInterval(consultarStatus,8000);
+    PD_TIMER=setInterval(consultarStatus,ms||8000);
+  }
+  /* Numero e codigo depois do pagamento (26/09/2026). O codigo e o que o
+     comprador mostra na retirada ou para o entregador. */
+  function blocoCodigo(j){
+    if(!j||!j.codigo)return '';
+    const ret=j.entrega!=='entrega';
+    return '<div class="pgConfere" style="text-align:center"><h4>'+(j.numero?'Pedido nº '+String(j.numero).padStart(4,'0'):'Seu pedido')+'</h4>'+
+      '<div style="font-size:30px;font-weight:800;letter-spacing:6px;margin:6px 0">'+esc(String(j.codigo))+'</div>'+
+      '<p>'+(ret?'Mostre este código na hora de retirar.':'Mostre este código para quem entregar.')+' Não passe para mais ninguém.</p></div>';
   }
   async function consultarStatus(){
     if(!PEDIDO){ if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;} return; }
@@ -2776,13 +2840,30 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(!j.ok)return;
       const st=el('pgStatus'); if(!st)return;
       if(j.status==='aguardando')return;
-      st.className='pgStatus'+(j.status==='pago'||j.status==='entregue'?' ok':(j.status==='recusado'||j.status==='estornado'?' ruim':''));
+      const pagoJa=PD_PAGOS.indexOf(j.status)>=0;
+      st.className='pgStatus'+(pagoJa?' ok':(j.status==='recusado'||j.status==='estornado'?' ruim':''));
       st.textContent=PD_ROTULO[j.status]||'';
-      if(j.status==='pago'||j.status==='entregue'){
+      if(pagoJa){
+        const primeiraVez=!PEDIDO._pago;
+        PEDIDO._pago=true;
         el('pedidoTitulo').textContent='Pedido confirmado';
-        const b=el('btnPaguei'); if(b){b.style.display='none';}
-        SACOLA=[]; pintarSacola(); pintarTodosBotoes(); esquecerPedido();
-        if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;}
+        if(primeiraVez){
+          /* Pago: o QR e o copia-e-cola perdem a funcao. A folha passa a ser o
+             acompanhamento do pedido, com o codigo no alto. */
+          const box=el('corpoPedido');
+          const w=wppDaUnidade();
+          box.innerHTML=passos(3)+
+            '<div class="pgTot"><div class="v">'+fmtReal(PEDIDO.total)+'</div><div class="l">Pagamento confirmado</div></div>'+
+            '<div class="pgStatus ok" id="pgStatus"></div><div id="pgCodigo"></div>'+
+            (w?'<a class="pgWpp" href="https://wa.me/55'+mvWpp(w)+'?text='+encodeURIComponent('Olá! Sobre o meu pedido'+(j.numero?' nº '+String(j.numero).padStart(4,'0'):'')+' pelo Moviki.')+'" target="_blank" rel="noopener">Falar no WhatsApp</a>':'');
+          box.scrollTop=0;
+          SACOLA=[]; pintarSacola(); pintarTodosBotoes(); iniciarPolling(20000);
+        }
+        const st2=el('pgStatus'); if(st2){st2.className='pgStatus ok';st2.textContent=PD_ROTULO[j.status]||'';}
+        const cb=el('pgCodigo'); if(cb)cb.innerHTML=blocoCodigo(j);
+        /* Segue acompanhando as etapas com a tela aberta; so esquece o pedido
+           quando ele termina. */
+        if(j.status==='entregue'){ esquecerPedido(); if(PD_TIMER){clearInterval(PD_TIMER);PD_TIMER=null;} }
       }
       if(j.status==='recusado'||j.status==='cancelado'||j.status==='estornado'){
         esquecerPedido();
@@ -2813,10 +2894,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(!j.ok){ esquecerPedido(); return; }
     el('pedidoTitulo').textContent='Seu pedido';
     const box=el('corpoPedido');
-    box.innerHTML=passos(3)+'<div class="pgStatus'+(j.status==='pago'||j.status==='entregue'?' ok':'')+'">'+
-      esc(PD_ROTULO[j.status]||'')+'</div>';
+    box.innerHTML=passos(3)+'<div class="pgStatus'+(PD_PAGOS.indexOf(j.status)>=0?' ok':'')+'">'+
+      esc(PD_ROTULO[j.status]||'')+'</div>'+blocoCodigo(j);
     abrirFolha('folhaPedido');
-    if(j.status==='pago'||j.status==='entregue'||j.status==='recusado')esquecerPedido();
+    if(j.status==='entregue'||j.status==='recusado'||j.status==='cancelado'||j.status==='estornado')esquecerPedido();
   };
 
   /* ============ folhas ============ */
