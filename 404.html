@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1305,7 +1305,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-26-pedidos';
+  window.MOVIKI_VERSAO='2026-09-26-a2';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3163,7 +3163,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(!temResumo){
         /* negocio antigo, sem resumo: cai UMA vez no caminho antigo e ja grava
            o resumo. Da proxima visita em diante, nunca mais. */
-        const qs=await getDocs(collection(db,'negocios',uid,'avaliacoes'));
+        /* 25/09/2026 (A2): no maximo 50 leituras por visita. Sem resumo, este caminho
+           rodava em TODA visita e lia todas as avaliacoes (o visitante nao grava o
+           resumo desde a v30; quem grava e o painel do dono, na aba Avaliacoes). */
+        const qs=await getDocs(query(collection(db,'negocios',uid,'avaliacoes'),limit(50)));
         const lista=[];n=0;soma=0;
         qs.forEach(dd=>{const x=dd.data();const r=Number(x.nota||0);if(r>=1&&r<=5){n++;soma+=r;lista.push({nota:r,nome:x.nome,comentario:x.comentario,resposta:x.resposta});}});
         avaliacoesCache=lista.slice(0,20); avEstado='pronto';
