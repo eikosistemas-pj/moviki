@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Modo Live — venda ao vivo pelo celular | Moviki</title>
-<meta name="description" content="Abra a camera do celular, mostre o produto e quem esta assistindo pede ali mesmo. Sem loja, sem estudio e sem app. Modo Live do Moviki, com duas lives no teste gratis, sem cartao.">
+<meta name="description" content="Transmita a sua loja ao vivo pelo celular: mostre o produto de perto, tire as dúvidas na hora e receba o pedido ali mesmo. Sem estúdio e sem app. Duas lives no teste grátis de 30 dias, sem cartão.">
 <link rel="canonical" href="https://www.moviki.com.br/aovivo">
 
 <!-- ===== CSP DESTA PAGINA =====
@@ -22,7 +22,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://www.moviki.com.br/aovivo">
 <meta property="og:title" content="Modo Live — venda ao vivo pelo celular | Moviki">
-<meta property="og:description" content="Voce abre a camera, mostra o produto e quem esta assistindo pede ali mesmo. Sem loja e sem estudio.">
+<meta property="og:description" content="Leve a sua loja até o cliente: mostre o produto ao vivo pelo celular e receba o pedido na hora. Sem estúdio e sem app.">
 <meta property="og:image" content="https://www.moviki.com.br/livehero.jpg">
 <meta property="og:image:secure_url" content="https://www.moviki.com.br/livehero.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -31,7 +31,7 @@
 <meta property="og:image:alt" content="Venda ao vivo pelo celular com o Moviki">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Modo Live — venda ao vivo pelo celular | Moviki">
-<meta name="twitter:description" content="Voce abre a camera, mostra o produto e quem esta assistindo pede ali mesmo. Sem loja e sem estudio.">
+<meta name="twitter:description" content="Leve a sua loja até o cliente: mostre o produto ao vivo pelo celular e receba o pedido na hora. Sem estúdio e sem app.">
 <meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
 
 <link rel="icon" href="favicon512.png">
@@ -319,7 +319,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-21-player2';</script>
+<script>window.MOVIKI_VERSAO='2026-09-26-varejo';</script>
 </head>
 
 <body>
@@ -364,9 +364,41 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 <section class="avHero">
   <div class="avWrap avHeroGrid">
     <div>
-      <span class="avTag"><span class="avPonto"></span> Novo no Moviki &middot; Modo Live</span>
+      <span class="avTag"><span class="avPonto"></span> <span id="avTagRamo">Modo Live &middot; Live shop para lojas</span></span>
       <h1>Seu cliente n&atilde;o compra a foto.<br>Ele compra <em>voc&ecirc; mostrando</em>.</h1>
-      <p class="avLead">Voc&ecirc; abre a c&acirc;mera do celular, mostra o produto na m&atilde;o e quem est&aacute; assistindo pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, pagando por Pix sem sair da transmiss&atilde;o. Sem loja, sem est&uacute;dio, sem app pra instalar.</p>
+      <p class="avLead">Voc&ecirc; abre a c&acirc;mera do celular, mostra o produto na m&atilde;o e quem est&aacute; assistindo pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, pagando por Pix sem sair da transmiss&atilde;o. Sem est&uacute;dio e sem app pra instalar.</p>
+      <p class="avMuted" id="avNotaRamo" hidden style="font-size:13.5px;margin-top:10px"></p>
+      <!-- 26/09/2026 - MENSAGEM POR RAMO: o anuncio "Live por ramo" chega aqui com
+           utm_content = ramo do video. O selo do topo passa a dizer o ramo (a
+           pessoa reconhece o anuncio que clicou). So textContent, nada de HTML
+           vindo da URL. Farmacia ganha o aviso de que medicamento nao entra na
+           live (mvProibido) - melhor saber antes de se cadastrar. -->
+      <script>
+      (function(){
+        try{
+          var r=(new URLSearchParams(location.search).get('utm_content')||'').toLowerCase();
+          if(!r) return;
+          var M=[
+            [/farm|drog/,'Para farm\u00e1cias e drogarias','Dermocosm\u00e9ticos, higiene e beleza ao vivo. Medicamento n\u00e3o pode ser vendido na live (Regras da live).'],
+            [/moda|roupa|boutique|vestu/,'Para lojas de moda',''],
+            [/suplement|fitness|nutri/,'Para lojas de suplementos',''],
+            [/pet/,'Para pet shops',''],
+            [/cosmet|beleza|perfum/,'Para lojas de cosm\u00e9ticos e perfumaria',''],
+            [/bebe|beb\u00ea|infantil|kids/,'Para lojas de beb\u00ea e infantil',''],
+            [/esport|calcad|cal\u00e7ad|tenis/,'Para lojas de cal\u00e7ados e esportes',''],
+            [/otica|\u00f3tica/,'Para \u00f3ticas','']
+          ];
+          for(var i=0;i<M.length;i++){
+            if(M[i][0].test(r)){
+              var tag=document.getElementById('avTagRamo');
+              if(tag) tag.textContent='Modo Live \u00b7 '+M[i][1];
+              if(M[i][2]){ var n=document.getElementById('avNotaRamo'); if(n){ n.textContent=M[i][2]; n.hidden=false; } }
+              break;
+            }
+          }
+        }catch(e){}
+      })();
+      </script>
 
       <div class="avCtas">
         <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_hero">Ativar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
@@ -397,8 +429,8 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 <section class="avSec avSec--alt">
   <div class="avWrap">
     <div class="avCentro">
-      <h2 class="avH2">O produto ficou pronto. <em>E o dia n&atilde;o veio.</em></h2>
-      <p class="avLead">Voc&ecirc; acordou cedo, produziu, arrumou tudo, tirou a foto, postou &mdash; e ficou olhando o celular. A foto n&atilde;o tira d&uacute;vida, n&atilde;o mostra o tamanho, n&atilde;o responde &ldquo;tem de outro sabor?&rdquo; e n&atilde;o fecha venda nenhuma sozinha. Ela s&oacute; espera.</p>
+      <h2 class="avH2">A vitrine est&aacute; pronta. <em>E o cliente n&atilde;o veio.</em></h2>
+      <p class="avLead">Voc&ecirc; arrumou a loja, fotografou a novidade, postou &mdash; e ficou olhando o celular. A foto n&atilde;o tira d&uacute;vida, n&atilde;o mostra o caimento, n&atilde;o responde &ldquo;tem em outra cor?&rdquo; e n&atilde;o fecha venda nenhuma sozinha. Ela s&oacute; espera.</p>
     </div>
 
     <div class="avDuplo">
@@ -517,7 +549,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
       </div>
       <div class="avCard">
         <h3 class="avH3">Estou aqui agora <span class="avSelo">Enterprise</span></h3>
-        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O bot&atilde;o &ldquo;Como chegar&rdquo; dentro da pr&oacute;pria transmiss&atilde;o. Quem se move vende pra quem est&aacute; perto agora.</p>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O bot&atilde;o &ldquo;Como chegar&rdquo; dentro da pr&oacute;pria transmiss&atilde;o. Quem est&aacute; perto recebe o caminho at&eacute; a sua loja.</p>
       </div>
       <div class="avCard">
         <h3 class="avH3">Cupom por tempo assistindo <span class="avSelo">Enterprise</span></h3>
@@ -564,7 +596,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
       </div>
       <div class="avCard">
         <h3>&ldquo;N&atilde;o tenho seguidores.&rdquo;</h3>
-        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">N&atilde;o existe m&iacute;nimo de seguidores no Moviki. A sua live tem um link pr&oacute;prio: d&aacute; pra mandar no grupo da rua, no status, na lista de transmiss&atilde;o e pro cliente que perguntou ontem. Dez pessoas que j&aacute; te conhecem valem mais que mil desconhecidos.</p>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">N&atilde;o existe m&iacute;nimo de seguidores no Moviki. A sua live tem um link pr&oacute;prio: d&aacute; pra mandar no grupo de clientes, no status, na lista de transmiss&atilde;o e pro cliente que perguntou ontem. Dez pessoas que j&aacute; te conhecem valem mais que mil desconhecidos.</p>
       </div>
       <div class="avCard">
         <h3>&ldquo;N&atilde;o sei falar na c&acirc;mera.&rdquo;</h3>
@@ -602,12 +634,14 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
           <tr><td>Selo AO VIVO na p&aacute;gina do neg&oacute;cio</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Agendar live e avisar clientes</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Bot&atilde;o &ldquo;Quero este&rdquo; abrindo seu WhatsApp</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Pedidos com retirada ou entrega, com taxa por bairro</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
           <tr><td><b>Pix dentro da live, na sua conta</b></td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Oferta rel&acirc;mpago com tempo e estoque reais</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Pedidos pagos na hora, avisados no chat</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Cupom por tempo assistindo</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Brinde aos primeiros pedidos</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Fila de quem tocou em &ldquo;Quero&rdquo;</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Impress&atilde;o de pedidos em lote e lista de separa&ccedil;&atilde;o</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>&ldquo;Estou aqui agora&rdquo; com Como chegar</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Dados ao vivo e resumo por produto</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
           <tr><td>Corte de 60 s para Reels e status</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
@@ -676,8 +710,8 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
         <p>A transmiss&atilde;o tenta se reconectar sozinha. Se a live ficar sem sinal por alguns minutos, ela &eacute; considerada encerrada e o selo AO VIVO some da sua p&aacute;gina. Basta entrar ao vivo de novo &mdash; e, no teste gr&aacute;tis, reabrir logo em seguida conta como a mesma live, n&atilde;o gasta a segunda.</p>
       </details>
       <details>
-        <summary>Funciona para quem n&atilde;o tem ponto fixo?</summary>
-        <p>Funciona &mdash; foi feito pensando em quem se move. No Enterprise, o bot&atilde;o &ldquo;Estou aqui agora&rdquo; coloca o &ldquo;Como chegar&rdquo; dentro da pr&oacute;pria transmiss&atilde;o, com a sua localiza&ccedil;&atilde;o daquele momento.</p>
+        <summary>Tenho loja no shopping. Funciona pra mim?</summary>
+        <p>Funciona. Voc&ecirc; chama a sua pr&oacute;pria lista de clientes para a live &mdash; WhatsApp, Instagram, quem j&aacute; comprou &mdash;, mostra a cole&ccedil;&atilde;o de perto e tira a d&uacute;vida de tamanho, cor e uso na hora. O pedido chega pelo seu WhatsApp ou, no Enterprise, pago por Pix dentro da live; o cliente retira na loja ou recebe em casa.</p>
       </details>
       <details>
         <summary>Vender ao vivo garante mais vendas?</summary>
@@ -698,7 +732,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
         <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_final">Come&ccedil;ar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
         <a class="avBtn avBtn--s" href="/comerciantes.html" data-ev="aovivo_conhecer">Conhecer o Moviki inteiro</a>
       </div>
-      <p class="avMuted" style="margin-top:6px">O Modo Live est&aacute; em libera&ccedil;&atilde;o gradual para os neg&oacute;cios cadastrados.</p>
+      <p class="avMuted" style="margin-top:6px">Medicamento, tabaco e os demais itens proibidos nas <a href="/regras-da-live.html">Regras da live</a> n&atilde;o podem ser vendidos ao vivo.</p>
     </div>
   </div>
 </section>
@@ -712,7 +746,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
           <img src="logo.png" alt="Moviki" onerror="this.style.display='none';var t=document.getElementById('brandtxt2');if(t)t.style.display='inline-flex'">
           <span id="brandtxt2" style="display:none">mo<b>viki</b></span>
         </a>
-        <p class="avMuted" style="margin-top:12px;max-width:320px">O Moviki coloca o seu neg&oacute;cio no mapa e, agora, no ar. Para quem tem ponto fixo, para quem se move e para quem atende onde o cliente est&aacute;.</p>
+        <p class="avMuted" style="margin-top:12px;max-width:320px">O Moviki leva a sua loja ao vivo at&eacute; o celular do cliente &mdash; e a p&otilde;e no mapa pra quem est&aacute; perto. Para lojas de shopping, de rua e de bairro.</p>
       </div>
       <div>
         <h4>Produto</h4>
@@ -983,10 +1017,10 @@ function avAbrirVideo(id){
     },
     {
       "@type": "Question",
-      "name": "Funciona para quem não tem ponto fixo?",
+      "name": "Tenho loja no shopping. Funciona pra mim?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Funciona — foi feito pensando em quem se move. No Enterprise, o botão “Estou aqui agora” coloca o “Como chegar” dentro da própria transmissão, com a sua localização daquele momento."
+        "text": "Funciona. Você chama a sua própria lista de clientes para a live — WhatsApp, Instagram, quem já comprou —, mostra a coleção de perto e tira a dúvida de tamanho, cor e uso na hora. O pedido chega pelo seu WhatsApp ou, no Enterprise, pago por Pix dentro da live; o cliente retira na loja ou recebe em casa."
       }
     },
     {
