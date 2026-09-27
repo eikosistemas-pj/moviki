@@ -797,6 +797,34 @@ a{color:inherit}
 .lp-ramos{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:820px;margin:22px auto 0;padding:0;list-style:none}
 .lp-ramos li{font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;
   border:1px solid rgba(0,212,255,.28);background:rgba(0,212,255,.06);color:var(--mv-txt-2,#cfe3ff)}
+
+/* ===== 26/09/2026 - CENTRAL DE PEDIDOS NA VITRINE =====
+   Celular desenhado em CSS com a tela de Pedidos do painel (dados ficticios).
+   Nada de imagem: nao pesa e acompanha o tema. Textos batem com o painel:
+   Separando, Pronto para retirar, Saiu para entrega, Imprimir, Avisar cliente. */
+.pdFone{position:relative;width:100%;max-width:330px;margin-inline:auto;border-radius:34px;padding:10px;
+  background:linear-gradient(160deg,#1d3354,#0a1424);box-shadow:0 30px 60px rgba(0,0,0,.5),0 0 0 1px rgba(0,212,255,.18)}
+.pdTela{border-radius:26px;overflow:hidden;background:#07111f;padding:14px 12px 16px;font-size:12px;color:var(--mv-txt-2);text-align:left}
+.pdTopo{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pdTopo b{font-size:15px;color:var(--mv-txt)}
+.pdTopo span{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,138,0,.16);color:#ffb35c}
+.pdAbas{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.pdAbas i{font-style:normal;font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--mv-surf);color:var(--mv-txt-3)}
+.pdAbas i.on{background:rgba(0,212,255,.14);color:var(--mv-ciano)}
+.pdCard{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:14px;padding:10px 11px;margin-bottom:8px}
+.pdL1{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pdL1 b{color:var(--mv-txt);font-size:12.5px}
+.pdSt{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pdSt--sep{background:rgba(255,176,32,.16);color:#ffc75a}
+.pdSt--pronto{background:rgba(37,227,155,.14);color:var(--mv-ok)}
+.pdSt--saiu{background:rgba(0,212,255,.14);color:var(--mv-ciano)}
+.pdItem{margin:5px 0 2px;color:var(--mv-txt-2)}
+.pdInfo{font-size:10.5px;color:var(--mv-txt-3)}
+.pdBts{display:flex;gap:6px;margin-top:8px}
+.pdBts span{flex:1;text-align:center;font-size:10.5px;font-weight:700;padding:6px 4px;border-radius:9px;background:var(--mv-surf-2);color:var(--mv-txt-2)}
+.pdBts span.pri{background:linear-gradient(135deg,#ff9a2e,#ff7a00);color:#1a0d00}
+.pdBts span.wpp{background:rgba(37,211,102,.14);color:#5ee89a}
+.pdNota{font-size:11.5px;color:var(--mv-txt-3);text-align:center;margin-top:10px}
 </style>
 <style>
 /* Vik no FAQ - 2026-08-28-vikfaq. So a partir de 820px: no celular ele empurraria
@@ -988,7 +1016,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-26-planos';</script>
+<script>window.MOVIKI_VERSAO='2026-09-26-pedidos';</script>
 <script>
 /* Reserva dos icones 3D — 21/09/2026: esta funcao ESTAVA no fim da pagina.
    O onerror de um PNG que falha dispara antes de o fim da pagina ser lido, e
@@ -1041,6 +1069,7 @@ window.lpIco = lpIco;
       <a class="item" href="#aovivo" onclick="lpMenu(false)">Modo Live</a>
       <a class="item" href="#shopping" onclick="lpMenu(false)">Lojas de shopping</a>
       <a class="item" href="#vender" onclick="lpMenu(false)">Catálogo que vende</a>
+      <a class="item" href="#pedidos" onclick="lpMenu(false)">Pedidos e entrega</a>
       <a class="item" href="#recursos" onclick="lpMenu(false)">Recursos</a>
       <a class="item" href="#mapa" onclick="lpMenu(false)">No mapa</a>
       <a class="item" href="#como" onclick="lpMenu(false)">Como funciona</a>
@@ -1172,10 +1201,10 @@ window.lpIco = lpIco;
 
         <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
           <picture>
-            <source srcset="livehero.webp" type="image/webp">
-            <img src="livehero.png" alt="Celular transmitindo ao vivo pelo Moviki: selo AO VIVO, produto com preço fixo na tela, chat dos clientes e confirmação de pagamento por Pix." width="800" height="1421" loading="lazy" decoding="async" style="width:100%;max-width:320px;height:auto;filter:drop-shadow(0 22px 44px rgba(0,0,0,.55))">
+            <source srcset="live-moda.webp" type="image/webp">
+            <img src="live-moda.jpg" alt="Tela de uma live de loja de moda no Moviki: selo AO VIVO, oferta da live com preço, chat dos clientes e botão Comprar com Pix." width="700" height="1273" loading="lazy" decoding="async" style="width:100%;max-width:320px;height:auto;border-radius:22px;box-shadow:0 22px 44px rgba(0,0,0,.55)">
           </picture>
-          <p class="mv-muted" style="font-size:12px;text-align:center;max-width:320px">Ilustração da tela do Moviki — os números são exemplo. Na live de verdade, tudo o que aparece na tela é contado.</p>
+          <p class="mv-muted" style="font-size:12px;text-align:center;max-width:320px">Os números são exemplo. Oferta com contagem e Pix dentro da live são do Enterprise. Na live de verdade, tudo o que aparece na tela é contado.</p>
         </div>
       </div>
 
@@ -1425,6 +1454,54 @@ window.lpIco = lpIco;
     </div>
   </section>
 
+  <!-- ================= PEDIDOS (26/09/2026) =================
+       A objecao de quem vai fazer live: "e depois, como eu dou conta dos
+       pedidos?". A Central de Pedidos entrou no ar em 26/09 e nenhuma pagina
+       mostrava. Divisao por plano conferida no painel: Premium recebe e
+       entrega; impressao em lote e lista de separacao sao do Enterprise. -->
+  <section class="lp-sec" id="pedidos" data-sec="pedidos">
+    <div class="mv-container lp-duplo">
+      <div>
+        <div class="lp-tit lp-tit--esq" style="margin-bottom:6px">
+          <h2>Depois da live, <em>os pedidos organizados</em></h2>
+          <p>Live boa gera pedido — e pedido perdido no meio da conversa vira cliente esperando. No Moviki, cada pedido chega numerado na aba Pedidos, e você acompanha do pagamento até a entrega.</p>
+        </div>
+        <ul class="lp-bul" style="margin:22px 0 22px">
+          <li><img class="ic3d ic3d--p" src="icones-premium/presente.png" alt="" loading="lazy" onerror="lpIco(this,'📦')">Etapas claras: separando, pronto para retirar, saiu para entrega, entregue</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Retirada na loja ou entrega, com a taxa de cada bairro que você definir</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" loading="lazy" onerror="lpIco(this,'💬')">Comanda pra imprimir e “Avisar cliente” com a mensagem pronta no WhatsApp</li>
+          <li><img class="ic3d ic3d--p" src="icones-premium/escudo.png" alt="" loading="lazy" onerror="lpIco(this,'🔒')">Código do pedido pra conferir na retirada e na entrega</li>
+        </ul>
+        <p class="mv-muted" style="font-size:13px;margin:0 0 18px">Pedidos com entrega são dos planos <b>Premium</b> e <b>Enterprise</b>. No Enterprise, todos os pedidos da live saem impressos de uma vez, com a lista do que separar.</p>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_pedidos">Começar grátis</a>
+      </div>
+
+      <div aria-hidden="true">
+        <div class="pdFone"><div class="pdTela">
+          <div class="pdTopo"><b>Pedidos</b><span>3 novos</span></div>
+          <div class="pdAbas"><i class="on">Todos</i><i>Pagos</i><i>Separando</i><i>Entrega</i></div>
+          <div class="pdCard">
+            <div class="pdL1"><b>#0042 · Juliana</b><span class="pdSt pdSt--sep">Separando</span></div>
+            <div class="pdItem">1× Blusa floral manga curta (M)</div>
+            <div class="pdInfo">Entrega · Centro · taxa R$ 7,00 · Pix pago</div>
+            <div class="pdBts"><span class="pri">Pronto</span><span>Imprimir</span><span class="wpp">Avisar cliente</span></div>
+          </div>
+          <div class="pdCard">
+            <div class="pdL1"><b>#0041 · Rafael</b><span class="pdSt pdSt--pronto">Pronto para retirar</span></div>
+            <div class="pdItem">1× Tênis de corrida azul (42)</div>
+            <div class="pdInfo">Retirada na loja · Pix pago</div>
+          </div>
+          <div class="pdCard">
+            <div class="pdL1"><b>#0040 · Ana</b><span class="pdSt pdSt--saiu">Saiu para entrega</span></div>
+            <div class="pdItem">2× Body de algodão verde-água</div>
+            <div class="pdInfo">Entrega · Jardim América · taxa R$ 9,00</div>
+          </div>
+        </div></div>
+        <p class="pdNota">Ilustração da aba Pedidos — loja e clientes fictícios.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= RECURSOS ================= -->
   <section class="lp-sec lp-sec--faixa" id="recursos" data-sec="recursos">
     <div class="mv-container">
@@ -1497,7 +1574,7 @@ window.lpIco = lpIco;
               </div>
 
               <div class="fn-corpo">
-                <div class="fn-ola">Olá, amigo(a)! 👋<small>Aqui está o resumo do seu negócio hoje.</small></div>
+                <div class="fn-ola">Olá, Aurora Moda! 👋<small>Aqui está o resumo da sua loja hoje.</small></div>
 
                 <div class="fn-card">
                   <div class="fn-cardT"><b>Sua loja no mapa</b><span class="fn-sel"><i></i>Visível</span></div>
@@ -1514,7 +1591,7 @@ window.lpIco = lpIco;
                     <span class="fn-mapa__tag">📍 Você está no mapa</span>
                   </div>
                   <div class="fn-status">
-                    <span class="fn-statusL">Seu negócio está agora:</span>
+                    <span class="fn-statusL">Sua loja está agora:</span>
                     <div class="fn-tog"><span class="on"><i></i>Aberto</span><span><i></i>Fechado</span></div>
                   </div>
                   <div class="fn-cta"><img src="icones-premium/link.png" alt="" loading="lazy" onerror="lpIco(this,'🌐')">Ver minha página</div>
@@ -1522,10 +1599,10 @@ window.lpIco = lpIco;
 
                 <div class="fn-rot">Ferramentas</div>
                 <div class="fn-grade">
-                  <div class="fn-cel"><img src="icones-premium/loja.png" alt="" loading="lazy" onerror="lpIco(this,'👤')">Perfil</div>
+                  <div class="fn-cel"><img src="icones-premium/live.png" alt="" loading="lazy" onerror="lpIco(this,'🔴')">Fazer live</div>
+                  <div class="fn-cel"><img src="icones-premium/presente.png" alt="" loading="lazy" onerror="lpIco(this,'📦')">Pedidos</div>
                   <div class="fn-cel"><img src="icones-premium/cardapio.png" alt="" loading="lazy" onerror="lpIco(this,'🛍️')">Catálogo</div>
                   <div class="fn-cel"><img src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🔥')">Promoções</div>
-                  <div class="fn-cel"><img src="icones-premium/eventos.png" alt="" loading="lazy" onerror="lpIco(this,'📅')">Eventos</div>
                   <div class="fn-cel"><img src="icones-premium/galeria.png" alt="" loading="lazy" onerror="lpIco(this,'📸')">Fotos</div>
                   <div class="fn-cel"><img src="icones-premium/localizacao.png" alt="" loading="lazy" onerror="lpIco(this,'📍')">Localização</div>
                 </div>
