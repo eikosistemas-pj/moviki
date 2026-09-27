@@ -988,7 +988,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-26-home-varejo';</script>
+<script>window.MOVIKI_VERSAO='2026-09-26-planos';</script>
 <script>
 /* Reserva dos icones 3D — 21/09/2026: esta funcao ESTAVA no fim da pagina.
    O onerror de um PNG que falha dispara antes de o fim da pagina ser lido, e
@@ -1773,21 +1773,26 @@ window.lpIco = lpIco;
           <ul><li>Localização ao vivo no mapa</li><li>Seu link personalizado</li><li>Status aberto/fechado e recado</li></ul>
           <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br" data-ev="cta_plano_basico">Começar grátis</a>
         </div>
-        <div class="lp-plano lp-plano--destaque">
-          <span class="lp-plano__selo">Mais escolhido</span>
+        <!-- 26/09/2026 - PLANOS: o selo "Mais escolhido" saiu. Sem lojista pagante
+             real, era afirmacao falsa (CDC art. 37; politica de anuncio da Meta e
+             do Google). O destaque foi para o Premium, que e o plano do Modo Live
+             que a home vende; o selo descreve o plano, nao a popularidade. -->
+        <div class="lp-plano">
           <h3>Pró</h3><p class="desc">Catálogo, promoções e eventos.</p>
           <div class="preco" data-mensal="R$ 39,90" data-anual="R$ 399">R$ 39,90</div>
           <div class="ciclo"><span data-ciclo-mensal>/mês · 30 dias grátis pra testar</span><span data-ciclo-anual hidden>/ano · 2 meses grátis</span></div>
           <ul><li>Tudo do Básico</li><li>Catálogo com categorias e preços</li><li>Promoções e eventos</li><li>Aviso de “acabando”</li></ul>
           <p class="mv-muted" style="margin:0 0 14px;font-size:12.5px">Modo Live e venda por Pix entram a partir do Premium.</p>
-          <a class="mv-btn mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_plano_pro">Testar 30 dias grátis</a>
+          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br" data-ev="cta_plano_pro">Testar 30 dias grátis</a>
         </div>
-        <div class="lp-plano">
+        <div class="lp-plano lp-plano--destaque">
+          <span class="lp-plano__selo">Para vender ao vivo</span>
           <h3>Premium</h3><p class="desc">Pra quem vai vender pela tela.</p>
           <div class="preco" data-mensal="R$ 69,90" data-anual="R$ 699">R$ 69,90</div>
           <div class="ciclo"><span data-ciclo-mensal>/mês</span><span data-ciclo-anual hidden>/ano · 2 meses grátis</span></div>
-          <ul><li>Tudo do Pró</li><li><b>Modo Live: transmita e venda ao vivo</b></li><li><b>Catálogo que vende, com Pix na sua conta</b></li><li>Sua logo como pino no mapa</li><li>Galeria de fotos e cor da marca</li><li>Relatórios</li></ul>
-          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br" data-ev="cta_plano_premium">Assinar Premium</a>
+          <ul><li>Tudo do Pró</li><li><b>Modo Live: transmita e venda ao vivo</b></li><li>Live de até 1 h, sacolinha de 5 produtos e até 30 pessoas assistindo</li><li><b>Catálogo que vende, com Pix na sua conta</b></li><li>Pedidos com retirada ou entrega, com taxa por bairro</li><li>Sua logo como pino no mapa</li><li>Galeria de fotos e cor da marca</li><li>Relatórios</li></ul>
+          <p class="mv-muted" style="margin:0 0 14px;font-size:12.5px">No teste grátis de 30 dias o Modo Live já vem liberado: 2 lives de até 1 hora, sem cartão.</p>
+          <a class="mv-btn mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_plano_premium">Começar grátis com a live</a>
         </div>
         <div class="lp-plano">
           <h3>Enterprise</h3><p class="desc">Pra quem vende em volume ou tem mais de uma loja.</p>
@@ -1798,7 +1803,7 @@ window.lpIco = lpIco;
                "R$ 399/ano" e "R$ 699/ano" - e o plano de maior ticket parecia o mais caro
                dos tres por uma margem absurda. Aqui a ausencia e dita, e como vantagem. -->
           <div class="ciclo"><span data-ciclo-mensal>/mês · até 3 unidades</span><span data-ciclo-anual hidden>/mês · até 3 unidades</span></div>
-          <ul><li>Tudo do Premium</li><li><b>Pix dentro da própria live</b></li><li>Live de até 3 h e sacolinha de 20 produtos</li><li>Várias unidades no mapa</li><li>Relatório consolidado</li><li>Marca própria na página pública</li></ul>
+          <ul><li>Tudo do Premium</li><li><b>Pix dentro da própria live</b></li><li>Live de até 3 h, sacolinha de 20 produtos e até 100 pessoas assistindo</li><li>Impressão de pedidos em lote e lista de separação</li><li>Várias unidades no mapa</li><li>Relatório consolidado</li><li>Marca própria na página pública</li></ul>
           <p class="mv-muted" data-ciclo-anual hidden style="margin:0 0 14px;font-size:12.5px">O Enterprise é sempre mensal: você paga mês a mês e cancela quando quiser, sem 12 meses de fidelidade.</p>
           <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="/enterprise.html" data-ev="cta_plano_enterprise">Conhecer o Enterprise</a>
         </div>
