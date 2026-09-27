@@ -39,6 +39,16 @@
  *    moviki.com.br/?medicao=escolher reabre a barra (link na politica).
  *    Nao aparece no painel do dono nem nas telas de live.
  *
+ * 26/09/2026 (versao medicao4) — O GOOGLE ADS PASSA A VER O CADASTRO:
+ *  - Causa de 16+ dias com 0 conversao no Google Ads: ad_user_data 'denied'.
+ *    Com ele negado, o GA4 registra o sign_up mas NAO repassa ao Google Ads
+ *    (a acao "Inscricao" ficava eternamente em "Conversoes pendentes").
+ *  - Agora ad_user_data acompanha a escolha de medicao: 'granted' por padrao,
+ *    'denied' com "Nao medir". ad_storage e ad_personalization CONTINUAM
+ *    'denied': nenhum cookie de publicidade, nenhuma personalizacao. O que
+ *    sai e so o aviso de conversao da campanha, com o gclid do url_passthrough.
+ *  - Autorizado pelo Paulo em 26/09/2026. privacidade.html ajustada junto.
+ *
  * 25/09/2026 (versao medicao3) — "NAO MEDIR" NAO CARREGA NADA DO GOOGLE:
  *  - Com mv_medicao=nao o gtag.js nem e baixado (antes baixava e so ficava
  *    com analytics_storage negado, o que ainda manda sinal sem cookie).
@@ -258,11 +268,12 @@
   var MV_MED = 'mv_medicao';
   var semMedicao = lerLocal(MV_MED) === 'nao';
 
-  // Consentimento: analytics SIM (salvo recusa), anuncio NAO. Desliga sinais
-  // de publicidade de proposito (base legal do site e so medir o proprio funil).
+  // Consentimento: analytics SIM (salvo recusa); cookie e personalizacao de
+  // anuncio NAO. ad_user_data segue a escolha de medicao (medicao4, 26/09):
+  // sem ele o GA4 nao repassa a conversao ao Google Ads.
   gtag('consent', 'default', {
     ad_storage: 'denied',
-    ad_user_data: 'denied',
+    ad_user_data: semMedicao ? 'denied' : 'granted',
     ad_personalization: 'denied',
     analytics_storage: semMedicao ? 'denied' : 'granted',
     functionality_storage: 'granted',
@@ -363,11 +374,11 @@
         b.appendChild(t);
         b.appendChild(botao('N\u00e3o medir', false, function () {
           gravarLocal(MV_MED, 'nao');
-          try { gtag('consent', 'update', { analytics_storage: 'denied' }); } catch (e) {}
+          try { gtag('consent', 'update', { analytics_storage: 'denied', ad_user_data: 'denied' }); } catch (e) {}
         }));
         b.appendChild(botao('Ok', true, function () {
           gravarLocal(MV_MED, 'sim');
-          try { gtag('consent', 'update', { analytics_storage: 'granted' }); } catch (e) {}
+          try { gtag('consent', 'update', { analytics_storage: 'granted', ad_user_data: 'granted' }); } catch (e) {}
           carregarGtag();
         }));
         document.body.appendChild(b);
