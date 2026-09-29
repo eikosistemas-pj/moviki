@@ -319,7 +319,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-26-ramofoto';</script>
+<script>window.MOVIKI_VERSAO='2026-09-29-ramos2';</script>
 </head>
 
 <body>
@@ -338,7 +338,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
     </nav>
     <div class="avNavCta">
       <a class="avEntrar" href="https://app.moviki.com.br">Entrar</a>
-      <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_header">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_header">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
     </div>
     <button class="avBurger" type="button" aria-label="Abrir menu" aria-expanded="false" onclick="avMenu(true)">&#9776;</button>
   </div>
@@ -356,7 +356,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
     <a class="item" href="#duvidas" onclick="avMenu(false)">D&uacute;vidas</a>
     <a class="item" href="/comerciantes.html" onclick="avMenu(false)">O Moviki para o seu neg&oacute;cio</a>
     <a class="item" href="https://app.moviki.com.br">Entrar</a>
-    <a class="avBtn avBtn--p" style="margin-top:10px" href="https://app.moviki.com.br" data-ev="aovivo_menu">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+    <a class="avBtn avBtn--p" style="margin-top:10px" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_menu">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
   </div>
 </div>
 
@@ -365,44 +365,136 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
   <div class="avWrap avHeroGrid">
     <div>
       <span class="avTag"><span class="avPonto"></span> <span id="avTagRamo">Modo Live &middot; Live shop para lojas</span></span>
-      <h1>Seu cliente n&atilde;o compra a foto.<br>Ele compra <em>voc&ecirc; mostrando</em>.</h1>
-      <p class="avLead">Voc&ecirc; abre a c&acirc;mera do celular, mostra o produto na m&atilde;o e quem est&aacute; assistindo pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, pagando por Pix sem sair da transmiss&atilde;o. Sem est&uacute;dio e sem app pra instalar.</p>
+      <h1 id="avH1">Seu cliente n&atilde;o compra a foto.<br>Ele compra <em>voc&ecirc; mostrando</em>.</h1>
+      <p class="avLead" id="avLeadRamo">Voc&ecirc; abre a c&acirc;mera do celular, mostra o produto na m&atilde;o e quem est&aacute; assistindo pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, pagando por Pix sem sair da transmiss&atilde;o. Sem est&uacute;dio e sem app pra instalar.</p>
       <p class="avMuted" id="avNotaRamo" hidden style="font-size:13.5px;margin-top:10px"></p>
-      <!-- 26/09/2026 - MENSAGEM POR RAMO: o anuncio "Live por ramo" chega aqui com
-           utm_content = ramo do video. O selo do topo passa a dizer o ramo (a
-           pessoa reconhece o anuncio que clicou). So textContent, nada de HTML
-           vindo da URL. Farmacia ganha o aviso de que medicamento nao entra na
-           live (mvProibido) - melhor saber antes de se cadastrar. -->
+      <!-- 29/09/2026 - PAGINA POR RAMO (substitui o bloco de 26/09).
+           O anuncio chega com utm_content (ou ramo=) = ramo do video. Cada ramo
+           tem selo, titulo, texto e a tela da live do MESMO video do anuncio.
+           Casamento por PALAVRA do utm_content (shopping-pet -> pet), nunca por
+           pedaco solto: /pet/ casava com "tapete" e "infantil" mandava brinquedos
+           para a tela de bebe. Ordem importa: o mais especifico vem primeiro.
+           So textContent/createTextNode: nada vindo da URL vira HTML.
+           TESTE DOS 7 DIAS: os ramos que ja rodam no Meta (t:1) so trocam titulo e
+           texto a partir de 03/10 00h (janela do dia 7). Ate la, igual ao que
+           estava no ar: selo, foto e aviso da farmacia. -->
       <script>
       (function(){
         try{
-          var r=(new URLSearchParams(location.search).get('utm_content')||'').toLowerCase();
+          var q=new URLSearchParams(location.search);
+          var r=(q.get('ramo')||q.get('utm_content')||'').toLowerCase().slice(0,80);
           if(!r) return;
+          try{ r=r.normalize('NFD').replace(/[̀-ͯ]/g,''); }catch(_){}
+          var P=r.split(/[^a-z0-9]+/);
+          var W=' Quem assiste pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, por Pix sem sair da transmissão.';
+          /* k=chave/foto, a=palavras, s=selo, h=[titulo linha 1, antes do destaque, destaque, depois],
+             l=texto, n=aviso, t=1 ramo em teste no Meta, f=0 sem foto propria */
           var M=[
-            [/farm|drog/,'farmacia','Para farm\u00e1cias e drogarias','Dermocosm\u00e9ticos, higiene e beleza ao vivo. Medicamento n\u00e3o pode ser vendido na live (Regras da live).'],
-            [/moda|roupa|boutique|vestu/,'moda','Para lojas de moda',''],
-            [/suplement|fitness|nutri/,'suplementos','Para lojas de suplementos',''],
-            [/pet/,'pet','Para pet shops',''],
-            [/cosmet|beleza|perfum/,'cosmeticos','Para lojas de cosm\u00e9ticos e perfumaria',''],
-            [/bebe|beb\u00ea|infantil|kids/,'bebe','Para lojas de beb\u00ea e infantil',''],
-            [/esport|calcad|cal\u00e7ad|tenis/,'esportes','Para lojas de cal\u00e7ados e esportes',''],
-            [/otica|\u00f3tica/,'','Para \u00f3ticas','']
+            {k:'farmacia',a:['farm','drog'],s:'Para farmácias e drogarias',t:1,
+             h:['A rede grande abriu na esquina.','Seu cliente de sempre ','volta pela live','.'],
+             l:'Mostre o protetor solar de perto, responda “serve pra pele oleosa?” no chat e lance a oferta.',
+             n:'Dermocosméticos, higiene e beleza ao vivo. Medicamento não pode ser vendido na live (Regras da live).'},
+            {k:'perfumaria',a:['perfum'],s:'Para perfumarias',
+             h:['Perfume não tem cheiro na foto.','Ele tem ','a sua voz, ao vivo','.'],
+             l:'Descreva as notas de cada fragrância, mostre o frasco de perto, monte o kit presente com a cliente no chat e lance a oferta.'},
+            {k:'cosmeticos',a:['cosmet','beleza','maquiag'],s:'Para lojas de cosméticos e perfumaria',t:1,
+             h:['Sua cliente já assiste live de maquiagem.','Que seja ','a da sua loja','.'],
+             l:'Mostre a cor na pele, responda “tem tom mais escuro?” no chat e lance a oferta.'},
+            {k:'boutique',a:['boutique'],s:'Para boutiques de bairro',
+             h:['Arara cheia de peça nova e a rua vazia.','Suas clientes ','estão no celular','.'],
+             l:'Mostre a peça de perto, responda “tem no M?” e “qual o comprimento?” no chat e lance a oferta.'},
+            {k:'brecho',a:['brecho'],s:'Para brechós',
+             h:['Peça única na arara.','Mostre ao vivo e ','quem pagar primeiro leva','.'],
+             l:'Mostre a peça no corpo, conte a história dela, tire a dúvida de tamanho no chat e avise que é peça única.'},
+            {k:'moda-masculina',a:['masculin'],s:'Para lojas de moda masculina',
+             h:['Camisa boa na arara e a loja sem movimento.','Seu cliente de sempre ','est\u00e1 no celular','.'],
+             l:'Mostre o caimento da camisa, tire a d\u00favida do tamanho no chat e lance a oferta.'},
+            {k:'moda',a:['moda','roupa','vestu'],s:'Para lojas de moda',t:1,
+             h:['O corredor anda vazio no meio da semana.','Sua cliente está ','no celular, no sofá','.'],
+             l:'Mostre a peça, responda tamanho e caimento no chat e deixe o produto em destaque na tela.'},
+            {k:'suplementos',a:['suplement','fitness','nutri','whey'],s:'Para lojas de suplementos',t:1,
+             h:['Seu cliente compara sabor e preço no celular.','Mostre ','o pote ao vivo','.'],
+             l:'Mostre o pote de perto, responda “tem sabor chocolate?” e “tem sem lactose?” no chat e lance a oferta.',
+             n:'Anabolizante e emagrecedor não podem ser vendidos na live (Regras da live).'},
+            {k:'pet',a:['pet'],s:'Para pet shops',t:1,
+             h:['O tutor está no sofá, com o pet no colo.','Mostre ','a roupinha ao vivo','.'],
+             l:'Mostre a roupinha no pet, responda “tem no P?” e “serve em gato?” no chat e lance a oferta.'},
+            {k:'brinquedos',a:['brinq'],s:'Para lojas de brinquedos',
+             h:['Brinquedo parado na prateleira.','Mostre ele ','funcionando, ao vivo','.'],
+             l:'Mostre o brinquedo funcionando, responda “serve pra qual idade?” e “faz embrulho?” no chat e lance a oferta para quem vai dar o presente.'},
+            {k:'bebe',a:['bebe','infantil','kids'],s:'Para lojas de bebê e infantil',
+             h:['Quem monta o enxoval pesquisa pelo celular.','Mostre ','o tecido ao vivo','.'],
+             l:'Mostre o body de pertinho, responda “tem RN?” e “é 100% algodão?” no chat e lance a oferta.'},
+            {k:'calcados',a:['calcad','sapat'],s:'Para lojas de calçados',
+             h:['Chegou a numeração que faltava.','Avise ','ao vivo','.'],
+             l:'Mostre a sola, calçe no pé, confirme a numeração e a forma no chat e lance a oferta.'},
+            {k:'esportes',a:['esport','tenis'],s:'Para lojas de calçados e esportes',
+             h:['Tênis parado na vitrine.','Seu cliente está ','procurando no celular','.'],
+             l:'Mostre o tênis de perto, tire a dúvida de numeração no chat e lance a oferta.'},
+            {k:'acai',a:['acai','lanch','sorvet'],s:'Para açaí e lanchonetes',
+             h:['O aplicativo leva uma fatia de cada pedido.','Venda ','direto, ao vivo','.'],
+             l:'Mostre o copo sendo montado, responda “tem paçoca?” e “entrega no meu bairro?” no chat e lance a oferta. Quem preferir retira no balcão.'},
+            {k:'confeitaria',a:['confeit','doceria','bolo'],s:'Para confeitarias',
+             h:['O bolo mais bonito do bairro.','Mostre ','a fatia ao vivo','.'],
+             l:'Corte a fatia ao vivo, mostre o recheio, combine a encomenda com a data no chat e lance a oferta.'},
+            {k:'acessorios-celular',a:['acessorio','celular','capinha'],s:'Para lojas de acessórios de celular',
+             h:['Ele vê a capinha no balcão e compra pela internet.','Venda ','antes, ao vivo','.'],
+             l:'Mostre a capinha de pertinho, teste o fone ao vivo, responda “tem pro meu modelo?” no chat e lance a oferta.'},
+            {k:'bijuteria',a:['bijut','semijoia'],s:'Para lojas de bijuteria e semijoias',
+             h:['Ninguém entra pra ver o brilho de perto.','Leve ','o brilho até ela','.'],
+             l:'Mostre o brilho da peça de pertinho, monte o conjunto com a cliente no chat e lance a oferta.'},
+            {k:'autopecas',a:['autopeca','autopecas','motopeca','pecas'],s:'Para lojas de autopeças',
+             h:['Três ligações pra saber se tem a peça.','Mostre ','na mão, ao vivo','.'],
+             l:'Mostre a peça na mão, confirme no chat se serve no carro do cliente, separe para retirada e lance a oferta.'},
+            {k:'naturais',a:['natura','granel','emporio'],s:'Para empórios de produtos naturais',
+             h:['Chegou novidade no granel.','Conte ','ao bairro inteiro, ao vivo','.'],
+             l:'Pese na hora, mostre o chá e a castanha de perto, responda no chat quanto a cliente quer levar e lance a oferta.',
+             n:'Medicamento e emagrecedor não podem ser vendidos na live (Regras da live).'},
+            {k:'utilidades',a:['utilid','cozinh'],s:'Para lojas de utilidades',
+             h:['Panela boa na prateleira do fundo.','Traga ela ','para a frente, ao vivo','.'],
+             l:'Mostre a tampa, o pote e a garrafa térmica em uso, tire a dúvida no chat e lance a oferta.'},
+            {k:'cama-mesa-banho',a:['cama','banho','lencol'],s:'Para lojas de cama, mesa e banho',
+             h:['O toque do lençol não passa na foto.','Mostre ','o tecido de perto, ao vivo','.'],
+             l:'Mostre o tecido de perto, confirme a medida no chat, apresente o jogo completo e lance a oferta.'},
+            {k:'otica',a:['otica'],s:'Para óticas',f:0}
           ];
-          for(var i=0;i<M.length;i++){
-            if(M[i][0].test(r)){
-              var tag=document.getElementById('avTagRamo');
-              window.avRamoFoto=M[i][1];
-              if(tag) tag.textContent='Modo Live \u00b7 '+M[i][2];
-              if(M[i][3]){ var n=document.getElementById('avNotaRamo'); if(n){ n.textContent=M[i][3]; n.hidden=false; } }
-              break;
+          var achou=null;
+          for(var i=0;i<M.length && !achou;i++){
+            for(var w=0;w<P.length && !achou;w++){
+              if(!P[w]) continue;
+              for(var z=0;z<M[i].a.length;z++){ if(P[w].indexOf(M[i].a[z])===0){ achou=M[i]; break; } }
             }
           }
-        }catch(e){}
+          if(!achou) return;
+          var e=achou;
+          window.avRamo=e.k;
+          if(e.f!==0) window.avRamoFoto=e.k;
+          var tag=document.getElementById('avTagRamo');
+          if(tag) tag.textContent='Modo Live · '+e.s;
+          var antes=(e.t===1 && Date.now()<Date.parse('2026-10-03T00:00:00-03:00'));
+          if(e.h && !antes){
+            var h1=document.getElementById('avH1');
+            if(h1){
+              h1.textContent='';
+              h1.appendChild(document.createTextNode(e.h[0]));
+              h1.appendChild(document.createElement('br'));
+              h1.appendChild(document.createTextNode(e.h[1]));
+              var em=document.createElement('em'); em.textContent=e.h[2]; h1.appendChild(em);
+              h1.appendChild(document.createTextNode(e.h[3]));
+            }
+            var ld=document.getElementById('avLeadRamo');
+            if(ld && e.l) ld.textContent=e.l+W;
+            try{ document.title='Live '+e.s.charAt(0).toLowerCase()+e.s.slice(1)+' | Moviki'; }catch(_){}
+          }
+          var nt=e.n;
+          if(e.t===1 && antes && e.k!=='farmacia') nt='';
+          if(nt){ var n=document.getElementById('avNotaRamo'); if(n){ n.textContent=nt; n.hidden=false; } }
+        }catch(err){}
       })();
       </script>
 
       <div class="avCtas">
-        <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_hero">Ativar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_hero">Ativar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
         <a class="avBtn avBtn--s" href="#filme" data-ev="aovivo_hero_video">Ver funcionando</a>
       </div>
       <span class="avProva"><b>30 dias</b>&nbsp;gr&aacute;tis, sem cart&atilde;o, com duas lives para testar.</span>
@@ -417,8 +509,10 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
     </div>
 
     <div class="avFoto">
-      <!-- 26/09/2026 - FOTO POR RAMO: a tela da live e a mesma cena do video do
-           anuncio que a pessoa clicou (utm_content). Sem ramo, fica a de moda.
+      <!-- 29/09/2026 - FOTO POR RAMO: a tela da live e a mesma cena do video do
+           anuncio que a pessoa clicou. Os 7 ramos de 26/09 usam a tela cheia
+           (700x1273); os 13 de 29/09 usam o quadro do proprio video, com a frase
+           da cena e o selo "Cena ilustrativa" (700x739). Sem ramo, fica a de moda.
            Troca feita logo abaixo do <picture>, antes de a imagem pintar. -->
       <picture>
         <source id="avFotoSrc" srcset="live-moda.webp" type="image/webp">
@@ -428,10 +522,19 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
       (function(){
         try{
           var r=window.avRamoFoto;
-          if(!r || !/^(farmacia|moda|suplementos|pet|cosmeticos|bebe|esportes)$/.test(r) || r==='moda') return;
+          if(!r || r==='moda') return;
+          var CHEIA={farmacia:1,suplementos:1,pet:1,cosmeticos:1,bebe:1,esportes:1};
+          var QUADRO={'moda-masculina':1,boutique:1,brecho:1,perfumaria:1,brinquedos:1,calcados:1,acai:1,confeitaria:1,'acessorios-celular':1,bijuteria:1,autopecas:1,naturais:1,utilidades:1,'cama-mesa-banho':1};
+          if(!CHEIA[r] && !QUADRO[r]) return;
           var s=document.getElementById('avFotoSrc'), i=document.getElementById('avFotoImg');
+          if(QUADRO[r] && i){ i.setAttribute('height','739'); i.style.height='auto'; i.style.objectFit='contain'; }
           if(s) s.srcset='live-'+r+'.webp';
-          if(i) i.src='live-'+r+'.jpg';
+          if(i){
+            i.src='live-'+r+'.jpg';
+            var tag=document.getElementById('avTagRamo');
+            var nome=tag ? tag.textContent.replace(/^.*·\s*Para\s+/,'') : '';
+            if(nome) i.alt='Tela de uma live no Moviki para '+nome+': chat dos clientes e produto em destaque com preço. Cena ilustrativa, loja fictícia.';
+          }
         }catch(e){}
       })();
       </script>
@@ -590,7 +693,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
       <p class="avLead" style="max-width:780px">Aqui ningu&eacute;m vai te prometer plateia pronta. O Moviki entrega o lugar onde a venda acontece: a transmiss&atilde;o, a vitrine na tela, o chat e o pagamento. Chamar a sua gente &mdash; o grupo do WhatsApp, o status, o Instagram, os clientes que j&aacute; te conhecem &mdash; continua sendo com voc&ecirc;.</p>
       <p class="avLead" style="max-width:780px;margin-top:14px">E &eacute; por isso que o teste gr&aacute;tis vem com a <b>Academia Moviki</b>: as aulas ensinam justamente isso &mdash; como avisar, como abrir a live com poucas pessoas na sala e como conduzir at&eacute; a primeira venda.</p>
       <div class="avCtas" style="margin-bottom:0">
-        <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_palco">Come&ccedil;ar com a Academia inclusa &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_palco">Come&ccedil;ar com a Academia inclusa &nbsp;&rarr;</a>
       </div>
     </div>
   </div>
@@ -667,7 +770,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
     <p class="avMuted" style="margin-top:14px">Durante os 30 dias gr&aacute;tis voc&ecirc; faz <b>duas lives</b> de at&eacute; 60 minutos, para experimentar. Assinando, n&atilde;o h&aacute; limite de quantidade de lives: o que conta &eacute; o pacote de minutos de v&iacute;deo do m&ecirc;s (3.000 no Premium, 10.000 no Enterprise). O Pix dentro da live &eacute; recurso Enterprise.</p>
 
     <div class="avCtas">
-      <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_planos">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_planos">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
       <a class="avBtn avBtn--s" href="/premium.html" data-ev="aovivo_ver_premium">Ver o Premium</a>
       <a class="avBtn avBtn--s" href="/enterprise.html" data-ev="aovivo_ver_enterprise">Ver o Enterprise</a>
     </div>
@@ -744,7 +847,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
       <h2 style="margin-top:16px">Amanh&atilde; voc&ecirc; vai produzir de novo.<br>A diferen&ccedil;a &eacute; <em style="font-style:normal;color:var(--mv-ciano)">quem vai ver</em>.</h2>
       <p class="avLead" style="max-width:640px;margin-inline:auto">Ative o teste de 30 dias, monte a sacolinha da sua primeira live e abra a c&acirc;mera. Sem cart&atilde;o, sem fidelidade e sem instalar nada.</p>
       <div class="avCtas">
-        <a class="avBtn avBtn--p" href="https://app.moviki.com.br" data-ev="aovivo_final">Come&ccedil;ar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_final">Come&ccedil;ar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
         <a class="avBtn avBtn--s" href="/comerciantes.html" data-ev="aovivo_conhecer">Conhecer o Moviki inteiro</a>
       </div>
       <p class="avMuted" style="margin-top:6px">Medicamento, tabaco e os demais itens proibidos nas <a href="/regras-da-live.html">Regras da live</a> n&atilde;o podem ser vendidos ao vivo.</p>
@@ -975,7 +1078,7 @@ function avAbrirVideo(id){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
     if (!a) return;
-    try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'aovivo' }); } catch(err){}
+    try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'aovivo', ramo: window.avRamo || 'generico' }); } catch(err){}
   }, true);
   /* Veio de um link de parceiro (/p/apelido)? Registra a origem uma vez. */
   try {
