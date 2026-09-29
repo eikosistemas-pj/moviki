@@ -2,6 +2,7 @@
  * mvmotion.js - sistema unico de MOVIMENTO e LAZY LOADING do Moviki.
  * IDENTICO nos repos moviki e moviki-app. Servido do proprio dominio.
  * Marca de versao: digitar  mvMotion.versao  no console do navegador.
+ * 28/09/2026 (motion2): no topo, o carregador do mvguarda.js (Guarda anticlonagem).
  *
  * Como chega nas paginas:
  *  - Toda pagina que carrega o mvmetrica.js recebe este arquivo sozinha
@@ -26,13 +27,33 @@
  * Pagina ou trecho que nao deve se mexer: atributo data-mv-sem-motion.
  * Forcar modo numa pagina: <html data-mv-motion="painel|pagina|off">.
  */
+/* ------------------------------------------------------------------ */
+/* GUARDA ANTICLONAGEM (28/09/2026) - carrega o mvguarda.js nos paineis */
+/* logados de app.moviki.com.br. Fica FORA do motor de movimento de     */
+/* proposito: ?motion=0 e MV_MOTION_LIGADO nao desligam a seguranca.    */
+/* O arquivo mvguarda.js so existe no repo moviki-app. No site (www)    */
+/* este bloco nao faz nada. Chave-mestra: painel guarda.html.           */
+/* ------------------------------------------------------------------ */
+(function () {
+  try {
+    if (!/^app\.moviki\.com\.br$/i.test(String(location.hostname || ''))) return;
+    if (/^\/(eikoadm01|guarda)(\.html)?\/?$/i.test(String(location.pathname || ''))) return;
+    if (window.__mvGuardaInjetado) return;
+    window.__mvGuardaInjetado = true;
+    var s = document.createElement('script');
+    s.src = '/mvguarda.js';
+    s.defer = true;
+    (document.head || document.documentElement).appendChild(s);
+  } catch (e) {}
+})();
+
 (function () {
   'use strict';
 
   // >>> CHAVE-MESTRA. false = desliga todo o movimento deste arquivo. <<<
   var MV_MOTION_LIGADO = true;
 
-  var VERSAO = '2026-09-23-motion1';
+  var VERSAO = '2026-09-28-motion2'; // motion2 = + carregador da Guarda anticlonagem
   var W = window, D = document, H = D.documentElement;
   if (W.mvMotion) return;
 
