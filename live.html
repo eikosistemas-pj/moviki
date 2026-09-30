@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-26-pedidos (entrega por bairro com taxa, CEP, numero e codigo do pedido) -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
+<!-- anterior: 2026-09-26-pedidos (entrega por bairro com taxa, CEP, numero e codigo do pedido) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
@@ -86,14 +87,20 @@ svg{display:block}
 #faixaBrinde svg{width:16px;height:16px;color:#ffd76a;flex:0 0 16px}
 
 /* ---------- lateral direita ---------- */
-#lateral{right:10px;bottom:calc(env(safe-area-inset-bottom) + 206px);display:flex;flex-direction:column;gap:14px;align-items:center}
+#lateral{right:10px;bottom:calc(env(safe-area-inset-bottom) + 178px);display:flex;flex-direction:column;gap:12px;align-items:center}
+#palco.semVitrine #lateral{bottom:calc(env(safe-area-inset-bottom) + 80px)}
+#btnDenunciar{width:32px;height:32px;opacity:.85}
+#btnDenunciar svg{width:15px;height:15px}
 .latBtn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#fff;text-decoration:none;font-size:11px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .latBtn span.ico{position:relative;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
 .latBtn svg{width:23px;height:23px}
 .latBtn b{position:absolute;top:-3px;right:-3px;background:var(--vivo);color:#fff;border-radius:999px;font-size:11px;min-width:19px;height:19px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+/* celular baixo: o trilho encolhe para nao subir por cima da faixa da oferta */
+@media (max-height:760px){#lateral{gap:6px}.latBtn span.ico{width:40px;height:40px}.latBtn svg{width:20px;height:20px}.latBtn{font-size:10px}}
+@media (max-height:680px){#lateral{gap:8px}.latBtn{font-size:0;gap:0}.latBtn b{font-size:10.5px}}
 
 /* ---------- chat ---------- */
-#chat{margin-right:64px;max-height:30vh;overflow:hidden;display:flex;flex-direction:column-reverse;gap:5px;-webkit-mask-image:linear-gradient(0deg,#000 75%,transparent);mask-image:linear-gradient(0deg,#000 75%,transparent)}
+#chat{margin-right:64px;max-height:24vh;overflow:hidden;display:flex;flex-direction:column-reverse;gap:5px;-webkit-mask-image:linear-gradient(0deg,#000 75%,transparent);mask-image:linear-gradient(0deg,#000 75%,transparent)}
 .msg{align-self:flex-start;max-width:100%;background:rgba(0,0,0,.42);border-radius:14px;padding:5px 10px;font-size:13px;line-height:1.35;word-wrap:break-word;overflow-wrap:anywhere}
 .msg b{color:#9fe8ff;font-weight:600;margin-right:4px}
 .msg.quero{background:rgba(37,211,102,.28)}
@@ -106,7 +113,6 @@ svg{display:block}
 #pilha>*{pointer-events:auto}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-right:64px}
 .chips:empty{display:none}
-#cardProduto{background:rgba(10,20,36,.92);border:1px solid rgba(0,212,255,.3);border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:sobe .35s ease}
 @keyframes sobe{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
 .cpFoto{width:62px;height:62px;border-radius:12px;background:var(--mv-surf-2) center/cover no-repeat;flex:0 0 62px;display:flex;align-items:center;justify-content:center;color:var(--mv-txt-3)}
 .cpFoto svg{width:28px;height:28px}
@@ -123,6 +129,72 @@ svg{display:block}
 .btnQuero svg{width:16px;height:16px}
 .btnLink{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--mv-linha);border-radius:10px;background:transparent;color:var(--mv-txt);font-weight:600;font-size:12px;padding:6px 10px;text-decoration:none;white-space:nowrap;max-width:52%;overflow:hidden;text-overflow:ellipsis}
 .btnLink svg{width:13px;height:13px}
+
+/* ---------- vitrine: faixa de produtos sempre a vista (29/09/2026) ----------
+   Antes o visitante via UM card (o destaque) e o resto ficava atras do botao
+   Sacolinha. Agora a sacola inteira corre na base do video, o destaque fica
+   marcado e a faixa rola ate ele sozinha quando o lojista troca. */
+#vitrine{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -10px;padding:2px 10px 4px;scroll-padding:0 10px}
+#vitrine::-webkit-scrollbar{display:none}
+#vitrine:empty{display:none}
+.vCard{position:relative;flex:0 0 auto;width:min(252px,72vw);display:flex;gap:9px;align-items:stretch;background:rgba(8,17,31,.74);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:7px;scroll-snap-align:start;text-align:left;color:#fff;font:inherit;cursor:pointer;transition:border-color .25s,box-shadow .25s}
+.vCard.ativo{border-color:rgba(0,212,255,.85);box-shadow:0 0 0 1px rgba(0,212,255,.45),0 8px 24px rgba(0,102,255,.35)}
+.vCard.chegou{animation:pulso .9s ease 2}
+@keyframes pulso{50%{box-shadow:0 0 0 4px rgba(0,212,255,.35),0 8px 24px rgba(0,102,255,.45)}}
+.vCard .cpFoto{width:64px;height:64px;flex:0 0 64px;border-radius:10px}
+.vInfo{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:3px}
+.vSelo{align-self:flex-start;font-size:9.5px;font-weight:800;letter-spacing:.5px;border-radius:4px;padding:1px 5px;color:#001428;background:var(--mv-ciano)}
+.vSelo.of{background:linear-gradient(135deg,#ff2d55,#ff8a00);color:#fff}
+.vNome{font-weight:700;font-size:13px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vRodape{display:flex;align-items:center;gap:6px}
+.vPreco{font-size:12px;color:var(--mv-txt-2);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vPreco s{display:none} /* no card so o preco que vale; o riscado aparece no painel */
+.vPreco strong{color:#fff;font-size:13.5px}
+.vCta{margin-left:auto;flex:0 0 auto;border:0;border-radius:8px;padding:6px 9px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.vCta svg{width:13px;height:13px}
+.vCta.pix{background:var(--mv-grad);color:#001428}
+.vCta.wpp{background:var(--mv-whats);color:#06240f}
+
+/* ---------- painel do produto, translucido sobre o video (29/09/2026) ----------
+   A transmissao continua visivel e com som por tras. O cliente olha o produto
+   sem sair da live — o "Quero este" que abria o WhatsApp direto tirava ele dela. */
+#painelFundo{position:absolute;inset:0;z-index:14;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.25))}
+#painelProd{position:absolute;left:0;right:0;bottom:0;z-index:15;max-height:66%;overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(180deg,rgba(6,13,24,.62),rgba(6,13,24,.9) 38%);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-top:1px solid rgba(255,255,255,.14);border-radius:22px 22px 0 0;padding:8px 16px calc(env(safe-area-inset-bottom) + 16px);animation:sobe .28s ease}
+.ppAlca{width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.35);margin:0 auto 8px}
+.ppFechar{position:absolute;top:10px;right:10px}
+.ppGaleria{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:4px -16px 6px;padding:0 16px}
+.ppGaleria::-webkit-scrollbar{display:none}
+.ppFoto{flex:0 0 auto;width:min(190px,52vw);aspect-ratio:1/1;border-radius:14px;background:#fff center/contain no-repeat;scroll-snap-align:center}
+.ppGaleria.uma .ppFoto{margin:0 auto}
+.ppPontos{display:flex;justify-content:center;gap:5px;margin-bottom:8px}
+.ppPontos:empty{display:none}
+.ppPontos i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3)}
+.ppPontos i.on{background:var(--mv-ciano)}
+.ppSelos{display:flex;gap:6px;flex-wrap:wrap;margin:2px 44px 4px 0}
+.ppSelos:empty{display:none}
+.ppNome{font-size:18px;font-weight:800;line-height:1.25;margin:0 44px 4px 0}
+.ppPreco{font-size:14px;color:var(--mv-txt-2);margin-bottom:6px}
+.ppPreco s{opacity:.7;margin-right:6px}
+.ppPreco strong{color:#fff;font-size:22px}
+.ppEstoque{font-size:12.5px;font-weight:700;color:#ffd0a0;margin-bottom:6px}
+.ppDesc{font-size:13.5px;line-height:1.5;color:var(--mv-txt-2);white-space:pre-line;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.ppDesc.aberta{display:block}
+.ppMais{background:none;border:0;color:var(--mv-ciano);font-weight:600;font-size:12.5px;padding:2px 0 0}
+.ppAcoes{display:flex;gap:8px;align-items:stretch;margin-top:12px}
+.ppAcoes .ckQtd{margin-left:0;background:rgba(255,255,255,.06);border-radius:11px;padding:4px}
+.ppAcoes .ckQtd button{width:34px;height:34px}
+.ppAcoes .btnPix,.ppAcoes .btnQuero{flex:1;font-size:14.5px;padding:12px}
+.ppAcoes .btnWppMini{width:48px;flex-basis:48px}
+.ppExtra{margin-top:10px;display:flex;justify-content:center}
+.ppExtra .btnLink{max-width:100%}
+.ppNota{font-size:11.5px;color:var(--mv-txt-3);margin:10px 0 0;line-height:1.45;text-align:center}
+.ppSaiu{background:rgba(255,176,32,.14);border:1px solid rgba(255,176,32,.45);color:#ffe1a8;border-radius:11px;padding:9px 12px;font-size:13px;margin-top:10px}
+
+/* ---------- curtir (so animacao local; nenhum numero na tela) ---------- */
+.coracao{position:absolute;z-index:4;pointer-events:none;width:26px;height:26px;color:#ff4d7d;animation:voa 1.6s ease-out forwards}
+.coracao svg{width:100%;height:100%}
+@keyframes voa{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:1;transform:translate(0,-20px) scale(1.1)}100%{transform:translate(var(--dx),-220px) scale(.9);opacity:0}}
+.latBtn.on span.ico{background:rgba(255,77,125,.3)}
 
 /* ---------- barra de baixo ---------- */
 #barra{left:0;right:0;bottom:0;padding:8px 10px calc(env(safe-area-inset-bottom) + 10px);display:flex;gap:8px;align-items:center}
@@ -153,8 +225,9 @@ svg{display:block}
 .foRodape{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 14px);font-size:11.5px;color:var(--mv-txt-3)}
 
 /* ---------- folhas (sacola, nome, cupom) ---------- */
-.folha{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
-.fCaixa{width:100%;max-width:520px;max-height:78vh;overflow:auto;background:var(--mv-surf);border-radius:20px 20px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px);animation:sobe .25s ease}
+.folha{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.3);display:flex;align-items:flex-end;justify-content:center}
+/* 29/09/2026: folhas translucidas — o video continua aparecendo por tras */
+.fCaixa{width:100%;max-width:520px;max-height:78vh;overflow:auto;background:rgba(14,28,48,.9);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-top:1px solid rgba(255,255,255,.12);border-radius:20px 20px 0 0;padding:16px 16px calc(env(safe-area-inset-bottom) + 18px);animation:sobe .25s ease}
 .fTopo{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .fTopo h2{font-size:16px;margin:0;font-weight:700}
 .fTopo button{margin-left:auto}
@@ -209,6 +282,7 @@ svg{display:block}
     <div class="topoDir">
       <span class="pillVivo escondido" id="pillVivo"><i></i>AO VIVO</span>
       <span class="pillOlho escondido" id="pillOlho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><span id="nOlho">0</span></span>
+      <button type="button" class="btnRedondo" id="btnDenunciar" aria-label="Denunciar esta live" title="Denunciar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4M4 4h12l-2 4 2 4H4"/></svg></button>
       <a class="btnRedondo" id="btnFechar" href="/" aria-label="Sair da live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
     </div>
   </div>
@@ -232,8 +306,9 @@ svg{display:block}
 
   <div id="lateral" class="camada">
     <button type="button" class="latBtn" id="btnSacola"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><b id="nSacola">0</b></span>Sacolinha</button>
+    <button type="button" class="latBtn" id="btnCurtir"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>Curtir</button>
+    <button type="button" class="latBtn" id="btnSomLat" aria-label="Ligar o som"><span class="ico" id="icoSom"></span><span id="rotSom">Som</span></button>
     <button type="button" class="latBtn" id="btnCompartilhar"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>Enviar</button>
-    <button type="button" class="latBtn" id="btnDenunciar"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4M4 4h12l-2 4 2 4H4"/></svg></span>Denunciar</button>
     <a class="latBtn" id="btnLoja" href="/"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9h18v11H3zM9 20v-6h6v6"/></svg></span>Página</a>
   </div>
 
@@ -243,8 +318,11 @@ svg{display:block}
       <div id="faixaBrinde" class="escondido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 1 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 1 1 0 5"/></svg><span id="brTxt"></span></div>
       <div id="faixaLocal" class="escondido"><a id="lnkRota" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Estou aqui agora · Como chegar</a></div>
     </div>
-    <div id="cardProduto" class="escondido"></div>
+    <div id="vitrine" aria-label="Produtos da live"></div>
   </div>
+
+  <div id="painelFundo" class="escondido"></div>
+  <div id="painelProd" class="escondido" role="dialog" aria-label="Produto"></div>
 
   <div id="barra" class="camada">
     <form id="formMsg" autocomplete="off">
@@ -269,7 +347,7 @@ svg{display:block}
 <div class="folha escondido" id="folhaSacola"><div class="fCaixa">
   <div class="fTopo"><h2>Sacolinha da live</h2><button type="button" class="btnRedondo" data-fecha="folhaSacola" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div id="listaSacola"></div>
-  <p class="nota">O pedido é combinado direto com o negócio pelo WhatsApp. Preço e condições valem como anunciados na live.</p>
+  <p class="nota" id="notaSacola">O pedido é combinado direto com o negócio pelo WhatsApp. Preço e condições valem como anunciados na live.</p>
 </div></div>
 
 <div class="folha escondido" id="folhaNome"><div class="fCaixa">
@@ -353,7 +431,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-26-pedidos';
+  window.MOVIKI_VERSAO='2026-09-29-vitrine1';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -495,6 +573,9 @@ svg{display:block}
   const _m=/^\/+live\/+([^/?#]+)/.exec(decodeURIComponent(location.pathname));
   const slug=((_m&&_m[1])||new URLSearchParams(location.search).get('s')||'').trim().toLowerCase();
   let CK_CFG={entrega:'ambos',bairros:[]};
+  /* vitrine e painel do produto (29/09/2026) — declarados aqui em cima porque
+     fora() fecha o painel e pode rodar antes do resto do modulo */
+  let vitToque=0, vitFixAnt='', ppNome='', ppQ=1, ppDescAberta=false;
   let bloqueado=false,liveDesligada=false,pixAtivo=false,uid='',neg=null,nivel=null,est={},noAr=false,pc=null,tentando=false,chatDes=null,chatDesdeMs=0,presencaT=null;
   const sid=(()=>{try{let s=sessionStorage.getItem('mv_live_sid');if(!s){s=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now()).replace(/-/g,'').slice(0,24);sessionStorage.setItem('mv_live_sid',s);}return s;}catch(_){return String(Date.now());}})();
 
@@ -514,7 +595,7 @@ svg{display:block}
       onSnapshot(doc(db,'configuracoes','liveTermos'),t=>{const d=t.exists()?(t.data()||{}):{};
         MV_TERMOS_EXTRAS=Array.isArray(d.extras)?d.extras.filter(x=>typeof x==='string').slice(0,300):[];
         liveDesligada=d.liveDesligada===true;
-        if(noAr){el('cardProduto')._chave='';pintarProduto();pintarSacola();}
+        if(noAr){el('vitrine')._chave='';pintarProduto();pintarSacola();}
         aplicarEstado();},()=>{});
       onSnapshot(doc(db,'live_bloqueios',uid),b=>{const d=b.exists()?b.data():null;bloqueado=!!(d&&(!d.ate||ms(d.ate)>Date.now()));aplicarEstado();},()=>{});
       onSnapshot(doc(db,'negocios',uid,'estado','live'),snap=>{est=snap.exists()?(snap.data()||{}):{};aplicarEstado();},()=>fora('Não deu para carregar','Tente de novo em instantes.'));
@@ -602,6 +683,7 @@ svg{display:block}
   }
 
   function fora(titulo,sub){
+    fecharProduto();
     el('fora').classList.remove('escondido'); el('pillVivo').classList.add('escondido');
     if(titulo)el('foNome').textContent=titulo; else if(neg)el('foNome').textContent=neg.nome||'Negócio';
     el('foTit').textContent=sub||''; el('foAgenda').classList.add('escondido'); el('btnAgenda').classList.add('escondido');
@@ -654,7 +736,15 @@ svg{display:block}
     const v=el('vid'); try{v.srcObject=null;}catch(_){}
     if(!manterAviso){el('aguardando').classList.add('escondido');el('btnSom').classList.add('escondido');}
   }
-  el('btnSom').addEventListener('click',()=>{const v=el('vid');v.muted=false;v.play().catch(()=>{});el('btnSom').classList.add('escondido');});
+  el('btnSom').addEventListener('click',()=>{const v=el('vid');v.muted=false;v.play().catch(()=>{});el('btnSom').classList.add('escondido');pintarSom();});
+  /* ---- som no trilho lateral (29/09/2026): liga e desliga a qualquer hora,
+     nao so no primeiro toque. O aviso do meio da tela continua para quem
+     entrou sem som (o navegador obriga a comecar mudo). ---- */
+  const SVG_SOM_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
+  const SVG_SOM_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+  function pintarSom(){const m=el('vid').muted;el('icoSom').innerHTML=m?SVG_SOM_OFF:SVG_SOM_ON;el('rotSom').textContent=m?'Sem som':'Som';el('btnSomLat').setAttribute('aria-label',m?'Ligar o som':'Tirar o som');}
+  pintarSom();
+  el('btnSomLat').addEventListener('click',()=>{const v=el('vid');v.muted=!v.muted;if(!v.muted){v.play().catch(()=>{});el('btnSom').classList.add('escondido');}pintarSom();ev('live_som',{ligado:!v.muted});});
 
   /* ================= presenca (quem esta assistindo) =================
      Um documento por aba, carimbado a cada 60 s. Quem conta e o estudio do
@@ -747,11 +837,12 @@ svg{display:block}
     if(live&&base&&live!==base)return '<s>'+esc(base)+'</s><strong>'+esc(live)+'</strong>';
     return '<strong>'+esc(live||base||'')+'</strong>';
   }
-  function linkWpp(p){
+  function linkWpp(p,q){
     const w=(function(x){x=String(x||'').replace(/\D/g,'').replace(/^0+/,'');return (x.length>=12&&x.slice(0,2)==='55')?x.slice(2):x;})(neg&&neg.whatsapp); /* 23/09: sem o 55 do pais */ if(!w)return '';
     const of=ofertaAtiva(); const naOferta=of&&p&&of.nome===p.nome;
     const preco=fmtPreco(naOferta?of.precoPor:(p.precoLive||p.preco));
-    let t='Oi! Vi na sua live no Moviki e quero: '+p.nome+(preco?' ('+preco+')':'')+'.';
+    q=Math.max(1,Math.min(10,Number(q)||1));
+    let t='Oi! Vi na sua live no Moviki e quero: '+(q>1?q+'x ':'')+p.nome+(preco?' ('+preco+(q>1?' cada':'')+')':'')+'.';
     const cod=cupomLiberado(); if(cod)t+=' Cupom da live: '+cod+'.';
     return 'https://wa.me/55'+w+'?text='+encodeURIComponent(t);
   }
@@ -767,32 +858,156 @@ svg{display:block}
   }
   /* Sem `style=` no texto: a foto entra depois, pelo CSSOM (ver C5). */
   function fotoDiv(p){return fotoOk(p.foto)?'<div class="cpFoto" data-mvfoto="1"></div>':'<div class="cpFoto">'+SVG_PRATO+'</div>';}
+  /* ---------- VITRINE (29/09/2026) ----------
+     Substitui o card unico do destaque. A faixa mostra a sacolinha inteira
+     (5 itens no Premium, 20 no Enterprise — mesmo corte de antes), o produto
+     que o lojista marcou em Destacar fica aceso e a faixa rola ate ele sozinha.
+     Se o visitante estiver mexendo na faixa, ela nao e puxada da mao dele. */
+  function destaqueNome(){const f=est.fixado;return (f&&f.nome&&!mvProibido(f.nome))?f.nome:'';}
+  function vitrineLista(){
+    const s=sacolaLista(), f=destaqueNome();
+    if(f&&!s.some(x=>x.nome===f))return [est.fixado].concat(s);
+    return s;
+  }
+  function acharProduto(nome){return nome?(vitrineLista().find(x=>x.nome===nome)||null):null;}
   function pintarProduto(){
-    const p=est.fixado, box=el('cardProduto');
-    if(!p||!p.nome||mvProibido(p.nome)){box.classList.add('escondido');box._chave='';return;}
-    const chave=JSON.stringify([p,ofertaAtiva()?1:0,cupomLiberado(),pixAtivo]);
+    const box=el('vitrine'), lista=noAr?vitrineLista():[], fix=destaqueNome(), of=ofertaAtiva();
+    el('palco').classList.toggle('semVitrine',!lista.length);
+    const chave=JSON.stringify([lista,fix,of?[of.nome,of.precoPor]:0,cupomLiberado(),pixAtivo,noAr]);
+    if(box._chave!==chave){
+      box._chave=chave; box.innerHTML='';
+      lista.forEach(p=>{
+        const naOf=!!(of&&of.nome===p.nome), w=linkWpp(p);
+        const c=document.createElement('div');
+        c.className='vCard'+(p.nome===fix?' ativo':''); c.setAttribute('role','button'); c.tabIndex=0; c.dataset.nome=p.nome;
+        const selo=naOf?'<span class="vSelo of">OFERTA</span>':(p.nome===fix?'<span class="vSelo">MOSTRANDO AGORA</span>':'');
+        const cta=pixPode(p)?'<button type="button" class="vCta pix" data-comprar="1">Comprar</button>'
+          :(w?'<a class="vCta wpp" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener">'+SVG_WPP+'Quero</a>':'');
+        c.innerHTML=fotoDiv(p)+'<div class="vInfo">'+selo+'<div class="vNome">'+esc(p.nome)+'</div><div class="vRodape"><div class="vPreco">'+precoTexto(p)+'</div>'+cta+'</div></div>';
+        porFoto(c.querySelector('[data-mvfoto]'),p.foto);
+        ligarCliques(c,p);
+        c.addEventListener('click',e=>{if(e.target.closest('[data-comprar],[data-quero]'))return;abrirProduto(p.nome,'vitrine');});
+        c.addEventListener('keydown',e=>{if(e.key==='Enter')abrirProduto(p.nome,'vitrine');});
+        box.appendChild(c);
+      });
+      vitFixAnt='';
+    }
+    if(fix!==vitFixAnt){vitFixAnt=fix;if(fix)rolarAte(fix);}
+    repintarPainel();
+  }
+  function rolarAte(nome){
+    const box=el('vitrine'), c=[...box.children].find(x=>x.dataset.nome===nome); if(!c)return;
+    c.classList.remove('chegou'); void c.offsetWidth; c.classList.add('chegou');
+    if(Date.now()-vitToque<4000)return;
+    try{box.scrollTo({left:Math.max(0,c.offsetLeft-box.offsetLeft-10),behavior:'smooth'});}catch(_){box.scrollLeft=Math.max(0,c.offsetLeft-box.offsetLeft-10);}
+  }
+  ['pointerdown','touchstart','wheel'].forEach(t=>el('vitrine').addEventListener(t,()=>{vitToque=Date.now();},{passive:true}));
+
+  /* ---------- PAINEL DO PRODUTO (29/09/2026) ----------
+     Abre por cima do video, translucido: a live continua passando e com som.
+     Fotos e descricao vem do CARDAPIO do proprio negocio (neg.cardapio, que ja
+     e publico), casadas pelo nome — a sacolinha da live so carrega uma foto e
+     nenhuma descricao. Tudo passa pelo mesmo filtro do resto (mvProibido),
+     texto sai por esc() e foto entra pelo CSSOM (fotoOk), como no C5.
+     O preco mostrado e so vitrine: quem cobra e o servidor. */
+  function normNome(x){return String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();}
+  function doCardapio(nome){
+    const alvo=normNome(nome); if(!alvo||!neg||!Array.isArray(neg.cardapio))return null;
+    for(const c of neg.cardapio){if(!c||!Array.isArray(c.produtos))continue;
+      for(const x of c.produtos){if(x&&normNome(x.nome)===alvo)return x;}}
+    return null;
+  }
+  function fotosDe(p){
+    const l=[], add=u=>{if(fotoOk(u)&&l.indexOf(u)<0)l.push(u);};
+    add(p.foto); const c=doCardapio(p.nome); if(c&&Array.isArray(c.fotos))c.fotos.slice(0,6).forEach(add);
+    return l.slice(0,5);
+  }
+  function descDe(p){
+    const c=doCardapio(p.nome), d=(c&&typeof c.descricao==='string')?c.descricao.trim().slice(0,600):'';
+    return (d&&!mvProibido(d))?d:'';
+  }
+  function limiteQtd(p){const of=ofertaAtiva();const lim=(of&&p&&of.nome===p.nome&&Number(of.estoque)>0)?Math.max(1,Number(of.estoque)-Number(of.vendidos||0)):10;return Math.min(10,lim);}
+  const SVG_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const SVG_PIX='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4.2 4.2-2.1 2.1L12 6.2 9.9 8.3 7.8 6.2zM2 12l4.2-4.2 2.1 2.1L6.2 12l2.1 2.1-2.1 2.1zm10 10l-4.2-4.2 2.1-2.1 2.1 2.1 2.1-2.1 2.1 2.1zm10-10l-4.2 4.2-2.1-2.1 2.1-2.1-2.1-2.1 2.1-2.1zM12 9.2L14.8 12 12 14.8 9.2 12z"/></svg>';
+  function abrirProduto(nome,origem){
+    if(!noAr||!acharProduto(nome))return;
+    ppNome=nome; ppQ=1; ppDescAberta=false;
+    const box=el('painelProd'); box._chave=''; repintarPainel();
+    el('painelFundo').classList.remove('escondido'); box.classList.remove('escondido'); box.scrollTop=0;
+    ev('live_produto_abrir',{slug,origem:origem||''});
+  }
+  function fecharProduto(){ppNome='';el('painelProd').classList.add('escondido');el('painelFundo').classList.add('escondido');}
+  el('painelFundo').addEventListener('click',fecharProduto);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ppNome&&el('folhaCompra').classList.contains('escondido'))fecharProduto();});
+  function repintarPainel(){
+    if(!ppNome)return;
+    const box=el('painelProd'), p=acharProduto(ppNome), of=ofertaAtiva(), naOf=!!(p&&of&&of.nome===p.nome);
+    const chave=JSON.stringify([p,naOf?[of.precoPor,of.precoDe,of.estoque,of.vendidos]:0,cupomLiberado(),pixAtivo,destaqueNome()===ppNome,noAr]);
     if(box._chave===chave)return; box._chave=chave;
-    box.innerHTML=fotoDiv(p)+'<div class="cpInfo"><span class="cpSelo">EM DESTAQUE</span><div class="cpNome">'+esc(p.nome)+'</div><div class="cpPreco">'+precoTexto(p)+'</div></div><div class="cpBtns">'+blocoBotoes(p)+'</div>';
-    porFoto(box.querySelector('[data-mvfoto]'),p.foto);
-    box.classList.remove('escondido'); ligarCliques(box,p);
+    if(!p||!noAr){
+      /* saiu da sacolinha (ou a live acabou) com o painel aberto: nada de botao de compra */
+      box.querySelectorAll('.ppAcoes,.ppExtra,.ppNota').forEach(x=>x.remove());
+      if(!box.querySelector('.ppSaiu')){const a=document.createElement('div');a.className='ppSaiu';a.textContent=noAr?'Este produto saiu da vitrine da live. Pergunte no chat se ainda tem.':'A live acabou.';box.appendChild(a);}
+      return;
+    }
+    if(ppQ>limiteQtd(p))ppQ=limiteQtd(p);
+    const fotos=fotosDe(p), pix=pixPode(p), w=linkWpp(p,ppQ), d=descDe(p), vend=(neg&&neg.nome)||'o vendedor';
+    let h='<div class="ppAlca"></div><button type="button" class="btnRedondo ppFechar" id="ppFechar" aria-label="Fechar">'+SVG_X+'</button>';
+    if(fotos.length)h+='<div class="ppGaleria'+(fotos.length===1?' uma':'')+'" id="ppGal">'+fotos.map(()=>'<div class="ppFoto" role="img" aria-label="'+esc(p.nome)+'"></div>').join('')+'</div>'+
+      '<div class="ppPontos" id="ppPontos">'+(fotos.length>1?fotos.map((_,i)=>'<i'+(i===0?' class="on"':'')+'></i>').join(''):'')+'</div>';
+    const selos=[]; if(naOf)selos.push('<span class="vSelo of">OFERTA DA LIVE</span>'); if(destaqueNome()===p.nome)selos.push('<span class="vSelo">MOSTRANDO AGORA</span>');
+    h+='<div class="ppSelos">'+selos.join('')+'</div><div class="ppNome">'+esc(p.nome)+'</div><div class="ppPreco">'+precoTexto(p)+'</div>';
+    if(naOf&&Number(of.estoque)>0){const tot=Number(of.estoque),r=tot-Math.min(Number(of.vendidos||0),tot);h+='<div class="ppEstoque">'+(r>0?'Restam '+r+' na oferta':'Oferta esgotada')+'</div>';}
+    if(d)h+='<div class="ppDesc'+(ppDescAberta?' aberta':'')+'" id="ppDesc">'+esc(d)+'</div><button type="button" class="ppMais escondido" id="ppVerMais">Ver mais</button>';
+    if(pix||w){
+      h+='<div class="ppAcoes"><div class="ckQtd"><button type="button" id="ppMenos" aria-label="Menos">−</button><b id="ppQ">'+ppQ+'</b><button type="button" id="ppMaisQ" aria-label="Mais">+</button></div>';
+      if(pix){h+='<button type="button" class="btnPix" data-comprar="1">'+SVG_PIX+'Comprar com Pix</button>';
+        if(w)h+='<a class="btnWppMini" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener" title="Perguntar no WhatsApp">'+SVG_WPP+'</a>';}
+      else h+='<a class="btnQuero" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener">'+SVG_WPP+'Quero este</a>';
+      h+='</div>';
+    }
+    if(linkOk(p.link)){let host='';try{host=new URL(p.link).hostname.replace(/^www\./,'');}catch(_){}
+      h+='<div class="ppExtra"><a class="btnLink" data-link="1" href="'+esc(p.link)+'" target="_blank" rel="noopener nofollow">'+SVG_LINK+'Ver em '+esc(host)+'</a></div>';}
+    h+='<p class="ppNota">'+(pix?('O Pix vai direto para a conta de '+esc(vend)+'. A live continua aqui enquanto você paga.')
+      :(w?'O WhatsApp abre em outra aba. A live continua aqui.':'Pergunte no chat como comprar este produto.'))+'</p>';
+    const rol=box.scrollTop; box.innerHTML=h; box.scrollTop=rol;
+    const g=el('ppGal');
+    if(g){[...g.children].forEach((f,i)=>porFoto(f,fotos[i]));
+      if(fotos.length>1)g.addEventListener('scroll',()=>{const f=g.children[0];const i=Math.round(g.scrollLeft/((f.offsetWidth||1)+8));[...el('ppPontos').children].forEach((x,k)=>x.classList.toggle('on',k===i));},{passive:true});}
+    const dd=el('ppDesc'), vm=el('ppVerMais');
+    if(dd&&vm&&!ppDescAberta&&dd.scrollHeight>dd.clientHeight+2){vm.classList.remove('escondido');vm.onclick=()=>{ppDescAberta=true;dd.classList.add('aberta');vm.remove();};}
+    el('ppFechar').onclick=fecharProduto;
+    if(el('ppMenos')){el('ppMenos').onclick=()=>ppQtd(-1);el('ppMaisQ').onclick=()=>ppQtd(1);}
+    ligarCliques(box,p,()=>ppQ);
+  }
+  function ppQtd(dlt){
+    const p=acharProduto(ppNome); if(!p)return;
+    const n=ppQ+dlt; if(n<1)return; if(n>limiteQtd(p)){toast('Limite desta compra.');return;}
+    ppQ=n; el('ppQ').textContent=n;
+    const a=el('painelProd').querySelector('[data-quero]'); if(a){const w=linkWpp(p,ppQ);if(w)a.href=w;}
   }
   function sacolaLista(){const s=Array.isArray(est.sacola)?est.sacola:[];return s.filter(x=>x&&x.nome&&!mvProibido(x.nome)).slice(0,nivel==='enterprise'?20:5);}
   function pintarSacola(){
     const s=sacolaLista(); el('nSacola').textContent=s.length; el('btnSacola').classList.toggle('escondido',!s.length);
+    /* 29/09/2026: a nota dizia "combinado pelo WhatsApp" tambem para quem vende com Pix na live */
+    el('notaSacola').textContent='Toque no produto para ver fotos e detalhes. '+((pixAtivo&&nivel==='enterprise')
+      ?'O Pix vai direto para a conta de '+((neg&&neg.nome)||'quem vende')+'. Preço e condições valem como anunciados na live.'
+      :'O pedido é combinado direto com o negócio pelo WhatsApp. Preço e condições valem como anunciados na live.');
     const l=el('listaSacola'); l.innerHTML='';
     s.forEach(p=>{const d=document.createElement('div');d.className='itSacola'+(est.fixado&&est.fixado.nome===p.nome?' ativo':'');
       d.innerHTML=fotoDiv(p)+'<div class="cpInfo"><div class="cpNome">'+esc(p.nome)+'</div><div class="cpPreco">'+precoTexto(p)+'</div></div><div class="cpBtns">'+blocoBotoes(p)+'</div>';
       porFoto(d.querySelector('[data-mvfoto]'),p.foto);
+      d.querySelectorAll('.cpFoto,.cpInfo').forEach(x=>{x.style.cursor='pointer';x.addEventListener('click',()=>{el('folhaSacola').classList.add('escondido');abrirProduto(p.nome,'sacolinha');});});
       l.appendChild(d); ligarCliques(d,p);});
   }
-  function ligarCliques(box,p){
+  function ligarCliques(box,p,qf){
     const q=box.querySelector('[data-quero]');
     if(q)q.addEventListener('click',e=>{
       if(!meuNome()){e.preventDefault();pedirNome(()=>{registrarQuero(p);window.open(q.href,'_blank','noopener');});return;}
       registrarQuero(p);
     });
     const k=box.querySelector('[data-link]'); if(k)k.addEventListener('click',()=>ev('live_link',{slug}));
-    const c=box.querySelector('[data-comprar]'); if(c)c.addEventListener('click',()=>abrirCompra(p));
+    const c=box.querySelector('[data-comprar]'); if(c)c.addEventListener('click',()=>abrirCompra(p,qf?qf():1));
   }
   function registrarQuero(p){ev('live_quero',{slug});if(noAr)gravarChat('quero',p.nome).catch(()=>{});}
   el('btnSacola').addEventListener('click',()=>el('folhaSacola').classList.remove('escondido'));
@@ -872,6 +1087,24 @@ svg{display:block}
     try{if(navigator.share){await navigator.share({title:t,text:t,url});return;}}catch(_){return;}
     try{await navigator.clipboard.writeText(url);toast('Link copiado.');}catch(_){toast(url);}
   });
+  /* ================= curtir (29/09/2026) =================
+     So o coracao subindo na tela de quem tocou. Nao grava nada no banco e nao
+     mostra numero: numero na tela e numero contado (regra do Modo Live), e
+     contar curtida exigiria regra nova no Firestore. Mede no GA4, com freio. */
+  let curtirEvT=0;
+  const SVG_CORACAO='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21l-7.8-7.5-1-1.1a5.5 5.5 0 0 1 7.8-7.8l1 1.1 1-1.1a5.5 5.5 0 0 1 7.8 7.8l-1 1.1z"/></svg>';
+  el('btnCurtir').addEventListener('click',()=>{
+    const pal=el('palco'), b=el('btnCurtir').querySelector('.ico').getBoundingClientRect(), r=pal.getBoundingClientRect();
+    if(pal.querySelectorAll('.coracao').length<12){
+      const h=document.createElement('div'); h.className='coracao'; h.innerHTML=SVG_CORACAO;
+      h.style.left=Math.round(b.left-r.left+10)+'px'; h.style.top=Math.round(b.top-r.top)+'px';
+      h.style.setProperty('--dx',(Math.round(Math.random()*56)-38)+'px');
+      pal.appendChild(h); setTimeout(()=>h.remove(),1700);
+    }
+    el('btnCurtir').classList.add('on');
+    if(Date.now()-curtirEvT>15000){curtirEvT=Date.now();ev('live_curtir',{slug});}
+  });
+
   /* ================= checkout Pix (Enterprise, 11/09/2026) =================
      O Pix e emitido pela conta do LOJISTA no Asaas (subconta), pelo robo.
      O preco que vale e o do servidor — o daqui e so para mostrar. */
@@ -883,8 +1116,8 @@ svg{display:block}
   let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null;
   const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
   const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
-  function abrirCompra(p){
-    ckP=p; ckQ=1; clearInterval(ckPoll);
+  function abrirCompra(p,q){
+    ckP=p; ckQ=Math.max(1,Math.min(limiteQtd(p),Number(q)||1)); clearInterval(ckPoll);
     el('ckForm').classList.remove('escondido'); el('ckPix').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckErro').classList.add('escondido');
     el('ckProd').textContent=p.nome; el('ckAviso').textContent='A venda é feita por '+((neg&&neg.nome)||'este negócio')+' e o Pix vai direto para a conta dele. O CPF é exigido pelo banco para gerar o Pix; o Moviki não guarda o número inteiro.';
     try{const g=JSON.parse(localStorage.getItem('mv_ck_dados')||'{}');if(g.nome)el('ckNome').value=g.nome;if(g.wpp)el('ckWpp').value=g.wpp;}catch(_){}
