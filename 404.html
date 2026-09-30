@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -688,6 +688,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .addBtn:disabled{opacity:.55;cursor:default;filter:none;}
 .addBtn svg{width:17px;height:17px;}
 .semPreco{margin-top:8px;font-size:12px;color:var(--mv-txt-3);}
+.esgotadoPub{margin-top:8px;display:inline-block;font-size:12px;font-weight:800;letter-spacing:.3px;color:#ff8b96;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);padding:5px 10px;border-radius:var(--mv-r-pill);}
+.restamPub{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;color:#ffd27a;}
 
 /* barra da sacola, presa no rodapé da folha do cardápio */
 .sacolaBar{flex:0 0 auto;display:none;align-items:center;gap:11px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
@@ -1305,7 +1307,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-26-a2';
+  window.MOVIKI_VERSAO='2026-09-30-estoque';
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2312,10 +2314,26 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(m)todos[i].innerHTML=htmlControle(Number(m[1]),Number(m[2]));
     }
   }
+  /* ESTOQUE (30/09/2026, P53): o numero que o lojista informa no painel mora
+     em checkout_publico/{uid}.estoque (so o robo escreve). Pelo sku primeiro,
+     depois pelo nome — as mesmas chaves do servidor. null = sem controle. */
+  function estoquePub(p){
+    const m=(COMPRA&&COMPRA.estoque)||{};
+    const sku=String((p&&p.sku)||'').replace(/[^a-z0-9]/gi,'');
+    if(sku&&Object.prototype.hasOwnProperty.call(m,'s:'+sku))return Math.max(0,Number(m['s:'+sku])||0);
+    const k='n:'+String((p&&p.nome)||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+    return Object.prototype.hasOwnProperty.call(m,k)?Math.max(0,Number(m[k])||0):null;
+  }
+  function tetoQtd(ci,pi){
+    const c=(cardapioAtual||[])[ci], p=c&&(c.produtos||[])[pi];
+    const e=estoquePub(p);
+    return e===null?10:Math.max(0,Math.min(10,e));
+  }
   function botaoComprar(p,ci,pi){
     if(!podeComprar()||typeof ci!=='number'||typeof pi!=='number')return '';
     const pr=precoNumPub(p.preco);
     if(!(pr>0))return '<div class="semPreco">Este item não é vendido pelo site — chame no WhatsApp.</div>';
+    if(estoquePub(p)===0)return '<div class="esgotadoPub">Esgotado</div>';
     return '<div class="addBox" id="ab_'+ci+'_'+pi+'">'+htmlControle(ci,pi)+'</div>';
   }
   function produtoHtml(p,mostrarFotos,ci,pi){
@@ -2324,7 +2342,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
        significa "da para comprar", e aqui nao da. */
     const vendavel=podeComprar()&&precoNumPub(p.preco)>0;
     const preco=p.preco?('<div class="pr'+(podeComprar()&&!vendavel?' semVenda':'')+'">'+esc(fmtPreco(p.preco))+'</div>'):'';
-    const ac=p.acabando?'<span class="acabando">ACABANDO!</span>':'';
+    const _eq=podeComprar()?estoquePub(p):null;
+    const ac=(p.acabando?'<span class="acabando">ACABANDO!</span>':'')+((_eq!==null&&_eq>0&&_eq<=5)?'<span class="restamPub">Restam '+_eq+'</span>':'');
     const desc=(p.descricao&&String(p.descricao).trim())?('<div class="desc">'+esc(String(p.descricao).trim())+'</div>'):'';
     let fotos=[];
     if(mostrarFotos&&Array.isArray(p.fotos))fotos=p.fotos.filter(fotoOk).slice(0,3);
@@ -2446,9 +2465,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         minimoEntrega:Number((d&&d.minimoEntrega)||0)||0,
         prazo:String((d&&d.prazo)||''),
         cidadeEntrega:String((d&&d.cidadeEntrega)||''),
-        retirada:String((d&&d.retirada)||'')
+        retirada:String((d&&d.retirada)||''),
+        estoque:(d&&d.estoque&&typeof d.estoque==='object')?d.estoque:{}
       };
-    }catch(e){ COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:''}; }
+    }catch(e){ COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:'',estoque:{}}; }
     PD_ENT=(COMPRA.entrega==='entrega')?'entrega':'retirada';
   }
 
@@ -2465,7 +2485,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const it=itemDoCardapio(ci,pi); if(!it)return;
     const k=chaveItem(ci,pi);
     const ja=SACOLA.find(x=>x.k===k);
-    if(ja){ if(ja.qtd<10)ja.qtd++; }
+    const teto=tetoQtd(ci,pi);
+    if(teto<1)return;
+    if(ja){ if(ja.qtd<teto)ja.qtd++; }
     else SACOLA.push({k:k,ci:ci,pi:pi,nome:it.nome,preco:it.preco,sku:it.sku,qtd:1});
     pintarBotao(ci,pi);
     pintarSacola();
@@ -2479,7 +2501,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const alvo=SACOLA[i];
     const nova=alvo.qtd+d;
     if(nova<1)SACOLA.splice(i,1);
-    else alvo.qtd=Math.min(10,nova);
+    else alvo.qtd=Math.max(1,Math.min(tetoQtd(alvo.ci,alvo.pi)||1,nova));
     pintarBotao(alvo.ci,alvo.pi);
     pintarSacola();
     return alvo;
@@ -2623,7 +2645,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       indisponivel:'As vendas deste negócio estão fechadas neste momento.',
       fora:'As vendas estão fechadas neste momento.',
       live_fora:'As vendas estão fechadas neste momento.',
-      esgotado:'Esse item acabou de esgotar.',
+      esgotado:(extra&&extra.nome)?('Esgotou: '+String(extra.nome).slice(0,60)+(Number(extra.restam)>0?'. Só restam '+Number(extra.restam)+' — diminua a quantidade.':'. Tire da sacola para continuar.')):'Esse item acabou de esgotar.',
+      ocupado:'Muita gente comprando agora. Tente de novo em instantes.',
       chave:'O recebimento deste negócio está com problema. Chame no WhatsApp.',
       config:'O recebimento deste negócio está com problema. Chame no WhatsApp.',
       comprovante:'Imagem inválida. Mande uma foto ou print do comprovante.',
