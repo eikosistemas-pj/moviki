@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -125,6 +125,7 @@ svg{display:block}
 .cpBtns{display:flex;gap:6px;flex:1 1 100%}
 .cpBtns .btnQuero{flex:1}
 .itSacola{flex-wrap:wrap}
+.btnEsgot{display:inline-flex;align-items:center;justify-content:center;flex:1;border:1px solid rgba(255,107,107,.55);border-radius:10px;background:rgba(255,107,107,.12);color:#ff9d9d;font-weight:800;font-size:13px;padding:9px 12px;white-space:nowrap}
 .btnQuero{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;background:var(--mv-whats);color:#06240f;font-weight:800;font-size:13px;padding:9px 12px;text-decoration:none;white-space:nowrap}
 .btnQuero svg{width:16px;height:16px}
 .btnLink{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--mv-linha);border-radius:10px;background:transparent;color:var(--mv-txt);font-weight:600;font-size:12px;padding:6px 10px;text-decoration:none;white-space:nowrap;max-width:52%;overflow:hidden;text-overflow:ellipsis}
@@ -150,7 +151,8 @@ svg{display:block}
 .vPreco{font-size:12px;color:var(--mv-txt-2);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vPreco s{display:none} /* no card so o preco que vale; o riscado aparece no painel */
 .vPreco strong{color:#fff;font-size:13.5px}
-.vCta{margin-left:auto;flex:0 0 auto;border:0;border-radius:8px;padding:6px 9px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.vCta{margin-left:auto;flex:0 0 auto;border:0;border-radius:8px;padding:6px 9px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.vCta.esg{background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.5);color:#ff9d9d;cursor:default}
 .vCta svg{width:13px;height:13px}
 .vCta.pix{background:var(--mv-grad);color:#001428}
 .vCta.wpp{background:var(--mv-whats);color:#06240f}
@@ -450,7 +452,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-30-reserva';
+  window.MOVIKI_VERSAO='2026-09-30-estoque';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -867,7 +869,8 @@ svg{display:block}
   }
   function blocoBotoes(p){
     const w=linkWpp(p); let h='';
-    if(pixPode(p)){
+    if(esgotado(p)){h+='<span class="btnEsgot">Esgotado</span>';if(w)h+='<a class="btnWppMini" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener" title="Perguntar no WhatsApp">'+SVG_WPP+'</a>';}
+    else if(pixPode(p)){
       h+='<button type="button" class="btnPix" data-comprar="1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4.2 4.2-2.1 2.1L12 6.2 9.9 8.3 7.8 6.2zM2 12l4.2-4.2 2.1 2.1L6.2 12l2.1 2.1-2.1 2.1zm10 10l-4.2-4.2 2.1-2.1 2.1 2.1 2.1-2.1 2.1 2.1zm10-10l-4.2 4.2-2.1-2.1 2.1-2.1-2.1-2.1 2.1-2.1zM12 9.2L14.8 12 12 14.8 9.2 12z"/></svg>Comprar com Pix</button>';
       if(w)h+='<a class="btnWppMini" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener" title="Perguntar no WhatsApp">'+SVG_WPP+'</a>';
     } else if(w)h+='<a class="btnQuero" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener">'+SVG_WPP+'Quero este</a>';
@@ -892,7 +895,7 @@ svg{display:block}
   function pintarProduto(){
     const box=el('vitrine'), lista=noAr?vitrineLista():[], fix=destaqueNome(), of=ofertaAtiva();
     el('palco').classList.toggle('semVitrine',!lista.length);
-    const chave=JSON.stringify([lista,fix,of?[of.nome,of.precoPor]:0,cupomLiberado(),pixAtivo,noAr]);
+    const chave=JSON.stringify([lista,fix,of?[of.nome,of.precoPor]:0,cupomLiberado(),pixAtivo,noAr,(CK_CFG&&CK_CFG.estoque)||0]);
     if(box._chave!==chave){
       box._chave=chave; box.innerHTML='';
       lista.forEach(p=>{
@@ -900,7 +903,7 @@ svg{display:block}
         const c=document.createElement('div');
         c.className='vCard'+(p.nome===fix?' ativo':''); c.setAttribute('role','button'); c.tabIndex=0; c.dataset.nome=p.nome;
         const selo=naOf?'<span class="vSelo of">OFERTA</span>':(p.nome===fix?'<span class="vSelo">MOSTRANDO AGORA</span>':'');
-        const cta=pixPode(p)?'<button type="button" class="vCta pix" data-comprar="1">Comprar</button>'
+        const cta=esgotado(p)?'<span class="vCta esg">Esgotado</span>':pixPode(p)?'<button type="button" class="vCta pix" data-comprar="1">Comprar</button>'
           :(w?'<a class="vCta wpp" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener">'+SVG_WPP+'Quero</a>':'');
         c.innerHTML=fotoDiv(p)+'<div class="vInfo">'+selo+'<div class="vNome">'+esc(p.nome)+'</div><div class="vRodape"><div class="vPreco">'+precoTexto(p)+'</div>'+cta+'</div></div>';
         porFoto(c.querySelector('[data-mvfoto]'),p.foto);
@@ -945,7 +948,12 @@ svg{display:block}
     const c=doCardapio(p.nome), d=(c&&typeof c.descricao==='string')?c.descricao.trim().slice(0,600):'';
     return (d&&!mvProibido(d))?d:'';
   }
-  function limiteQtd(p){const of=ofertaAtiva();const lim=(of&&p&&of.nome===p.nome&&Number(of.estoque)>0)?Math.max(1,ofRestam(of)):10;return Math.min(10,lim);}
+  /* ESTOQUE DO PRODUTO (30/09/2026, P53): o numero que o lojista informa no
+     painel mora em checkout_publico/{uid}.estoque, escrito so pelo robo.
+     Chave pelo nome normalizado, igual ao servidor. null = sem controle. */
+  function estoqueDe(nome){const m=(CK_CFG&&CK_CFG.estoque)||{};const k='n:'+String(nome||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();return Object.prototype.hasOwnProperty.call(m,k)?Math.max(0,Number(m[k])||0):null;}
+  function esgotado(p){const e=estoqueDe(p&&p.nome);return e!==null&&e<=0;}
+  function limiteQtd(p){const of=ofertaAtiva();let lim=(of&&p&&of.nome===p.nome&&Number(of.estoque)>0)?Math.max(1,ofRestam(of)):10;const eq=estoqueDe(p&&p.nome);if(eq!==null&&eq>0)lim=Math.min(lim,eq);return Math.max(1,Math.min(10,lim));}
   const SVG_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const SVG_PIX='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4.2 4.2-2.1 2.1L12 6.2 9.9 8.3 7.8 6.2zM2 12l4.2-4.2 2.1 2.1L6.2 12l2.1 2.1-2.1 2.1zm10 10l-4.2-4.2 2.1-2.1 2.1 2.1 2.1-2.1 2.1 2.1zm10-10l-4.2 4.2-2.1-2.1 2.1-2.1-2.1-2.1 2.1-2.1zM12 9.2L14.8 12 12 14.8 9.2 12z"/></svg>';
   function abrirProduto(nome,origem){
@@ -961,7 +969,7 @@ svg{display:block}
   function repintarPainel(){
     if(!ppNome)return;
     const box=el('painelProd'), p=acharProduto(ppNome), of=ofertaAtiva(), naOf=!!(p&&of&&of.nome===p.nome);
-    const chave=JSON.stringify([p,naOf?[of.precoPor,of.precoDe,of.estoque,of.vendidos,ofReservadas(of)]:0,cupomLiberado(),pixAtivo,destaqueNome()===ppNome,noAr]);
+    const chave=JSON.stringify([p,naOf?[of.precoPor,of.precoDe,of.estoque,of.vendidos,ofReservadas(of)]:0,cupomLiberado(),pixAtivo,destaqueNome()===ppNome,noAr,estoqueDe(p&&p.nome)]);
     if(box._chave===chave)return; box._chave=chave;
     if(!p||!noAr){
       /* saiu da sacolinha (ou a live acabou) com o painel aberto: nada de botao de compra */
@@ -977,8 +985,11 @@ svg{display:block}
     const selos=[]; if(naOf)selos.push('<span class="vSelo of">OFERTA DA LIVE</span>'); if(destaqueNome()===p.nome)selos.push('<span class="vSelo">MOSTRANDO AGORA</span>');
     h+='<div class="ppSelos">'+selos.join('')+'</div><div class="ppNome">'+esc(p.nome)+'</div><div class="ppPreco">'+precoTexto(p)+'</div>';
     if(naOf&&Number(of.estoque)>0){const r=ofRestam(of),rs=ofReservadas(of);h+='<div class="ppEstoque">'+(r>0?'Restam '+r+' na oferta'+(rs?' · '+rs+' aguardando Pix':''):(rs?'Todas reservadas · '+rs+' aguardando Pix':'Oferta esgotada'))+'</div>';}
+    else{const eq=estoqueDe(p.nome);if(eq!==null&&eq<=5)h+='<div class="ppEstoque">'+(eq>0?'Restam '+eq:'Esgotado')+'</div>';}
+    const semPeca=esgotado(p);
     if(d)h+='<div class="ppDesc'+(ppDescAberta?' aberta':'')+'" id="ppDesc">'+esc(d)+'</div><button type="button" class="ppMais escondido" id="ppVerMais">Ver mais</button>';
-    if(pix||w){
+    if(semPeca){h+='<div class="ppAcoes"><span class="btnEsgot">Esgotado</span>'+(w?'<a class="btnWppMini" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener" title="Perguntar no WhatsApp">'+SVG_WPP+'</a>':'')+'</div>';}
+    else if(pix||w){
       h+='<div class="ppAcoes"><div class="ckQtd"><button type="button" id="ppMenos" aria-label="Menos">−</button><b id="ppQ">'+ppQ+'</b><button type="button" id="ppMaisQ" aria-label="Mais">+</button></div>';
       if(pix){h+='<button type="button" class="btnPix" data-comprar="1">'+SVG_PIX+'Comprar com Pix</button>';
         if(w)h+='<a class="btnWppMini" data-quero="1" href="'+esc(w)+'" target="_blank" rel="noopener" title="Perguntar no WhatsApp">'+SVG_WPP+'</a>';}
@@ -1139,10 +1150,10 @@ svg{display:block}
   const brl=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
   function precoUnit(p){const of=ofertaAtiva();const t=String((of&&of.nome===p.nome?of.precoPor:(p.precoLive||p.preco))||'').replace(/^R\$\s*/i,'').trim();
     if(!/^\d{1,5}([.,]\d{1,2})?$/.test(t))return NaN;return Math.round(parseFloat(t.replace(',','.'))*100)/100;}
-  function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0;}
+  function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0&&!esgotado(p);}
   let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null,ckPrazoT=null;
   const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
-  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
+  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',ocupado:'Muita gente comprando agora. Tente de novo em instantes.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
   function abrirCompra(p,q){
     ckP=p; ckQ=Math.max(1,Math.min(limiteQtd(p),Number(q)||1)); clearInterval(ckPoll); clearInterval(ckPrazoT);
     el('ckForm').classList.remove('escondido'); el('ckPix').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckErro').classList.add('escondido');
@@ -1207,7 +1218,13 @@ svg{display:block}
       if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
       /* 30/09/2026: a oferta segura a unidade de quem gerou o Pix. Esgotado
          pode ser "por enquanto": diz quando uma unidade pode voltar. */
-      if(r&&r.erro==='esgotado'){
+      /* 30/09 (P53): esgotado do ESTOQUE DO PRODUTO vem com o nome; o da
+         oferta vem com a hora de volta. */
+      if(r&&r.erro==='esgotado'&&r.nome){
+        msg=(r.restam>0)?('Só restam '+Number(r.restam)+' de '+String(r.nome).slice(0,60)+'. Diminua a quantidade.'):('Esgotou: '+String(r.nome).slice(0,60)+'. Alguém levou a última agora.');
+        ev('live_pix_esgotado',{slug});
+      }
+      else if(r&&r.erro==='esgotado'){
         if(r.restam>0)msg='Só sobrou '+r.restam+' nesta oferta. Diminua a quantidade.';
         else if(r.voltaEm>Date.now())msg='Todas as unidades estão reservadas por quem já gerou o Pix. Se alguém não pagar, uma volta em até '+Math.max(1,Math.ceil((r.voltaEm-Date.now())/60000))+' min.';
         ev('live_pix_esgotado',{slug});
