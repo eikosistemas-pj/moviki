@@ -319,7 +319,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-09-29-clipes';</script>
+<script>window.MOVIKI_VERSAO='2026-09-30-ramos16';</script>
 </head>
 
 <body>
@@ -406,6 +406,18 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
             {k:'brecho',a:['brecho'],s:'Para brechós',
              h:['Peça única na arara.','Mostre ao vivo e ','quem pagar primeiro leva','.'],
              l:'Mostre a peça no corpo, conte a história dela, tire a dúvida de tamanho no chat e avise que é peça única.'},
+            {k:'lingerie',a:['linger','intim','pijam'],s:'Para lojas de moda íntima',
+             h:['Presente de Réveillon, peça no cabide.','Mostre ','o tecido de perto, ao vivo','.'],
+             l:'Mostre o cetim de perto e o caimento no cabide, responda “tem no G?” e “embrulha pra presente?” no chat e lance a oferta.'},
+            {k:'moda-fitness',a:['legging','academ'],s:'Para lojas de moda fitness',
+             h:['Tecido que só convence de perto.','Mostre ','a costura ao vivo','.'],
+             l:'Mostre o tecido de perto, a costura e as cores, responda “fica transparente?” e “tem GG?” no chat e lance a oferta.'},
+            {k:'moda-infantil',a:[],s:'Para lojas de moda infantil',
+             h:['Roupa de festa infantil só vende no provador.','Mostre ','a peça aberta, ao vivo','.'],
+             l:'Mostre a peça aberta e o tecido de perto, responda “tem de 4 anos?” e “é de algodão?” no chat e lance a oferta.'},
+            {k:'moda-praia',a:['praia','biquin','bikin'],s:'Para lojas de moda praia',
+             h:['Verão chegando e a moda praia na arara.','Mostre ','a estampa ao vivo','.'],
+             l:'Mostre a estampa e o tecido de perto, responda “tem no M?” e “tem em outra cor?” no chat e lance a oferta.'},
             {k:'moda-masculina',a:['masculin'],s:'Para lojas de moda masculina',
              h:['Camisa boa na arara e a loja sem movimento.','Seu cliente de sempre ','est\u00e1 no celular','.'],
              l:'Mostre o caimento da camisa, tire a d\u00favida do tamanho no chat e lance a oferta.'},
@@ -440,13 +452,19 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
             {k:'acessorios-celular',a:['acessorio','celular','capinha'],s:'Para lojas de acessórios de celular',
              h:['Ele vê a capinha no balcão e compra pela internet.','Venda ','antes, ao vivo','.'],
              l:'Mostre a capinha de pertinho, teste o fone ao vivo, responda “tem pro meu modelo?” no chat e lance a oferta.'},
-            {k:'bijuteria',a:['bijut','semijoia'],s:'Para lojas de bijuteria e semijoias',
+            {k:'semijoias',a:['semijoia','joia','relog'],s:'Para lojas de semijoias',
+             h:['Presente de Natal escolhido pelo celular.','Que seja ','na sua loja, ao vivo','.'],
+             l:'Mostre o brilho na luz e o fecho de perto, responda “é banhado a ouro 18k?” e “embrulha pra presente?” no chat e lance a oferta.'},
+            {k:'bijuteria',a:['bijut'],s:'Para lojas de bijuteria e acessórios',
              h:['Ninguém entra pra ver o brilho de perto.','Leve ','o brilho até ela','.'],
              l:'Mostre o brilho da peça de pertinho, monte o conjunto com a cliente no chat e lance a oferta.'},
             {k:'autopecas',a:['autopeca','autopecas','motopeca','pecas'],s:'Para lojas de autopeças',
              h:['Três ligações pra saber se tem a peça.','Mostre ','na mão, ao vivo','.'],
              l:'Mostre a peça na mão, confirme no chat se serve no carro do cliente, separe para retirada e lance a oferta.'},
-            {k:'naturais',a:['natura','granel','emporio'],s:'Para empórios de produtos naturais',
+            {k:'emporio',a:['emporio','queij','frios'],s:'Para empórios',
+             h:['Cesta de Natal montada. Pedido por telefone.','Monte ','a cesta ao vivo','.'],
+             l:'Mostre o queijo cortado, monte a cesta ao vivo, responda “separa pro dia 23?” no chat e lance a oferta.'},
+            {k:'naturais',a:['natura','granel'],s:'Para empórios de produtos naturais',
              h:['Chegou novidade no granel.','Conte ','ao bairro inteiro, ao vivo','.'],
              l:'Pese na hora, mostre o chá e a castanha de perto, responda no chat quanto a cliente quer levar e lance a oferta.',
              n:'Medicamento e emagrecedor não podem ser vendidos na live (Regras da live).'},
@@ -456,9 +474,41 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
             {k:'cama-mesa-banho',a:['cama','banho','lencol'],s:'Para lojas de cama, mesa e banho',
              h:['O toque do lençol não passa na foto.','Mostre ','o tecido de perto, ao vivo','.'],
              l:'Mostre o tecido de perto, confirme a medida no chat, apresente o jogo completo e lance a oferta.'},
-            {k:'otica',a:['otica'],s:'Para óticas',f:0}
+            {k:'acougue',a:['acoug','carne','churras'],s:'Para açougues e casas de carnes',
+             h:['Sábado de churrasco. Pedido só no balcão.','Monte ','o kit ao vivo','.'],
+             l:'Mostre o corte na hora, monte o kit churrasco, responda “dá pra 5 pessoas?” e “separa pro sábado?” no chat e deixe o pedido pronto para retirada.'},
+            {k:'cabelo',a:['cabel','aplique','peruc'],s:'Para lojas de cabelo e apliques',
+             h:['Cor de cabelo que a foto muda.','Mostre ','o tom ao vivo','.'],
+             l:'Mostre o tom na luz do dia e a textura de perto, responda “tem na cor mel?” e “qual o comprimento?” no chat e lance a oferta.'},
+            {k:'chocolateria',a:['chocolat','bombon','trufa'],s:'Para chocolaterias',
+             h:['Chocolate artesanal que o bairro nem conhece.','Mostre ','o recheio ao vivo','.'],
+             l:'Mostre o recheio ao vivo, monte a caixa de presente, responda “qual o recheio?” e “separa pro sábado?” no chat e lance a oferta.'},
+            {k:'eletroportateis',a:['eletropor','eletrodom','airfryer','fritadeir'],s:'Para lojas de eletroportáteis',
+             h:['Air fryer na vitrine e o cliente no app.','Ligue ','o aparelho ao vivo','.'],
+             l:'Ligue o aparelho ao vivo, mostre a voltagem, responda “é 110 ou 220?” e “tem garantia?” no chat e lance a oferta.'},
+            {k:'festa',a:['festa','balao','baloe'],s:'Para lojas de artigos de festa',
+             h:['Réveillon chegando e a decoração parada.','Mostre ','o kit montado, ao vivo','.'],
+             l:'Mostre a decoração montada e o kit completo, responda “tem em prata?” e “separa pro dia 30?” no chat e lance a oferta.'},
+            {k:'floricultura',a:['floric','flores','buque','arranjo'],s:'Para floriculturas',
+             h:['Arranjo pronto esperando cliente.','Mostre ','a flor de perto, ao vivo','.'],
+             l:'Mostre o arranjo girando e a flor de perto, responda “tem em branco também?” e “separa pro dia 24?” no chat e lance a oferta.'},
+            {k:'games',a:['game','informat','periferic'],s:'Para lojas de games e informática',
+             h:['Teclado que ele só testa no vídeo dos outros.','Teste ','ao vivo, na sua loja','.'],
+             l:'Teste o teclado ao vivo, mostre a luz do mouse, responda “qual o switch?” e “tem ABNT2?” no chat e lance a oferta.'},
+            {k:'padaria',a:['padar','panific','panetone','rabanada'],s:'Para padarias',
+             h:['Pão saindo às 17h e só o vizinho sabe.','Mostre ','a fornada ao vivo','.'],
+             l:'Mostre a fornada ao vivo e o panetone de perto, responda “tem panetone de gotas?” e “separa 2 pra véspera?” no chat e lance a oferta.'},
+            {k:'presentes',a:['present','lembranc'],s:'Para lojas de presentes',
+             h:['Dezembro: fila só na véspera.','Venda ','o mês inteiro, ao vivo','.'],
+             l:'Mostre o presente de perto, embrulhe ao vivo, responda “tem outra cor de caneca?” e “embrulha pra presente?” no chat e lance a oferta.'},
+            {k:'otica',a:['otica','oculos'],s:'Para óticas',
+             h:['Óculos de sol que só se prova na loja.','Prove ','a armação ao vivo','.'],
+             l:'Prove a armação ao vivo, mostre os modelos de perto, responda “tem proteção UV?” e “dá pra provar na loja?” no chat e lance a oferta.'}
           ];
           var achou=null;
+          /* 30/09/2026: o proprio ramo vence (moda-fitness nao cai em moda, semijoias nao cai em bijuteria). */
+          var base=r.replace(/^(shopping|comercio)-/,'');
+          for(var x=0;x<M.length;x++){ if(M[x].k===base){ achou=M[x]; break; } }
           for(var i=0;i<M.length && !achou;i++){
             for(var w=0;w<P.length && !achou;w++){
               if(!P[w]) continue;
@@ -528,7 +578,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
         try{
           var r=window.avRamoFoto;
           if(!r) return;
-          var RAMOS={farmacia:1,cosmeticos:1,moda:1,suplementos:1,pet:1,bebe:1,esportes:1,'moda-masculina':1,boutique:1,brecho:1,perfumaria:1,brinquedos:1,calcados:1,acai:1,confeitaria:1,'acessorios-celular':1,bijuteria:1,autopecas:1,naturais:1,utilidades:1,'cama-mesa-banho':1};
+          var RAMOS={farmacia:1,cosmeticos:1,moda:1,suplementos:1,pet:1,bebe:1,esportes:1,'moda-masculina':1,boutique:1,brecho:1,perfumaria:1,brinquedos:1,calcados:1,acai:1,confeitaria:1,'acessorios-celular':1,bijuteria:1,autopecas:1,naturais:1,utilidades:1,'cama-mesa-banho':1,lingerie:1,'moda-fitness':1,'moda-infantil':1,'moda-praia':1,semijoias:1,emporio:1,acougue:1,cabelo:1,chocolateria:1,eletroportateis:1,festa:1,floricultura:1,games:1,padaria:1,presentes:1,otica:1};
           if(!RAMOS[r]) return;
           var s=document.getElementById('avFotoSrc'), i=document.getElementById('avFotoImg');
           if(!i) return;
