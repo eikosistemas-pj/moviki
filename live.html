@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
-<!-- anterior: 2026-09-26-pedidos (entrega por bairro com taxa, CEP, numero e codigo do pedido) -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
 <!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
@@ -268,6 +268,17 @@ svg{display:block}
 .ckCod{width:100%;font-size:12px;word-break:break-all;background:#0b1728;border:1px solid var(--mv-linha);border-radius:10px;padding:8px;color:var(--mv-txt-2);max-height:70px;overflow:auto}
 .ckEst{text-align:center;font-size:13.5px;color:var(--mv-txt-2);margin:10px 0}
 .ckOk{text-align:center;padding:10px 0}
+/* 30/09/2026: prazo do Pix, quadro do recebedor e Pix vencido */
+.ckPrazo{text-align:center;font-size:13px;color:var(--mv-txt-2);margin:0 0 6px;font-variant-numeric:tabular-nums;min-height:18px}
+.ckPrazo b{color:var(--mv-txt)}
+.ckPrazo.pouco b{color:var(--mv-alerta)}
+.ckReceb{background:var(--mv-surf-2);border-radius:12px;padding:10px 12px;margin:10px 0 0;font-size:12.5px;color:var(--mv-txt-2);line-height:1.45}
+.ckReceb h4{margin:0 0 6px;font-size:13px;color:var(--mv-txt)}
+.ckReceb .lin{display:flex;justify-content:space-between;gap:10px}
+.ckReceb .lin b{color:var(--mv-txt);text-align:right;word-break:break-word}
+.ckReceb p{margin:6px 0 0}
+.ckVenc{background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.45);color:#ffe2a8;border-radius:12px;padding:12px;margin:4px 0 10px;font-size:13.5px;line-height:1.45;text-align:center}
+.ckVenc strong{display:block;font-size:15px;margin-bottom:4px;color:var(--mv-alerta)}
 .ckOk svg{width:56px;height:56px;color:var(--mv-ok);margin:0 auto 8px}
 .msgErro{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.4);color:#ffd0d0;border-radius:11px;padding:10px 12px;font-size:13px;margin-top:10px}
 #toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);z-index:30;background:rgba(0,0,0,.85);color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;max-width:86%;text-align:center}
@@ -377,6 +388,7 @@ svg{display:block}
     <div id="ckErro" class="msgErro escondido"></div>
   </div>
   <div id="ckPix" class="escondido">
+    <div class="ckPrazo" id="ckPrazo" aria-live="polite"></div>
     <img class="ckQr" id="ckQr" alt="QR Code do Pix">
     <!-- QR desenhado aqui quando o modo de pagamento nao devolve imagem
          pronta (chave Pix do proprio lojista). Ver mvqr.js. -->
@@ -384,6 +396,13 @@ svg{display:block}
     <div class="ckTotal"><span id="ckPixProd"></span><span id="ckPixTotal"></span></div>
     <div class="ckCod" id="ckCod"></div>
     <button type="button" class="btnGrad" id="ckCopiar" style="width:100%;margin-top:10px">Copiar código Pix</button>
+    <!-- 30/09/2026: nome e documento de quem recebe. E a unica defesa que
+         sobrevive a um QR trocado por script: o app do banco mostra o mesmo nome. -->
+    <div class="ckReceb escondido" id="ckReceb"></div>
+    <!-- Pix vencido: o codigo some da tela. O estatico nao vence no banco, entao
+         deixa-lo a vista convidaria a pagar um preco ou uma unidade que ja nao valem. -->
+    <div class="ckVenc escondido" id="ckVenc"><strong>O prazo deste Pix acabou</strong><span id="ckVencTxt">Não pague mais este código.</span></div>
+    <button type="button" class="btnGrad escondido" id="ckNovo" style="width:100%">Gerar novo Pix</button>
     <div class="ckEst" id="ckEst">Esperando o pagamento…</div>
     <!-- MODO CHAVE PIX DO LOJISTA (16/09/2026): aqui NAO existe gateway a quem
          perguntar, entao a tela nunca confirma sozinha. Quem confirma e o
@@ -431,7 +450,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-29-vitrine1';
+  window.MOVIKI_VERSAO='2026-09-30-reserva';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -926,7 +945,7 @@ svg{display:block}
     const c=doCardapio(p.nome), d=(c&&typeof c.descricao==='string')?c.descricao.trim().slice(0,600):'';
     return (d&&!mvProibido(d))?d:'';
   }
-  function limiteQtd(p){const of=ofertaAtiva();const lim=(of&&p&&of.nome===p.nome&&Number(of.estoque)>0)?Math.max(1,Number(of.estoque)-Number(of.vendidos||0)):10;return Math.min(10,lim);}
+  function limiteQtd(p){const of=ofertaAtiva();const lim=(of&&p&&of.nome===p.nome&&Number(of.estoque)>0)?Math.max(1,ofRestam(of)):10;return Math.min(10,lim);}
   const SVG_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   const SVG_PIX='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l4.2 4.2-2.1 2.1L12 6.2 9.9 8.3 7.8 6.2zM2 12l4.2-4.2 2.1 2.1L6.2 12l2.1 2.1-2.1 2.1zm10 10l-4.2-4.2 2.1-2.1 2.1 2.1 2.1-2.1 2.1 2.1zm10-10l-4.2 4.2-2.1-2.1 2.1-2.1-2.1-2.1 2.1-2.1zM12 9.2L14.8 12 12 14.8 9.2 12z"/></svg>';
   function abrirProduto(nome,origem){
@@ -942,7 +961,7 @@ svg{display:block}
   function repintarPainel(){
     if(!ppNome)return;
     const box=el('painelProd'), p=acharProduto(ppNome), of=ofertaAtiva(), naOf=!!(p&&of&&of.nome===p.nome);
-    const chave=JSON.stringify([p,naOf?[of.precoPor,of.precoDe,of.estoque,of.vendidos]:0,cupomLiberado(),pixAtivo,destaqueNome()===ppNome,noAr]);
+    const chave=JSON.stringify([p,naOf?[of.precoPor,of.precoDe,of.estoque,of.vendidos,ofReservadas(of)]:0,cupomLiberado(),pixAtivo,destaqueNome()===ppNome,noAr]);
     if(box._chave===chave)return; box._chave=chave;
     if(!p||!noAr){
       /* saiu da sacolinha (ou a live acabou) com o painel aberto: nada de botao de compra */
@@ -957,7 +976,7 @@ svg{display:block}
       '<div class="ppPontos" id="ppPontos">'+(fotos.length>1?fotos.map((_,i)=>'<i'+(i===0?' class="on"':'')+'></i>').join(''):'')+'</div>';
     const selos=[]; if(naOf)selos.push('<span class="vSelo of">OFERTA DA LIVE</span>'); if(destaqueNome()===p.nome)selos.push('<span class="vSelo">MOSTRANDO AGORA</span>');
     h+='<div class="ppSelos">'+selos.join('')+'</div><div class="ppNome">'+esc(p.nome)+'</div><div class="ppPreco">'+precoTexto(p)+'</div>';
-    if(naOf&&Number(of.estoque)>0){const tot=Number(of.estoque),r=tot-Math.min(Number(of.vendidos||0),tot);h+='<div class="ppEstoque">'+(r>0?'Restam '+r+' na oferta':'Oferta esgotada')+'</div>';}
+    if(naOf&&Number(of.estoque)>0){const r=ofRestam(of),rs=ofReservadas(of);h+='<div class="ppEstoque">'+(r>0?'Restam '+r+' na oferta'+(rs?' · '+rs+' aguardando Pix':''):(rs?'Todas reservadas · '+rs+' aguardando Pix':'Oferta esgotada'))+'</div>';}
     if(d)h+='<div class="ppDesc'+(ppDescAberta?' aberta':'')+'" id="ppDesc">'+esc(d)+'</div><button type="button" class="ppMais escondido" id="ppVerMais">Ver mais</button>';
     if(pix||w){
       h+='<div class="ppAcoes"><div class="ckQtd"><button type="button" id="ppMenos" aria-label="Menos">−</button><b id="ppQ">'+ppQ+'</b><button type="button" id="ppMaisQ" aria-label="Mais">+</button></div>';
@@ -1035,6 +1054,12 @@ svg{display:block}
     return o;
   }
   function ofertaAtiva(){const o=ofertaLimpa(est.oferta);return nivel==='enterprise'&&o&&ms(o.fimEm)>Date.now()?o:null;}
+  /* 30/09/2026: unidades seguras por quem ja gerou o Pix. O servidor grava em
+     oferta.reservas o horario em que cada uma volta; a conta e feita aqui, sem
+     leitura nova. Numero na tela e numero contado. */
+  function ofReservadas(o){return (o&&Array.isArray(o.reservas))?o.reservas.filter(t=>Number(t)>Date.now()).length:0;}
+  function ofRestam(o){const tot=Number((o&&o.estoque)||0);return Math.max(0,tot-Math.min(Number(o.vendidos||0),tot)-ofReservadas(o));}
+  let ofResVisto=-1;
   function pintarEnterprise(){
     const ent=nivel==='enterprise';
     const o=ofertaAtiva(); el('faixaOferta').classList.toggle('escondido',!o);
@@ -1042,7 +1067,7 @@ svg{display:block}
       el('ofNome').textContent=o.nome; el('ofDe').textContent=o.precoDe?fmtPreco(o.precoDe):''; el('ofPor').textContent=fmtPreco(o.precoPor);
       const tot=Number(o.estoque||0), vend=Math.min(Number(o.vendidos||0),tot);
       el('ofEstoqueBox').classList.toggle('escondido',!(tot>0));
-      if(tot>0){const r=tot-vend;el('ofEstoque').textContent=r>0?('Restam '+r+' de '+tot):'Esgotado';el('ofBarra').style.width=Math.round(vend/tot*100)+'%';}
+      if(tot>0){const r=ofRestam(o),rs=ofReservadas(o);ofResVisto=rs;el('ofEstoque').textContent=r>0?('Restam '+r+' de '+tot+(rs?' · '+rs+' aguardando Pix':'')):(rs?('Reservado · '+rs+' aguardando Pix'):'Esgotado');el('ofBarra').style.width=Math.round((tot-r)/tot*100)+'%';}
     }
     const b=est.brinde, bOk=ent&&b&&b.texto&&!mvProibido(b.texto);   /* B9 */
     el('faixaBrinde').classList.toggle('escondido',!bOk);
@@ -1053,7 +1078,9 @@ svg{display:block}
     pintarCupom();
   }
   setInterval(()=>{if(!noAr)return;const o=ofertaAtiva();
-    if(o){const s=Math.max(0,Math.floor((ms(o.fimEm)-Date.now())/1000));el('ofRelogio').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+    if(o){const s=Math.max(0,Math.floor((ms(o.fimEm)-Date.now())/1000));el('ofRelogio').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+      /* reserva que venceu devolve a unidade sem nada mudar no banco */
+      if(Number(o.estoque)>0&&ofReservadas(o)!==ofResVisto){pintarEnterprise();pintarProduto();pintarSacola();repintarPainel();}}
     else if(!el('faixaOferta').classList.contains('escondido')){pintarEnterprise();pintarProduto();pintarSacola();}
   },1000);
 
@@ -1113,11 +1140,11 @@ svg{display:block}
   function precoUnit(p){const of=ofertaAtiva();const t=String((of&&of.nome===p.nome?of.precoPor:(p.precoLive||p.preco))||'').replace(/^R\$\s*/i,'').trim();
     if(!/^\d{1,5}([.,]\d{1,2})?$/.test(t))return NaN;return Math.round(parseFloat(t.replace(',','.'))*100)/100;}
   function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0;}
-  let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null;
+  let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null,ckPrazoT=null;
   const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
-  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
+  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
   function abrirCompra(p,q){
-    ckP=p; ckQ=Math.max(1,Math.min(limiteQtd(p),Number(q)||1)); clearInterval(ckPoll);
+    ckP=p; ckQ=Math.max(1,Math.min(limiteQtd(p),Number(q)||1)); clearInterval(ckPoll); clearInterval(ckPrazoT);
     el('ckForm').classList.remove('escondido'); el('ckPix').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckErro').classList.add('escondido');
     el('ckProd').textContent=p.nome; el('ckAviso').textContent='A venda é feita por '+((neg&&neg.nome)||'este negócio')+' e o Pix vai direto para a conta dele. O CPF é exigido pelo banco para gerar o Pix; o Moviki não guarda o número inteiro.';
     try{const g=JSON.parse(localStorage.getItem('mv_ck_dados')||'{}');if(g.nome)el('ckNome').value=g.nome;if(g.wpp)el('ckWpp').value=g.wpp;}catch(_){}
@@ -1155,7 +1182,7 @@ svg{display:block}
     el('ckFreteLin').classList.toggle('escondido',!(ent==='entrega'&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
     el('ckTotal').textContent=brl(u*ckQ+fr);}
   el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();}};
-  el('ckMais').onclick=()=>{const of=ofertaAtiva();const lim=(of&&of.nome===ckP.nome&&Number(of.estoque)>0)?Math.max(1,Number(of.estoque)-Number(of.vendidos||0)):10;if(ckQ<Math.min(10,lim)){ckQ++;ckTotal();}else toast('Limite desta compra.');};
+  el('ckMais').onclick=()=>{if(ckQ<limiteQtd(ckP)){ckQ++;ckTotal();}else toast('Limite desta compra.');};
   document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',trocarEntrega));
   el('ckCpf').addEventListener('input',()=>{let d=el('ckCpf').value.replace(/\D/g,'').slice(0,11);el('ckCpf').value=d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');});
   el('ckGerar').onclick=async()=>{
@@ -1178,30 +1205,107 @@ svg{display:block}
     if(!r||!r.ok){
       let msg=(r&&r.erro==='asaas')?(r.mensagem||'O banco recusou. Tente de novo.'):(ERR_CK[r&&r.erro]||'Não deu certo. Confira a internet e tente de novo.');
       if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
+      /* 30/09/2026: a oferta segura a unidade de quem gerou o Pix. Esgotado
+         pode ser "por enquanto": diz quando uma unidade pode voltar. */
+      if(r&&r.erro==='esgotado'){
+        if(r.restam>0)msg='Só sobrou '+r.restam+' nesta oferta. Diminua a quantidade.';
+        else if(r.voltaEm>Date.now())msg='Todas as unidades estão reservadas por quem já gerou o Pix. Se alguém não pagar, uma volta em até '+Math.max(1,Math.ceil((r.voltaEm-Date.now())/60000))+' min.';
+        ev('live_pix_esgotado',{slug});
+      }
       if(r&&r.erro==='minimo_entrega')msg='Pedido mínimo para entrega: '+brl(r.minimo||0)+' em produtos.';
       er.textContent=msg;er.classList.remove('escondido');return;}
     try{localStorage.setItem('mv_ck_dados',JSON.stringify({nome:corpo.nome,wpp:corpo.whatsapp}));}catch(_){}
-    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||'',numero:r.numero||0,frete:r.frete||0,entrega:r.entrega||ent_};
-    try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}
+    const ofNa=ofertaAtiva();
+    /* 30/09/2026: o pedido guarda o prazo que o SERVIDOR deu (10 min na
+       oferta, 30 no resto) e o proprio codigo, para a tela voltar inteira
+       quando o comprador sai para o app do banco e volta. So nesta aba. */
+    ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||'',numero:r.numero||0,frete:r.frete||0,entrega:r.entrega||ent_,
+      validoAte:Number(r.validoAte)||(Date.now()+(Number(r.validadeMin)||30)*60000),criado:Date.now(),
+      copia:String((r.pix&&r.pix.copiaCola)||''),imagem:String((r.pix&&r.pix.imagem)||''),receb:(r.pix&&r.pix.recebedor)||null,
+      oferta:!!(ofNa&&ofNa.nome===ckP.nome),avisou:false,vencido:false};
+    guardarPed();
     ev('live_pix_gerado',{slug,valor:r.total});
-    el('ckForm').classList.add('escondido'); el('ckPix').classList.remove('escondido');
+    mostrarPix();
+  };
+  function guardarPed(){try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}}
+  function esquecerPed(){try{sessionStorage.removeItem('mv_ck_ped');}catch(_){}}
+  /* Desenha a tela do Pix a partir de ckPed (pedido novo ou retomado). */
+  function mostrarPix(){
+    const g=ckPed;
+    el('ckForm').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckPix').classList.remove('escondido');
+    el('ckVenc').classList.add('escondido'); el('ckNovo').classList.add('escondido'); el('ckNota').classList.remove('escondido');
+    el('ckPixProd').textContent=(g.qtd>1?g.qtd+'x ':'')+(g.produto||''); el('ckPixTotal').textContent=brl(g.total);
     /* QR SEMPRE NA TELA (16/09/2026). No modo Asaas o banco devolve a
        imagem pronta; no modo chave-Pix-do-lojista nao vem imagem nenhuma e
        a tela ficava so com o copia-e-cola — inutil para quem vai pagar do
        celular de outra pessoa. Sem imagem, o QR e desenhado aqui a partir
        do proprio copia-e-cola, com o gerador da casa (mvqr.js). */
-    desenharQrPix(r.pix.imagem||'', r.pix.copiaCola||'');
+    if(g.copia){desenharQrPix(g.imagem||'',g.copia);el('ckCod').textContent=g.copia;}
+    else{el('ckQr').classList.add('escondido');el('ckQrC').classList.add('escondido');el('ckCod').textContent='Se ainda não pagou, gere o Pix de novo.';}
+    el('ckCod').classList.remove('escondido'); el('ckCopiar').classList.toggle('escondido',!g.copia);
+    pintarRecebedor(g.receb);
     /* O texto muda com o modo: prometer confirmacao automatica onde ela nao
        existe deixa o comprador olhando a tela ate o Pix vencer — depois de
        ele ja ter pago. */
-    const ehPixDireto = (r.modo==='pix');
-    el('ckPaguei').classList.toggle('escondido', !ehPixDireto);
+    const ehPixDireto=(g.modo==='pix');
+    el('ckPaguei').classList.toggle('escondido',!ehPixDireto||g.avisou);
+    const bp=el('ckBtnPaguei'); bp.disabled=false; bp.textContent='Já paguei'; bp.className='btnGrad';
     el('ckNota').textContent = ehPixDireto
       ? ('Abra o app do banco, use o copia e cola ou leia o QR, e pague o valor EXATO — os centavos identificam o seu pedido. Depois toque em «Já paguei»: '+((neg&&neg.nome)||'o vendedor')+' confere no extrato e libera.')
       : 'Abra o app do seu banco, escolha Pix copia e cola ou leia o QR. Esta tela confirma sozinha quando o pagamento cair.';
-    el('ckCod').textContent=r.pix.copiaCola; el('ckPixProd').textContent=(r.qtd>1?r.qtd+'x ':'')+r.produto; el('ckPixTotal').textContent=brl(r.total);
+    el('ckEst').textContent=g.avisou?('O vendedor está conferindo o seu pagamento.'):'Esperando o pagamento…';
+    if(g.vencido||Date.now()>=g.validoAte)vencerPix(g.vencidoMotivo||'');
+    else contarPrazo();
     esperarPagamento();
-  };
+  }
+  function pintarRecebedor(rc){
+    const cx=el('ckReceb');
+    if(!rc||!rc.nome){cx.innerHTML='';cx.classList.add('escondido');return;}
+    cx.innerHTML='<h4>Confira antes de pagar</h4><div class="lin"><span>Recebedor</span><b>'+esc(String(rc.nome))+'</b></div>'+
+      (rc.documento?'<div class="lin"><span>CPF/CNPJ</span><b>'+esc(String(rc.documento))+'</b></div>':'')+
+      (rc.chave?'<div class="lin"><span>Chave Pix</span><b>'+esc(String(rc.chave))+'</b></div>':'')+
+      '<p>O app do seu banco mostra esse mesmo nome antes de confirmar. Se aparecer outro, não pague e avise no chat.</p>';
+    cx.classList.remove('escondido');
+  }
+  /* Relogio do prazo. Quando zera, o codigo sai da tela. */
+  function contarPrazo(){
+    clearInterval(ckPrazoT);
+    const tick=()=>{
+      if(!ckPed||ckPed.vencido){clearInterval(ckPrazoT);return;}
+      const s=Math.max(0,Math.floor((ckPed.validoAte-Date.now())/1000)), cx=el('ckPrazo');
+      cx.classList.toggle('pouco',s<120);
+      cx.innerHTML=ckPed.avisou?'':('Este Pix vale por <b>'+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'</b>');
+      if(s<=0){clearInterval(ckPrazoT);vencerPix('');}
+    };
+    tick(); ckPrazoT=setInterval(tick,1000);
+  }
+  /* 30/09/2026: PIX VENCIDO. O copia-e-cola da chave do lojista nao vence no
+     banco: se ficasse na tela, o comprador pagaria um preco de oferta que ja
+     acabou ou uma unidade que ja foi liberada para outra pessoa. O codigo
+     some; ficam "Gerar novo Pix" e, no Pix direto, o aviso de quem pagou
+     dentro do prazo e so avisou depois. */
+  function vencerPix(motivo){
+    if(!ckPed)return;
+    const primeira=!ckPed.vencido;
+    ckPed.vencido=true; ckPed.vencidoMotivo=motivo||ckPed.vencidoMotivo||''; guardarPed();
+    clearInterval(ckPrazoT); el('ckPrazo').innerHTML='';
+    ['ckQr','ckQrC','ckCod','ckCopiar','ckReceb'].forEach(i=>el(i).classList.add('escondido'));
+    el('ckNota').classList.add('escondido');
+    if(ckPed.avisou){el('ckEst').textContent='O vendedor está conferindo o seu pagamento.';return;}
+    el('ckVencTxt').textContent=(ckPed.vencidoMotivo==='cancelado'?'Este Pix foi cancelado. ':'')+'Não pague mais este código. '+
+      (ckPed.oferta?'A unidade da oferta foi liberada para outra pessoa.':'Se ainda quiser, gere um novo com o preço de agora.');
+    el('ckVenc').classList.remove('escondido'); el('ckNovo').classList.remove('escondido');
+    const direto=ckPed.modo==='pix';
+    el('ckPaguei').classList.toggle('escondido',!direto);
+    if(direto){const bp=el('ckBtnPaguei');bp.disabled=false;bp.textContent='Já paguei antes do prazo acabar';bp.className='btnSec';}
+    el('ckEst').textContent='';
+    if(primeira)ev('live_pix_vencido',{slug,oferta:ckPed.oferta?1:0});
+  }
+  el('ckNovo').addEventListener('click',()=>{
+    const nome=ckPed&&ckPed.produto, q=(ckPed&&ckPed.qtd)||1, p=nome?acharProduto(nome):null;
+    if(!p||!pixPode(p)){toast(noAr?'Este produto saiu da vitrine da live.':'A live acabou.');return;}
+    clearInterval(ckPoll); esquecerPed(); ckPed=null; abrirCompra(p,q);
+  });
   function desenharQrPix(imagem, copiaCola){
     const img=el('ckQr'), cv=el('ckQrC');
     if(imagem){img.src='data:image/png;base64,'+imagem;img.classList.remove('escondido');cv.classList.add('escondido');return;}
@@ -1226,25 +1330,37 @@ svg{display:block}
     let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify(Object.assign({acao:'compra_paguei',pedidoId:ckPed.id,chave:ckPed.chave},comprovante?{comprovanteBase64:comprovante}:{}))})).json();}catch(_){r=null;}
     if(!r||!r.ok){b.disabled=false;b.textContent=antes;toast((r&&r.erro==='comprovante_grande')?'A imagem é grande demais.':'Não deu para avisar. Tente de novo.');return;}
+    if(r.status&&r.status!=='conferindo'){b.disabled=false;b.textContent=antes;if(CK_PAGOS.indexOf(r.status)>=0){clearInterval(ckPoll);pago(r);}else toast('Este pedido já foi encerrado pelo vendedor.');return;}
     b.textContent='Vendedor avisado';
-    el('ckEst').textContent='Avisamos '+((neg&&neg.nome)||'o vendedor')+'. Assim que ele conferir no extrato, o pedido é liberado aqui.';
-    ev('live_pix_avisou',{slug});
+    ckPed.avisou=true; guardarPed();
+    el('ckPaguei').classList.add('escondido'); el('ckVenc').classList.add('escondido'); el('ckNovo').classList.add('escondido'); el('ckPrazo').innerHTML='';
+    const vend=(neg&&neg.nome)||'o vendedor';
+    el('ckEst').textContent=r.alertaEstoque
+      ? ('Avisamos '+vend+'. O seu pagamento chegou depois que a unidade da oferta foi reservada por outra pessoa: ele confere e, se não tiver a peça, devolve o Pix.')
+      : ('Avisamos '+vend+'. Assim que ele conferir no extrato, o pedido é liberado aqui.');
+    ev('live_pix_avisou',{slug,atrasado:r.atrasado?1:0});
+    esperarPagamento();
   });
   function esperarPagamento(){
-    clearInterval(ckPoll); const t0=Date.now();
+    clearInterval(ckPoll);
     ckPoll=setInterval(async()=>{
       if(!ckPed)return clearInterval(ckPoll);
-      if(Date.now()-t0>30*60000){clearInterval(ckPoll);el('ckEst').textContent='O prazo deste Pix passou. Se você já pagou, fale com o vendedor.';return;}
+      /* Pix direto vencido sem aviso: nao ha o que esperar (quem confirma e o
+         vendedor, e so depois do "Ja paguei"). Duas horas: para de perguntar. */
+      if((ckPed.vencido&&!ckPed.avisou&&ckPed.modo==='pix')||Date.now()-(ckPed.criado||0)>2*3600000)return clearInterval(ckPoll);
       if(document.visibilityState!=='visible')return;
       let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({acao:'compra_status',pedidoId:ckPed.id,chave:ckPed.chave})})).json();}catch(_){return;}
-      if(r&&r.ok&&CK_PAGOS.indexOf(r.status)>=0){clearInterval(ckPoll);pago(r);}
-      else if(r&&r.ok&&r.status==='conferindo'){el('ckEst').textContent='O vendedor está conferindo o seu pagamento.';}
-      else if(r&&r.ok&&(r.status==='expirado'||r.status==='cancelado')){clearInterval(ckPoll);el('ckEst').textContent='Este Pix foi cancelado ou venceu. Gere outro se ainda quiser.';}
+      if(!r||!r.ok)return;
+      if(Number(r.validoAte)>0&&!ckPed.vencido&&Number(r.validoAte)!==ckPed.validoAte){ckPed.validoAte=Number(r.validoAte);guardarPed();}
+      if(CK_PAGOS.indexOf(r.status)>=0){clearInterval(ckPoll);pago(r);}
+      else if(r.status==='conferindo'){if(!ckPed.avisou){ckPed.avisou=true;guardarPed();el('ckPaguei').classList.add('escondido');}el('ckEst').textContent='O vendedor está conferindo o seu pagamento.';}
+      else if(r.status==='recusado'){clearInterval(ckPoll);esquecerPed();el('ckEst').textContent='O vendedor não encontrou este pagamento no extrato. Chame no WhatsApp da página do negócio.';}
+      else if(r.status==='expirado'||r.status==='cancelado'){if(!ckPed.vencido)vencerPix(r.status);if(ckPed.modo!=='pix')clearInterval(ckPoll);}
     },4000);
   }
   function pago(st){
     ev('purchase_live',{slug,valor:ckPed.total});
-    try{sessionStorage.removeItem('mv_ck_ped');}catch(_){}
+    clearInterval(ckPrazoT); esquecerPed();
     el('ckPix').classList.add('escondido'); el('ckOk').classList.remove('escondido'); el('folhaCompra').classList.remove('escondido');
     const num=(st&&st.numero)||ckPed.numero||0;
     const cod=num?String(num).padStart(4,'0'):ckPed.id.slice(-6).toUpperCase(), ent_=(st&&st.entrega)||ckPed.entrega||(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
@@ -1259,7 +1375,12 @@ svg{display:block}
     el('ckOkWpp').href=w?'https://wa.me/55'+w+'?text='+encodeURIComponent(msg):'#'; el('ckOkWpp').classList.toggle('escondido',!w);
   }
   /* Fechou a aba no meio do pagamento e voltou: retoma a espera. */
-  try{const g=JSON.parse(sessionStorage.getItem('mv_ck_ped')||'null');if(g&&g.id){ckPed=g;setTimeout(()=>{el('ckForm').classList.add('escondido');el('ckOk').classList.add('escondido');el('ckPix').classList.remove('escondido');el('ckQr').classList.add('escondido');el('ckCod').textContent='Se ainda não pagou, gere o Pix de novo.';el('ckPixProd').textContent=g.produto;el('ckPixTotal').textContent=brl(g.total);el('folhaCompra').classList.remove('escondido');esperarPagamento();},1500);}}catch(_){}
+  /* 30/09/2026: volta com o codigo, o prazo e o recebedor — ou com o Pix ja
+     vencido. Pedido guardado pela versao anterior (sem prazo) ganha 30 min. */
+  try{const g=JSON.parse(sessionStorage.getItem('mv_ck_ped')||'null');if(g&&g.id){
+    if(!g.validoAte)g.validoAte=(g.criado||Date.now())+30*60000;
+    if(!g.criado)g.criado=Date.now();
+    ckPed=g;setTimeout(()=>{if(ckPed!==g)return;mostrarPix();el('folhaCompra').classList.remove('escondido');},1500);}}catch(_){}
   /* ================= denuncia (anonima) ================= */
   el('btnDenunciar').addEventListener('click',()=>{el('folhaDenuncia').classList.remove('escondido');ev('live_denuncia_aberta',{slug});});
   document.querySelectorAll('input[name="denM"]').forEach(x=>x.addEventListener('change',()=>{const v=document.querySelector('input[name="denM"]:checked').value;el('denUrgente').style.display=(v==='menor'||v==='violencia')?'block':'none';}));
