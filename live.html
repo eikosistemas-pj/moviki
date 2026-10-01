@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -61,10 +61,10 @@ svg{display:block}
 .idTxt{min-width:0}
 .idNome{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .idSub{font-size:11.5px;color:var(--mv-txt-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pillVivo{display:inline-flex;align-items:center;gap:5px;background:var(--vivo);color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.6px;padding:4px 9px;border-radius:6px}
+.pillVivo{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0;background:var(--vivo);color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.6px;padding:4px 9px;border-radius:6px}
 .pillVivo i{width:7px;height:7px;border-radius:50%;background:#fff;animation:pisca 1.2s infinite}
 @keyframes pisca{50%{opacity:.25}}
-.pillOlho{display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.42);font-size:12px;font-weight:600;padding:4px 9px;border-radius:6px}
+.pillOlho{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0;background:rgba(0,0,0,.42);font-size:12px;font-weight:600;padding:4px 9px;border-radius:6px}
 .pillOlho svg{width:14px;height:14px}
 .topoDir{margin-left:auto;display:flex;gap:8px;align-items:center}
 .btnRedondo{width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.42);color:#fff;display:flex;align-items:center;justify-content:center}
@@ -452,7 +452,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-09-30-estoque';
+  window.MOVIKI_VERSAO='2026-10-01-pillvivo';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
