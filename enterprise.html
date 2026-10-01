@@ -188,6 +188,8 @@
       <li>Suporte prioritário no WhatsApp</li>
     </ul>
     <a class="btn btn-prim" href="https://app.moviki.com.br?plano=enterprise" data-ev="assinar_preco">Começar agora</a>
+    <p class="fundLink" id="fundLink" style="margin-top:14px;font-size:14.5px;color:#ffe08a">🏅 <b>Lote Fundador:</b> 12 meses de Enterprise por <b>R$ 990</b> à vista ou 12x de R$ 89,90 no cartão. 50 vagas, até 27/11. <a href="/fundador" data-ev="fundador_enterprise" style="color:#ffcf4d;text-decoration:underline;font-weight:700">Ver o Lote Fundador →</a></p>
+    <script>if(Date.now()>Date.parse('2026-11-27T23:59:59-03:00')){var _fl=document.getElementById('fundLink');if(_fl)_fl.style.display='none';}</script>
   </div>
 </div></section>
 
@@ -232,7 +234,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-26-varejo';
+window.MOVIKI_VERSAO = '2026-10-01-fundador'; /* 2026-10-01-fundador: chamada do Lote Fundador abaixo do preco; antes 2026-09-26-varejo */
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
