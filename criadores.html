@@ -7,7 +7,7 @@
 <meta name="description" content="Para criadores de conteúdo: mostre o Moviki para quem tem comércio e receba 15% de cada mensalidade paga pelos comércios do seu link, enquanto continuarem assinando. Material pronto por ramo, link próprio, crachá com QR e saque por Pix. Grátis para participar. Pode ser zero.">
 <link rel="canonical" href="https://www.moviki.com.br/criadores">
 <!--
-  criadores.html — 2026-09-30-criadores2 (rota /criadores no vercel.json, ANTES do curinga /:slug).
+  criadores.html — 2026-09-30-criadores3 (rota /criadores no vercel.json, ANTES do curinga /:slug).
   Porta de entrada do funil de criadores: anuncio (gancho 35 s, Google/YouTube) -> esta pagina (guia 2:18) -> cadastro de parceiro.
   CSP desta pagina (meta, como o resto do repo):
     frame-src https://www.youtube-nocookie.com  -> o guia no YouTube, so nasce no toque
@@ -98,8 +98,8 @@ h2 em,h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:tex
 .micro svg{width:16px;height:16px;color:var(--verde);flex:none}
 
 /* celular com o guia */
-.palco{position:relative;display:flex;justify-content:center}
-.cel{position:relative;width:min(330px,78vw);aspect-ratio:9/16;border-radius:42px;padding:10px;background:linear-gradient(160deg,#1c2b44,#0b1424);box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.05)}
+.palco{position:relative;display:grid;grid-template-columns:minmax(0,280px) 196px;gap:16px;justify-content:center;align-items:center}
+.cel{position:relative;width:100%;aspect-ratio:9/16;border-radius:42px;padding:10px;background:linear-gradient(160deg,#1c2b44,#0b1424);box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.05)}
 .cel .tela{position:relative;width:100%;height:100%;border-radius:33px;overflow:hidden;background:#000;cursor:pointer}
 .cel .tela img.capa{width:100%;height:100%;object-fit:cover}
 .cel .tela:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.65));pointer-events:none;transition:opacity .25s}
@@ -114,13 +114,14 @@ h2 em,h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:tex
 .tela.mv-carregando .play svg{animation:gira 1s linear infinite;opacity:.7}
 @keyframes gira{to{transform:rotate(360deg)}}
 .tela.mv-tocando .play,.tela.mv-tocando .rot,.tela.mv-tocando:after{opacity:0;pointer-events:none}
-.ficha{position:absolute;z-index:4;background:rgba(13,24,41,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--linha2);border-radius:16px;padding:10px 14px;font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.4);display:flex;align-items:center;gap:10px;white-space:nowrap}
-.ficha img{width:30px;height:30px;object-fit:contain}
-.ficha small{display:block;font-weight:500;color:var(--texto2);font-size:11.5px}
-.f1{left:-8px;top:14%;animation:flut 6s ease-in-out infinite}
-.f2{right:-14px;top:44%;animation:flut 7s ease-in-out -2s infinite}
-.f3{left:2px;bottom:12%;animation:flut 6.5s ease-in-out -4s infinite}
-@keyframes flut{50%{transform:translateY(-8px)}}
+.fichas{display:flex;flex-direction:column;gap:14px}
+.ficha{position:relative;background:rgba(13,24,41,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--linha2);border-radius:16px;padding:12px 14px;font-size:13.5px;font-weight:600;line-height:1.25;box-shadow:0 14px 34px rgba(0,0,0,.4);display:flex;align-items:center;gap:10px}
+.ficha img{width:30px;height:30px;object-fit:contain;flex:none}
+.ficha small{display:block;font-weight:500;color:var(--texto2);font-size:11.5px;margin-top:2px}
+.f1{animation:flut 6s ease-in-out infinite}
+.f2{animation:flut 7s ease-in-out -2s infinite}
+.f3{animation:flut 6.5s ease-in-out -4s infinite}
+@keyframes flut{50%{transform:translateY(-6px)}}
 
 /* faixa de contraste */
 .faixa{padding:0}
@@ -177,6 +178,7 @@ h2 em,h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:tex
 
 /* regra */
 .regra{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px;align-items:start}
+.regra>*{min-width:0}
 .cartao{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--linha);border-radius:var(--raio);padding:26px 24px}
 .grande{font-size:clamp(54px,9vw,84px);font-weight:800;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .cartao h3{font-size:20px;margin:8px 0 10px}
@@ -248,9 +250,18 @@ footer a{color:var(--texto2);text-decoration:underline;text-underline-offset:3px
 .barra .btn{width:100%;min-height:52px}
 .barra small{display:block;text-align:center;font-size:11.5px;color:var(--texto3);margin-top:6px}
 
+@media (min-width:961px) and (max-width:1120px){
+  .palco{grid-template-columns:minmax(0,280px) 164px;gap:14px}
+  .ficha{font-size:12.5px;padding:10px 11px;gap:8px}
+  .ficha img{width:26px;height:26px}
+}
 @media (max-width:960px){
   .hgrid,.prod,.regra,.conf{grid-template-columns:1fr}
   .hgrid{gap:34px}
+  .palco{grid-template-columns:1fr;justify-items:center;gap:20px}
+  .cel{width:min(300px,78vw)}
+  .fichas{flex-direction:row;width:100%;max-width:520px;gap:10px}
+  .ficha{flex:1 1 0;min-width:0;flex-direction:column;text-align:center;gap:6px;padding:12px 8px;animation:none}
   .vgrid,.passos,.comb{grid-template-columns:1fr 1fr}
   .kit{grid-template-columns:1fr}
   .faixa .caixa{grid-template-columns:1fr 1fr}
@@ -267,11 +278,14 @@ footer a{color:var(--texto2);text-decoration:underline;text-underline-offset:3px
   .trio{height:400px}
   .mini-cel{width:160px;border-radius:24px;padding:5px}
   .mini-cel img{border-radius:20px}
-  .f1{left:-4px}.f2{right:-6px}.f3{left:-2px}
-  .ficha{font-size:12px;padding:8px 11px}
-  .ficha img{width:24px;height:24px}
-  .f2{display:none}
+  .ficha{font-size:12.5px;padding:10px 6px}
+  .ficha small{font-size:11px}
+  .ficha img{width:26px;height:26px}
   .cel{width:min(290px,76vw)}
+  .cartao{padding:22px 16px}
+  table{font-size:14px}
+  th,td{padding:11px 4px}
+  th{font-size:10.5px;letter-spacing:.05em}
   .peca .foto{height:260px}
 }
 @media (prefers-reduced-motion:reduce){
@@ -334,9 +348,11 @@ footer a{color:var(--texto2);text-decoration:underline;text-underline-offset:3px
           <video id="crVideo" hidden playsinline controls preload="none" poster="/criadores-img/guia-capa.webp"></video>
         </div>
       </div>
-      <div class="ficha f1"><img src="/icones-premium/recorrente.png" alt="" onerror="this.remove()"><div>15% todo mês<small>enquanto ele assinar</small></div></div>
-      <div class="ficha f2"><img src="/icones-premium/galeria.png" alt="" onerror="this.remove()"><div>Material pronto<small>por ramo de comércio</small></div></div>
-      <div class="ficha f3"><img src="/icones-premium/pix.png" alt="" onerror="this.remove()"><div>Saque por Pix<small>a partir de R$ 20</small></div></div>
+      <div class="fichas">
+        <div class="ficha f1"><img src="/icones-premium/recorrente.png" alt="" onerror="this.remove()"><div>15% todo mês<small>enquanto ele assinar</small></div></div>
+        <div class="ficha f2"><img src="/icones-premium/galeria.png" alt="" onerror="this.remove()"><div>Material pronto<small>por ramo de comércio</small></div></div>
+        <div class="ficha f3"><img src="/icones-premium/pix.png" alt="" onerror="this.remove()"><div>Saque por Pix<small>a partir de R$&nbsp;20</small></div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -585,7 +601,7 @@ footer a{color:var(--texto2);text-decoration:underline;text-underline-offset:3px
   <small>Grátis para participar · pode ser zero</small>
 </div>
 
-<script>window.MOVIKI_VERSAO='2026-09-30-criadores2';</script>
+<script>window.MOVIKI_VERSAO='2026-09-30-criadores3';</script>
 <script>
 /* ===== CONFIGURACAO DO GUIA =====
    CR_YT: id do guia no YouTube (o trecho depois de youtu.be/ ou de /shorts/).
