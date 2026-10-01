@@ -1016,7 +1016,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-01-liveshop';</script>
+<script>window.MOVIKI_VERSAO='2026-10-01-loopjoias';</script>
 <script>
 /* Reserva dos icones 3D — 21/09/2026: esta funcao ESTAVA no fim da pagina.
    O onerror de um PNG que falha dispara antes de o fim da pagina ser lido, e
@@ -1199,13 +1199,60 @@ window.lpIco = lpIco;
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
-          <picture>
-            <source srcset="live-moda.webp" type="image/webp">
-            <img src="live-moda.jpg" alt="Tela de uma live de loja de moda no Moviki: selo AO VIVO, oferta da live com preço, chat dos clientes e botão Comprar com Pix." width="700" height="1273" loading="lazy" decoding="async" style="width:100%;max-width:320px;height:auto;border-radius:22px;box-shadow:0 22px 44px rgba(0,0,0,.55)">
-          </picture>
-          <p class="mv-muted" style="font-size:12px;text-align:center;max-width:320px">Os números são exemplo. Oferta com contagem e Pix dentro da live são do Enterprise. Na live de verdade, tudo o que aparece na tela é contado.</p>
+        <!-- 01/10/2026 - a tela parada da live (live-moda) virou cena em laco:
+             duas vendedoras de semijoias mostrando o brinco para o celular no
+             tripe. Laco sem emenda (quadro de ponte interpolado, sem ida e
+             volta), 4,4 s, 219 KB, sem som, em ramos/ (unica pasta
+             onde o .bat aceita video, ate 1,2 MB). A foto fica por baixo: e ela que
+             aparece ate o video tocar e para quem pediu menos movimento ou
+             esta em economia de dados. So toca quando a secao esta na tela. -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <div class="lp-lojaLaco">
+            <picture>
+              <source srcset="/ramos/home-semijoias.webp" type="image/webp">
+              <img src="/ramos/home-semijoias.jpg" alt="Cena ilustrativa: duas vendedoras de uma loja de semijoias mostram um brinco para o celular no tripé, ao vivo." width="540" height="960" loading="lazy" decoding="async">
+            </picture>
+            <video id="lpLojaLaco" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture width="540" height="960">
+              <source src="/ramos/home-semijoias.mp4" type="video/mp4">
+            </video>
+          </div>
+          <p class="mv-muted" style="font-size:12px;text-align:center;max-width:320px">Cena ilustrativa · loja fictícia. Oferta com contagem e Pix dentro da live são do Enterprise.</p>
         </div>
+        <style>
+          .lp-lojaLaco{position:relative;width:100%;max-width:320px;aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 22px 44px rgba(0,0,0,.55);background:#0b1626}
+          .lp-lojaLaco img,.lp-lojaLaco video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+          .lp-lojaLaco video{opacity:0;transition:opacity .35s ease}
+          .lp-lojaLaco video.on{opacity:1}
+        </style>
+        <script>
+        /* Laco da loja de semijoias: baixa e toca so quando a secao entra na
+           tela, pausa quando sai. Sem movimento para quem pediu menos
+           movimento ou esta em economia de dados/2G: fica a foto. */
+        (function(){
+          var v=document.getElementById('lpLojaLaco');
+          if(!v) return;
+          try{
+            if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+            var c=navigator.connection;
+            if(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||''))) return;
+          }catch(e){ return; }
+          if(!('IntersectionObserver' in window)) return;
+          var carregado=false;
+          v.addEventListener('playing',function(){ v.classList.add('on'); });
+          function toca(){
+            try{
+              if(!carregado){ carregado=true; v.preload='auto'; v.load(); }
+              var p=v.play(); if(p&&p.catch) p.catch(function(){});
+            }catch(e){}
+          }
+          new IntersectionObserver(function(es){
+            es.forEach(function(e){
+              if(e.isIntersecting) toca();
+              else { try{ v.pause(); }catch(x){} }
+            });
+          },{rootMargin:'200px 0px'}).observe(v);
+        })();
+        </script>
       </div>
 
       <!-- 16/09/2026 - os botoes desceram para DEPOIS do filme.
