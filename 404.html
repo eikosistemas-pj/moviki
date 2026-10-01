@@ -1307,7 +1307,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-09-30-estoque';
+  window.MOVIKI_VERSAO='2026-10-01-conforto';   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3584,5 +3584,25 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     }catch(e){mostrarTela('Erro ao carregar','Tente de novo em instantes.');}
   })();
 </script>
+
+<style id="cfConforto">
+/* ==========================================================================
+   CONFORTO VISUAL v2 — 2026-10-01-conforto (P65, Lote 3, aprovado pelo Paulo em 01/10)
+   - WhatsApp e o unico botao cheio; "Como chegar" vira contorno
+   - "Fechado no momento" em cinza: fechado e estado normal, nao erro
+   - icones das informacoes numa cor so; verde fica so no "Aberto"
+   - promocao e evento sem fundo colorido: quem da a cor e a arte do lojista
+   ========================================================================== */
+.acao.wpp{background:#1fae5b;box-shadow:none}
+.acao.rota{background:transparent;box-shadow:none;border:1px solid #2a3d58;color:var(--mv-txt)}
+.acao.rota svg{color:var(--mv-txt)}
+.selo.fechado{color:#b4c2d3;background:rgba(255,255,255,.06);border-color:#2a3d58}
+.selo.fechado .bol,.selo.fechado i{background:#8d9db2!important;box-shadow:none!important}
+.rapido .ico svg,.infoIt .ico svg{color:#9fb0c4}
+.rapido .ico.verde svg{color:var(--mv-ok)}
+.promoDest,.eventoDest{background:var(--mv-surf)}
+.promoDest .badge{background:transparent;color:#ffa62b;border:1px solid rgba(255,166,43,.55)}
+.eventoDest .badge{background:transparent;color:#c9a7ff;border:1px solid rgba(201,167,255,.55)}
+</style>
 </body>
 </html>
