@@ -29,6 +29,10 @@
       "destination": "/regras-da-live.html"
     },
     {
+      "source": "/criadores",
+      "destination": "/criadores.html"
+    },
+    {
       "source": "/sitemap-negocios.xml",
       "destination": "/api/sitemap"
     },

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Criador parceiro Moviki: publi que não acaba no dia do post</title>
+<meta name="description" content="Para criadores de conteúdo: mostre o Moviki para quem tem comércio e receba 15% de cada mensalidade paga pelos comércios do seu link, enquanto continuarem assinando. Material pronto por ramo, link próprio, crachá com QR e saque por Pix. Grátis para participar. Pode ser zero.">
+<link rel="canonical" href="https://www.moviki.com.br/criadores">
+<!--
+  criadores.html — 2026-09-30-criadores2 (rota /criadores no vercel.json, ANTES do curinga /:slug).
+  Porta de entrada do funil de criadores: anuncio (gancho 35 s, Google/YouTube) -> esta pagina (guia 2:18) -> cadastro de parceiro.
+  CSP desta pagina (meta, como o resto do repo):
+    frame-src https://www.youtube-nocookie.com  -> o guia no YouTube, so nasce no toque
+    media-src https://firebasestorage.googleapis.com -> plano B: o mp4 do material, enquanto o id do YouTube nao existir
+  Regras de conteudo: descreve a REGRA, nunca o resultado; "pode ser zero"; sem nivel, sem bonus, sem vagas, sem depoimento, sem contador.
+-->
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self' https://firebasestorage.googleapis.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googleapis.com; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#050b14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/criadores">
+<meta property="og:title" content="Criador parceiro Moviki: publi que não acaba no dia do post">
+<meta property="og:description" content="Mostre o Moviki para quem tem comércio. 15% de cada mensalidade paga pelos comércios do seu link, enquanto continuarem assinando. Material pronto, link próprio e crachá com QR. Pode ser zero.">
+<meta property="og:image" content="https://www.moviki.com.br/criadores-img/og-criadores.jpg">
+<meta property="og:image:secure_url" content="https://www.moviki.com.br/criadores-img/og-criadores.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Criador parceiro Moviki — comissão em cada mensalidade paga">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Criador parceiro Moviki: publi que não acaba no dia do post">
+<meta name="twitter:description" content="15% de cada mensalidade paga pelos comércios do seu link, enquanto continuarem assinando. Material pronto e crachá com QR. Pode ser zero.">
+<meta name="twitter:image" content="https://www.moviki.com.br/criadores-img/og-criadores.jpg">
+<link rel="icon" href="favicon512.png">
+<link rel="preload" as="image" href="/criadores-img/guia-capa.webp" fetchpriority="high">
+<script src="/mvmetrica.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ciano:#00D4FF; --azul:#0066FF; --fundo:#050b14; --fundo2:#08111f; --card:#0d1829; --card2:#111f35;
+  --linha:rgba(255,255,255,.08); --linha2:rgba(255,255,255,.14);
+  --texto:#eaf3ff; --texto2:#9db4d0; --texto3:#6f87a6;
+  --ouro:#ffcf4d; --verde:#22d39a; --rosa:#ff4f8b;
+  --raio:22px; --sombra:0 24px 60px rgba(0,0,0,.45);
+  --grad:linear-gradient(135deg,#00D4FF 0%,#0066FF 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Poppins',system-ui,-apple-system,sans-serif;background:var(--fundo);color:var(--texto);line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+b,strong{font-weight:700}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{position:relative;padding:76px 0}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ciano)}
+.kick i{width:8px;height:8px;border-radius:50%;background:var(--ciano);box-shadow:0 0 0 4px rgba(0,212,255,.18)}
+h1,h2,h3{line-height:1.12;letter-spacing:-.02em}
+h2{font-size:clamp(28px,4.4vw,44px);font-weight:800;margin:12px 0 14px}
+h2 em,h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(16px,2vw,19px);color:var(--texto2);max-width:720px}
+.centro{text-align:center}.centro .lead{margin:0 auto}
+.selo{font-size:11.5px;color:var(--texto3);margin-top:10px;letter-spacing:.02em}
+
+/* botoes */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 28px;border-radius:999px;font-weight:700;font-size:16.5px;cursor:pointer;border:0;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s,background .18s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.btn-pri{background:var(--grad);color:#fff;box-shadow:0 14px 34px rgba(0,102,255,.38),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-pri:hover{box-shadow:0 18px 44px rgba(0,140,255,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-sec{background:rgba(255,255,255,.06);color:var(--texto);border:1px solid var(--linha2)}
+.btn-sec:hover{background:rgba(255,255,255,.1)}
+.btn svg{width:20px;height:20px;flex:none}
+
+/* topo */
+.topo{position:sticky;top:0;z-index:40;background:rgba(5,11,20,.72);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--linha)}
+.topo .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.topo img{height:30px;width:auto}
+.topo .mini{display:inline-flex;align-items:center;min-height:40px;padding:0 18px;border-radius:999px;background:var(--grad);font-weight:700;font-size:14px;color:#fff}
+
+/* hero */
+.hero{padding:40px 0 70px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:-20% -10% auto auto;width:780px;height:780px;background:radial-gradient(closest-side,rgba(0,102,255,.32),transparent 70%);pointer-events:none}
+.hero:after{content:"";position:absolute;left:-220px;bottom:-260px;width:620px;height:620px;background:radial-gradient(closest-side,rgba(0,212,255,.16),transparent 70%);pointer-events:none}
+.hgrid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(36px,6.2vw,64px);font-weight:800;margin:14px 0 16px}
+.hero .lead{font-size:clamp(16.5px,2.1vw,20px)}
+.hero .lead b{color:var(--texto)}
+.zero{display:inline-block;margin-top:10px;font-size:13.5px;color:var(--texto2);background:rgba(255,207,77,.08);border:1px solid rgba(255,207,77,.28);padding:6px 12px;border-radius:10px}
+.zero b{color:var(--ouro)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.micro{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:13.5px;color:var(--texto2)}
+.micro span{display:inline-flex;align-items:center;gap:7px}
+.micro svg{width:16px;height:16px;color:var(--verde);flex:none}
+
+/* celular com o guia */
+.palco{position:relative;display:flex;justify-content:center}
+.cel{position:relative;width:min(330px,78vw);aspect-ratio:9/16;border-radius:42px;padding:10px;background:linear-gradient(160deg,#1c2b44,#0b1424);box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.05)}
+.cel .tela{position:relative;width:100%;height:100%;border-radius:33px;overflow:hidden;background:#000;cursor:pointer}
+.cel .tela img.capa{width:100%;height:100%;object-fit:cover}
+.cel .tela:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.65));pointer-events:none;transition:opacity .25s}
+.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:86px;height:86px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,.8);display:grid;place-items:center;z-index:2;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.play:before{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid rgba(0,212,255,.55);animation:pulso 2.2s ease-out infinite}
+.play svg{width:34px;height:34px;margin-left:5px;color:#fff}
+@keyframes pulso{from{transform:scale(.9);opacity:1}to{transform:scale(1.35);opacity:0}}
+.rot{position:absolute;left:0;right:0;bottom:22px;z-index:2;text-align:center;font-size:13.5px;font-weight:600}
+.rot small{display:block;font-weight:500;color:#cfe0f5;font-size:12px;margin-top:2px}
+.tela iframe,.tela video{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:3;background:#000}
+.tela iframe[hidden],.tela video[hidden]{display:none}
+.tela.mv-carregando .play svg{animation:gira 1s linear infinite;opacity:.7}
+@keyframes gira{to{transform:rotate(360deg)}}
+.tela.mv-tocando .play,.tela.mv-tocando .rot,.tela.mv-tocando:after{opacity:0;pointer-events:none}
+.ficha{position:absolute;z-index:4;background:rgba(13,24,41,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--linha2);border-radius:16px;padding:10px 14px;font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.4);display:flex;align-items:center;gap:10px;white-space:nowrap}
+.ficha img{width:30px;height:30px;object-fit:contain}
+.ficha small{display:block;font-weight:500;color:var(--texto2);font-size:11.5px}
+.f1{left:-8px;top:14%;animation:flut 6s ease-in-out infinite}
+.f2{right:-14px;top:44%;animation:flut 7s ease-in-out -2s infinite}
+.f3{left:2px;bottom:12%;animation:flut 6.5s ease-in-out -4s infinite}
+@keyframes flut{50%{transform:translateY(-8px)}}
+
+/* faixa de contraste */
+.faixa{padding:0}
+.faixa .caixa{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linha);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden}
+.faixa .it{background:var(--fundo2);padding:22px 20px}
+.faixa .it b{display:block;font-size:17px;margin-bottom:3px}
+.faixa .it span{font-size:13.5px;color:var(--texto2)}
+
+/* contraste publi x moviki */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
+.vs .lado{border-radius:var(--raio);padding:26px 24px;border:1px solid var(--linha)}
+.vs .antes{background:rgba(255,255,255,.025)}
+.vs .depois{background:linear-gradient(160deg,rgba(0,102,255,.18),rgba(0,212,255,.06));border-color:rgba(0,212,255,.35);box-shadow:0 20px 50px rgba(0,102,255,.18)}
+.vs h3{font-size:19px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.vs ul{list-style:none;display:grid;gap:11px}
+.vs li{display:flex;gap:10px;font-size:15px;color:var(--texto2)}
+.vs li svg{width:20px;height:20px;flex:none;margin-top:2px}
+.vs .antes li svg{color:#ff7b7b}
+.vs .depois li svg{color:var(--verde)}
+.vs .depois li{color:var(--texto)}
+
+/* vantagens */
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.vant{position:relative;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--linha);border-radius:var(--raio);padding:22px 20px 22px;transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s}
+.vant:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.35)}
+.vant img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5));margin-bottom:12px}
+.vant h3{font-size:17px;margin-bottom:6px}
+.vant p{font-size:14px;color:var(--texto2)}
+.vant .tag{position:absolute;top:14px;right:14px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ouro);background:rgba(255,207,77,.1);border:1px solid rgba(255,207,77,.3);padding:3px 8px;border-radius:999px}
+
+/* telas do produto */
+.prod{display:grid;grid-template-columns:.9fr 1.1fr;gap:46px;align-items:center}
+.trio{position:relative;height:560px}
+.mini-cel{position:absolute;width:228px;border-radius:30px;padding:7px;background:linear-gradient(160deg,#1c2b44,#0b1424);box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08)}
+.mini-cel img{border-radius:24px;width:100%;height:auto}
+.mc1{left:0;top:40px;transform:rotate(-6deg);z-index:1}
+.mc2{left:50%;top:0;transform:translateX(-50%);z-index:3}
+.mc3{right:0;top:52px;transform:rotate(6deg);z-index:2}
+.demo{position:absolute;left:0;right:0;bottom:-6px;text-align:center;font-size:12px;color:var(--texto3)}
+.pontos{display:grid;gap:14px;margin-top:22px}
+.ponto{display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.03);border:1px solid var(--linha);border-radius:18px;padding:16px}
+.ponto img{width:42px;height:42px;object-fit:contain;flex:none}
+.ponto b{display:block;font-size:16px;margin-bottom:2px}
+.ponto span{font-size:14px;color:var(--texto2)}
+.ponto small{display:inline-block;margin-top:6px;font-size:11.5px;color:var(--ouro)}
+
+/* passos */
+.passos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px;counter-reset:p}
+.passo{position:relative;background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:24px 20px}
+.passo .n{width:40px;height:40px;border-radius:12px;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:18px;margin-bottom:14px;box-shadow:0 10px 24px rgba(0,102,255,.35)}
+.passo h3{font-size:17px;margin-bottom:6px}
+.passo p{font-size:14px;color:var(--texto2)}
+.passo:not(:last-child):after{content:"";position:absolute;top:44px;right:-12px;width:8px;height:8px;border-top:2px solid var(--texto3);border-right:2px solid var(--texto3);transform:rotate(45deg)}
+
+/* regra */
+.regra{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:34px;align-items:start}
+.cartao{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--linha);border-radius:var(--raio);padding:26px 24px}
+.grande{font-size:clamp(54px,9vw,84px);font-weight:800;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cartao h3{font-size:20px;margin:8px 0 10px}
+.cartao p{color:var(--texto2);font-size:15px}
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:15px}
+th,td{text-align:left;padding:12px 6px;border-bottom:1px solid var(--linha)}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--texto3);font-weight:600}
+td.v{text-align:right;font-weight:700;color:var(--verde);white-space:nowrap}
+th.v{text-align:right}
+tr.gratis td{color:var(--texto3)} tr.gratis td.v{color:var(--texto3);font-weight:600}
+.lista{list-style:none;display:grid;gap:12px;margin-top:4px}
+.lista li{display:flex;gap:11px;font-size:15px;color:var(--texto2)}
+.lista li svg{width:20px;height:20px;color:var(--ciano);flex:none;margin-top:2px}
+.lista li b{color:var(--texto)}
+.aviso{margin-top:18px;border-radius:16px;padding:16px 18px;background:rgba(255,207,77,.07);border:1px solid rgba(255,207,77,.28);font-size:14px;color:var(--texto2)}
+.aviso b{color:var(--ouro)}
+
+/* recebe pronto */
+.kit{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+.peca{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);overflow:hidden;display:flex;flex-direction:column}
+.peca .foto{height:300px;overflow:hidden;background:#0b1424;position:relative}
+.peca .foto img{width:100%;height:auto}
+.peca .foto:after{content:"";position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(180deg,transparent,var(--card))}
+.peca .txt{padding:18px 20px 22px}
+.peca h3{font-size:18px;margin-bottom:6px}
+.peca p{font-size:14px;color:var(--texto2)}
+.dado{display:block;font-size:11px;color:var(--texto3);margin-top:8px}
+
+/* confianca */
+.conf{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.conf .prova{border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);box-shadow:var(--sombra);max-width:380px;margin:0 auto}
+.selos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.selos div{background:rgba(255,255,255,.03);border:1px solid var(--linha);border-radius:16px;padding:14px}
+.selos b{display:block;font-size:15px}
+.selos span{font-size:13px;color:var(--texto2)}
+
+/* combinados */
+.comb{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+.comb div{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:18px}
+.comb b{display:block;font-size:15.5px;margin-bottom:4px}
+.comb span{font-size:13.5px;color:var(--texto2)}
+.comb .sim b:before{content:"✓ ";color:var(--verde)}
+.comb .nao b:before{content:"✕ ";color:#ff7b7b}
+
+/* faq */
+.faq{max-width:820px;margin:30px auto 0;display:grid;gap:10px}
+details{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:0 20px;transition:border-color .2s}
+details[open]{border-color:rgba(0,212,255,.3)}
+summary{list-style:none;cursor:pointer;padding:18px 34px 18px 0;font-weight:600;font-size:16px;position:relative}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:24px;color:var(--ciano);font-weight:500;transition:transform .2s}
+details[open] summary:after{transform:translateY(-50%) rotate(45deg)}
+details p{padding:0 0 18px;color:var(--texto2);font-size:15px}
+
+/* final */
+.final{text-align:center;overflow:hidden}
+.final:before{content:"";position:absolute;left:50%;top:50%;width:900px;height:600px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(0,102,255,.28),transparent 70%);pointer-events:none}
+.final .wrap{position:relative}
+.final h2{font-size:clamp(32px,5.4vw,54px)}
+.final .ctas{justify-content:center}
+
+footer{border-top:1px solid var(--linha);padding:34px 0 120px;font-size:13px;color:var(--texto3);text-align:center}
+footer p+p{margin-top:8px}
+footer a{color:var(--texto2);text-decoration:underline;text-underline-offset:3px}
+
+/* barra fixa no celular */
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(5,11,20,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--linha);display:none;transform:translateY(110%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.barra.on{transform:none}
+.barra .btn{width:100%;min-height:52px}
+.barra small{display:block;text-align:center;font-size:11.5px;color:var(--texto3);margin-top:6px}
+
+@media (max-width:960px){
+  .hgrid,.prod,.regra,.conf{grid-template-columns:1fr}
+  .hgrid{gap:34px}
+  .vgrid,.passos,.comb{grid-template-columns:1fr 1fr}
+  .kit{grid-template-columns:1fr}
+  .faixa .caixa{grid-template-columns:1fr 1fr}
+  .passo:not(:last-child):after{display:none}
+  .trio{height:470px;max-width:520px;margin:0 auto;width:100%}
+  .mini-cel{width:190px}
+  .barra{display:block}
+}
+@media (max-width:560px){
+  section{padding:58px 0}
+  .hero{padding:22px 0 50px}
+  .vgrid,.passos,.comb,.vs,.selos{grid-template-columns:1fr}
+  .ctas .btn{width:100%}
+  .trio{height:400px}
+  .mini-cel{width:160px;border-radius:24px;padding:5px}
+  .mini-cel img{border-radius:20px}
+  .f1{left:-4px}.f2{right:-6px}.f3{left:-2px}
+  .ficha{font-size:12px;padding:8px 11px}
+  .ficha img{width:24px;height:24px}
+  .f2{display:none}
+  .cel{width:min(290px,76vw)}
+  .peca .foto{height:260px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Isso é pirâmide?","acceptedAnswer":{"@type":"Answer","text":"Não. A comissão só existe quando um comércio paga a mensalidade de um plano do Moviki. Entrar é grátis, não existe taxa de adesão nem compra obrigatória, e ninguém ganha por cadastrar pessoas."}},
+    {"@type":"Question","name":"Preciso de muitos seguidores?","acceptedAnswer":{"@type":"Answer","text":"Não existe número mínimo de seguidores no cadastro. O que conta é mostrar a ferramenta do jeito que ela é para quem tem comércio."}},
+    {"@type":"Question","name":"Quanto eu vou ganhar?","acceptedAnswer":{"@type":"Answer","text":"Depende de quantos comércios assinarem um plano pago pelo seu link e continuarem pagando. Pode ser zero. A regra é 15% de cada mensalidade paga, enquanto o comércio continuar assinando."}},
+    {"@type":"Question","name":"Preciso vender ou atender o comerciante?","acceptedAnswer":{"@type":"Answer","text":"Não. Você mostra o Moviki. O comerciante testa grátis, decide e assina sozinho. Suporte, cobrança e atendimento são do Moviki."}},
+    {"@type":"Question","name":"Quando e como eu recebo?","acceptedAnswer":{"@type":"Answer","text":"Cada mensalidade paga gera a comissão no seu painel, liberada 7 dias depois do pagamento. O saque é por Pix, a partir de R$ 20, na chave que você cadastrou."}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <a href="/" aria-label="Moviki — início" data-ev="logo_topo"><img src="/logo.png" alt="Moviki" width="120" height="30"></a>
+    <a class="mini js-cad" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="cadastro_topo">Quero participar</a>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hgrid">
+    <div>
+      <span class="kick"><i></i>Para criadores de conteúdo</span>
+      <h1>Publi que <em>não acaba</em> no dia do post.</h1>
+      <p class="lead">Você mostra o Moviki para quem tem comércio. Cada comércio que assinar um plano pago pelo seu link gera <b>15% de cada mensalidade</b> para você, <b>todo mês em que continuar assinando</b>.</p>
+      <span class="zero"><b>Regra, não promessa:</b> se ninguém assinar, não há comissão. Pode ser zero.</span>
+      <div class="ctas">
+        <a class="btn btn-pri js-cad" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="cadastro_hero">Quero ser criador parceiro
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-sec" href="#guia" data-ev="ver_guia_hero" onclick="crAbrirGuia();return false;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>Assistir ao guia · 2:18</a>
+      </div>
+      <div class="micro">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Grátis para participar</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Sem mínimo de seguidores</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Você não vende nada</span>
+      </div>
+    </div>
+
+    <div class="palco" id="guia">
+      <div class="cel">
+        <div class="tela" id="crTela" role="button" tabindex="0" aria-label="Assistir ao guia do criador, 2 minutos e 18 segundos">
+          <img class="capa" src="/criadores-img/guia-capa.webp" alt="" width="720" height="1280" fetchpriority="high">
+          <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12.5-7.5z"/></svg></span>
+          <span class="rot">Guia do criador<small>2:18 · tudo o que você precisa saber</small></span>
+          <iframe id="crFrame" hidden title="Guia do criador Moviki"></iframe>
+          <video id="crVideo" hidden playsinline controls preload="none" poster="/criadores-img/guia-capa.webp"></video>
+        </div>
+      </div>
+      <div class="ficha f1"><img src="/icones-premium/recorrente.png" alt="" onerror="this.remove()"><div>15% todo mês<small>enquanto ele assinar</small></div></div>
+      <div class="ficha f2"><img src="/icones-premium/galeria.png" alt="" onerror="this.remove()"><div>Material pronto<small>por ramo de comércio</small></div></div>
+      <div class="ficha f3"><img src="/icones-premium/pix.png" alt="" onerror="this.remove()"><div>Saque por Pix<small>a partir de R$ 20</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAIXA ============ -->
+<section class="faixa">
+  <div class="wrap">
+    <div class="caixa">
+      <div class="it"><b>R$ 0 para entrar</b><span>Sem kit, sem taxa, sem estoque.</span></div>
+      <div class="it"><b>Comissão recorrente</b><span>A cada mensalidade paga, não só na primeira.</span></div>
+      <div class="it"><b>Tudo pronto</b><span>Artes, vídeos e legendas com o seu link.</span></div>
+      <div class="it"><b>Empresa de verdade</b><span>CNPJ, regras públicas e verificação do parceiro.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTRASTE ============ -->
+<section>
+  <div class="wrap centro">
+    <span class="kick"><i></i>A diferença</span>
+    <h2>Cachê paga o post. <em>Aqui a comissão volta todo mês.</em></h2>
+    <p class="lead">Na publi comum, o pagamento acaba quando o post sai do ar. No Moviki, a comissão acompanha o cliente: enquanto o comércio que veio pelo seu link continuar pagando, a comissão continua caindo.</p>
+    <div class="vs" style="text-align:left">
+      <div class="lado antes">
+        <h3>Publi comum</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Paga uma vez, pelo post</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Você precisa negociar cada campanha</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Briefing e roteiro por sua conta</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Acabou a campanha, acabou</li>
+        </ul>
+      </div>
+      <div class="lado depois">
+        <h3>Criador parceiro Moviki</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>15% de cada mensalidade paga, todo mês</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Regra única e pública, sem negociar</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Material pronto por ramo, com o seu link</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Continua enquanto o comércio continuar assinando</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VANTAGENS ============ -->
+<section style="background:linear-gradient(180deg,transparent,var(--fundo2) 30%,var(--fundo2) 70%,transparent)">
+  <div class="wrap">
+    <div class="centro">
+      <span class="kick"><i></i>O que você ganha ao entrar</span>
+      <h2>Oito vantagens, <em>nenhuma letra miúda.</em></h2>
+    </div>
+    <div class="vgrid">
+      <div class="vant"><img src="/icones-premium/recorrente.png" alt="" loading="lazy" onerror="this.remove()"><h3>Comissão recorrente</h3><p>15% de cada mensalidade paga, todo mês em que o comércio continuar assinando.</p></div>
+      <div class="vant"><img src="/icones-premium/presente.png" alt="" loading="lazy" onerror="this.remove()"><h3>Custo zero</h3><p>Entrar não custa nada. Sem taxa de adesão, sem compra, sem estoque.</p></div>
+      <div class="vant"><img src="/icones-premium/galeria.png" alt="" loading="lazy" onerror="this.remove()"><h3>Material pronto</h3><p>Artes, vídeos e legendas por ramo de comércio, com o seu link já na legenda.</p></div>
+      <div class="vant"><img src="/icones-premium/link.png" alt="" loading="lazy" onerror="this.remove()"><h3>Seu link próprio</h3><p>Quem clica fica marcado como sua indicação por 90 dias naquele aparelho.</p></div>
+      <div class="vant"><img src="/icones-premium/escudo.png" alt="" loading="lazy" onerror="this.remove()"><h3>Crachá com QR Code</h3><p>O comerciante aponta a câmera e confere na hora, numa página do Moviki, que você é parceiro.</p></div>
+      <div class="vant"><span class="tag">Exclusivo</span><img src="/icones-premium/crescimento.png" alt="" loading="lazy" onerror="this.remove()"><h3>Seu conteúdo nas redes oficiais</h3><p>Na Área do criador, liberada pelo Moviki, sua peça pode ir para as redes do Moviki com crédito para o seu @.</p></div>
+      <div class="vant"><img src="/icones-premium/pix.png" alt="" loading="lazy" onerror="this.remove()"><h3>Saque por Pix</h3><p>Cada comissão aparece no painel. O saque sai a partir de R$ 20, direto na sua chave.</p></div>
+      <div class="vant"><img src="/icones-premium/chat.png" alt="" loading="lazy" onerror="this.remove()"><h3>Aulas e suporte</h3><p>Aulas curtas no painel e o Vik, assistente que tira dúvidas e revisa a sua legenda.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ O QUE VOCE MOSTRA ============ -->
+<section>
+  <div class="wrap prod">
+    <div class="trio" aria-hidden="true">
+      <div class="mini-cel mc1"><img src="/criadores-img/tela-estudio.webp" alt="" loading="lazy" width="600" height="1298"></div>
+      <div class="mini-cel mc2"><img src="/criadores-img/tela-live.webp" alt="" loading="lazy" width="600" height="1298"></div>
+      <div class="mini-cel mc3"><img src="/criadores-img/tela-pix.webp" alt="" loading="lazy" width="600" height="1298"></div>
+      <span class="demo">Telas reais do Moviki · demonstração com loja fictícia</span>
+    </div>
+    <div>
+      <span class="kick"><i></i>O que você vai mostrar</span>
+      <h2>Uma ferramenta que <em>se explica sozinha</em> na tela.</h2>
+      <p class="lead">Você não precisa convencer ninguém de nada abstrato. É só mostrar o comércio vendendo ao vivo pelo celular.</p>
+      <div class="pontos">
+        <div class="ponto"><img src="/icones-premium/live.png" alt="" loading="lazy" onerror="this.remove()"><div><b>Live pelo próprio celular</b><span>Sem aplicativo e sem número mínimo de seguidores. O cliente assiste por um link.</span></div></div>
+        <div class="ponto"><img src="/icones-premium/pix.png" alt="" loading="lazy" onerror="this.remove()"><div><b>Pix dentro da live, direto para o lojista</b><span>Sem comissão sobre a venda: o dinheiro cai na conta do comerciante.</span><small>Pix dentro da live: plano Enterprise</small></div></div>
+        <div class="ponto"><img src="/icones-premium/localizacao.png" alt="" loading="lazy" onerror="this.remove()"><div><b>No mapa em tempo real</b><span>Página própria do negócio e pino no mapa, para ser encontrado.</span></div></div>
+        <div class="ponto"><img src="/icones-premium/sem-cartao.png" alt="" loading="lazy" onerror="this.remove()"><div><b>Teste grátis para o comerciante</b><span>30 dias para testar, sem cartão. Fica mais fácil dizer "experimenta".</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PASSOS ============ -->
+<section style="background:var(--fundo2)">
+  <div class="wrap">
+    <div class="centro">
+      <span class="kick"><i></i>Como funciona</span>
+      <h2>Do cadastro ao Pix, <em>em 4 passos.</em></h2>
+    </div>
+    <div class="passos">
+      <div class="passo"><div class="n">1</div><h3>Cadastro grátis</h3><p>Nome, e-mail, chave Pix e o apelido do seu link. Leva um minuto.</p></div>
+      <div class="passo"><div class="n">2</div><h3>Aulas curtas</h3><p>Mostram o que pode e o que não pode ser dito, e liberam o seu crachá de parceiro.</p></div>
+      <div class="passo"><div class="n">3</div><h3>Você divulga</h3><p>Com o material pronto do seu ramo ou com o seu jeito, sempre com #publi no começo.</p></div>
+      <div class="passo"><div class="n">4</div><h3>Comissão no painel</h3><p>A cada mensalidade paga pelos comércios do seu link. Saque por Pix.</p></div>
+    </div>
+    <div class="centro" style="margin-top:34px">
+      <a class="btn btn-pri js-cad" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="cadastro_passos">Começar o cadastro grátis
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A REGRA ============ -->
+<section id="regra">
+  <div class="wrap">
+    <div class="centro">
+      <span class="kick"><i></i>A regra da comissão</span>
+      <h2>Clara do começo ao fim. <em>Escrita aqui, à vista.</em></h2>
+    </div>
+    <div class="regra">
+      <div class="cartao">
+        <div class="grande">15%</div>
+        <h3>de cada mensalidade paga</h3>
+        <p>Pelos comércios que assinarem um plano pago pelo seu link, todo mês em que continuarem assinando.</p>
+        <table>
+          <thead><tr><th>Plano do comércio</th><th>Mensalidade</th><th class="v">Comissão por mensalidade paga</th></tr></thead>
+          <tbody>
+            <tr><td>Pró</td><td>R$ 39,90</td><td class="v">R$ 5,99</td></tr>
+            <tr><td>Premium</td><td>R$ 69,90</td><td class="v">R$ 10,49</td></tr>
+            <tr><td>Enterprise</td><td>R$ 129,90</td><td class="v">R$ 19,49</td></tr>
+            <tr class="gratis"><td>Básico</td><td>grátis</td><td class="v">sem comissão</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cartao">
+        <h3 style="margin-top:0">Os detalhes que importam</h3>
+        <ul class="lista">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Recorrente:</b> não é só a primeira mensalidade. Vale para cada mês pago.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Seu link marca a indicação</b> por 90 dias no aparelho de quem clicou. Vale o último link clicado.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Liberada 7 dias</b> depois de cada pagamento, no seu painel.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Saque por Pix</b> a partir de R$ 20, na chave que você cadastrou.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>Plano grátis não gera comissão.</b> Só mensalidade paga.</span></li>
+        </ul>
+        <div class="aviso"><b>Pode ser zero.</b> Os valores acima são a regra de cálculo, não previsão de quanto você vai receber. Se ninguém assinar pelo seu link, não há comissão. <a href="/regulamento.html" data-ev="regulamento_regra" style="text-decoration:underline;text-underline-offset:3px">Regulamento completo</a>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECEBE PRONTO ============ -->
+<section style="background:linear-gradient(180deg,transparent,var(--fundo2) 25%,var(--fundo2) 75%,transparent)">
+  <div class="wrap">
+    <div class="centro">
+      <span class="kick"><i></i>No seu painel, desde o primeiro dia</span>
+      <h2>A gente entrega pronto. <em>Você só mostra.</em></h2>
+      <p class="lead">Nada de criar do zero: o painel de parceiro já vem com tudo o que você precisa para publicar hoje.</p>
+    </div>
+    <div class="kit">
+      <div class="peca"><div class="foto"><img src="/criadores-img/tela-material.webp" alt="Material de apoio no painel do parceiro: vídeos por ramo com botões de postar" loading="lazy" width="600" height="1031"></div>
+        <div class="txt"><h3>Material por ramo</h3><p>Vídeos, artes e legendas para moda, alimentação, beleza e outros ramos. Um toque e vai para Instagram, Facebook ou WhatsApp, com o seu link.</p><span class="dado">Tela real · dados fictícios</span></div></div>
+      <div class="peca"><div class="foto"><img src="/criadores-img/tela-cracha.webp" alt="Crachá de parceiro com QR Code" loading="lazy" width="600" height="815"></div>
+        <div class="txt"><h3>Crachá com QR Code</h3><p>Sua credencial para o story, o grupo do WhatsApp ou o perfil. O comerciante aponta a câmera e confere que você é parceiro.</p><span class="dado">Tela real · dados fictícios</span></div></div>
+      <div class="peca"><div class="foto"><img src="/criadores-img/tela-criador.webp" alt="Área do criador: enviar peça para as redes oficiais" loading="lazy" width="600" height="923"></div>
+        <div class="txt"><h3>Área do criador</h3><p>Envie suas fotos e vídeos. Com a sua autorização e a aprovação do Moviki, a peça sai nas redes oficiais com crédito para o seu @.</p><span class="dado">Tela real · dados fictícios</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIANCA ============ -->
+<section>
+  <div class="wrap conf">
+    <div class="prova"><img src="/criadores-img/tela-verifica.webp" alt="Página de verificação do parceiro no site do Moviki" loading="lazy" width="600" height="769"></div>
+    <div>
+      <span class="kick"><i></i>Sua reputação protegida</span>
+      <h2>Você indica com <em>tranquilidade.</em></h2>
+      <p class="lead">O comerciante confere numa página do Moviki que você é parceiro autorizado e lê, com todas as letras, que não paga nada a você: a comissão sai do Moviki.</p>
+      <div class="selos">
+        <div><b>Empresa com CNPJ</b><span>EIKO Sistemas · Curitiba/PR</span></div>
+        <div><b>Regras públicas</b><span>Regulamento e termos no site</span></div>
+        <div><b>Você não cobra ninguém</b><span>Nada de dinheiro na sua mão</span></div>
+        <div><b>Atendimento é nosso</b><span>Suporte, cobrança e dúvidas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMBINADOS ============ -->
+<section style="background:var(--fundo2)">
+  <div class="wrap">
+    <div class="centro">
+      <span class="kick"><i></i>Os combinados</span>
+      <h2>Quatro regras que <em>protegem você.</em></h2>
+      <p class="lead">Seu público confia em você. Por isso o programa é feito para quem mostra uma coisa que existe, do jeito que ela é.</p>
+    </div>
+    <div class="comb">
+      <div class="sim"><b>#publi no começo</b><span>Visível antes do "ver mais", em todo post.</span></div>
+      <div class="sim"><b>Fale do que a ferramenta faz</b><span>Live, Pix, mapa, pedidos. Mostre a tela.</span></div>
+      <div class="nao"><b>Nunca prometa ganho</b><span>Nem "renda", "garantido" ou "sem risco".</span></div>
+      <div class="nao"><b>Nunca cobre o comerciante</b><span>Ele não paga nada a você. Nunca.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section>
+  <div class="wrap">
+    <div class="centro">
+      <span class="kick"><i></i>Dúvidas</span>
+      <h2>Perguntas de quem <em>está pensando em entrar.</em></h2>
+    </div>
+    <div class="faq">
+      <details><summary>Isso é pirâmide?</summary><p>Não. A comissão só existe quando um comércio paga a mensalidade de um plano do Moviki. Entrar é grátis, não existe taxa de adesão nem compra obrigatória, e ninguém ganha por cadastrar pessoas.</p></details>
+      <details><summary>Preciso de muitos seguidores?</summary><p>Não existe número mínimo de seguidores no cadastro. O que conta é mostrar a ferramenta do jeito que ela é para quem tem comércio: no perfil, no story, no grupo do bairro ou pessoalmente.</p></details>
+      <details><summary>Quanto eu vou ganhar?</summary><p>Depende de quantos comércios assinarem um plano pago pelo seu link e continuarem pagando. Pode ser zero. A regra é 15% de cada mensalidade paga, enquanto o comércio continuar assinando.</p></details>
+      <details><summary>Preciso vender ou atender o comerciante?</summary><p>Não. Você mostra o Moviki. O comerciante testa grátis, decide e assina sozinho. Suporte, cobrança e atendimento são do Moviki.</p></details>
+      <details><summary>Quando e como eu recebo?</summary><p>Cada mensalidade paga gera a comissão no seu painel, liberada 7 dias depois do pagamento. O saque é por Pix, a partir de R$ 20, na chave que você cadastrou.</p></details>
+      <details><summary>Posso divulgar no Instagram, TikTok, WhatsApp e YouTube?</summary><p>Pode, em qualquer rede, com #publi no começo da legenda. O material do painel já vem nos formatos de feed, story e reels, com o seu link.</p></details>
+      <details><summary>O que é a Área do criador?</summary><p>Um espaço no painel, liberado pelo Moviki para quem é criador parceiro, para enviar as suas fotos e vídeos. Com a sua autorização e a aprovação da equipe, a peça é publicada nas redes oficiais do Moviki com crédito para o seu @. Nada vai ao ar sem as duas confirmações.</p></details>
+      <details><summary>Tenho que pagar alguma coisa?</summary><p>Não. Participar é grátis, hoje e depois. Se alguém pedir pagamento, taxa de cadastro ou dados bancários em nome do Moviki, não é o Moviki.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL ============ -->
+<section class="final">
+  <div class="wrap">
+    <span class="kick"><i></i>Seu próximo post</span>
+    <h2>Mostre uma coisa que existe.<br><em>Deixe a comissão trabalhar.</em></h2>
+    <p class="lead" style="margin:0 auto">Cadastro grátis, aulas curtas e material pronto no seu painel. Venda ao vivo pelo celular ainda é novidade para muito comércio de bairro: quem mostra primeiro, apresenta primeiro.</p>
+    <div class="ctas">
+      <a class="btn btn-pri js-cad" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="cadastro_final">Quero ser criador parceiro
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-sec" href="#guia" data-ev="ver_guia_final" onclick="crAbrirGuia();return false;">Rever o guia</a>
+    </div>
+    <p class="selo">Grátis para participar · pode ser zero · #publi sempre</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02 · Curitiba/PR</p>
+    <p><a href="/" data-ev="voltar_site">Site do Moviki</a> · <a href="/regulamento.html" data-ev="regulamento_rodape">Regulamento do Programa de Parceiros</a> · <a href="/termos.html">Termos de uso</a> · <a href="/privacidade.html">Privacidade</a> · <a href="tel:+554120186848" data-ev="telefone_rodape">(41) 2018-6848</a></p>
+  </div>
+</footer>
+
+<div class="barra" id="crBarra">
+  <a class="btn btn-pri js-cad" href="https://app.moviki.com.br/seja-parceiro.html" data-ev="cadastro_barra">Quero ser criador parceiro</a>
+  <small>Grátis para participar · pode ser zero</small>
+</div>
+
+<script>window.MOVIKI_VERSAO='2026-09-30-criadores2';</script>
+<script>
+/* ===== CONFIGURACAO DO GUIA =====
+   CR_YT: id do guia no YouTube (o trecho depois de youtu.be/ ou de /shorts/).
+   Vazio = toca o mp4 do Material de apoio no Firebase Storage (plano B). */
+var CR_YT='4LYZ__yEubc';
+var CR_MP4='https://firebasestorage.googleapis.com/v0/b/moviki-app.firebasestorage.app/o/material%2Fvideo-criador-guia.mp4?alt=media';
+
+/* ===== LINK DO CADASTRO: leva a origem e as UTMs da visita ===== */
+(function(){
+  var q=new URLSearchParams(location.search), p=new URLSearchParams();
+  p.set('origem','criadores');
+  ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){
+    var v=(q.get(k)||'').replace(/[^\w.\-]/g,'').slice(0,60); if(v) p.set(k,v);
+  });
+  if(!p.get('utm_source')){ p.set('utm_source','site'); p.set('utm_medium','pagina'); p.set('utm_campaign','criadores'); }
+  var ref=(q.get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+  if(ref.length>=3) p.set('ref',ref);
+  var url='https://app.moviki.com.br/seja-parceiro.html?'+p.toString();
+  document.querySelectorAll('.js-cad').forEach(function(a){ a.href=url; });
+  try{ if(ref.length>=3 && window.mvEv) window.mvEv('chegou_por_indicacao',{ref:ref,destino:'criadores'}); }catch(e){}
+})();
+
+/* ===== GUIA: fachada (o player so nasce no toque) + medicao de quanto foi assistido ===== */
+var crMarcas={};
+function crProgresso(pct){
+  [25,50,75,90].forEach(function(m){
+    if(pct>=m && !crMarcas[m]){ crMarcas[m]=1; try{ if(window.mvEv) window.mvEv('video_progresso',{video:'guia_criador',pagina:'criadores',pct:m}); }catch(e){} }
+  });
+}
+function crAbrirGuia(){
+  var tela=document.getElementById('crTela');
+  if(!tela) return;
+  try{ document.getElementById('guia').scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+  if(tela.dataset.on==='1') return;
+  tela.dataset.on='1';
+  tela.classList.add('mv-carregando');
+  try{ if(window.mvEv) window.mvEv('video_play',{video:'guia_criador',pagina:'criadores',fonte:CR_YT?'youtube':'storage'}); }catch(e){}
+  if(CR_YT){ crYoutube(tela); } else { crMp4(tela); }
+}
+function crPronto(tela){
+  if(tela.classList.contains('mv-tocando')) return;
+  tela.classList.remove('mv-carregando'); tela.classList.add('mv-tocando');
+  try{ if(window.mvEv) window.mvEv('video_pronto',{video:'guia_criador',pagina:'criadores'}); }catch(e){}
+}
+function crMp4(tela){
+  var v=document.getElementById('crVideo');
+  v.src=CR_MP4; v.hidden=false;
+  v.addEventListener('playing',function(){ crPronto(tela); },{once:true});
+  v.addEventListener('timeupdate',function(){ if(v.duration) crProgresso(100*v.currentTime/v.duration); });
+  v.addEventListener('ended',function(){ crProgresso(100); });
+  var pr=v.play(); if(pr && pr.catch) pr.catch(function(){ tela.classList.remove('mv-carregando'); tela.classList.add('mv-tocando'); });
+}
+function crYoutube(tela){
+  var ORIGEM='https://www.youtube-nocookie.com', q=document.getElementById('crFrame');
+  q.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+  q.setAttribute('allowfullscreen',''); q.referrerPolicy='strict-origin-when-cross-origin';
+  q.src=ORIGEM+'/embed/'+encodeURIComponent(CR_YT)+'?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+  q.hidden=false;
+  function fala(m){ try{ q.contentWindow.postMessage(JSON.stringify(m),ORIGEM); }catch(e){} }
+  var dur=0;
+  window.addEventListener('message',function(e){
+    if(e.origin!==ORIGEM || e.source!==q.contentWindow) return;
+    var d=e.data; if(typeof d==='string'){ try{ d=JSON.parse(d); }catch(err){ return; } }
+    var i=d&&d.info; if(!i) return;
+    if(typeof i.duration==='number' && i.duration>0) dur=i.duration;
+    if(i.playerState===1 || (typeof i.currentTime==='number' && i.currentTime>0.2)) crPronto(tela);
+    if(dur && typeof i.currentTime==='number') crProgresso(100*i.currentTime/dur);
+    if(i.playerState===0) crProgresso(100);
+  });
+  var n=0, bate=setInterval(function(){ n++; fala({event:'listening',id:1,channel:'widget'}); if(n>40) clearInterval(bate); },250);
+  setTimeout(function(){ if(!tela.classList.contains('mv-tocando')){ tela.classList.remove('mv-carregando'); tela.classList.add('mv-tocando'); } },2600);
+}
+(function(){
+  var t=document.getElementById('crTela'); if(!t) return;
+  t.addEventListener('pointerdown',crAbrirGuia);
+  t.addEventListener('click',function(e){ if(t.dataset.on!=='1'){ e.preventDefault(); crAbrirGuia(); } });
+  t.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); crAbrirGuia(); } });
+})();
+
+/* ===== BARRA FIXA no celular: aparece depois do topo, some no fim ===== */
+(function(){
+  var b=document.getElementById('crBarra'), hero=document.querySelector('.hero'), fim=document.querySelector('.final');
+  if(!b||!hero||!('IntersectionObserver' in window)) return;
+  var vHero=true, vFim=false;
+  function at(){ b.classList.toggle('on', !vHero && !vFim); }
+  new IntersectionObserver(function(es){ vHero=es[0].isIntersecting; at(); },{threshold:0.05}).observe(hero);
+  new IntersectionObserver(function(es){ vFim=es[0].isIntersecting; at(); },{threshold:0.2}).observe(fim);
+})();
+
+/* ===== MEDICAO: cta_click com o nome do botao; profundidade de leitura ===== */
+(function(){
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('[data-ev]'):null; if(!a) return;
+    try{ if(window.mvEv) window.mvEv('cta_click',{cta:a.getAttribute('data-ev'),pagina:'criadores'}); }catch(err){}
+  },true);
+  document.querySelectorAll('details').forEach(function(d){
+    d.addEventListener('toggle',function(){ if(d.open){ try{ if(window.mvEv) window.mvEv('faq_aberta',{pagina:'criadores',pergunta:(d.querySelector('summary')||{}).textContent||''}); }catch(e){} } });
+  });
+  if(!('IntersectionObserver' in window)) return;
+  var vistos={};
+  document.querySelectorAll('main > section').forEach(function(s,i){
+    new IntersectionObserver(function(es,o){ if(es[0].isIntersecting && !vistos[i]){ vistos[i]=1; o.disconnect(); try{ if(window.mvEv) window.mvEv('secao_vista',{pagina:'criadores',secao:i}); }catch(e){} } },{threshold:0.35}).observe(s);
+  });
+})();
+</script>
+</body>
+</html>
