@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lote Fundador Moviki · 12 meses de Enterprise por R$ 990</title>
+<!-- f.html — 2026-10-01-linkfundador. Link de indicacao do LOTE FUNDADOR:
+     /f/apelido (parceiro) e /fc/apelido (criador). Mesma regra do p.html:
+     grava o cookie mv_ref (90 dias, dominio pai) e carimba UTM; o destino e a
+     /fundador em vez da comerciantes. Previa do WhatsApp fala da oferta.
+     Depois de 27/11/2026 a propria /fundador mostra "encerrou" e aponta para o
+     Enterprise: o link impresso nunca quebra. -->
+<meta name="description" content="Lote Fundador do Moviki: o plano Enterprise por 12 meses, R$ 990 à vista ou 12x de R$ 89,90 no cartão. Live com Pix dentro da transmissão. 50 vagas, até 27/11.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/fundador">
+<meta property="og:title" content="Lote Fundador Moviki: 12 meses de Enterprise por R$ 990">
+<meta property="og:description" content="Ou 12x de R$ 89,90 no cartão. Live com Pix dentro da transmissão e preço travado na renovação. 50 vagas, até 27/11.">
+<meta property="og:image" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:image:secure_url" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:image:alt" content="Lojista vendendo ao vivo pelo celular com o Moviki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lote Fundador Moviki: 12 meses de Enterprise por R$ 990">
+<meta name="twitter:description" content="Ou 12x de R$ 89,90 no cartão. 50 vagas, até 27/11.">
+<meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
+<script>
+/* MOVIKI f.html | versao 2026-10-01-linkfundador | sem Google Analytics de proposito (redireciona na hora; a /fundador mede a visita ja carimbada) */
+(function(){
+  var m=location.pathname.match(/\/(fc|f)\/([^\/?#]+)/);
+  var tipo=(m&&m[1]==='fc')?'criador':'parceiro';
+  var ref=(m?decodeURIComponent(m[2]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+  var canal='indicacao';
+  try{
+    var cv=(new URLSearchParams(location.search).get('canal')||'').toLowerCase();
+    if(/^(ig|tt|yt|wa|qr|bio|story|dm|grupo)$/.test(cv)) canal=cv;
+  }catch(e){}
+  var q='utm_source='+tipo+'&utm_medium='+canal+'&utm_campaign=lote_fundador'
+      +'&utm_content='+encodeURIComponent(ref.length>=3?ref:'sem_ref');
+  if(ref.length>=3){
+    q+='&ref='+encodeURIComponent(ref);
+    try{ document.cookie='mv_ref='+encodeURIComponent(ref)+
+      '; Max-Age=7776000; Path=/; Domain=.moviki.com.br; SameSite=Lax; Secure'; }catch(e){}
+  }
+  location.replace('/fundador?'+q);
+})();
+</script>
+</head>
+<body style="background:#050b14"></body>
+</html>
