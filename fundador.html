@@ -7,7 +7,7 @@
 <meta name="description" content="Lote Fundador: o plano Enterprise do Moviki por 12 meses, R$ 990 à vista ou 12x de R$ 89,90 no cartão. Live com Pix dentro da transmissão, vários pontos no mapa e preço travado na renovação. 50 vagas, até 27/11/2026.">
 <link rel="canonical" href="https://www.moviki.com.br/fundador">
 <!--
-  fundador.html — 2026-10-01-fundador (rota /fundador no vercel.json, ANTES do curinga /:slug). P62.
+  fundador.html — 2026-10-01-fundador2 (JSON-LD de Product trocado por SoftwareApplication: plano de software nao e listagem de comerciante; o Search Console acusava "image" ausente) · 2026-10-01-fundador (rota /fundador no vercel.json, ANTES do curinga /:slug). P62.
   Oferta APROVADA pelo Paulo em 01/10/2026: Enterprise 12 meses, R$ 990 a vista ou 12x R$ 89,90 no cartao,
   50 vagas, ate 27/11/2026 23:59 (Brasilia), garantia 30 dias. Regras na clausula 3-A dos Termos.
   O placar "restam N" vem do robo (GET /api/criar-assinatura): numero na tela = numero contado no servidor.
@@ -321,7 +321,7 @@ footer a{text-decoration:underline}
   <small id="barraTxt">ou 12x de R$ 89,90 no cartão · até 27/11</small>
 </div>
 
-<script>window.MOVIKI_VERSAO='2026-10-01-fundador';</script>
+<script>window.MOVIKI_VERSAO='2026-10-01-fundador2';</script>
 <script>
 /* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
 (function(){
@@ -369,11 +369,18 @@ footer a{text-decoration:underline}
       ]
     },
     {
-      "@type":"Product",
+      "@type":"SoftwareApplication",
       "name":"Moviki Enterprise - Lote Fundador (12 meses)",
+      "applicationCategory":"BusinessApplication",
+      "operatingSystem":"Web",
+      "url":"https://www.moviki.com.br/fundador",
+      "image":"https://www.moviki.com.br/livehero.jpg",
       "description":"Plano Enterprise do Moviki por 12 meses: live com Pix dentro da transmissão, vários pontos no mapa e Central de Pedidos.",
-      "brand":{"@type":"Brand","name":"Moviki"},
-      "offers":{"@type":"Offer","price":"990.00","priceCurrency":"BRL","url":"https://www.moviki.com.br/fundador","availability":"https://schema.org/LimitedAvailability","priceValidUntil":"2026-11-27","seller":{"@type":"Organization","name":"EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA"}}
+      "offers":[
+        {"@type":"Offer","name":"Lote Fundador à vista (12 meses)","price":"990.00","priceCurrency":"BRL","url":"https://www.moviki.com.br/fundador","availability":"https://schema.org/LimitedAvailability","validFrom":"2026-10-01","priceValidUntil":"2026-11-27"},
+        {"@type":"Offer","name":"Lote Fundador 12x no cartão (total)","price":"1078.80","priceCurrency":"BRL","url":"https://www.moviki.com.br/fundador","availability":"https://schema.org/LimitedAvailability","validFrom":"2026-10-01","priceValidUntil":"2026-11-27"}
+      ],
+      "publisher":{"@type":"Organization","name":"EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA","url":"https://www.moviki.com.br/"}
     },
     {
       "@type":"FAQPage",
