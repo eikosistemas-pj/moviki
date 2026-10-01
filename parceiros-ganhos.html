@@ -283,6 +283,10 @@
   .simNota{font-size:13px;color:var(--texto2);line-height:1.55;margin-top:18px;padding-top:16px;border-top:1px solid var(--linha)}
   .simNota b{color:var(--texto)}
   @media(max-width:560px){.simSaida{grid-template-columns:1fr}}
+.criFaixa{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;background:linear-gradient(120deg,rgba(0,212,255,.10),rgba(168,85,247,.10));border:1px solid rgba(0,212,255,.25);border-radius:18px;padding:16px 20px;margin:0 auto}
+.criFaixa b{display:block;font-size:16px;color:#fff}
+.criFaixa span{font-size:14px;color:#b9cbe0}
+.criFaixa a{flex:none;display:inline-block;background:linear-gradient(120deg,#00D4FF,#0066FF);color:#04121f;font-weight:800;font-size:14px;border-radius:12px;padding:11px 16px;text-decoration:none}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"VideoObject",
@@ -354,6 +358,14 @@
     <p class="empresa">Programa oficial da EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02 · Curitiba/PR</p>
   </div>
 </section>
+
+<!-- CRIADORES (2026-10-01-criadores): quem produz conteudo tem pagina propria -->
+<div class="wrap" style="margin-top:-6px;margin-bottom:8px">
+  <div class="criFaixa">
+    <div><b>É criador de conteúdo?</b><span>Tem uma página feita para você, com o guia em vídeo e a regra explicada.</span></div>
+    <a href="/criadores?utm_source=site&amp;utm_medium=parceiros_ganhos&amp;utm_campaign=criadores" data-ev="ir_criadores">Ver a página dos criadores</a>
+  </div>
+</div>
 
 <!-- COMO FUNCIONA -->
 <section>
@@ -629,7 +641,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-09-26-varejo';
+window.MOVIKI_VERSAO = '2026-10-01-criadores';
 
 /* ===== SIMULADOR DE COMISSAO - 16/09/2026 ===================================
    Mesma conta do painel do parceiro (parceiro.html, funcao barras), mesma
