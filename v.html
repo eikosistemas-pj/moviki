@@ -150,7 +150,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-09-10-foto-parceiro';
+window.MOVIKI_VERSAO = '2026-10-01-apelido';
 const app = initializeApp(firebaseConfig);
 
 /* APP CHECK — 03/09/2026.
@@ -359,6 +359,14 @@ document.addEventListener('click', function(e){
     const snap = await getDoc(doc(db, 'parceiros_publicos', apelido));
     if(!snap.exists()){ pintarNegado(apelido, false); mostrar(); return; }
     const d = snap.data() || {};
+    /* 01/10/2026: o dono trocou o apelido deste parceiro no painel. O espelho
+       velho guarda so o apelido novo (sem nome, sem foto): cracha e panfleto
+       impressos continuam abrindo, ja no endereco certo. Um salto so. */
+    const novo = String(d.movidoPara || '').toLowerCase();
+    if(/^[a-z0-9][a-z0-9_-]{2,39}$/.test(novo) && novo !== apelido){
+      location.replace('/v/' + encodeURIComponent(novo) + location.search + location.hash);
+      return;
+    }
     if(d.ativo !== true){ pintarNegado(apelido, true); mostrar(); return; }
     pintarAutorizado(d, apelido);
     mostrar();
