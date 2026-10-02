@@ -30,7 +30,7 @@
 <meta name="twitter:description" content="Sem app, sem estúdio, sem mínimo de seguidores e sem comissão do Moviki por venda. 30 dias grátis.">
 <meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
 <link rel="icon" href="/favicon512.png">
-<link rel="preload" as="image" href="/livehero.webp" fetchpriority="high">
+<link rel="preload" as="image" href="/ramos/moda.webp?v=20261001" type="image/webp" fetchpriority="high">
 <script src="/mvmetrica.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,9 +80,13 @@ p+p{margin-top:12px}
 .micro{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:13.5px;color:var(--texto2)}
 .micro span{display:inline-flex;align-items:center;gap:7px}
 .micro span:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--verde);flex:none}
-.foto{position:relative;max-width:340px;margin:0 auto;border-radius:34px;overflow:hidden;box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08)}
-.foto img{width:100%;height:auto;aspect-ratio:800/1421;object-fit:cover}
-.foto .rot{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(5,11,20,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--linha2);border-radius:14px;padding:10px 12px;font-size:12.5px;color:var(--texto2)}
+.foto{position:relative;max-width:320px;margin:0 auto}
+/* 01/10/2026: telefone com a live em laco (mesmo formato do laco da home e da /aovivo) */
+.tel{position:relative;aspect-ratio:540/1168;border-radius:30px;overflow:hidden;border:3px solid rgba(255,255,255,.14);box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08);background:#0b1626}
+.tel img,.tel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.tel video{opacity:0;transition:opacity .35s ease}
+.tel video.on{opacity:1}
+.foto .rot{position:relative;margin-top:12px;background:rgba(5,11,20,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--linha2);border-radius:14px;padding:10px 12px;font-size:12.5px;color:var(--texto2)}
 .foto .rot b{color:var(--texto);display:block;font-size:13.5px}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
 .card{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:22px}
@@ -177,8 +181,48 @@ footer a{text-decoration:underline}
       </div>
     </div>
     <div class="foto">
-      <img src="/livehero.webp" alt="Lojista mostrando um produto ao vivo pelo celular" width="800" height="1421" fetchpriority="high">
-      <div class="rot"><b>Cena ilustrativa</b>A live abre no navegador do celular, pelo painel do Moviki.</div>
+      <!-- 01/10/2026: a arte parada do hamburguer (livehero) virou a tela REAL da live
+           publica em laco, igual a home e a /aovivo: loja ficticia Ateliê Tapiá, oferta,
+           chat e produto em destaque, com a camera em movimento por baixo. Mesmo arquivo
+           da /aovivo sem ramo (ramos/moda.*). O video so baixa e toca com a foto na tela,
+           pausa fora dela; "reduzir movimento", "economizar dados" e 2G ficam com a foto. -->
+      <div class="tel">
+        <picture>
+          <source srcset="/ramos/moda.webp?v=20261001" type="image/webp">
+          <img src="/ramos/moda.jpg?v=20261001" alt="Tela de uma live no Moviki: a vendedora mostra o vestido na câmera, com a oferta da live, o chat dos clientes e o botão Comprar. Cena ilustrativa, loja fictícia." width="540" height="1168" fetchpriority="high" decoding="async">
+        </picture>
+        <video id="lsLaco" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture width="540" height="1168">
+          <source src="/ramos/moda.mp4?v=20261001" type="video/mp4">
+        </video>
+      </div>
+      <div class="rot"><b>Cena ilustrativa · loja fictícia</b>A live abre no navegador do celular, pelo painel do Moviki. Oferta com contagem e Pix dentro da live são do Enterprise.</div>
+      <script>
+      (function(){
+        var v=document.getElementById('lsLaco');
+        if(!v) return;
+        try{
+          if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+          var c=navigator.connection;
+          if(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||''))) return;
+        }catch(e){ return; }
+        if(!('IntersectionObserver' in window)) return;
+        var carregado=false;
+        v.addEventListener('playing',function(){ v.classList.add('on'); });
+        function toca(){
+          try{
+            if(!carregado){ carregado=true; v.preload='auto'; v.load(); }
+            var p=v.play(); if(p&&p.catch) p.catch(function(){});
+          }catch(e){}
+        }
+        function ligar(){
+          new IntersectionObserver(function(es){
+            es.forEach(function(e){ if(e.isIntersecting) toca(); else { try{ v.pause(); }catch(x){} } });
+          },{rootMargin:'200px 0px'}).observe(v);
+        }
+        if(document.readyState==='complete') setTimeout(ligar,150);
+        else window.addEventListener('load',function(){ setTimeout(ligar,150); });
+      })();
+      </script>
     </div>
   </div>
 </section>
@@ -346,7 +390,7 @@ footer a{text-decoration:underline}
   <small>Sem cartão · sem fidelidade</small>
 </div>
 
-<script>window.MOVIKI_VERSAO='2026-10-01-liveshop';</script>
+<script>window.MOVIKI_VERSAO='2026-10-01-telefone';</script>
 <script>
 /* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
 (function(){
