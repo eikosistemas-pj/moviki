@@ -1016,7 +1016,7 @@ a{color:inherit}
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-01-livejoias';</script>
+<script>window.MOVIKI_VERSAO='2026-10-02-telefonegrande';</script>
 <script>
 /* Reserva dos icones 3D — 21/09/2026: esta funcao ESTAVA no fim da pagina.
    O onerror de um PNG que falha dispara antes de o fim da pagina ser lido, e
@@ -1224,6 +1224,9 @@ window.lpIco = lpIco;
           .lp-lojaLaco img,.lp-lojaLaco video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
           .lp-lojaLaco video{opacity:0;transition:opacity .35s ease}
           .lp-lojaLaco video.on{opacity:1}
+          /* 02/10/2026: no celular o telefone ocupa a tela (largura toda, altura ate a
+             parte visivel abaixo do topo), igual a /aovivo e a /live-shop */
+          @media(max-width:760px){.lp-lojaLaco{max-width:min(100%,calc((100vh - 80px)*.4623));max-width:min(100%,calc((100svh - 80px)*.4623))}}
         </style>
         <script>
         /* Laco da tela da live (semijoias): baixa e toca so quando a secao entra na

@@ -138,8 +138,23 @@ footer a{text-decoration:underline}
 .barra{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(5,11,20,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--linha);display:none;text-align:center}
 .barra .btn{width:100%;max-width:440px}
 .barra small{display:block;font-size:11.5px;color:var(--texto3);margin-top:4px}
+.barra{transition:transform .25s ease}
+.barra.fora{transform:translateY(115%)}
 @media (max-width:900px){
   .hgrid{grid-template-columns:1fr;gap:34px}
+  /* 02/10/2026: no celular o telefone vem logo ABAIXO DO TITULO e ocupa a tela
+     (largura toda, altura ate a parte visivel abaixo do topo). A barra de baixo
+     sai da frente quando o telefone inteiro ou um botao de cadastro esta na tela.
+     Ordem: selo, titulo, telefone, texto, botoes, micro. */
+  .hgrid{display:flex;flex-direction:column;gap:0}
+  .hgrid>div:first-child{display:contents}
+  .hero .kick{order:1;align-self:flex-start}
+  .hero h1{order:2}
+  .foto{order:3;max-width:none;width:min(100%,calc((100vh - 80px)*.4623));width:min(100%,calc((100svh - 80px)*.4623));margin:4px auto 0}
+  .foto .rot{margin-top:10px}
+  .hero .lead{order:4;margin-top:22px}
+  .hero .ctas{order:5}
+  .hero .micro{order:6}
   .cards,.planos{grid-template-columns:1fr}
   .telas{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .telas figure{padding:8px}
@@ -390,7 +405,27 @@ footer a{text-decoration:underline}
   <small>Sem cartão · sem fidelidade</small>
 </div>
 
-<script>window.MOVIKI_VERSAO='2026-10-01-telefone';</script>
+<script>
+/* 02/10/2026: a barra sai da frente quando o telefone esta inteiro na tela (para
+   nao cobrir o chat da live) ou quando um botao de cadastro da pagina aparece. */
+(function(){
+  try{
+    var bar=document.querySelector('.barra');
+    if(!bar || !('IntersectionObserver' in window)) return;
+    var vis=new Set(), tel=document.querySelector('.foto .tel');
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(x){
+        var dentro=(x.target===tel) ? x.intersectionRatio>=.85 : x.isIntersecting;
+        if(dentro) vis.add(x.target); else vis.delete(x.target);
+      });
+      bar.classList.toggle('fora', vis.size>0);
+    },{threshold:[0,.5,.85,1]});
+    document.querySelectorAll('.ctas').forEach(function(el){ io.observe(el); });
+    if(tel) io.observe(tel);
+  }catch(e){}
+})();
+</script>
+<script>window.MOVIKI_VERSAO='2026-10-02-telefonegrande';</script>
 <script>
 /* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
 (function(){
