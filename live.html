@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -269,7 +269,8 @@ svg{display:block}
 .ckTira{border:0;background:none;color:var(--mv-txt-3);font-size:22px;line-height:1;width:30px;height:34px;flex:0 0 30px}
 #ckContinuar{width:100%;margin:0 0 10px}
 .ckRot{display:block;font-size:12px;color:var(--mv-txt-3);margin:10px 0 5px}
-.ckEnt{display:flex;gap:8px}
+.ckEnt{display:flex;gap:8px;flex-wrap:wrap}
+.ckEnt label.off{opacity:.45}
 .ckEnt label{flex:1;border:1px solid var(--mv-linha);border-radius:11px;padding:10px;font-size:13.5px;display:flex;gap:7px;align-items:center}
 .ckChk{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--mv-txt-2);margin:12px 0;line-height:1.4}
 .ckQr{display:block;width:220px;height:220px;margin:6px auto 10px;background:#fff;border-radius:12px;padding:8px;image-rendering:pixelated}
@@ -388,7 +389,8 @@ svg{display:block}
     <input class="campo" id="ckNome" maxlength="60" placeholder="Nome e sobrenome" autocomplete="name">
     <div style="display:flex;gap:8px;margin-top:8px"><input class="campo" id="ckWpp" maxlength="16" inputmode="tel" placeholder="WhatsApp com DDD" autocomplete="tel"><input class="campo" id="ckCpf" maxlength="14" inputmode="numeric" placeholder="CPF"></div>
     <span class="ckRot">Como você vai receber?</span>
-    <div class="ckEnt"><label id="ckEntRet"><input type="radio" name="ckEnt" value="retirada" checked> Retirar no local</label><label id="ckEntEnt"><input type="radio" name="ckEnt" value="entrega"> <span id="ckEntRot">Combinar entrega</span></label></div>
+    <div class="ckEnt"><label id="ckEntRet"><input type="radio" name="ckEnt" value="retirada" checked> Retirar no local</label><label id="ckEntEnt"><input type="radio" name="ckEnt" value="entrega"> <span id="ckEntRot">Combinar entrega</span></label><label id="ckEntEnv" class="escondido"><input type="radio" name="ckEnt" value="envio"> Enviar para outra cidade</label></div>
+    <p class="nota escondido" id="ckEnvNota" style="margin:8px 0 0"></p>
     <p class="nota escondido" id="ckRetInfo" style="margin:8px 0 0"></p>
     <input class="campo escondido" id="ckEnd" maxlength="140" placeholder="Endereço ou ponto de referência para a entrega" style="margin-top:8px">
     <div id="ckEndBox" class="escondido"></div>
@@ -461,7 +463,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-03-carrinho';
+  window.MOVIKI_VERSAO='2026-10-03-envio';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1184,8 +1186,8 @@ svg{display:block}
     carrItens().forEach(x=>{
       const d=document.createElement('div'); d.className='ckLinha';
       d.innerHTML='<div class="cpInfo"><div class="cpNome">'+esc(x.p.nome)+'</div><div class="cpPreco">'+brl(precoUnit(x.p))+' cada</div></div><div class="ckQtd"><button type="button" data-m="-1" aria-label="Menos">−</button><b>'+x.q+'</b><button type="button" data-m="1" aria-label="Mais">+</button></div><button type="button" class="ckTira" data-t="1" aria-label="Tirar do carrinho">×</button>';
-      d.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const c=carrLer().find(y=>y.nome===x.p.nome);if(!c)return;const n=c.q+Number(b.dataset.m);if(n<1)return;if(n>limiteQtd(x.p)){toast('Limite desta compra.');return;}c.q=n;carrSalvar();pintarCarr();pintarLista();ckTotal();});
-      d.querySelector('[data-t]').onclick=()=>{carr=carrLer().filter(y=>y.nome!==x.p.nome);carrSalvar();pintarCarr();if(!carrItens().length){el('folhaCompra').classList.add('escondido');return;}pintarLista();ckTotal();};
+      d.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const c=carrLer().find(y=>y.nome===x.p.nome);if(!c)return;const n=c.q+Number(b.dataset.m);if(n<1)return;if(n>limiteQtd(x.p)){toast('Limite desta compra.');return;}c.q=n;carrSalvar();pintarCarr();pintarLista();ckTotal();try{ckRepintarFrete();}catch(_){}});
+      d.querySelector('[data-t]').onclick=()=>{carr=carrLer().filter(y=>y.nome!==x.p.nome);carrSalvar();pintarCarr();if(!carrItens().length){el('folhaCompra').classList.add('escondido');return;}pintarLista();pintarEnvio();trocarEntrega();ckTotal();};
       box.appendChild(d);
     });
   }
@@ -1223,24 +1225,53 @@ svg{display:block}
     el('ckEntRot').textContent=tab?'Receber em casa':'Combinar entrega';
     el('ckRetInfo').textContent=CK_CFG&&CK_CFG.retirada?('Retirar em: '+CK_CFG.retirada):'';
     ckFrete=null;
-    if(window.mvEnt){el('ckEndBox').innerHTML=mvEnt.html(CK_CFG,{p:'ckE',input:'campo'});mvEnt.ligar(CK_CFG,{p:'ckE'},v=>{ckFrete=v;ckTotal();});}
+    ckBoxModo='';
+    pintarEnvio();
     trocarEntrega();
+  }
+  /* 03/10/2026 (P70 etapa 2): ENVIO PARA OUTRA CIDADE. So aparece com o recurso
+     ligado pelo dono e a tabela do lojista ativa; so para produto marcado
+     "pode ir pelo correio" no cardapio. Item que nao vai fica escrito. */
+  let ckBoxModo='';
+  function ckNomesPedido(){return (carrOn()&&!el('ckLista').classList.contains('escondido'))?carrItens().map(x=>x.p.nome):(ckP?[ckP.nome]:[]);}
+  function pintarEnvio(){
+    const lb=el('ckEntEnv'), nt=el('ckEnvNota'); if(!lb)return;
+    const on=!!(window.mvEnt&&mvEnt.envioAtivo&&mvEnt.envioAtivo(CK_CFG));
+    lb.classList.toggle('escondido',!on);
+    if(!on){nt.classList.add('escondido');return;}
+    const nomes=ckNomesPedido(), fora=mvEnt.semEnvio(neg,nomes), inp=lb.querySelector('input');
+    /* nada do pedido vai pelo correio (ex.: so comida): a opcao nem aparece */
+    if(nomes.length&&fora.length===nomes.length){lb.classList.add('escondido');nt.classList.add('escondido');if(inp.checked){inp.checked=false;const r=document.querySelector('input[name="ckEnt"][value="retirada"]');if(!el('ckEntRet').classList.contains('escondido'))r.checked=true;else document.querySelector('input[name="ckEnt"][value="entrega"]').checked=true;}return;}
+    inp.disabled=fora.length>0; lb.classList.toggle('off',fora.length>0);
+    if(fora.length&&inp.checked){const r=document.querySelector('input[name="ckEnt"][value="retirada"]');if(!el('ckEntRet').classList.contains('escondido'))r.checked=true;else document.querySelector('input[name="ckEnt"][value="entrega"]').checked=true;}
+    const emC=carrOn()&&!el('ckLista').classList.contains('escondido');
+    nt.textContent=!fora.length?'':(emC?('Não vai pelo correio: '+fora.slice(0,3).join(', ')+(fora.length>3?' e mais '+(fora.length-3):'')+'. Para enviar, tire do carrinho.'):'Este produto não vai pelo correio: só retirada ou entrega no bairro.');
+    nt.classList.toggle('escondido',!fora.length);
+  }
+  function montarBox(modo){
+    if(!window.mvEnt||ckBoxModo===modo)return;
+    ckBoxModo=modo; ckFrete=null;
+    const o={p:'ckE',input:'campo',modo:modo,sub:ckSub};
+    el('ckEndBox').innerHTML=mvEnt.html(CK_CFG,o);mvEnt.ligar(CK_CFG,o,v=>{ckFrete=v;ckTotal();});
   }
   function trocarEntrega(){
     const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;
+    montarBox(ent==='envio'?'envio':'local');
     const temForm=!!(window.mvEnt&&el('ckECep'));
-    el('ckEndBox').classList.toggle('escondido',!(ent==='entrega'&&temForm));
+    el('ckEndBox').classList.toggle('escondido',!((ent==='entrega'||ent==='envio')&&temForm));
     el('ckEnd').classList.toggle('escondido',!(ent==='entrega'&&!temForm));
     el('ckRetInfo').classList.toggle('escondido',!(ent==='retirada'&&el('ckRetInfo').textContent));
     ckTotal();
   }
   function ckSub(){if(carrOn()&&!el('ckLista').classList.contains('escondido'))return carrItens().reduce((t,x)=>t+precoUnit(x.p)*x.q,0);return precoUnit(ckP)*ckQ;}
   function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;
-    const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;const fr=(ent==='entrega'&&ckFrete!=null)?ckFrete:0;
-    el('ckFreteLin').classList.toggle('escondido',!(ent==='entrega'&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
+    const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value, comFrete=(ent==='entrega'||ent==='envio');const fr=(comFrete&&ckFrete!=null)?ckFrete:0;
+    el('ckFreteLin').classList.toggle('escondido',!(comFrete&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
     el('ckTotal').textContent=brl(ckSub()+fr);}
-  el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();}};
-  el('ckMais').onclick=()=>{if(ckQ<limiteQtd(ckP)){ckQ++;ckTotal();}else toast('Limite desta compra.');};
+  /* frete gratis acima de X depende do subtotal: repinta quando a quantidade muda */
+  function ckRepintarFrete(){const box=el('ckEFrete');if(ckBoxModo==='envio'&&box){const uf=el('ckEUf');if(uf)uf.dispatchEvent(new Event('input'));}}
+  el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();ckRepintarFrete();}};
+  el('ckMais').onclick=()=>{if(ckQ<limiteQtd(ckP)){ckQ++;ckTotal();ckRepintarFrete();}else toast('Limite desta compra.');};
   document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',trocarEntrega));
   el('ckCpf').addEventListener('input',()=>{let d=el('ckCpf').value.replace(/\D/g,'').slice(0,11);el('ckCpf').value=d.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');});
   el('ckGerar').onclick=async()=>{
@@ -1248,7 +1279,15 @@ svg{display:block}
     if(!el('ckAceite').checked){er.textContent='Marque que aceita os Termos e a Política de Privacidade.';er.classList.remove('escondido');return;}
     const ent_=document.querySelector('input[name="ckEnt"]:checked').value;
     let detalhe_=el('ckEnd').value, endereco_=null;
-    if(ent_==='entrega'&&window.mvEnt&&el('ckECep')){
+    if(ent_==='envio'){
+      if(!window.mvEnt){er.textContent='Recarregue a página e tente de novo.';er.classList.remove('escondido');return;}
+      const fora=mvEnt.semEnvio(neg,ckNomesPedido());
+      if(fora.length){er.textContent=mvEnt.msg('item_local',{nome:fora[0]});er.classList.remove('escondido');return;}
+      const L=mvEnt.ler(CK_CFG,{p:'ckE',modo:'envio',sub:ckSub});
+      if(!L.ok){er.textContent=mvEnt.msg(L.erro)||ERR_CK[L.erro]||'Confira o endereço.';er.classList.remove('escondido');return;}
+      detalhe_=L.detalhe; endereco_=L.endereco;
+    }
+    else if(ent_==='entrega'&&window.mvEnt&&el('ckECep')){
       const L=mvEnt.ler(CK_CFG,{p:'ckE'});
       if(!L.ok){er.textContent=ERR_CK[L.erro]||'Confira o endereço.';er.classList.remove('escondido');return;}
       const minE=Number(CK_CFG&&CK_CFG.minimoEntrega)||0;
@@ -1280,6 +1319,7 @@ svg{display:block}
         ev('live_pix_esgotado',{slug});
       }
       if(r&&r.erro==='minimo_entrega')msg='Pedido mínimo para entrega: '+brl(r.minimo||0)+' em produtos.';
+      if(r&&window.mvEnt&&['item_local','envio_fora','sem_envio','uf','cidade'].indexOf(r.erro)>=0)msg=mvEnt.msg(r.erro,r)||msg;
       if(r&&r.erro==='produto'&&r.nome&&emCarr)msg='Saiu da vitrine da live: '+String(r.nome).slice(0,60)+'. Tire do carrinho e gere o Pix de novo.';
       er.textContent=msg;er.classList.remove('escondido');return;}
     try{localStorage.setItem('mv_ck_dados',JSON.stringify({nome:corpo.nome,wpp:corpo.whatsapp}));}catch(_){}
@@ -1443,6 +1483,7 @@ svg{display:block}
     const cx=el('ckOkCod');
     if(st&&st.codigo){cx.innerHTML='<div class="nota" style="margin:0">Seu código</div><div style="font-size:30px;font-weight:800;letter-spacing:6px">'+esc(String(st.codigo))+'</div><div class="nota" style="margin:0">'+(ent_==='entrega'?'Mostre para quem entregar.':'Mostre na hora de retirar.')+'</div>';cx.classList.remove('escondido');}
     else{cx.innerHTML='';cx.classList.add('escondido');}
+    if(ent_==='envio')ent_='entrega';
     el('ckOkTxt').textContent='Pedido #'+cod+': '+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+' — '+brl(ckPed.total)+'. '+((neg&&neg.nome)||'O vendedor')+' já vê o seu pedido.';
     const w=(function(x){x=String(x||'').replace(/\D/g,'').replace(/^0+/,'');return (x.length>=12&&x.slice(0,2)==='55')?x.slice(2):x;})(neg&&neg.whatsapp); /* 23/09: sem o 55 do pais */
     const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(ent_==='entrega'?(ckPed.frete>0?'Aguardo a entrega.':'Vamos combinar a entrega?'):'Quando posso retirar?');
