@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1307,7 +1307,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-03-envio';   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-03-rastreio';   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2870,6 +2870,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     cancelado:'Pedido cancelado.',
     estornado:'Pagamento estornado.'
   };
+  function pdRotulo(j){ return (j&&j.envio===true&&j.status==='saiu')?'Seu pedido foi enviado.':(PD_ROTULO[j&&j.status]||''); }
   function iniciarPolling(ms){
     if(PD_TIMER)clearInterval(PD_TIMER);
     PD_TIMER=setInterval(consultarStatus,ms||8000);
@@ -2877,6 +2878,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   /* Numero e codigo depois do pagamento (26/09/2026). O codigo e o que o
      comprador mostra na retirada ou para o entregador. */
   function blocoCodigo(j){
+    /* 03/10/2026 (P70 etapa 3): envio para outra cidade nao tem codigo de
+       entrega na porta; tem rastreio, que chega pelo WhatsApp da loja. */
+    if(j&&j.envio===true&&PD_PAGOS.indexOf(j.status)>=0){
+      return '<div class="pgConfere" style="text-align:center"><h4>'+(j.numero?'Pedido nº '+String(j.numero).padStart(4,'0'):'Seu pedido')+'</h4>'+
+        '<p>'+((j.status==='saiu'||j.status==='entregue')?('A loja já postou o seu pacote. O código de rastreio chega pelo WhatsApp da loja'+(j.acompanhar?' e fica no link abaixo.':'.')):'Envio para a sua cidade. Quando postar o pacote, a loja manda o código de rastreio pelo WhatsApp.')+'</p>'+
+        (/^https:\/\/www\.moviki\.com\.br\/pedido\/[A-Za-z0-9]{10,60}-[0-9a-f]{24}$/.test(String(j.acompanhar||''))?'<p><a href="'+esc(j.acompanhar)+'" target="_blank" rel="noopener noreferrer">Acompanhar o pedido</a></p>':'')+'</div>';
+    }
     if(!j||!j.codigo)return '';
     const ret=j.entrega!=='entrega';
     return '<div class="pgConfere" style="text-align:center"><h4>'+(j.numero?'Pedido nº '+String(j.numero).padStart(4,'0'):'Seu pedido')+'</h4>'+
@@ -2892,7 +2900,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(j.status==='aguardando')return;
       const pagoJa=PD_PAGOS.indexOf(j.status)>=0;
       st.className='pgStatus'+(pagoJa?' ok':(j.status==='recusado'||j.status==='estornado'?' ruim':''));
-      st.textContent=PD_ROTULO[j.status]||'';
+      st.textContent=pdRotulo(j);
       if(pagoJa){
         const primeiraVez=!PEDIDO._pago;
         PEDIDO._pago=true;
@@ -2909,7 +2917,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
           box.scrollTop=0;
           SACOLA=[]; pintarSacola(); pintarTodosBotoes(); iniciarPolling(20000);
         }
-        const st2=el('pgStatus'); if(st2){st2.className='pgStatus ok';st2.textContent=PD_ROTULO[j.status]||'';}
+        const st2=el('pgStatus'); if(st2){st2.className='pgStatus ok';st2.textContent=pdRotulo(j);}
         const cb=el('pgCodigo'); if(cb)cb.innerHTML=blocoCodigo(j);
         /* Segue acompanhando as etapas com a tela aberta; so esquece o pedido
            quando ele termina. */
@@ -2945,7 +2953,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     el('pedidoTitulo').textContent='Seu pedido';
     const box=el('corpoPedido');
     box.innerHTML=passos(3)+'<div class="pgStatus'+(PD_PAGOS.indexOf(j.status)>=0?' ok':'')+'">'+
-      esc(PD_ROTULO[j.status]||'')+'</div>'+blocoCodigo(j);
+      esc(pdRotulo(j))+'</div>'+blocoCodigo(j);
     abrirFolha('folhaPedido');
     if(j.status==='entregue'||j.status==='recusado'||j.status==='cancelado'||j.status==='estornado')esquecerPedido();
   };

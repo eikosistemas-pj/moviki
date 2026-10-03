@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -463,7 +463,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-03-envio';
+  window.MOVIKI_VERSAO='2026-10-03-rastreio';   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1481,12 +1481,15 @@ svg{display:block}
     /* Codigo de 4 digitos (26/09/2026): o comprador mostra na retirada ou
        para quem entregar. So chega aqui depois do pagamento confirmado. */
     const cx=el('ckOkCod');
-    if(st&&st.codigo){cx.innerHTML='<div class="nota" style="margin:0">Seu código</div><div style="font-size:30px;font-weight:800;letter-spacing:6px">'+esc(String(st.codigo))+'</div><div class="nota" style="margin:0">'+(ent_==='entrega'?'Mostre para quem entregar.':'Mostre na hora de retirar.')+'</div>';cx.classList.remove('escondido');}
+    /* 03/10/2026 (P70 etapa 3): envio nao tem codigo de porta; o rastreio chega pelo WhatsApp da loja. */
+    const envio_=(st&&st.envio===true)||ent_==='envio';
+    if(envio_){cx.innerHTML='<div class="nota" style="margin:0">Envio para a sua cidade</div><div class="nota" style="margin:4px 0 0">Quando postar o pacote, a loja manda o código de rastreio pelo WhatsApp.</div>';cx.classList.remove('escondido');}
+    else if(st&&st.codigo){cx.innerHTML='<div class="nota" style="margin:0">Seu código</div><div style="font-size:30px;font-weight:800;letter-spacing:6px">'+esc(String(st.codigo))+'</div><div class="nota" style="margin:0">'+(ent_==='entrega'?'Mostre para quem entregar.':'Mostre na hora de retirar.')+'</div>';cx.classList.remove('escondido');}
     else{cx.innerHTML='';cx.classList.add('escondido');}
     if(ent_==='envio')ent_='entrega';
     el('ckOkTxt').textContent='Pedido #'+cod+': '+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+' — '+brl(ckPed.total)+'. '+((neg&&neg.nome)||'O vendedor')+' já vê o seu pedido.';
     const w=(function(x){x=String(x||'').replace(/\D/g,'').replace(/^0+/,'');return (x.length>=12&&x.slice(0,2)==='55')?x.slice(2):x;})(neg&&neg.whatsapp); /* 23/09: sem o 55 do pais */
-    const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(ent_==='entrega'?(ckPed.frete>0?'Aguardo a entrega.':'Vamos combinar a entrega?'):'Quando posso retirar?');
+    const msg='Oi! Paguei o pedido #'+cod+' pela live no Moviki ('+(ckPed.qtd>1?ckPed.qtd+'x ':'')+ckPed.produto+'). '+(envio_?'Aguardo o código de rastreio.':(ent_==='entrega'?(ckPed.frete>0?'Aguardo a entrega.':'Vamos combinar a entrega?'):'Quando posso retirar?'));
     el('ckOkWpp').href=w?'https://wa.me/55'+w+'?text='+encodeURIComponent(msg):'#'; el('ckOkWpp').classList.toggle('escondido',!w);
   }
   /* Fechou a aba no meio do pagamento e voltou: retoma a espera. */
