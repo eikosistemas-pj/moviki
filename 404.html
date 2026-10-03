@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1307,7 +1307,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-01-conforto';   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-03-envio';   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2436,7 +2436,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      ===================================================================== */
   const MV_ROBO='https://moviki-robo.vercel.app';
   let COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:''};
-  let SACOLA=[], PEDIDO=null, PD_TIMER=null, PD_COMPROV=null, PD_ENT='retirada', PD_ENVIANDO=false, PD_FRETE=null;
+  let SACOLA=[], PEDIDO=null, PD_TIMER=null, PD_COMPROV=null, PD_ENT='retirada', PD_ENVIANDO=false, PD_FRETE=null, PD_FRETE_ENV=null;
   /* Tudo que ja e pagamento confirmado. Desde 26/09/2026 o lojista move o
      pedido por etapas depois do Pix; a tela nao pode esperar so por 'pago'. */
   const PD_PAGOS=['pago','separando','pronto','saiu','entregue'];
@@ -2466,7 +2466,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         prazo:String((d&&d.prazo)||''),
         cidadeEntrega:String((d&&d.cidadeEntrega)||''),
         retirada:String((d&&d.retirada)||''),
-        estoque:(d&&d.estoque&&typeof d.estoque==='object')?d.estoque:{}
+        estoque:(d&&d.estoque&&typeof d.estoque==='object')?d.estoque:{},
+        /* 03/10 (P70 etapa 2): envio para outras cidades (so com o recurso ligado pelo dono) */
+        recursos:(d&&d.recursos&&typeof d.recursos==='object')?d.recursos:{},
+        envio:(d&&d.envio&&typeof d.envio==='object')?d.envio:null,
+        entregaSuspensa:!!(d&&d.entregaSuspensa===true)
       };
     }catch(e){ COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:'',estoque:{}}; }
     PD_ENT=(COMPRA.entrega==='entrega')?'entrega':'retirada';
@@ -2560,6 +2564,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const podeEntregar=(ent==='entrega'||ent==='ambos');
     if(podeRetirar&&!podeEntregar)PD_ENT='retirada';
     if(podeEntregar&&!podeRetirar)PD_ENT='entrega';
+    /* 03/10 (P70 etapa 2): ENVIO. So com o recurso ligado e a tabela ativa; so
+       aparece se ALGUM item da sacola pode ir pelo correio; com item local junto,
+       fica travado e o nome dele aparece. */
+    const envOn=!!(window.mvEnt&&mvEnt.envioAtivo&&mvEnt.envioAtivo(COMPRA));
+    const nomesSac=SACOLA.map(x=>x.nome), foraEnv=envOn?mvEnt.semEnvio(dadosNeg,nomesSac):nomesSac;
+    const podeEnviar=envOn&&foraEnv.length<nomesSac.length, envTravado=podeEnviar&&foraEnv.length>0;
+    if(PD_ENT==='envio'&&(!podeEnviar||envTravado))PD_ENT=podeRetirar?'retirada':(podeEntregar?'entrega':'envio');
 
     let h=passos(1);
     h+=linhasSacola();
@@ -2573,11 +2584,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
        '<div class="pdCampo"><label>CPF</label><input id="pdCpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></div>'+
        '</div>';
 
-    if(podeRetirar||podeEntregar){
+    if(podeRetirar||podeEntregar||podeEnviar){
       h+='<div class="pdBloco"><h4>Como você quer receber</h4><div class="pdEnt">';
       if(podeRetirar)h+='<button type="button" id="pdBtnRet" class="'+(PD_ENT==='retirada'?'on':'')+'" onclick="mvEntrega(\'retirada\')">Retirar no local</button>';
       if(podeEntregar)h+='<button type="button" id="pdBtnEnt" class="'+(PD_ENT==='entrega'?'on':'')+'" onclick="mvEntrega(\'entrega\')">'+(window.mvEnt&&mvEnt.temTabela(COMPRA)?'Receber em casa':'Entrega combinada')+'</button>';
+      if(podeEnviar)h+='<button type="button" id="pdBtnEnv" class="'+(PD_ENT==='envio'?'on':'')+'"'+(envTravado?' disabled style="opacity:.45"':'')+' onclick="mvEntrega(\'envio\')">Enviar para outra cidade</button>';
       h+='</div>';
+      if(envTravado)h+='<div style="font-size:12.5px;color:#ffcf6b;line-height:1.5;margin-top:10px">Não vai pelo correio: '+esc(foraEnv.slice(0,3).join(', '))+(foraEnv.length>3?' e mais '+(foraEnv.length-3):'')+'. Para enviar, tire da sacola.</div>';
       if(podeRetirar&&COMPRA.retirada)h+='<div id="pdRetInfo" style="font-size:12.5px;color:var(--mv-txt-2);line-height:1.5;margin-top:10px;'+(PD_ENT==='retirada'?'':'display:none')+'">Retirar em: <b>'+esc(COMPRA.retirada)+'</b></div>';
       /* 26/09/2026: formulario de endereco do mventrega.js (CEP, bairro da
          lista do lojista com a taxa). Se o arquivo nao carregar, volta o
@@ -2588,7 +2601,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         h+='<div class="pdCampo" id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+
            '<label>Endereço da entrega</label><textarea id="pdEnd" rows="2" maxlength="140" placeholder="Rua, número, bairro e ponto de referência"></textarea></div>';
       }
-      h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega é feita pelo próprio negócio. O Moviki não faz entrega.</div>';
+      if(podeEnviar&&window.mvEnt)h+='<div id="pdEnvBox" style="margin-top:11px;'+(PD_ENT==='envio'?'':'display:none')+'">'+mvEnt.html(COMPRA,{p:'pv',wrap:'pdCampo',modo:'envio',sub:totalSacola})+'</div>';
+      h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega e o envio são feitos pelo próprio negócio. O Moviki não faz entrega.</div>';
       h+='</div>';
     }
 
@@ -2600,26 +2614,30 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     h+='<div class="pdAviso" id="pdAviso"></div>';
 
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
-    PD_FRETE=null;
+    PD_FRETE=null; PD_FRETE_ENV=null;
     if(window.mvEnt&&el('pdCep'))mvEnt.ligar(COMPRA,{p:'pd'},function(v){PD_FRETE=v;pintarTotalPedido();});
+    if(window.mvEnt&&el('pvCep'))mvEnt.ligar(COMPRA,{p:'pv',modo:'envio',sub:totalSacola},function(v){PD_FRETE_ENV=v;pintarTotalPedido();});
     pintarTotalPedido();
   }
   /* Total com a taxa de entrega do bairro escolhido. Vitrine: quem soma de
      verdade e o servidor. */
   function pintarTotalPedido(){
     const tot=totalSacola();
-    const fr=(PD_ENT==='entrega'&&PD_FRETE!=null)?PD_FRETE:0;
+    const frAt=(PD_ENT==='entrega')?PD_FRETE:((PD_ENT==='envio')?PD_FRETE_ENV:null);
+    const fr=(frAt!=null)?frAt:0;
     const lin=el('pdFreteLin'), val=el('pdFreteVal'), tv=el('pdTotVal');
-    if(lin)lin.style.display=(PD_ENT==='entrega'&&PD_FRETE!=null)?'':'none';
+    if(lin)lin.style.display=(frAt!=null)?'':'none';
     if(val)val.textContent=fr>0?fmtReal(fr):'grátis';
     if(tv)tv.textContent=fmtReal(tot+fr);
   }
   window.mvEntrega=function(t){
     PD_ENT=t;
-    const r=el('pdBtnRet'), e=el('pdBtnEnt'), cx=el('pdEndBox'), ri=el('pdRetInfo');
+    const r=el('pdBtnRet'), e=el('pdBtnEnt'), cx=el('pdEndBox'), ri=el('pdRetInfo'), v=el('pdBtnEnv'), vx=el('pdEnvBox');
     if(r)r.classList.toggle('on',t==='retirada');
     if(e)e.classList.toggle('on',t==='entrega');
+    if(v)v.classList.toggle('on',t==='envio');
     if(cx)cx.style.display=(t==='entrega')?'':'none';
+    if(vx)vx.style.display=(t==='envio')?'':'none';
     if(ri)ri.style.display=(t==='retirada')?'':'none';
     pintarTotalPedido();
   };
@@ -2654,6 +2672,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       modo:'Esse pedido não aceita este aviso.',
       nao_encontrado:'Não achei esse pedido.'
     };
+    if(!m[cod]&&window.mvEnt&&mvEnt.msg){const t=mvEnt.msg(cod,extra);if(t)return t;}
     return m[cod]||'Não consegui concluir agora. Tente de novo.';
   }
 
@@ -2682,6 +2701,14 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(COMPRA.minimoEntrega>0&&totalSacola()<COMPRA.minimoEntrega){av.textContent=erroPedido('minimo_entrega',{minimo:COMPRA.minimoEntrega});return;}
       endObj=L.endereco; end=L.detalhe;
     }
+    if(PD_ENT==='envio'){
+      if(!window.mvEnt||!el('pvCep')){av.textContent='Recarregue a página e tente de novo.';return;}
+      const fora=mvEnt.semEnvio(dadosNeg,SACOLA.map(x=>x.nome));
+      if(fora.length){av.textContent=mvEnt.msg('item_local',{nome:fora[0]});return;}
+      const L=mvEnt.ler(COMPRA,{p:'pv',modo:'envio',sub:totalSacola});
+      if(!L.ok){av.textContent=erroPedido(L.erro);return;}
+      endObj=L.endereco; end=L.detalhe;
+    }
     if(PD_ENT==='entrega'&&!endObj&&end.length<5){av.textContent=erroPedido('endereco');return;}
     if(!el('pdAceite').checked){av.textContent=erroPedido('aceite');return;}
 
@@ -2692,7 +2719,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         acao:'compra_criar', origem:'cardapio', lojistaUid:negocioUid,
         nome:nome, whatsapp:wpp, cpf:cpf,
         entrega:PD_ENT, detalhe:end, aceite:true,
-        ...(endObj&&PD_ENT==='entrega'?{endereco:endObj}:{}),
+        ...(endObj&&(PD_ENT==='entrega'||PD_ENT==='envio')?{endereco:endObj}:{}),
         itens:SACOLA.map(x=>({sku:x.sku,nome:x.nome,qtd:x.qtd}))
       });
       if(!j.ok){ av.textContent=erroPedido(j.erro,j); PD_ENVIANDO=false; btn.disabled=false; btn.textContent=rot; return; }
