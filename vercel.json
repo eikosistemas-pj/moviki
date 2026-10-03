@@ -61,6 +61,10 @@
       "destination": "/clientela.html"
     },
     {
+      "source": "/pedido/:ref",
+      "destination": "/pedido.html"
+    },
+    {
       "source": "/:slug([A-Za-z0-9_-]{3,40})",
       "destination": "/api/og?slug=:slug"
     }

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- MOVIKI pedido.html | versao 2026-10-03-rastreio | NOVO | repo: moviki
+     03/10/2026 (P70 etapa 3): acompanhamento do pedido de ENVIO, aberto pelo
+     link que a loja manda no WhatsApp: www.moviki.com.br/pedido/<pedido>-<token>.
+     Mostra so o que nao e da pessoa (loja, numero, etapa, cidade/UF, prazo,
+     transportadora e codigo). Sem medicao de proposito: o token esta no
+     endereco e nao pode ir para o Analytics nem para o site da transportadora
+     (referrer desligado). O link morre junto com os dados do comprador (LGPD). -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://moviki-robo.vercel.app; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Acompanhe seu pedido · Moviki</title>
+<meta name="description" content="Andamento do seu pedido e código de rastreio.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Acompanhe seu pedido">
+<meta property="og:description" content="Andamento do pedido e código de rastreio.">
+<meta property="og:image" content="https://www.moviki.com.br/ogmoviki.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="/favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
+    --painel:rgba(13,27,42,.86); --linha:rgba(0,212,255,.18); --suave:#9fb2c6;
+    --ok:#2ecc71; --erro:#ff6b6b; --aviso:#ffd36b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',system-ui,sans-serif; color:var(--claro);
+    background:var(--escuro); line-height:1.6; min-height:100vh;
+    background-image:linear-gradient(rgba(6,14,24,.88),rgba(6,14,24,.94)),url('/fundo.jpg');
+    background-size:cover; background-position:center; background-attachment:fixed;
+  }
+  .top{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--linha); background:rgba(6,14,24,.7)}
+  .top .marca{font-weight:700; font-size:18px; letter-spacing:.5px; color:var(--claro); text-decoration:none}
+  .top .marca b{color:var(--ciano)}
+  main{max-width:560px; margin:0 auto; padding:28px 16px 64px}
+  .cartao{background:var(--painel); border:1px solid var(--linha); border-radius:18px; padding:20px; margin-bottom:14px}
+  .eyebrow{color:var(--ciano); font-weight:600; font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px}
+  h1{font-size:22px; line-height:1.3; margin-bottom:4px}
+  .sub{color:var(--suave); font-size:14px}
+  .etapas{list-style:none; display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:18px 0 4px; counter-reset:e}
+  .etapas li{position:relative; text-align:center; font-size:12px; color:var(--suave); padding-top:30px}
+  .etapas li::before{content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:18px; height:18px; border-radius:50%; border:2px solid #2f4a63; background:var(--escuro)}
+  .etapas li::after{content:''; position:absolute; top:14px; left:calc(50% + 12px); right:calc(-50% + 12px); height:2px; background:#2f4a63}
+  .etapas li:last-child::after{display:none}
+  .etapas li.feito{color:var(--claro)}
+  .etapas li.feito::before{background:var(--ok); border-color:var(--ok)}
+  .etapas li.feito::after{background:var(--ok)}
+  .etapas li.agora{color:var(--claro); font-weight:600}
+  .etapas li.agora::before{background:var(--ciano); border-color:var(--ciano); box-shadow:0 0 0 4px rgba(0,212,255,.18)}
+  .linha{display:flex; justify-content:space-between; gap:10px; font-size:14px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,.06)}
+  .linha:last-child{border-bottom:0}
+  .linha span:first-child{color:var(--suave)}
+  .cod{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:22px; letter-spacing:1px; font-weight:700; word-break:break-all; margin:6px 0 12px}
+  .btns{display:grid; gap:10px}
+  .btn{display:block; text-align:center; border-radius:12px; padding:13px 14px; font-weight:600; font-size:15px; text-decoration:none; cursor:pointer; font-family:inherit; border:1px solid var(--linha); background:rgba(255,255,255,.04); color:var(--claro)}
+  .btn.pri{border:0; background:linear-gradient(90deg,var(--azul),var(--ciano)); color:#fff}
+  .dica{color:var(--suave); font-size:13px; margin-top:10px}
+  .aviso{border-left:3px solid var(--aviso); padding:10px 12px; background:rgba(255,211,107,.07); border-radius:8px; font-size:14px}
+  .erro{border-left-color:var(--erro); background:rgba(255,107,107,.08)}
+  .itens li{list-style:none; font-size:14px; padding:3px 0}
+  .rodape{color:var(--suave); font-size:12.5px; text-align:center; margin-top:18px}
+  .rodape a{color:var(--suave)}
+  .escondido{display:none}
+  .carregando{color:var(--suave); text-align:center; padding:40px 0}
+</style>
+</head>
+<body>
+<header class="top"><a class="marca" href="https://www.moviki.com.br/" rel="noreferrer">Movi<b>ki</b></a></header>
+<main>
+  <div id="carregando" class="carregando">Carregando o seu pedido…</div>
+  <div id="falha" class="cartao escondido">
+    <div class="eyebrow">Acompanhe seu pedido</div>
+    <h1>Não encontramos este pedido</h1>
+    <p class="sub" style="margin-top:8px">O link pode ter sido copiado pela metade ou já ter expirado. Peça o link de novo para a loja que vendeu.</p>
+  </div>
+  <div id="pedido" class="escondido">
+    <section class="cartao">
+      <div class="eyebrow">Acompanhe seu pedido</div>
+      <h1 id="titulo"></h1>
+      <p class="sub" id="loja"></p>
+      <ol class="etapas" id="etapas" aria-label="Andamento do pedido"></ol>
+      <div id="cancelado" class="aviso erro escondido" style="margin-top:12px">Este pedido foi cancelado pela loja. Fale com a loja para saber da devolução.</div>
+    </section>
+    <section class="cartao" id="boxRastreio">
+      <div class="eyebrow">Rastreio</div>
+      <div id="semRastreio" class="aviso escondido">A loja ainda não informou o código de rastreio. Ele aparece aqui assim que o pacote for postado.</div>
+      <div id="comRastreio" class="escondido">
+        <div class="sub" id="transp"></div>
+        <div class="cod" id="codigo"></div>
+        <div class="btns">
+          <button type="button" class="btn pri" id="btnCopiar">Copiar código</button>
+          <a class="btn escondido" id="btnSite" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+        <p class="dica" id="dicaSite"></p>
+      </div>
+    </section>
+    <section class="cartao">
+      <div class="eyebrow">Entrega</div>
+      <div class="linha"><span>Destino</span><span id="destino"></span></div>
+      <div class="linha" id="lPrazo"><span>Prazo da loja</span><span id="prazo"></span></div>
+      <div class="linha"><span>Itens</span><span></span></div>
+      <ul class="itens" id="itens"></ul>
+    </section>
+    <div class="btns"><a class="btn escondido" id="btnLoja" rel="noreferrer">Ver a loja</a></div>
+    <p class="rodape">Esta página mostra só o andamento do pedido. Nome, telefone e endereço não aparecem aqui.<br><a href="https://www.moviki.com.br/privacidade.html" rel="noreferrer">Privacidade</a></p>
+  </div>
+</main>
+<script>
+(function () {
+  'use strict';
+  var API = 'https://moviki-robo.vercel.app/api/pedido';
+  function el(id) { return document.getElementById(id); }
+  function txt(id, v) { var n = el(id); if (n) n.textContent = v == null ? '' : String(v); }
+  function mostra(id, sim) { var n = el(id); if (n) n.classList.toggle('escondido', !sim); }
+  function falhou() { mostra('carregando', false); mostra('pedido', false); mostra('falha', true); }
+  var m = /^\/pedido\/([A-Za-z0-9]{10,60}-[0-9a-f]{24})\/?$/.exec(location.pathname);
+  if (!m) { falhou(); return; }
+  var ETAPAS = [['pago', 'Pago'], ['separando', 'Separando'], ['enviado', 'Enviado'], ['entregue', 'Entregue']];
+  function pintar(d) {
+    var num = d.numero ? String(d.numero).padStart(4, '0') : '';
+    txt('titulo', 'Pedido' + (num ? ' nº ' + num : ''));
+    txt('loja', d.negocio ? 'Loja: ' + d.negocio : '');
+    var ol = el('etapas'); ol.innerHTML = '';
+    var idx = -1;
+    ETAPAS.forEach(function (e, i) { if (e[0] === d.etapa) idx = i; });
+    var cancel = d.etapa === 'cancelado';
+    ETAPAS.forEach(function (e, i) {
+      var li = document.createElement('li');
+      li.textContent = e[1];
+      if (!cancel && i < idx) li.className = 'feito';
+      if (!cancel && i === idx) li.className = (i === ETAPAS.length - 1) ? 'feito' : 'agora';
+      ol.appendChild(li);
+    });
+    mostra('cancelado', cancel);
+    var r = d.rastreio;
+    mostra('boxRastreio', !cancel && d.envio === true);
+    mostra('comRastreio', !!(r && r.codigo));
+    mostra('semRastreio', !(r && r.codigo));
+    if (r && r.codigo) {
+      txt('transp', r.nome ? 'Transportadora: ' + r.nome : '');
+      txt('codigo', r.codigo);
+      var seguro = /^https:\/\/(rastreamento\.correios\.com\.br|www\.jadlog\.com\.br|www\.loggi\.com|www\.jtexpress\.com\.br)\//.test(String(r.url || ''));
+      var a = el('btnSite');
+      if (seguro) { a.href = r.url; a.textContent = 'Abrir o site de rastreio'; }
+      mostra('btnSite', seguro);
+      txt('dicaSite', seguro ? 'Abre o site oficial da ' + (r.nome === 'Correios' ? 'empresa' : 'transportadora') + '. Lá, cole o código no campo de rastreio.' : 'Use o código no site ou no aplicativo da transportadora.');
+      el('btnCopiar').onclick = function () {
+        var b = el('btnCopiar');
+        function ok() { b.textContent = 'Código copiado'; setTimeout(function () { b.textContent = 'Copiar código'; }, 2200); }
+        try { navigator.clipboard.writeText(r.codigo).then(ok, function () { prompt('Copie o código:', r.codigo); }); }
+        catch (_) { prompt('Copie o código:', r.codigo); }
+      };
+    }
+    var dest = (d.cidade || '') + (d.uf ? (d.cidade ? '/' : '') + d.uf : '');
+    txt('destino', dest || '—');
+    txt('prazo', d.prazo || '');
+    mostra('lPrazo', !!d.prazo);
+    var ul = el('itens'); ul.innerHTML = '';
+    (d.itens || []).forEach(function (i) { var li = document.createElement('li'); li.textContent = (i.qtd || 1) + 'x ' + (i.nome || ''); ul.appendChild(li); });
+    if (d.slug) { var l = el('btnLoja'); l.href = 'https://www.moviki.com.br/' + encodeURIComponent(d.slug); l.textContent = 'Ver a loja'; mostra('btnLoja', true); }
+    mostra('carregando', false); mostra('falha', false); mostra('pedido', true);
+  }
+  fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acao: 'compra_acompanhar', ref: m[1] }), referrerPolicy: 'no-referrer' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) { if (j && j.ok) pintar(j); else falhou(); })
+    .catch(function () {
+      mostra('carregando', false);
+      var c = el('carregando'); c.textContent = 'Sem conexão agora. Tente de novo em instantes.'; mostra('carregando', true);
+    });
+})();
+</script>
+</body>
+</html>
