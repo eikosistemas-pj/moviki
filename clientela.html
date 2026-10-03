@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Live da sua clientela sem comissão por venda | Moviki</title>
+<meta name="description" content="Já vende ao vivo em plataforma e paga comissão até na recompra? Faça a live da sua loja para quem já é seu cliente: Pix direto na sua conta e 0% de comissão do Moviki por venda. Faça a conta com os seus números.">
+<link rel="canonical" href="https://www.moviki.com.br/live-shop/clientela">
+<!--
+  clientela.html — 2026-10-03-clientela (rota /live-shop/clientela no vercel.json; dois segmentos, nao colide com o curinga /:slug). P69.
+  PORTA DE ENTRADA para quem JA vende ao vivo em plataforma com comissao (publico do Grupo 5 do Google Ads e da prospeccao direta).
+  A tese: a plataforma fica para conhecer gente nova; o Moviki fica para vender DE NOVO para quem ja e cliente do lojista.
+  Regras:
+  - Nenhuma marca de terceiro citada (regra de 29/09). A comparacao nominal fica no guia /guia/taxas-live-shop (excecao controlada) e na conversa de venda.
+  - NUNCA sugerir usar contato de comprador de outra plataforma (termos das plataformas + LGPD): a pagina diz o contrario, em destaque.
+  - A calculadora e conta de TAXA, nunca de venda. Os numeros sao do visitante; os padroes sao editaveis.
+  - Limites da live na pagina (CDC arts. 30 e 35). Recurso Enterprise sempre dito como Enterprise. sempre "teste gratis".
+  - Pagina por ramo: ?ramo= ou utm_content= troca selo, titulo, texto, a live em laco (ramos/<ramo>.*) e os padroes da calculadora.
+    Casamento por palavra; so textContent; ramo desconhecido = pagina geral (moda).
+  - Oferta do Lote Fundador com placar contado no robo; depois de 27/11/2026 23:59 o bloco some sozinho.
+  CSP por meta, como o resto do repo; caminhos absolutos (pagina em subcaminho).
+-->
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://moviki-robo.vercel.app https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#050b14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/live-shop/clientela">
+<meta property="og:title" content="Seu cliente fiel compra de novo. Por que pagar comissão de novo?">
+<meta property="og:description" content="Live da sua loja para quem já é seu cliente: Pix direto na sua conta e 0% de comissão do Moviki por venda. Faça a conta com os seus números.">
+<meta property="og:image" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:image:alt" content="Live de uma loja no Moviki com produto em destaque e chat">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Seu cliente fiel compra de novo. Por que pagar comissão de novo?">
+<meta name="twitter:description" content="Live da sua loja para a sua clientela, com Pix direto na sua conta e 0% de comissão do Moviki por venda.">
+<meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
+<link rel="icon" href="/favicon512.png">
+<script src="/mvmetrica.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ciano:#00D4FF; --azul:#0066FF; --fundo:#050b14; --fundo2:#08111f; --card:#0d1829; --card2:#111f35;
+  --linha:rgba(255,255,255,.08); --linha2:rgba(255,255,255,.14);
+  --texto:#eaf3ff; --texto2:#9db4d0; --texto3:#6f87a6;
+  --ouro:#ffcf4d; --verde:#22d39a; --vermelho:#ff6b6b;
+  --raio:22px; --sombra:0 24px 60px rgba(0,0,0,.45);
+  --grad:linear-gradient(135deg,#00D4FF 0%,#0066FF 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Poppins',system-ui,-apple-system,sans-serif;background:var(--fundo);color:var(--texto);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+b,strong{font-weight:700}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{position:relative;padding:72px 0}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ciano)}
+.kick i{width:8px;height:8px;border-radius:50%;background:var(--ciano);box-shadow:0 0 0 4px rgba(0,212,255,.18)}
+h1,h2,h3{line-height:1.14;letter-spacing:-.02em}
+h2{font-size:clamp(27px,4.2vw,42px);font-weight:800;margin:12px 0 14px}
+h2 em,h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+h3{font-size:19px;font-weight:700}
+.lead{font-size:clamp(16px,2vw,19px);color:var(--texto2);max-width:740px}
+.lead b{color:var(--texto)}
+.centro{text-align:center}.centro .lead{margin:0 auto}
+p+p{margin-top:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font-weight:700;font-size:16px;cursor:pointer;border:0;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s,background .18s;-webkit-tap-highlight-color:transparent;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn-pri{background:var(--grad);color:#fff;box-shadow:0 14px 34px rgba(0,102,255,.38),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-sec{background:rgba(255,255,255,.06);color:var(--texto);border:1px solid var(--linha2)}
+.btn-sec:hover{background:rgba(255,255,255,.1)}
+.btn-ouro{background:linear-gradient(135deg,#ffe08a 0%,#ffb800 100%);color:#1a1200;box-shadow:0 14px 34px rgba(255,184,0,.28)}
+.topo{position:sticky;top:0;z-index:40;background:rgba(5,11,20,.78);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--linha)}
+.topo .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
+.topo img{height:28px;width:auto}
+.topo .mini{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;background:var(--grad);font-weight:700;font-size:14px;color:#fff;white-space:nowrap}
+.hero{padding:36px 0 64px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:-20% -10% auto auto;width:760px;height:760px;background:radial-gradient(closest-side,rgba(0,102,255,.30),transparent 70%);pointer-events:none}
+.hgrid{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+.hero h1{font-size:clamp(32px,5.6vw,56px);font-weight:800;margin:14px 0 16px}
+.hero h1 .l1{display:block;font-size:.62em;font-weight:700;color:var(--texto2);margin-bottom:8px;letter-spacing:-.01em}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.micro{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:13.5px;color:var(--texto2)}
+.micro span{display:inline-flex;align-items:center;gap:7px}
+.micro span:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--verde);flex:none}
+.nota{font-size:13.5px;color:var(--texto3);margin-top:10px}
+.foto{position:relative;max-width:320px;margin:0 auto}
+.tel{position:relative;aspect-ratio:540/1168;border-radius:30px;overflow:hidden;border:3px solid rgba(255,255,255,.14);box-shadow:var(--sombra),0 0 0 1px rgba(255,255,255,.08);background:#0b1626}
+.tel img,.tel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.tel video{opacity:0;transition:opacity .35s ease}
+.tel video.on{opacity:1}
+.foto .rot{position:relative;margin-top:12px;background:rgba(5,11,20,.78);border:1px solid var(--linha2);border-radius:14px;padding:10px 12px;font-size:12.5px;color:var(--texto2)}
+.foto .rot b{color:var(--texto);display:block;font-size:13.5px}
+/* faixa da tese */
+.tese{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px}
+.lado{border-radius:var(--raio);padding:24px;border:1px solid var(--linha);background:var(--card)}
+.lado.nosso{background:linear-gradient(160deg,rgba(0,102,255,.18),rgba(0,212,255,.06));border-color:rgba(0,212,255,.35)}
+.lado .rot2{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--texto2)}
+.lado.nosso .rot2{color:var(--ciano)}
+.lado h3{font-size:22px;margin:6px 0 10px}
+.lado ul{list-style:none;display:grid;gap:8px;color:var(--texto2);font-size:15px}
+.lado li{padding-left:18px;position:relative}
+.lado li:before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--texto3)}
+.lado.nosso li:before{background:var(--ciano)}
+/* calculadora */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px}
+.caixa{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:22px}
+.campo{display:grid;gap:6px;margin-bottom:16px}
+.campo label{font-size:14px;font-weight:600;color:var(--texto)}
+.campo small{font-size:12.5px;color:var(--texto3)}
+.campo input[type=number]{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--linha2);background:var(--fundo2);color:var(--texto);font:600 17px 'Poppins',sans-serif;padding:0 14px}
+.campo input[type=number]:focus{outline:2px solid var(--ciano);outline-offset:1px}
+.campo input[type=range]{width:100%;accent-color:#00D4FF;min-height:32px}
+.lin2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.valrc{font-weight:800;color:var(--ciano)}
+.res{background:linear-gradient(160deg,rgba(255,107,107,.10),rgba(255,207,77,.05));border-color:rgba(255,207,77,.28)}
+.big{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.1;color:var(--ouro);margin:4px 0 2px}
+.big small{font-size:15px;font-weight:600;color:var(--texto2)}
+.res .linha{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--linha);font-size:15px;color:var(--texto2)}
+.res .linha b{color:var(--texto);white-space:nowrap}
+.res .linha:last-of-type{border-bottom:0}
+.veredito{margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(34,211,154,.08);border:1px solid rgba(34,211,154,.3);font-size:15px;color:var(--texto2)}
+.veredito b{color:var(--verde)}
+.ajuste{border-top:1px solid var(--linha);padding-top:12px;margin-top:4px}
+.ajuste summary{cursor:pointer;list-style:none;font-size:14px;font-weight:600;color:var(--ciano);padding:6px 0 12px}
+.ajuste summary::-webkit-details-marker{display:none}
+.ajuste summary span{color:var(--texto3);font-weight:500}
+.mais{font-size:13px;color:var(--ciano);background:none;border:0;cursor:pointer;font-family:inherit;padding:4px 0;text-decoration:underline}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:30px}
+.card{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:22px}
+.card .num{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(255,107,107,.12);color:var(--vermelho);font-weight:800;margin-bottom:12px}
+.card h3{margin-bottom:6px}
+.card p{color:var(--texto2);font-size:15px}
+.card p b{color:var(--texto)}
+.passos{counter-reset:p;display:grid;gap:14px;margin-top:28px;max-width:820px}
+.passo{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--fundo2);border:1px solid var(--linha);border-radius:18px;padding:18px}
+.passo:before{counter-increment:p;content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:18px}
+.passo h3{font-size:17px;margin-bottom:4px}
+.passo p{color:var(--texto2);font-size:15px}
+.regra{margin-top:28px;max-width:860px;padding:20px 22px;border-radius:18px;background:rgba(255,207,77,.07);border:1px solid rgba(255,207,77,.32)}
+.regra h3{color:var(--ouro);font-size:18px;margin-bottom:8px}
+.regra p{color:var(--texto2);font-size:15px}
+.regra p b{color:var(--texto)}
+.ferr{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.ferr div{background:var(--card);border:1px solid var(--linha);border-radius:18px;padding:18px}
+.ferr img{width:40px;height:40px;object-fit:contain;margin-bottom:10px}
+.ferr h3{font-size:16px;margin-bottom:4px}
+.ferr p{color:var(--texto2);font-size:14px}
+.tabela{width:100%;border-collapse:collapse;margin-top:26px;font-size:15px;background:var(--fundo2);border:1px solid var(--linha);border-radius:18px;overflow:hidden}
+.tabela th,.tabela td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--linha)}
+.tabela thead th{background:var(--card2);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--texto2)}
+.tabela td:first-child{color:var(--texto2);width:30%}
+.tabela tr:last-child td{border-bottom:0}
+.rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.oferta{margin-top:28px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch}
+.oferta .caixa{background:linear-gradient(160deg,rgba(255,207,77,.12),rgba(255,184,0,.03));border-color:rgba(255,207,77,.35)}
+.oferta .preco{font-size:clamp(34px,5vw,46px);font-weight:800;color:var(--ouro);line-height:1.1}
+.oferta .preco small{font-size:15px;color:var(--texto2);font-weight:600}
+.oferta ul{list-style:none;display:grid;gap:8px;margin:14px 0 18px;color:var(--texto2);font-size:15px}
+.oferta li{padding-left:18px;position:relative}
+.oferta li:before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--ouro)}
+.placar{display:flex;align-items:baseline;gap:8px;font-size:15px;color:var(--texto2)}
+.placar .n{font-size:38px;font-weight:800;color:var(--ouro)}
+.barraV{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 6px}
+.barraV i{display:block;height:100%;width:3%;background:linear-gradient(90deg,#ffe08a,#ffb800);transition:width .6s ease}
+body.fimFundador .soFundador{display:none!important}
+.soDepois{display:none}
+body.fimFundador .soDepois{display:block}
+.faq{max-width:820px;margin-top:26px;display:grid;gap:12px}
+.faq details{background:var(--fundo2);border:1px solid var(--linha);border-radius:16px;padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:600;font-size:16px;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--ciano);font-size:22px;line-height:1}
+.faq details[open] summary:after{content:"–"}
+.faq details p{color:var(--texto2);font-size:15px;padding-bottom:16px}
+.final{background:linear-gradient(160deg,rgba(0,102,255,.20),rgba(0,212,255,.05));border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.links a{font-size:14px;padding:8px 14px;border-radius:999px;border:1px solid var(--linha2);color:var(--texto2)}
+.links a:hover{color:var(--texto)}
+footer{padding:36px 0 110px;color:var(--texto3);font-size:13px}
+footer p+p{margin-top:8px}
+footer a{text-decoration:underline}
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(5,11,20,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--linha);display:none;text-align:center;transition:transform .25s ease}
+.barra .btn{width:100%;max-width:440px}
+.barra small{display:block;font-size:11.5px;color:var(--texto3);margin-top:4px}
+.barra.fora{transform:translateY(115%)}
+@media (max-width:900px){
+  .hgrid{display:flex;flex-direction:column;gap:0}
+  .hgrid>div:first-child{display:contents}
+  .hero .kick{order:1;align-self:flex-start}
+  .hero h1{order:2}
+  .foto{order:3;max-width:none;width:min(100%,calc((100vh - 80px)*.4623));width:min(100%,calc((100svh - 80px)*.4623));margin:4px auto 0}
+  .hero .lead{order:4;margin-top:22px}
+  .hero .ctas{order:5}
+  .hero .micro{order:6}
+  .hero .nota{order:7}
+  .tese,.calc,.cards,.oferta{grid-template-columns:1fr}
+  .ferr{grid-template-columns:1fr 1fr}
+  section{padding:56px 0}
+  .barra{display:block}
+}
+@media (max-width:420px){
+  .topo .mini{padding:0 12px;font-size:13px}
+  .tabela th,.tabela td{padding:12px 10px;font-size:14px}
+  .tabela td:first-child{width:34%}
+  .btn{width:100%}
+  .ferr{grid-template-columns:1fr}
+  .lin2{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.barra,.barraV i{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <a href="/" aria-label="Moviki, página inicial"><img src="/logo.png" alt="Moviki" width="94" height="28" onerror="this.style.display='none'"></a>
+    <a class="mini" href="#a-conta" data-ev="clientela_topo">Fazer a minha conta</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hgrid">
+    <div>
+      <span class="kick"><i></i><span id="clSelo">Para quem já vende ao vivo</span></span>
+      <h1 id="clH1"><span class="l1" id="clH1a">Seu cliente fiel compra de novo.</span><span id="clH1b">E você paga </span><em id="clH1c">comissão de novo</em><span id="clH1d">.</span></h1>
+      <p class="lead" id="clLead">Continue na plataforma para conhecer gente nova. <b>Para quem já é seu cliente, faça a live da sua própria loja no Moviki:</b> Pix direto na sua conta e 0% de comissão do Moviki por venda.</p>
+      <div class="ctas">
+        <a class="btn btn-pri" href="#a-conta" data-ev="clientela_hero_conta">Quanto eu pago para vender a quem já é meu →</a>
+        <a class="btn btn-sec soFundador" href="#fundador" data-ev="clientela_hero_fundador">Ver o Lote Fundador</a>
+      </div>
+      <div class="micro">
+        <span>Não precisa sair da plataforma</span><span>Sem mínimo de seguidores</span><span>O Pix cai na sua conta</span>
+      </div>
+      <p class="nota" id="clNota" hidden></p>
+    </div>
+    <div class="foto">
+      <div class="tel" id="clTel"></div>
+      <div class="rot"><b>Cena ilustrativa · loja fictícia</b>A live abre no navegador do celular, pelo painel do Moviki. Pix dentro da live e oferta relâmpago são do Enterprise.</div>
+    </div>
+  </div>
+  <script>
+  /* PAGINA POR RAMO (03/10/2026). ?ramo= ou utm_content= escolhe a variante.
+     k = chave do laco em /ramos, a = palavras que casam, s = selo, h = [linha 1, antes, destaque, depois],
+     l = texto, n = aviso, tk = preco medio padrao da calculadora, rc = % de recompra padrao.
+     Casamento por PALAVRA, o mais especifico primeiro. So textContent. */
+  (function(){
+    var M=[
+      {k:'perfumaria',a:['perfum','fragranc'],s:'Para quem vende perfume ao vivo',tk:120,rc:30,
+       h:['O perfume acaba. A cliente volta.','Ela não precisa ','te custar comissão','.'],
+       l:'A plataforma apresentou você a ela. Agora ela já sabe o que gosta. A próxima compra pode sair da live da sua loja, com Pix direto na sua conta.'},
+      {k:'cabelo',a:['cabelo','capilar','shampoo','hair'],s:'Para quem vende cuidado com o cabelo ao vivo',tk:60,rc:40,
+       h:['O shampoo acaba todo mês.','A comissão ','não precisa vir junto','.'],
+       l:'Quem gostou do seu kit volta para repor. Chame essa cliente para a live da sua loja e venda a reposição com Pix direto na sua conta.'},
+      {k:'cosmeticos',a:['cosmet','beleza','maquiag','skincare','skin','make'],s:'Para quem vende beleza ao vivo',tk:45,rc:40,
+       h:['O batom acaba. A cliente volta.','Por que pagar ','comissão de novo','?'],
+       l:'Quem já testou a sua base sabe o tom dela. A recompra não precisa de vitrine nova: precisa de você mostrando o lançamento para quem já é sua cliente.'},
+      {k:'suplementos',a:['suplement','whey','creatin','nutri'],s:'Para quem vende suplementos ao vivo',tk:120,rc:45,
+       h:['O pote acaba em 30 dias.','A comissão ','não deveria voltar com ele','.'],
+       l:'Quem treina compra de novo todo mês. Faça a live de reposição para quem já é seu cliente, com Pix direto na sua conta.',
+       n:'Anabolizante, emagrecedor e medicamento não podem ser vendidos na live (Regras da live).'},
+      {k:'semijoias',a:['semijoi','prata','folhead'],s:'Para quem vende semijoias ao vivo',tk:60,rc:35,
+       h:['Coleção nova toda semana. Cliente fiel toda semana.','E comissão ','toda semana','.'],
+       l:'A cliente que coleciona as suas peças volta a cada lançamento. Faça o lançamento numa live só para ela, com Pix direto na sua conta.'},
+      {k:'bijuteria',a:['bijut','acessori'],s:'Para quem vende acessórios ao vivo',tk:35,rc:35,
+       h:['Peça nova chegou. A cliente de sempre também.','Ela não precisa ','te custar comissão','.'],
+       l:'Em peça de preço baixo, a taxa fixa por item pesa mais. Venda a reposição para quem já é sua cliente na live da sua loja.'},
+      {k:'moda-fitness',a:['fitness','legging','academ','treino'],s:'Para quem vende moda fitness ao vivo',tk:110,rc:30,
+       h:['Quem treina troca de legging toda estação.','A recompra ','é sua, não da plataforma','.'],
+       l:'A aluna que já veste o seu tamanho volta para a cor nova. Mostre a coleção numa live para quem já é sua cliente.'},
+      {k:'moda-praia',a:['praia','biquin','bikin'],s:'Para quem vende moda praia ao vivo',tk:120,rc:20,
+       h:['Verão chegando. A cliente do ano passado também.','Chame quem ','já é sua','.'],
+       l:'Quem comprou o biquíni do ano passado já sabe o seu tamanho e confia na sua peça. Lance a coleção numa live só para ela.'},
+      {k:'moda-infantil',a:['infantil','kids','crianc'],s:'Para quem vende moda infantil ao vivo',tk:70,rc:35,
+       h:['Criança cresce. A mãe volta a cada estação.','A recompra ','não precisa pagar pedágio','.'],
+       l:'A mãe que já comprou o número anterior volta para o próximo. Mostre a coleção nova numa live para quem já é sua cliente.'},
+      {k:'lingerie',a:['linger','intim','pijam'],s:'Para quem vende moda íntima ao vivo',tk:80,rc:30,
+       h:['A cliente que acertou o tamanho volta.','Ela não precisa ','te custar comissão','.'],
+       l:'Quem já sabe o seu caimento compra a cor nova sem medo. Venda a reposição na live da sua loja, com Pix direto na sua conta.'},
+      {k:'calcados',a:['calcad','tenis','sapat','sandal'],s:'Para quem vende calçados ao vivo',tk:150,rc:20,
+       h:['Quem acertou a numeração volta.','A recompra ','é sua, não da plataforma','.'],
+       l:'O cliente que já calça a sua forma compra o modelo novo sem medo. Lance o modelo numa live para quem já é seu.'},
+      {k:'pet',a:['pet','cachorr','gato','racao'],s:'Para quem vende para pets ao vivo',tk:70,rc:40,
+       h:['O petisco acaba. O tutor volta.','A comissão ','não precisa vir junto','.'],
+       l:'O tutor que já sabe o tamanho da roupinha e o petisco preferido volta sempre. Venda a reposição na live da sua loja.'},
+      {k:'eletroportateis',a:['eletro','airfryer','fritadeir','cozinha'],s:'Para quem vende eletroportáteis ao vivo',tk:180,rc:15,
+       h:['Quem comprou um volta pelo segundo.','Em produto caro, ','cada ponto de comissão pesa','.'],
+       l:'O cliente que gostou do primeiro aparelho compra o próximo de quem ele confia. Mostre o lançamento numa live para quem já é seu.'},
+      {k:'acessorios-celular',a:['celular','capinha','capa','fone','carregador'],s:'Para quem vende acessórios de celular ao vivo',tk:40,rc:20,
+       h:['Celular novo, capinha nova.','O cliente de sempre ','volta pela sua live','.'],
+       l:'Em item barato, a taxa fixa por pedido come a margem. Venda a reposição para quem já é seu cliente, com Pix direto na sua conta.'},
+      {k:'utilidades',a:['casa','utilidad','organiz','decor'],s:'Para quem vende casa e utilidades ao vivo',tk:50,rc:25,
+       h:['Quem comprou o primeiro organizador volta para o segundo.','A recompra ','é sua, não da plataforma','.'],
+       l:'O cliente que confia no seu produto volta para completar a casa. Faça a live da novidade para quem já é seu.'},
+      {k:'moda',a:['moda','roupa','vestu','boutique','feminin'],s:'Para quem vende moda ao vivo',tk:90,rc:30,
+       h:['Coleção nova chegou. A cliente de sempre também.','Ela não precisa ','te custar comissão','.'],
+       l:'Quem já veste a sua numeração compra a peça nova sem medo. Lance a coleção numa live para quem já é sua cliente, com Pix direto na sua conta.'}
+    ];
+    var r='', v=null;
+    try{
+      var q=new URLSearchParams(location.search);
+      r=(q.get('ramo')||q.get('utm_content')||'').toLowerCase().slice(0,80);
+      try{ r=r.normalize('NFD').replace(/[̀-ͯ]/g,''); }catch(_){}
+    }catch(_){}
+    if(r){
+      var P=r.split(/[^a-z0-9]+/);
+      for(var i=0;i<M.length && !v;i++){
+        if(('-'+P.join('-')+'-').indexOf('-'+M[i].k+'-')>-1){ v=M[i]; break; }
+        for(var j=0;j<P.length && !v;j++){
+          if(!P[j]) continue;
+          for(var w=0;w<M[i].a.length;w++){ if(P[j].indexOf(M[i].a[w])===0){ v=M[i]; break; } }
+        }
+      }
+    }
+    window.clRamo=v||{k:'moda',tk:80,rc:30,geral:1};
+    function t(id,s){ var e=document.getElementById(id); if(e&&s!=null) e.textContent=s; }
+    if(v){
+      t('clSelo',v.s); t('clH1a',v.h[0]); t('clH1b',v.h[1]); t('clH1c',v.h[2]); t('clH1d',v.h[3]);
+      var ld=document.getElementById('clLead');
+      if(ld){
+        while(ld.firstChild) ld.removeChild(ld.firstChild);
+        ld.appendChild(document.createTextNode(v.l+' '));
+        var b=document.createElement('b'); b.textContent='0% de comissão do Moviki por venda.'; ld.appendChild(b);
+      }
+      if(v.n){ var n=document.getElementById('clNota'); n.textContent=v.n; n.hidden=false; }
+    }
+    /* telefone com a live em laco do ramo (mesmo arquivo da /aovivo) */
+    var box=document.getElementById('clTel'); if(!box) return;
+    var k=window.clRamo.k, V='?v=20261001', base='/ramos/'+k;
+    var pic=document.createElement('picture');
+    var so=document.createElement('source'); so.type='image/webp'; so.srcset=base+'.webp'+V; pic.appendChild(so);
+    var im=document.createElement('img'); im.src=base+'.jpg'+V; im.width=540; im.height=1168; im.decoding='async';
+    im.setAttribute('fetchpriority','high');
+    im.alt='Tela de uma live no Moviki: produto em destaque com o botão Comprar, oferta da live e chat dos clientes. Cena ilustrativa, loja fictícia.';
+    pic.appendChild(im); box.appendChild(pic);
+    try{
+      if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var c=navigator.connection; if(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||''))) return;
+    }catch(_){ return; }
+    if(!('IntersectionObserver' in window)) return;
+    var vd=document.createElement('video');
+    vd.muted=true; vd.setAttribute('muted',''); vd.setAttribute('playsinline',''); vd.loop=true; vd.preload='none';
+    vd.setAttribute('aria-hidden','true'); vd.tabIndex=-1; vd.setAttribute('disablepictureinpicture','');
+    var src=document.createElement('source'); src.src=base+'.mp4'+V; src.type='video/mp4'; vd.appendChild(src);
+    box.appendChild(vd);
+    var carregado=false;
+    vd.addEventListener('playing',function(){ vd.classList.add('on'); });
+    function toca(){ try{ if(!carregado){ carregado=true; vd.preload='auto'; vd.load(); } var p=vd.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} }
+    function ligar(){ new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) toca(); else { try{ vd.pause(); }catch(x){} } }); },{rootMargin:'200px 0px'}).observe(vd); }
+    if(document.readyState==='complete') setTimeout(ligar,150); else window.addEventListener('load',function(){ setTimeout(ligar,150); });
+  })();
+  </script>
+</section>
+
+<section id="a-tese" style="padding-top:24px">
+  <div class="wrap">
+    <span class="kick"><i></i>Não é para sair de lá</span>
+    <h2>A plataforma te apresenta. <em>A recompra é sua.</em></h2>
+    <p class="lead">Ninguém que fatura bem vai largar a vitrine que traz gente nova. E não precisa. O que não faz sentido é pagar a mesma comissão pela cliente que já te conhece, já confia e voltaria de qualquer jeito.</p>
+    <div class="tese">
+      <div class="lado">
+        <span class="rot2">Plataforma de vendas</span>
+        <h3>Para conhecer gente nova</h3>
+        <ul>
+          <li>Mostra a sua live para quem nunca ouviu falar de você</li>
+          <li>Cobra comissão em cada pedido, inclusive na recompra</li>
+          <li>O dinheiro passa por ela antes de chegar a você</li>
+          <li>As regras e o alcance são decididos por ela</li>
+        </ul>
+      </div>
+      <div class="lado nosso">
+        <span class="rot2">A live da sua loja no Moviki</span>
+        <h3>Para vender de novo para quem já é seu</h3>
+        <ul>
+          <li>Link próprio: quem entra é quem você chamou</li>
+          <li>0% de comissão do Moviki por venda: você paga o plano do mês</li>
+          <li>No Enterprise, Pix dentro da live, direto na sua conta</li>
+          <li>Na sua live, ninguém rola para o concorrente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="a-conta">
+  <div class="wrap">
+    <span class="kick"><i></i>A conta da sua loja</span>
+    <h2>Quanto você paga de taxa <em>para vender a quem já é seu</em></h2>
+    <p class="lead">Coloque os seus números. Os campos de taxa já vêm com a tarifa padrão mais usada em live shop de plataforma em 2026; troque pela sua. A fonte de cada número está no <a href="/guia/taxas-live-shop" data-ev="clientela_guia" style="text-decoration:underline;color:var(--texto)">guia de taxas</a>.</p>
+    <div class="calc">
+      <div class="caixa">
+        <div class="campo">
+          <label for="cFat">Quanto você vende por mês na plataforma (R$)</label>
+          <input id="cFat" type="number" inputmode="decimal" min="0" step="100" value="20000">
+        </div>
+        <div class="campo">
+          <label for="cTk">Preço médio de cada item (R$)</label>
+          <input id="cTk" type="number" inputmode="decimal" min="1" step="1" value="80">
+        </div>
+        <div class="campo">
+          <label for="cRc">Dos pedidos, quantos são de quem já comprou de você: <span class="valrc" id="cRcV">30%</span></label>
+          <input id="cRc" type="range" min="0" max="90" step="5" value="30">
+          <small>Não sabe? Olhe os nomes repetidos nos pedidos do último mês. O padrão é um ponto de partida, não um dado.</small>
+        </div>
+        <details class="ajuste">
+          <summary>Ajustar a taxa e o afiliado <span id="cResumoTaxa"></span></summary>
+        <div class="lin2">
+          <div class="campo">
+            <label for="cPct">Comissão por venda (%)</label>
+            <input id="cPct" type="number" inputmode="decimal" min="0" max="60" step="0.5" value="6">
+          </div>
+          <div class="campo">
+            <label for="cFix">Taxa fixa por item (R$)</label>
+            <input id="cFix" type="number" inputmode="decimal" min="0" max="50" step="0.5" value="6">
+          </div>
+        </div>
+        <small id="cAuto" style="display:block;color:var(--texto3);font-size:12.5px;margin:-6px 0 4px">A comissão e a taxa fixa acompanham a faixa de preço do item (abaixo de R$ 50 e a partir de R$ 50) até você mexer nelas.</small>
+        <div class="campo" style="margin-top:14px">
+          <label for="cAf">Comissão de afiliado que você paga (%, opcional)</label>
+          <input id="cAf" type="number" inputmode="decimal" min="0" max="60" step="0.5" value="0">
+        </div>
+        </details>
+      </div>
+      <div class="caixa res" aria-live="polite">
+        <span class="kick" style="color:var(--ouro)"><i style="background:var(--ouro);box-shadow:0 0 0 4px rgba(255,207,77,.18)"></i>O pedágio da recompra</span>
+        <div class="big" id="rAno">R$ 0 <small>por ano</small></div>
+        <p style="color:var(--texto2);font-size:14.5px">é o que vai de taxa só nos pedidos de quem <b style="color:var(--texto)">já era seu cliente</b>.</p>
+        <div style="margin-top:12px">
+          <div class="linha"><span>Itens vendidos por mês</span><b id="rItens">0</b></div>
+          <div class="linha"><span>Taxa total por mês</span><b id="rTot">R$ 0</b></div>
+          <div class="linha"><span>Taxa só da recompra, por mês</span><b id="rMes">R$ 0</b></div>
+          <div class="linha"><span>Taxa por pedido, em média</span><b id="rPed">R$ 0</b></div>
+        </div>
+        <div class="veredito" id="rVer">—</div>
+        <p style="font-size:12.5px;color:var(--texto3);margin-top:12px">Conta de taxa, não de venda: não é previsão de quanto você vai vender no Moviki. Quem assiste a sua live é quem você chama. Não inclui frete, impostos nem anúncios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="o-que-fica-para-tras" style="padding-top:24px">
+  <div class="wrap">
+    <span class="kick"><i></i>O que fica para trás</span>
+    <h2>Quatro coisas que você perde <em>sem perceber</em></h2>
+    <div class="cards">
+      <div class="card"><span class="num">1</span><h3>A recompra paga como venda nova</h3><p>A plataforma cobra o mesmo da cliente que ela trouxe e da cliente que voltou por sua causa. <b>A fidelidade que você construiu vira taxa.</b></p></div>
+      <div class="card"><span class="num">2</span><h3>A sua clientela de fora não tem onde comprar ao vivo</h3><p>O grupo do WhatsApp, a lista de transmissão, quem te segue no Instagram, quem compra no balcão. <b>É gente que é sua e que hoje não tem uma live com Pix só da sua loja.</b></p></div>
+      <div class="card"><span class="num">3</span><h3>O dinheiro que espera</h3><p>Em muitas plataformas, o valor só é liberado dias depois da entrega. No Moviki, com a sua chave Pix, <b>o dinheiro cai na sua conta na hora em que o cliente paga</b>. Faz diferença quando é preciso repor estoque para a próxima live.</p></div>
+      <div class="card"><span class="num">4</span><h3>Um ponto de falha só</h3><p>Regra nova, conta suspensa, alcance que cai. <b>Quem vende num lugar só depende das regras de um lugar só.</b> A live da sua loja é o seu canal próprio, com o seu link.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona" style="padding-top:24px">
+  <div class="wrap">
+    <span class="kick"><i></i>Como fica na prática</span>
+    <h2>A live VIP <em>da sua clientela</em></h2>
+    <p class="lead">Um dia fixo na semana, só para quem já compra de você. Lugar limitado vira exclusividade: até 100 pessoas ao mesmo tempo no Enterprise.</p>
+    <div class="passos">
+      <div class="passo"><div><h3>Monte a vitrine da live</h3><p>Foto, nome, preço e estoque de cada produto. Os mesmos produtos servem para a live e para o catálogo da sua página, que recebe pedido 24 horas.</p></div></div>
+      <div class="passo"><div><h3>Chame quem é seu</h3><p>Grupo do WhatsApp, lista de transmissão, Status, Instagram e o balcão. A live tem endereço próprio e a sua página ganha o selo AO VIVO enquanto você transmite.</p></div></div>
+      <div class="passo"><div><h3>Venda com Pix dentro da live</h3><p>No Enterprise, o cliente paga sem sair da transmissão, com a sua chave Pix ou a sua conta Asaas. A oferta relâmpago segura a peça para quem gerou o código.</p></div></div>
+      <div class="passo"><div><h3>Despache pela Central de Pedidos</h3><p>Pedido pago, separando, pronto e entregue. Retirada com código de 4 dígitos, entrega própria com taxa por bairro e comanda impressa.</p></div></div>
+      <div class="passo"><div><h3>Repita toda semana</h3><p>Dia fixo cria hábito. Corte os melhores momentos (Enterprise) e poste nas suas redes para a clientela ver o que perdeu.</p></div></div>
+    </div>
+    <div class="regra">
+      <h3>A regra de ouro da clientela</h3>
+      <p><b>Chame só quem é seu por um canal seu.</b> O contato de quem comprou dentro de uma plataforma pertence ao pedido de lá: as regras das plataformas de venda proíbem usar esses dados para divulgação e tirar a venda de dentro delas, e a LGPD também protege esse contato.</p>
+      <p>A sua clientela de verdade é quem te deu o WhatsApp por vontade própria, quem entrou no seu grupo, quem te segue nas suas redes e quem compra no seu balcão. É para essa gente que a live do Moviki existe.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ferramentas" style="padding-top:24px">
+  <div class="wrap">
+    <span class="kick"><i></i>Feito para live que vende</span>
+    <h2>O que você leva <em>para a sua live</em></h2>
+    <div class="ferr">
+      <div><img src="/icones-premium/pix.png" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><h3>Pix dentro da live</h3><p>Enterprise. Sem sair da transmissão, direto na sua conta.</p></div>
+      <div><img src="/icones-premium/presente.png" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><h3>Oferta relâmpago</h3><p>Enterprise. Contagem e estoque: o Pix segura a peça.</p></div>
+      <div><img src="/icones-premium/live.png" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><h3>Esgotado e "Restam N"</h3><p>O estoque baixa sozinho na live e no catálogo.</p></div>
+      <div><img src="/icones-premium/chat.png" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><h3>Chat com filtro</h3><p>Ofensa barrada sozinha. Link no chat, só o seu.</p></div>
+      <div><img src="/icones-premium/carrinho.png" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><h3>Central de Pedidos</h3><p>Etapas, comanda, retirada com código e devolução.</p></div>
+      <div><img src="/icones-premium/localizacao.png" alt="" width="40" height="40" loading="lazy" onerror="this.style.display='none'"><h3>Live com endereço</h3><p>Enterprise. Quem está perto toca em Como chegar.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="limites" style="padding-top:24px">
+  <div class="wrap">
+    <span class="kick"><i></i>Antes de decidir</span>
+    <h2>O que o Moviki <em>é e o que não é</em></h2>
+    <div class="rolar">
+      <table class="tabela">
+        <thead><tr><th>Ponto</th><th>Como funciona no Moviki</th></tr></thead>
+        <tbody>
+          <tr><td>Público</td><td>O Moviki <b>não entrega audiência pronta</b>. Assiste quem você chama. Por isso ele é o lugar da recompra, não da descoberta.</td></tr>
+          <tr><td>Pessoas ao mesmo tempo</td><td>Enterprise: até 100, lives de até 180 min e 10.000 minutos de vídeo por ciclo (renova todo dia 12). Premium: até 30, 60 min e 3.000 minutos.</td></tr>
+          <tr><td>Frete</td><td>O Moviki não calcula frete para o Brasil inteiro. Na live, a entrega é retirada, entrega própria com taxa por bairro ou combinada com o cliente.</td></tr>
+          <tr><td>Confirmação do Pix</td><td>Com a sua chave Pix, você confirma com um toque quando o dinheiro cai. Com a sua conta Asaas conectada, o pedido se confere sozinho e o Asaas cobra a tarifa dele.</td></tr>
+          <tr><td>Comissão</td><td>0% do Moviki por venda. Se um dia houver tarifa, ela será fixa por pedido, nunca porcentagem, com aviso de 30 dias.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="fundador" style="padding-top:24px">
+  <div class="wrap">
+    <div class="soFundador">
+      <span class="kick" style="color:var(--ouro)"><i style="background:var(--ouro);box-shadow:0 0 0 4px rgba(255,207,77,.18)"></i>Lote Fundador · até 27/11</span>
+      <h2>Um ano de Enterprise <em>pelo preço de poucas taxas</em></h2>
+      <p class="lead">O plano com Pix dentro da live, oferta relâmpago e Como chegar, por 12 meses. Faça a conta acima e compare com o que vai de taxa em um ano.</p>
+      <div class="oferta">
+        <div class="caixa">
+          <div class="preco">R$ 990 <small>à vista, 12 meses</small></div>
+          <p style="color:var(--texto2);font-size:15px">ou 12x de R$ 89,90 no cartão</p>
+          <ul>
+            <li>Enterprise completo: Pix na live, 100 pessoas, 180 min por live</li>
+            <li>0% de comissão do Moviki por venda</li>
+            <li>Garantia de 30 dias</li>
+            <li>Regras na cláusula 3-A dos <a href="/termos.html" style="text-decoration:underline">Termos</a></li>
+          </ul>
+          <div class="ctas" style="margin-top:6px">
+            <a class="btn btn-ouro" href="https://app.moviki.com.br/?criar=1&amp;plano=enterprise&amp;periodo=fundador" data-ev="clientela_fundador_avista">Quero R$ 990 à vista →</a>
+            <a class="btn btn-sec" href="https://app.moviki.com.br/?criar=1&amp;plano=enterprise&amp;periodo=fundador12x" data-ev="clientela_fundador_12x">12x de R$ 89,90</a>
+          </div>
+        </div>
+        <div class="caixa" style="background:var(--card);border-color:var(--linha)">
+          <div class="placar" id="clPlacar" hidden><span class="n" id="clRestam">–</span><span>vagas restantes de <span id="clVagas">50</span></span></div>
+          <div class="barraV" id="clBarra" hidden><i id="clBarraI"></i></div>
+          <p style="color:var(--texto2);font-size:14.5px;margin-top:8px">50 vagas, uma por conta, até 27/11/2026 ou enquanto houver vaga. Os 12 meses contam do fim do teste grátis.</p>
+          <p style="color:var(--texto2);font-size:14.5px"><a href="/fundador" data-ev="clientela_fundador_pagina" style="text-decoration:underline;color:var(--texto)">Ver todas as regras do Lote Fundador</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="soDepois">
+      <span class="kick"><i></i>Plano para a live da clientela</span>
+      <h2>Enterprise: <em>R$ 129,90 por mês</em></h2>
+      <p class="lead">Pix dentro da live, oferta relâmpago, até 100 pessoas e 0% de comissão do Moviki por venda.</p>
+      <div class="ctas"><a class="btn btn-pri" href="/enterprise.html" data-ev="clientela_enterprise">Ver o Enterprise</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="duvidas" style="padding-top:24px">
+  <div class="wrap">
+    <span class="kick"><i></i>Dúvidas</span>
+    <h2>Perguntas de quem <em>já vende ao vivo</em></h2>
+    <div class="faq">
+      <details><summary>Preciso sair da plataforma onde já vendo?</summary><p>Não. A ideia é usar cada um para uma coisa: a plataforma para conhecer gente nova e a live da sua loja no Moviki para vender de novo para quem já é seu cliente.</p></details>
+      <details><summary>Posso chamar para a minha live quem comprou de mim pela plataforma?</summary><p>Não use o contato que veio de um pedido de lá. As regras das plataformas de venda proíbem usar esses dados para divulgação e desviar a venda, e a LGPD protege esse contato. Chame a sua clientela pelos seus canais: grupo, lista de transmissão, redes e balcão.</p></details>
+      <details><summary>O Moviki cobra comissão sobre a venda?</summary><p>Não. Hoje a taxa do Moviki por venda é 0%: você paga o plano do mês ou o Lote Fundador. Se um dia houver tarifa, ela será fixa por pedido, nunca porcentagem, com aviso de 30 dias.</p></details>
+      <details><summary>Onde cai o dinheiro?</summary><p>Na sua conta. No Enterprise, o Pix da live vai para a sua chave ou para a sua conta Asaas conectada, nunca para a conta do Moviki.</p></details>
+      <details><summary>E o frete?</summary><p>O Moviki não calcula frete para o Brasil inteiro. Você oferece retirada, entrega própria com taxa por bairro ou combina o envio com o cliente.</p></details>
+      <details><summary>Quantas pessoas cabem na live?</summary><p>No Enterprise, até 100 ao mesmo tempo, em lives de até 180 minutos, com 10.000 minutos de vídeo por ciclo. Quem chega com a live cheia vê "Live lotada" e entra sozinho quando abre vaga.</p></details>
+      <details><summary>Dá para testar antes?</summary><p>O teste grátis de 30 dias, sem cartão, tem 2 lives em nível Premium, sem o Pix dentro da live. Para testar o Pix na live, o Lote Fundador tem garantia de 30 dias.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap centro">
+    <h2>A sua clientela já existe. <em>Falta a live dela.</em></h2>
+    <p class="lead">Faça a conta, escolha o dia da semana e chame quem já é seu.</p>
+    <div class="ctas" style="justify-content:center">
+      <a class="btn btn-ouro soFundador" href="https://app.moviki.com.br/?criar=1&amp;plano=enterprise&amp;periodo=fundador" data-ev="clientela_final_fundador">Garantir a minha vaga de fundador →</a>
+      <a class="btn btn-sec" href="https://app.moviki.com.br/?criar=1" data-ev="clientela_final_teste">Começar o teste grátis</a>
+    </div>
+    <div class="links" style="justify-content:center">
+      <a href="/guia/taxas-live-shop" data-ev="clientela_link_guia">Taxas de live shop em 2026</a>
+      <a href="/live-shop" data-ev="clientela_link_liveshop">Live shop para lojista</a>
+      <a href="/aovivo" data-ev="clientela_link_aovivo">Ver a live funcionando</a>
+      <a href="/regras-da-live" data-ev="clientela_link_regras">Regras da live</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02 · Curitiba/PR · <a href="tel:+554120186848">(41) 2018-6848</a></p>
+    <p>O Moviki fornece a ferramenta de transmissão e de venda e não tem relação com nenhuma plataforma de vendas. A calculadora mostra só taxas, com os números que você informa; não é previsão de vendas nem recomendação financeira. A oferta, o preço, a entrega e o cumprimento do que for anunciado na live são responsabilidade do lojista, nos termos do Código de Defesa do Consumidor.</p>
+    <p><a href="/">Site do Moviki</a> · <a href="/termos.html">Termos de uso</a> · <a href="/privacidade.html">Privacidade</a> · <a href="/regras-da-live">Regras da live</a></p>
+  </div>
+</footer>
+
+<div class="barra">
+  <a class="btn btn-pri" href="#a-conta" data-ev="clientela_barra">Fazer a conta da minha loja</a>
+  <small>Leva 30 segundos · sem cadastro</small>
+</div>
+
+<script>
+/* CALCULADORA — conta de TAXA com os numeros do visitante. Valor sai sempre do Intl (regra de 30/09). */
+(function(){
+  var R=window.clRamo||{tk:80,rc:30};
+  var brl=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+  var brl2=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});
+  var int=new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0});
+  var ENTERPRISE=129.90, FUNDADOR_MES=990/12, FIM=Date.parse('2026-11-27T23:59:59-03:00');
+  function $(i){ return document.getElementById(i); }
+  function n(i){ var v=parseFloat(String($(i).value).replace(',','.')); return isFinite(v)&&v>=0?v:0; }
+  var mexeu=false, usou=false;
+  $('cTk').value=R.tk; $('cRc').value=R.rc;
+  function faixa(){
+    if(mexeu) return;
+    var tk=n('cTk');
+    $('cPct').value=tk<50?10:6; $('cFix').value=tk<50?4:6;
+  }
+  function conta(){
+    var fat=n('cFat'), tk=Math.max(1,n('cTk')), rc=Math.min(90,n('cRc'))/100;
+    var pct=n('cPct')/100, fix=n('cFix'), af=n('cAf')/100;
+    $('cRcV').textContent=Math.round(rc*100)+'%';
+    $('cResumoTaxa').textContent='('+String(n('cPct')).replace('.',',')+'% + '+brl2.format(fix)+' por item'+(af>0?' + '+String(n('cAf')).replace('.',',')+'% de afiliado':'')+')';
+    var itens=fat/tk;
+    var tot=fat*(pct+af)+itens*fix;
+    var rec=tot*rc;
+    var porPed=itens>0?tot/itens:0;
+    $('rItens').textContent=int.format(itens);
+    $('rTot').textContent=brl.format(tot);
+    $('rMes').textContent=brl.format(rec);
+    $('rPed').textContent=brl2.format(porPed);
+    var ano=$('rAno'); while(ano.firstChild) ano.removeChild(ano.firstChild);
+    ano.appendChild(document.createTextNode(brl.format(rec*12)+' '));
+    var sm=document.createElement('small'); sm.textContent='por ano'; ano.appendChild(sm);
+    var ver=$('rVer'); while(ver.firstChild) ver.removeChild(ver.firstChild);
+    if(porPed<=0){ ver.textContent='Coloque os seus números para ver a conta.'; return; }
+    var fundadorAberto=Date.now()<=FIM;
+    var ref=fundadorAberto?FUNDADOR_MES:ENTERPRISE;
+    var nPed=Math.ceil(ref/porPed);
+    var b=document.createElement('b');
+    b.textContent=fundadorAberto
+      ? 'A taxa de '+int.format(nPed)+' pedidos por mês já equivale ao Enterprise no Lote Fundador ('+brl2.format(FUNDADOR_MES)+' por mês).'
+      : 'A taxa de '+int.format(nPed)+' pedidos por mês já equivale ao Enterprise ('+brl2.format(ENTERPRISE)+' por mês).';
+    ver.appendChild(b);
+    var nRec=itens*rc;
+    ver.appendChild(document.createTextNode(nRec>=nPed
+      ? ' Na sua conta, a recompra soma '+int.format(nRec)+' pedidos por mês, e o Moviki não cobra comissão sobre eles.'
+      : ' Na sua conta, a recompra soma '+int.format(nRec)+' pedidos por mês: a taxa deles ainda não chega à mensalidade. Faça a conta de novo quando a sua clientela crescer.'));
+  }
+  ['cFat','cTk','cRc','cPct','cFix','cAf'].forEach(function(id){
+    $(id).addEventListener('input',function(){
+      if(id==='cPct'||id==='cFix') mexeu=true;
+      if(id==='cTk') faixa();
+      conta();
+      if(!usou){ usou=true; try{ if(window.mvEv) window.mvEv('calc_clientela',{ramo:R.k||'geral'}); }catch(e){} }
+    });
+  });
+  faixa(); conta();
+})();
+/* PLACAR do Lote Fundador — numero contado no robo. Depois do prazo, o bloco some. */
+(function(){
+  var FIM=Date.parse('2026-11-27T23:59:59-03:00');
+  function encerrar(){ document.body.classList.add('fimFundador'); }
+  if(Date.now()>FIM){ encerrar(); return; }
+  try{
+    fetch('https://moviki-robo.vercel.app/api/criar-assinatura',{method:'GET'}).then(function(r){ return r.ok?r.json():null; }).then(function(d){
+      if(!d||typeof d.restam!=='number') return;
+      if(d.aberto===false){ encerrar(); return; }
+      document.getElementById('clRestam').textContent=d.restam;
+      document.getElementById('clVagas').textContent=d.vagas;
+      document.getElementById('clPlacar').hidden=false;
+      document.getElementById('clBarra').hidden=false;
+      var pct=d.vagas?Math.round((d.vagas-d.restam)/d.vagas*100):0;
+      setTimeout(function(){ document.getElementById('clBarraI').style.width=Math.max(3,pct)+'%'; },60);
+    }).catch(function(){});
+  }catch(e){}
+})();
+/* A barra de baixo sai da frente quando o telefone esta inteiro na tela ou um botao aparece. */
+(function(){
+  try{
+    var bar=document.querySelector('.barra');
+    if(!bar || !('IntersectionObserver' in window)) return;
+    var vis=new Set(), tel=document.getElementById('clTel');
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(x){
+        var dentro=(x.target===tel) ? x.intersectionRatio>=.85 : x.isIntersecting;
+        if(dentro) vis.add(x.target); else vis.delete(x.target);
+      });
+      bar.classList.toggle('fora', vis.size>0);
+    },{threshold:[0,.5,.85,1]});
+    document.querySelectorAll('.ctas,#a-conta .calc').forEach(function(el){ io.observe(el); });
+    if(tel) io.observe(tel);
+  }catch(e){}
+})();
+</script>
+<script>window.MOVIKI_VERSAO='2026-10-03-clientela';</script>
+<script>
+/* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
+(function(){
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('[data-ev]'):null;
+    if(!a) return;
+    try{ if(window.mvEv) window.mvEv('cta_click',{cta:a.getAttribute('data-ev'),pagina:'clientela',ramo:(window.clRamo&&window.clRamo.k)||'geral'}); }catch(err){}
+  },true);
+  try{
+    var ref=(new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    if(ref.length>=3&&window.mvEv) window.mvEv('chegou_por_indicacao',{ref:ref,destino:'clientela'});
+  }catch(err){}
+})();
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"Moviki","item":"https://www.moviki.com.br/"},
+        {"@type":"ListItem","position":2,"name":"Live shop para lojista","item":"https://www.moviki.com.br/live-shop"},
+        {"@type":"ListItem","position":3,"name":"Live da sua clientela","item":"https://www.moviki.com.br/live-shop/clientela"}
+      ]
+    },
+    {
+      "@type":"SoftwareApplication",
+      "name":"Moviki",
+      "applicationCategory":"BusinessApplication",
+      "operatingSystem":"Web",
+      "url":"https://www.moviki.com.br/live-shop/clientela",
+      "description":"Live da própria loja para quem já é cliente, com Pix direto na conta do lojista e 0% de comissão do Moviki por venda.",
+      "offers":[
+        {"@type":"Offer","name":"Enterprise","price":"129.90","priceCurrency":"BRL"}
+      ],
+      "publisher":{"@type":"Organization","name":"EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA","url":"https://www.moviki.com.br/"}
+    },
+    {
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Preciso sair da plataforma onde já vendo?","acceptedAnswer":{"@type":"Answer","text":"Não. A ideia é usar cada um para uma coisa: a plataforma para conhecer gente nova e a live da sua loja no Moviki para vender de novo para quem já é seu cliente."}},
+        {"@type":"Question","name":"Posso chamar para a minha live quem comprou de mim pela plataforma?","acceptedAnswer":{"@type":"Answer","text":"Não use o contato que veio de um pedido de lá. As regras das plataformas de venda proíbem usar esses dados para divulgação e desviar a venda, e a LGPD protege esse contato. Chame a sua clientela pelos seus canais: grupo, lista de transmissão, redes e balcão."}},
+        {"@type":"Question","name":"O Moviki cobra comissão sobre a venda?","acceptedAnswer":{"@type":"Answer","text":"Não. Hoje a taxa do Moviki por venda é 0%: você paga o plano do mês ou o Lote Fundador. Se um dia houver tarifa, ela será fixa por pedido, nunca porcentagem, com aviso de 30 dias."}},
+        {"@type":"Question","name":"Onde cai o dinheiro?","acceptedAnswer":{"@type":"Answer","text":"Na sua conta. No Enterprise, o Pix da live vai para a sua chave ou para a sua conta Asaas conectada, nunca para a conta do Moviki."}},
+        {"@type":"Question","name":"E o frete?","acceptedAnswer":{"@type":"Answer","text":"O Moviki não calcula frete para o Brasil inteiro. Você oferece retirada, entrega própria com taxa por bairro ou combina o envio com o cliente."}},
+        {"@type":"Question","name":"Quantas pessoas cabem na live?","acceptedAnswer":{"@type":"Answer","text":"No Enterprise, até 100 ao mesmo tempo, em lives de até 180 minutos, com 10.000 minutos de vídeo por ciclo. Quem chega com a live cheia vê \"Live lotada\" e entra sozinho quando abre vaga."}},
+        {"@type":"Question","name":"Dá para testar antes?","acceptedAnswer":{"@type":"Answer","text":"O teste grátis de 30 dias, sem cartão, tem 2 lives em nível Premium, sem o Pix dentro da live. Para testar o Pix na live, o Lote Fundador tem garantia de 30 dias."}}
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>
