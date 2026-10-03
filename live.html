@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -151,7 +151,8 @@ svg{display:block}
 .vPreco{font-size:12px;color:var(--mv-txt-2);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vPreco s{display:none} /* no card so o preco que vale; o riscado aparece no painel */
 .vPreco strong{color:#fff;font-size:13.5px}
-.vCta{margin-left:auto;flex:0 0 auto;border:0;border-radius:8px;padding:6px 9px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.vCta{margin-left:auto;flex:0 0 auto;border:0;border-radius:8px;padding:6px 9px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+
 .vCta.esg{background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.5);color:#ff9d9d;cursor:default}
 .vCta svg{width:13px;height:13px}
 .vCta.pix{background:var(--mv-grad);color:#001428}
@@ -262,6 +263,11 @@ svg{display:block}
 .ckQtd{display:flex;align-items:center;gap:8px;margin-left:auto}
 .ckQtd button{width:32px;height:32px;border-radius:9px;border:1px solid var(--mv-linha);background:transparent;color:#fff;font-size:18px}
 .ckTotal{display:flex;justify-content:space-between;font-weight:800;font-size:16px;margin:4px 0 10px}
+/* 03/10/2026 (P70): carrinho da live */
+.ckLista{display:grid;gap:8px;margin-bottom:10px}
+.ckLista .ckLinha{margin-bottom:0}
+.ckTira{border:0;background:none;color:var(--mv-txt-3);font-size:22px;line-height:1;width:30px;height:34px;flex:0 0 30px}
+#ckContinuar{width:100%;margin:0 0 10px}
 .ckRot{display:block;font-size:12px;color:var(--mv-txt-3);margin:10px 0 5px}
 .ckEnt{display:flex;gap:8px}
 .ckEnt label{flex:1;border:1px solid var(--mv-linha);border-radius:11px;padding:10px;font-size:13.5px;display:flex;gap:7px;align-items:center}
@@ -319,6 +325,7 @@ svg{display:block}
 
   <div id="lateral" class="camada">
     <button type="button" class="latBtn" id="btnSacola"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><b id="nSacola">0</b></span>Sacolinha</button>
+    <button type="button" class="latBtn escondido" id="btnCarrinho"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L22 8H6"/></svg><b id="nCarr">0</b></span>Carrinho</button>
     <button type="button" class="latBtn" id="btnCurtir"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>Curtir</button>
     <button type="button" class="latBtn" id="btnSomLat" aria-label="Ligar o som"><span class="ico" id="icoSom"></span><span id="rotSom">Som</span></button>
     <button type="button" class="latBtn" id="btnCompartilhar"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>Enviar</button>
@@ -373,9 +380,11 @@ svg{display:block}
 <div class="folha escondido" id="folhaCompra"><div class="fCaixa">
   <div class="fTopo"><h2 id="ckTit">Comprar com Pix</h2><button type="button" class="btnRedondo" data-fecha="folhaCompra" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div id="ckForm">
-    <div class="ckLinha"><div class="cpInfo"><div class="cpNome" id="ckProd"></div><div class="cpPreco" id="ckUnit"></div></div><div class="ckQtd"><button type="button" id="ckMenos">−</button><b id="ckQ">1</b><button type="button" id="ckMais">+</button></div></div>
+    <div class="ckLista escondido" id="ckLista"></div>
+    <div class="ckLinha" id="ckUma"><div class="cpInfo"><div class="cpNome" id="ckProd"></div><div class="cpPreco" id="ckUnit"></div></div><div class="ckQtd"><button type="button" id="ckMenos">−</button><b id="ckQ">1</b><button type="button" id="ckMais">+</button></div></div>
     <div class="ckTotal escondido" id="ckFreteLin" style="font-size:14px;font-weight:600;margin:0 0 4px"><span>Entrega</span><span id="ckFrete"></span></div>
     <div class="ckTotal"><span>Total</span><span id="ckTotal"></span></div>
+    <button type="button" class="btnSec escondido" id="ckContinuar">Continuar comprando</button>
     <input class="campo" id="ckNome" maxlength="60" placeholder="Nome e sobrenome" autocomplete="name">
     <div style="display:flex;gap:8px;margin-top:8px"><input class="campo" id="ckWpp" maxlength="16" inputmode="tel" placeholder="WhatsApp com DDD" autocomplete="tel"><input class="campo" id="ckCpf" maxlength="14" inputmode="numeric" placeholder="CPF"></div>
     <span class="ckRot">Como você vai receber?</span>
@@ -452,7 +461,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-01-pillvivo';
+  window.MOVIKI_VERSAO='2026-10-03-carrinho';
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1018,6 +1027,7 @@ svg{display:block}
   }
   function sacolaLista(){const s=Array.isArray(est.sacola)?est.sacola:[];return s.filter(x=>x&&x.nome&&!mvProibido(x.nome)).slice(0,nivel==='enterprise'?20:5);}
   function pintarSacola(){
+    pintarCarr();
     const s=sacolaLista(); el('nSacola').textContent=s.length; el('btnSacola').classList.toggle('escondido',!s.length);
     /* 29/09/2026: a nota dizia "combinado pelo WhatsApp" tambem para quem vende com Pix na live */
     el('notaSacola').textContent='Toque no produto para ver fotos e detalhes. '+((pixAtivo&&nivel==='enterprise')
@@ -1153,9 +1163,45 @@ svg{display:block}
   function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0&&!esgotado(p);}
   let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null,ckPrazoT=null;
   const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
-  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',ocupado:'Muita gente comprando agora. Tente de novo em instantes.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.'};
+  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',ocupado:'Muita gente comprando agora. Tente de novo em instantes.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.',carrinho_off:'O carrinho não está disponível agora. Compre um produto por vez.'};
+  /* ================= CARRINHO (03/10/2026, P70) =================
+     So existe com o recurso ligado pelo dono para este lojista
+     (checkout_publico/{uid}.recursos.carrinho; o robo confere de novo na
+     autoridade). Desligado, nada muda: um produto, um Pix. Ligado, "Comprar
+     com Pix" poe o produto no carrinho e abre a folha com tudo: um Pix e um
+     frete. O preco continua saindo do servidor. */
+  let carr=null;
+  function carrOn(){return !!(CK_CFG&&CK_CFG.recursos&&CK_CFG.recursos.carrinho===true)&&pixAtivo&&nivel==='enterprise';}
+  function carrLer(){if(carr)return carr;try{carr=JSON.parse(sessionStorage.getItem('mv_ck_carr_'+uid)||'[]');}catch(_){carr=[];}if(!Array.isArray(carr))carr=[];return carr;}
+  function carrSalvar(){try{sessionStorage.setItem('mv_ck_carr_'+uid,JSON.stringify(carr||[]));}catch(_){}}
+  function carrItens(){return carrLer().map(c=>({p:acharProduto(c.nome),q:Math.max(1,Number(c.q)||1)})).filter(x=>x.p&&pixPode(x.p));}
+  function carrAdd(p,q){carrLer();const c=carr.find(x=>x.nome===p.nome),lim=limiteQtd(p);
+    if(c)c.q=Math.min(lim,c.q+q);else carr.push({nome:p.nome,q:Math.min(lim,q)});carrSalvar();pintarCarr();}
+  function pintarCarr(){const n=carrOn()?carrItens().reduce((t,x)=>t+x.q,0):0;const b=el('btnCarrinho');if(!b)return;el('nCarr').textContent=n;b.classList.toggle('escondido',!n);}
+  function carrResumo(lst){if(!lst.length)return '';const a=lst[0];return (a.q>1?a.q+'x ':'')+a.p.nome+(lst.length>1?' e mais '+(lst.length-1):'');}
+  function pintarLista(){
+    const box=el('ckLista'); box.innerHTML='';
+    carrItens().forEach(x=>{
+      const d=document.createElement('div'); d.className='ckLinha';
+      d.innerHTML='<div class="cpInfo"><div class="cpNome">'+esc(x.p.nome)+'</div><div class="cpPreco">'+brl(precoUnit(x.p))+' cada</div></div><div class="ckQtd"><button type="button" data-m="-1" aria-label="Menos">−</button><b>'+x.q+'</b><button type="button" data-m="1" aria-label="Mais">+</button></div><button type="button" class="ckTira" data-t="1" aria-label="Tirar do carrinho">×</button>';
+      d.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const c=carrLer().find(y=>y.nome===x.p.nome);if(!c)return;const n=c.q+Number(b.dataset.m);if(n<1)return;if(n>limiteQtd(x.p)){toast('Limite desta compra.');return;}c.q=n;carrSalvar();pintarCarr();pintarLista();ckTotal();});
+      d.querySelector('[data-t]').onclick=()=>{carr=carrLer().filter(y=>y.nome!==x.p.nome);carrSalvar();pintarCarr();if(!carrItens().length){el('folhaCompra').classList.add('escondido');return;}pintarLista();ckTotal();};
+      box.appendChild(d);
+    });
+  }
+  function modoCarr(on){el('ckUma').classList.toggle('escondido',on);el('ckLista').classList.toggle('escondido',!on);el('ckContinuar').classList.toggle('escondido',!on);el('ckTit').textContent=on?'Seu carrinho':'Comprar com Pix';}
+  el('ckContinuar').addEventListener('click',()=>{el('folhaCompra').classList.add('escondido');toast('Continua no carrinho. Toque em Carrinho para pagar.');});
+  el('btnCarrinho').addEventListener('click',()=>{const l=carrItens();if(!l.length)return;abrirCompra(l[0].p,0);});
   function abrirCompra(p,q){
+    if(carrOn()){
+      if(Number(q)>0)carrAdd(p,Math.max(1,Number(q)||1));
+      if(!carrItens().length){toast('Este produto não pode ser comprado agora.');return;}
+      ckP=carrItens()[0].p; ckQ=1; clearInterval(ckPoll); clearInterval(ckPrazoT);
+      modoCarr(true); pintarLista();
+    } else {
+    modoCarr(false);
     ckP=p; ckQ=Math.max(1,Math.min(limiteQtd(p),Number(q)||1)); clearInterval(ckPoll); clearInterval(ckPrazoT);
+    }
     el('ckForm').classList.remove('escondido'); el('ckPix').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckErro').classList.add('escondido');
     el('ckProd').textContent=p.nome; el('ckAviso').textContent='A venda é feita por '+((neg&&neg.nome)||'este negócio')+' e o Pix vai direto para a conta dele. O CPF é exigido pelo banco para gerar o Pix; o Moviki não guarda o número inteiro.';
     try{const g=JSON.parse(localStorage.getItem('mv_ck_dados')||'{}');if(g.nome)el('ckNome').value=g.nome;if(g.wpp)el('ckWpp').value=g.wpp;}catch(_){}
@@ -1188,10 +1234,11 @@ svg{display:block}
     el('ckRetInfo').classList.toggle('escondido',!(ent==='retirada'&&el('ckRetInfo').textContent));
     ckTotal();
   }
+  function ckSub(){if(carrOn()&&!el('ckLista').classList.contains('escondido'))return carrItens().reduce((t,x)=>t+precoUnit(x.p)*x.q,0);return precoUnit(ckP)*ckQ;}
   function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;
     const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value;const fr=(ent==='entrega'&&ckFrete!=null)?ckFrete:0;
     el('ckFreteLin').classList.toggle('escondido',!(ent==='entrega'&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
-    el('ckTotal').textContent=brl(u*ckQ+fr);}
+    el('ckTotal').textContent=brl(ckSub()+fr);}
   el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();}};
   el('ckMais').onclick=()=>{if(ckQ<limiteQtd(ckP)){ckQ++;ckTotal();}else toast('Limite desta compra.');};
   document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',trocarEntrega));
@@ -1205,10 +1252,13 @@ svg{display:block}
       const L=mvEnt.ler(CK_CFG,{p:'ckE'});
       if(!L.ok){er.textContent=ERR_CK[L.erro]||'Confira o endereço.';er.classList.remove('escondido');return;}
       const minE=Number(CK_CFG&&CK_CFG.minimoEntrega)||0;
-      if(minE>0&&precoUnit(ckP)*ckQ<minE){er.textContent='Pedido mínimo para entrega: '+brl(minE)+' em produtos.';er.classList.remove('escondido');return;}
+      if(minE>0&&ckSub()<minE){er.textContent='Pedido mínimo para entrega: '+brl(minE)+' em produtos.';er.classList.remove('escondido');return;}
       detalhe_=L.detalhe; endereco_=L.endereco;
     }
+    const emCarr=carrOn()&&!el('ckLista').classList.contains('escondido'), lstC=emCarr?carrItens():[];
+    if(emCarr&&!lstC.length){er.textContent='O carrinho está vazio.';er.classList.remove('escondido');return;}
     const corpo={acao:'compra_criar',lojistaUid:uid,produto:ckP.nome,qtd:ckQ,nome:el('ckNome').value,whatsapp:el('ckWpp').value,cpf:el('ckCpf').value,entrega:ent_,detalhe:detalhe_,mostrarNome:el('ckMostrar').checked,aceite:true};
+    if(emCarr){delete corpo.produto;delete corpo.qtd;corpo.itens=lstC.map(x=>({nome:x.p.nome,qtd:x.q}));}
     if(endereco_)corpo.endereco=endereco_;
     b.disabled=true; b.textContent='Gerando o Pix…';
     let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)})).json();}catch(_){r={ok:false,erro:'rede'};}
@@ -1230,6 +1280,7 @@ svg{display:block}
         ev('live_pix_esgotado',{slug});
       }
       if(r&&r.erro==='minimo_entrega')msg='Pedido mínimo para entrega: '+brl(r.minimo||0)+' em produtos.';
+      if(r&&r.erro==='produto'&&r.nome&&emCarr)msg='Saiu da vitrine da live: '+String(r.nome).slice(0,60)+'. Tire do carrinho e gere o Pix de novo.';
       er.textContent=msg;er.classList.remove('escondido');return;}
     try{localStorage.setItem('mv_ck_dados',JSON.stringify({nome:corpo.nome,wpp:corpo.whatsapp}));}catch(_){}
     const ofNa=ofertaAtiva();
@@ -1239,7 +1290,8 @@ svg{display:block}
     ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||'',numero:r.numero||0,frete:r.frete||0,entrega:r.entrega||ent_,
       validoAte:Number(r.validoAte)||(Date.now()+(Number(r.validadeMin)||30)*60000),criado:Date.now(),
       copia:String((r.pix&&r.pix.copiaCola)||''),imagem:String((r.pix&&r.pix.imagem)||''),receb:(r.pix&&r.pix.recebedor)||null,
-      oferta:!!(ofNa&&ofNa.nome===ckP.nome),avisou:false,vencido:false};
+      oferta:!!(ofNa&&(emCarr?lstC.some(x=>x.p.nome===ofNa.nome):ofNa.nome===ckP.nome)),avisou:false,vencido:false};
+    if(emCarr){ckPed.produto=carrResumo(lstC);ckPed.qtd=1;ckPed.itens=lstC.map(x=>({nome:x.p.nome,q:x.q}));carr=[];carrSalvar();pintarCarr();}
     guardarPed();
     ev('live_pix_gerado',{slug,valor:r.total});
     mostrarPix();
@@ -1319,6 +1371,11 @@ svg{display:block}
     if(primeira)ev('live_pix_vencido',{slug,oferta:ckPed.oferta?1:0});
   }
   el('ckNovo').addEventListener('click',()=>{
+    if(ckPed&&Array.isArray(ckPed.itens)&&ckPed.itens.length&&carrOn()){
+      carr=ckPed.itens.map(x=>({nome:x.nome,q:x.q}));carrSalvar();
+      const l=carrItens(); if(!l.length){toast(noAr?'Os produtos saíram da vitrine da live.':'A live acabou.');return;}
+      clearInterval(ckPoll); esquecerPed(); ckPed=null; abrirCompra(l[0].p,0); return;
+    }
     const nome=ckPed&&ckPed.produto, q=(ckPed&&ckPed.qtd)||1, p=nome?acharProduto(nome):null;
     if(!p||!pixPode(p)){toast(noAr?'Este produto saiu da vitrine da live.':'A live acabou.');return;}
     clearInterval(ckPoll); esquecerPed(); ckPed=null; abrirCompra(p,q);
