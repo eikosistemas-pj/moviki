@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1314,7 +1314,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-03-vip';   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-04-freteauto';   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2608,7 +2608,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         h+='<div class="pdCampo" id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+
            '<label>Endereço da entrega</label><textarea id="pdEnd" rows="2" maxlength="140" placeholder="Rua, número, bairro e ponto de referência"></textarea></div>';
       }
-      if(podeEnviar&&window.mvEnt)h+='<div id="pdEnvBox" style="margin-top:11px;'+(PD_ENT==='envio'?'':'display:none')+'">'+mvEnt.html(COMPRA,{p:'pv',wrap:'pdCampo',modo:'envio',sub:totalSacola})+'</div>';
+      if(podeEnviar&&window.mvEnt)h+='<div id="pdEnvBox" style="margin-top:11px;'+(PD_ENT==='envio'?'':'display:none')+'">'+mvEnt.html(COMPRA,{p:'pv',wrap:'pdCampo',modo:'envio',sub:totalSacola,uid:negocioUid,qtd:pdQtdEnvio,itens:pdItensEnvio})+'</div>';
       h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega e o envio são feitos pelo próprio negócio. O Moviki não faz entrega.</div>';
       h+='</div>';
     }
@@ -2623,7 +2623,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
     PD_FRETE=null; PD_FRETE_ENV=null;
     if(window.mvEnt&&el('pdCep'))mvEnt.ligar(COMPRA,{p:'pd'},function(v){PD_FRETE=v;pintarTotalPedido();});
-    if(window.mvEnt&&el('pvCep'))mvEnt.ligar(COMPRA,{p:'pv',modo:'envio',sub:totalSacola},function(v){PD_FRETE_ENV=v;pintarTotalPedido();});
+    if(window.mvEnt&&el('pvCep'))mvEnt.ligar(COMPRA,{p:'pv',modo:'envio',sub:totalSacola,uid:negocioUid,qtd:pdQtdEnvio,itens:pdItensEnvio},function(v){PD_FRETE_ENV=v;pintarTotalPedido();});
     pintarTotalPedido();
   }
   /* Total com a taxa de entrega do bairro escolhido. Vitrine: quem soma de
@@ -2649,6 +2649,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     pintarTotalPedido();
   };
 
+  /* 04/10 (P70 etapa 6): pecas da sacola, para o frete automatico cotar o pacote. */
+  function pdItensEnvio(){return (SACOLA||[]).map(function(x){return {sku:x.sku||'',nome:x.nome,qtd:Number(x.qtd)||1};});}
+  function pdQtdEnvio(){return (SACOLA||[]).reduce(function(t,x){return t+(Number(x.qtd)||1);},0)||1;}
   function erroPedido(cod,extra){
     const m={
       dados:'Não consegui ler seus dados. Confira e tente de novo.',
@@ -2712,7 +2715,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(!window.mvEnt||!el('pvCep')){av.textContent='Recarregue a página e tente de novo.';return;}
       const fora=mvEnt.semEnvio(dadosNeg,SACOLA.map(x=>x.nome));
       if(fora.length){av.textContent=mvEnt.msg('item_local',{nome:fora[0]});return;}
-      const L=mvEnt.ler(COMPRA,{p:'pv',modo:'envio',sub:totalSacola});
+      const L=mvEnt.ler(COMPRA,{p:'pv',modo:'envio',sub:totalSacola,uid:negocioUid,qtd:pdQtdEnvio,itens:pdItensEnvio});
       if(!L.ok){av.textContent=erroPedido(L.erro);return;}
       endObj=L.endereco; end=L.detalhe;
     }
