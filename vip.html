@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- MOVIKI vip.html | versao 2026-10-03-vip | NOVO | repo: moviki
+     03/10/2026 (P70 etapa 4): confirma o e-mail da Lista VIP e tira da lista.
+     /vip/confirmar/<id>-<token> e /vip/sair/<id>-<token>. Sem medicao e sem
+     referrer: o token esta no endereco. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://moviki-robo.vercel.app; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Aviso de live · Moviki</title>
+<link rel="icon" href="/favicon512.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ciano:#00D4FF;--escuro:#0D1B2A;--claro:#F2F5F9;--suave:#9fb2c6;--linha:rgba(0,212,255,.18)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',system-ui,sans-serif;color:var(--claro);background:var(--escuro);min-height:100vh;line-height:1.6}
+  .top{padding:16px 20px;border-bottom:1px solid var(--linha)}
+  .top a{font-weight:700;font-size:18px;color:var(--claro);text-decoration:none}.top b{color:var(--ciano)}
+  main{max-width:520px;margin:0 auto;padding:40px 16px}
+  .cartao{background:rgba(13,27,42,.86);border:1px solid var(--linha);border-radius:18px;padding:24px}
+  h1{font-size:22px;margin-bottom:8px}p{color:var(--suave)}
+  .btn{display:block;text-align:center;margin-top:20px;border-radius:12px;padding:13px;font-weight:600;color:#fff;text-decoration:none;background:linear-gradient(90deg,#0066FF,#00D4FF)}
+  .sec{display:block;text-align:center;margin-top:12px;color:var(--suave);font-size:14px}
+</style>
+</head>
+<body>
+<header class="top"><a href="https://www.moviki.com.br/" rel="noreferrer">Movi<b>ki</b></a></header>
+<main><div class="cartao"><h1 id="tit">Um instante…</h1><p id="txt"></p><a class="btn" id="btn" href="https://www.moviki.com.br/" rel="noreferrer" hidden>Ir para o Moviki</a><a class="sec" id="sair" href="#" rel="noreferrer" hidden>Sair da lista</a></div></main>
+<script>
+(function () {
+  'use strict';
+  function el(id) { return document.getElementById(id); }
+  var m = /^\/vip\/(confirmar|sair)\/([epw][0-9a-f]{30}-[0-9a-f]{24})\/?$/.exec(location.pathname);
+  function fim(t, x) { el('tit').textContent = t; el('txt').textContent = x; el('btn').hidden = false; }
+  if (!m) { fim('Link inválido', 'Abra o link mais recente que você recebeu.'); return; }
+  var acao = m[1] === 'confirmar' ? 'compra_vip_confirmar' : 'compra_vip_sair';
+  fetch('https://moviki-robo.vercel.app/api/pedido', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acao: acao, t: m[2] }), referrerPolicy: 'no-referrer' })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (!j || !j.ok) { fim('Link inválido ou vencido', m[1] === 'confirmar' ? 'O link de confirmação vale 7 dias. Peça o aviso de novo na página da loja.' : 'Abra o link mais recente que você recebeu.'); return; }
+      var loja = j.loja ? j.loja : 'a loja';
+      if (m[1] === 'confirmar') {
+        fim('E-mail confirmado', 'Você vai receber um aviso quando ' + loja + ' entrar ao vivo no Moviki.');
+        if (j.sair) { var s = el('sair'); s.href = j.sair.replace(/^https:\/\/www\.moviki\.com\.br/, ''); s.hidden = false; }
+      } else {
+        fim('Pronto, você saiu da lista', j.ja ? 'Este cadastro já tinha sido apagado.' : 'Você não vai mais receber o aviso de live de ' + loja + '. Seus dados dessa lista foram apagados.');
+      }
+    })
+    .catch(function () { fim('Sem conexão', 'Tente de novo em instantes.'); });
+})();
+</script>
+</body>
+</html>

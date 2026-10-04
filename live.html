@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -32,6 +32,7 @@
 <script src="/mvmetrica.js"></script>
 <script src="/mvqr.js"></script>
 <script src="/mventrega.js"></script>
+<script src="/mvvip.js"></script>
 <style>
 :root{
   --mv-ciano:#00D4FF;--mv-azul:#0066FF;--mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
@@ -330,6 +331,7 @@ svg{display:block}
     <button type="button" class="latBtn" id="btnCurtir"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>Curtir</button>
     <button type="button" class="latBtn" id="btnSomLat" aria-label="Ligar o som"><span class="ico" id="icoSom"></span><span id="rotSom">Som</span></button>
     <button type="button" class="latBtn" id="btnCompartilhar"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></span>Enviar</button>
+    <button type="button" class="latBtn escondido" id="btnVip" aria-label="Me avise da próxima live"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>Avisar</button>
     <a class="latBtn" id="btnLoja" href="/"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9h18v11H3zM9 20v-6h6v6"/></svg></span>Página</a>
   </div>
 
@@ -358,6 +360,7 @@ svg{display:block}
     <p class="foTit" id="foTit"></p>
     <div class="foAgenda escondido" id="foAgenda"><small>Próxima live</small><strong id="foQuando"></strong><div id="foAgTit"></div></div>
     <div class="foBtns">
+      <button type="button" class="btnGrad escondido" id="btnVipFora"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Me avise da próxima live</button>
       <a class="btnGrad escondido" id="btnAgenda" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Lembrar na minha agenda</a>
       <a class="btnSec" id="btnPagina" href="/">Ver a página do negócio</a>
     </div>
@@ -463,7 +466,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-03-rastreio';   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
+  window.MOVIKI_VERSAO='2026-10-03-vip';   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -623,6 +626,13 @@ svg{display:block}
       neg=n.exists()?n.data():{};
       nivel=nivelDe(a&&a.exists()?a.data():null);
       pintarIdentidade();
+      /* 03/10/2026 (P70 etapa 4): Lista VIP, so com a chave listaVip ligada pelo dono (o robo confere de novo). */
+      if(nivel&&window.mvVip)getDoc(doc(db,'checkout_publico',uid)).then(c=>{
+        const r=c.exists()?((c.data()||{}).recursos||{}):{};
+        if(r.listaVip!==true)return;
+        if(!window.mvVip.montar({uid,loja:()=>neg&&neg.nome,origem:'live'}))return;
+        ['btnVip','btnVipFora'].forEach(id=>{const b=el(id);if(!b)return;b.classList.remove('escondido');b.addEventListener('click',()=>{window.mvVip.abrir();ev('vip_aberto',{slug,onde:id});});});
+      }).catch(()=>{});
       if(nivel==='enterprise')onSnapshot(doc(db,'checkout_publico',uid),c=>{pixAtivo=!!(c.exists()&&c.data().ativo===true);CK_CFG=c.exists()?(c.data()||{}):{entrega:'retirada',bairros:[]};if(noAr){pintarProduto();pintarSacola();}},()=>{});
       onSnapshot(doc(db,'configuracoes','liveTermos'),t=>{const d=t.exists()?(t.data()||{}):{};
         MV_TERMOS_EXTRAS=Array.isArray(d.extras)?d.extras.filter(x=>typeof x==='string').slice(0,300):[];

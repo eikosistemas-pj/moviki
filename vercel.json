@@ -61,6 +61,10 @@
       "destination": "/clientela.html"
     },
     {
+      "source": "/vip/:acao/:t",
+      "destination": "/vip.html"
+    },
+    {
       "source": "/pedido/:ref",
       "destination": "/pedido.html"
     },
@@ -70,6 +74,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/sw-vip.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

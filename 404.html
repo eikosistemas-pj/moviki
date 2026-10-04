@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -135,6 +135,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .acao svg{width:20px;height:20px;flex:0 0 auto;}
 .acao.wpp{background:linear-gradient(135deg,#2bd96f,#13a45a);box-shadow:0 10px 26px rgba(37,211,102,.28);}
 .acao.rota{background:linear-gradient(135deg,#1a7dff,#0b4fd4);box-shadow:0 10px 26px rgba(0,102,255,.30);}
+/* 03/10/2026 (P70 etapa 4): Lista VIP, linha inteira e discreta */
+.acao.vip{grid-column:1/-1;background:transparent;border:1px solid rgba(0,212,255,.35);color:#cfefff;box-shadow:none;height:48px;font-size:15px;}
 
 /* info rápida */
 /* Cartões de informação do topo — 01/09/2026.
@@ -1036,6 +1038,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 2.6a1 1 0 0 0-1.1-.22l-17 7a1 1 0 0 0 .06 1.87l7 2.4 2.4 7a1 1 0 0 0 1.87.06l7-17a1 1 0 0 0-.23-1.11z"/></svg>
           Como chegar
         </a>
+        <button type="button" class="acao vip escondido" id="btnVip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          Me avise da próxima live
+        </button>
       </div>
 
       <div class="rapidos" id="rapidos"></div>
@@ -1287,6 +1293,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 <script src="/mvqr.js"></script>
 <!-- 26/09/2026: formulario de entrega (CEP, bairro com taxa). Mesmo arquivo da live publica. -->
 <script src="/mventrega.js"></script>
+<script src="/mvvip.js"></script>
 
 <script type="module">
   /* 23/09/2026: WhatsApp do lojista pode vir com o 55 do pais ("+55 81 9...").
@@ -1307,7 +1314,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-03-rastreio';   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-03-vip';   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3518,12 +3525,26 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const a=el('mvAoVivo'); if(a)a.addEventListener('click',()=>ev('live_selo_clique',{}));
   }
 
+  /* 03/10/2026 (P70 etapa 4): Lista VIP — "Me avise da proxima live". So com
+     a chave listaVip ligada pelo dono e plano com live (o robo confere de novo). */
+  function ligarVip(uid){
+    try{
+      if(!window.mvVip||!COMPRA||!COMPRA.recursos||COMPRA.recursos.listaVip!==true)return;
+      if(planoAtual!=='premium'&&planoAtual!=='enterprise')return;
+      if(!window.mvVip.montar({uid:uid,loja:function(){return (el('nome')||{}).textContent||'';},origem:'pagina'}))return;
+      const b=el('btnVip'); if(!b||b._vip)return; b._vip=1;
+      b.classList.remove('escondido');
+      b.addEventListener('click',function(){window.mvVip.abrir();ev('vip_aberto',{onde:'pagina'});});
+    }catch(_){}
+  }
+
   /* ============ leitura do Firestore ============ */
   async function ouvir(uid){
     negocioUid=uid;
     ouvirLive(uid);
     await carregarPlano(uid);
     await carregarCheckout(uid);
+    ligarVip(uid);
     carregarAvaliacoesPub(uid);
     mvVisita();
     onSnapshot(doc(db,'negocios',uid),(snap)=>{
@@ -3547,6 +3568,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     ouvirLive(ownerUid);
     await carregarPlano(ownerUid);
     await carregarCheckout(ownerUid);
+    ligarVip(ownerUid);
     carregarAvaliacoesPub(ownerUid);
     mvVisita();
     onSnapshot(doc(db,'negocios',ownerUid),(snap)=>{
