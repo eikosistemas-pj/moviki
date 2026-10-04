@@ -69,6 +69,14 @@
       "destination": "/pedido.html"
     },
     {
+      "source": "/entregadores",
+      "destination": "/entregadores.html"
+    },
+    {
+      "source": "/entregadores/sair/:t",
+      "destination": "/entregadores.html"
+    },
+    {
       "source": "/:slug([A-Za-z0-9_-]{3,40})",
       "destination": "/api/og?slug=:slug"
     }

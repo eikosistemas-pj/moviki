@@ -1,5 +1,13 @@
 /*!
- * MOVIKI mventrega.js | versao 2026-10-03-envio | repo: moviki (site publico)
+ * MOVIKI mventrega.js | versao 2026-10-04-freteauto | repo: moviki (site publico)
+ *
+ * 04/10/2026 (P70 etapa 6): FRETE AUTOMATICO. Com a chave freteAuto ligada
+ * pelo dono e o Melhor Envio do lojista conectado (checkout_publico.envio.auto),
+ * o envio deixa de usar a tabela: com o CEP completo, a tela pede ao robo
+ * (compra_frete) as opcoes da conta DO LOJISTA e o comprador escolhe uma.
+ * O id do servico vai em endereco.servico; o PRECO quem decide e o robo, pelo
+ * cache da mesma cotacao. As paginas passam o.uid (lojista), o.qtd() (pecas)
+ * e o.itens() ([{sku,nome,qtd}]: o robo le o peso de cada produto no cardapio).
  *
  * 03/10/2026 (P70 etapa 2): modo ENVIO para outras cidades. Com o recurso
  * ligado pelo dono (checkout_publico.recursos.freteBrasil) e a tabela do
@@ -57,6 +65,12 @@
       '.mvEInfo{font-size:12px;color:var(--mv-txt-3,#8fa6c4);line-height:1.5;margin:2px 0 8px}' +
       '.mvEAviso{font-size:12.5px;color:#ffcf6b;line-height:1.45;margin:2px 0 8px}' +
       '.mvECep{position:relative}' +
+      '.mvEOps{display:grid;gap:6px;margin:4px 0 8px}' +
+      '.mvEOps label{display:flex;align-items:center;gap:10px;background:rgba(0,212,255,.05);border:1px solid var(--mv-linha,#1c3457);border-radius:11px;padding:10px 12px;font-size:13.5px;cursor:pointer}' +
+      '.mvEOps label.on{border-color:rgba(0,212,255,.6);background:rgba(0,212,255,.10)}' +
+      '.mvEOps input{accent-color:#00D4FF;width:17px;height:17px;flex:none}' +
+      '.mvEOps .n{flex:1;line-height:1.35}.mvEOps .n small{display:block;color:var(--mv-txt-3,#8fa6c4);font-size:12px}' +
+      '.mvEOps b{font-size:14.5px;white-space:nowrap}' +
       '.mvECep small{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11.5px;color:var(--mv-txt-3,#8fa6c4)}';
     document.head.appendChild(st);
   }
@@ -69,6 +83,10 @@
   /* ---- ENVIO (03/10/2026) ---- */
   var UFS = { AC:'N', AP:'N', AM:'N', PA:'N', RO:'N', RR:'N', TO:'N', AL:'NE', BA:'NE', CE:'NE', MA:'NE', PB:'NE', PE:'NE', PI:'NE', RN:'NE', SE:'NE',
     DF:'CO', GO:'CO', MT:'CO', MS:'CO', ES:'SE', MG:'SE', RJ:'SE', SP:'SE', PR:'S', RS:'S', SC:'S' };
+  var ROBO_P = 'https://moviki-robo.vercel.app/api/pedido';
+  var AUTO = {};   /* estado da cotacao por prefixo: { chave, opcoes, serv, qtd, carregando, erro } */
+  function autoAtivo(cfg) { return envioAtivo(cfg) && !!(cfg.recursos && cfg.recursos.freteAuto === true && cfg.envio && cfg.envio.auto === true); }
+  function prazoTxt(d) { d = Number(d) || 0; return d ? (d === 1 ? '1 dia útil' : d + ' dias úteis') : ''; }
   function envioAtivo(cfg) { return !!(cfg && cfg.recursos && cfg.recursos.freteBrasil === true && cfg.envio && cfg.envio.ativo === true && cfg.entregaSuspensa !== true); }
   function freteEnvio(cfg, uf, subtotal) {
     var e = (cfg && cfg.envio) || {}, u = String(uf || '').toUpperCase();
@@ -138,6 +156,12 @@
     var info = [];
     if (envio) {
       var en = (cfg && cfg.envio) || {};
+      if (autoAtivo(cfg)) {
+        info.push('Envio pelo correio ou transportadora. O frete é calculado pelo CEP: escolha a forma de envio.');
+        if (Number(en.gratisAcima) > 0) info.push('Acima de ' + real(en.gratisAcima) + ' em produtos, a opção mais barata sai grátis.');
+        h += '<div class="mvEInfo">' + info.join(' ') + '</div></div>';
+        return h;
+      }
       info.push('Envio pelo correio ou transportadora. O frete é pelo estado do CEP.');
       if (Number(en.gratisAcima) > 0) info.push('Frete grátis acima de ' + real(en.gratisAcima) + ' em produtos.');
       if (en.prazo) info.push('Prazo: ' + esc(en.prazo) + '.');
@@ -159,8 +183,58 @@
     var cep = $(p + 'Cep'), bai = $(p + 'Bairro');
     var ultimo = '';
     var cidadeCep = '', ufCep = '';
+    var auto = envio && autoAtivo(cfg);
+    var tAuto = null;
+    function pintarOpcoes() {
+      var box = $(p + 'Frete'), st = AUTO[p] || {}; if (!box) return;
+      box.className = 'mvEFrete';
+      if (st.carregando) { box.style.display = ''; box.innerHTML = '<span>Calculando o frete…</span>'; if (onFrete) onFrete(null); return; }
+      if (st.erro) { box.style.display = ''; box.innerHTML = '<span>' + esc(msg(st.erro) || 'Não deu para calcular o frete agora.') + '</span>'; if (onFrete) onFrete(null); return; }
+      var ops = st.opcoes || [];
+      if (!ops.length) { box.style.display = 'none'; if (onFrete) onFrete(null); return; }
+      box.style.display = ''; box.className = 'mvEOps';
+      box.innerHTML = ops.map(function (x) {
+        var on = st.serv === x.id;
+        return '<label class="' + (on ? 'on' : '') + '"><input type="radio" name="' + p + 'Serv" value="' + esc(x.id) + '"' + (on ? ' checked' : '') + '>' +
+          '<span class="n">' + esc((x.empresa ? x.empresa + ' ' : '') + x.nome) + (x.prazo ? '<small>até ' + esc(prazoTxt(x.prazo)) + ' depois do envio</small>' : '') + '</span>' +
+          '<b>' + (x.preco > 0 ? real(x.preco) : 'grátis') + '</b></label>';
+      }).join('');
+      Array.prototype.forEach.call(box.querySelectorAll('input'), function (i) {
+        i.addEventListener('change', function () { st.serv = i.value; pintarOpcoes(); });
+      });
+      var sel = ops.filter(function (x) { return x.id === st.serv; })[0];
+      if (onFrete) onFrete(sel ? sel.preco : null);
+    }
+    function cotar() {
+      var c = cep ? cep.value.replace(/\D/g, '') : '';
+      var st = AUTO[p] = AUTO[p] || {};
+      if (c.length !== 8) { st.opcoes = []; st.erro = ''; st.chave = ''; pintarOpcoes(); return; }
+      var qtd = Math.max(1, Number(o.qtd ? o.qtd() : 1) || 1), sub = Number(o.sub ? o.sub() : 0) || 0;
+      var its = o.itens ? (o.itens() || []) : [];
+      var gt = Number(cfg.envio && cfg.envio.gratisAcima) || 0;
+      var assin = qtd + '|' + JSON.stringify(its);
+      var chave = c + '|' + assin + '|' + (gt > 0 && sub >= gt ? 'g' : 'n');
+      if (st.chave === chave && (st.opcoes || st.carregando)) { pintarOpcoes(); return; }
+      st.chave = chave; st.carregando = true; st.erro = ''; st.assin = assin; st.recotar = cotar;
+      pintarOpcoes();
+      clearTimeout(tAuto);
+      tAuto = setTimeout(function () {
+        fetch(ROBO_P, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acao: 'compra_frete', lojistaUid: o.uid || '', cep: c, qtd: qtd, subtotal: sub, itens: its }) })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (st.chave !== chave) return;
+            st.carregando = false;
+            if (!j || !j.ok) { st.opcoes = []; st.erro = (j && j.erro) || 'frete_indisponivel'; pintarOpcoes(); return; }
+            st.opcoes = j.opcoes || [];
+            if (!st.opcoes.some(function (x) { return x.id === st.serv; })) st.serv = st.opcoes.length ? st.opcoes[0].id : '';
+            pintarOpcoes();
+          })
+          .catch(function () { if (st.chave !== chave) return; st.carregando = false; st.opcoes = []; st.erro = 'frete_indisponivel'; st.chave = ''; pintarOpcoes(); });
+      }, 350);
+    }
     function pintarFrete() {
       var box = $(p + 'Frete'); if (!box) return;
+      if (auto) { cotar(); return; }
       if (envio) {
         var ufEl = $(p + 'Uf'), uf = ufEl ? ufEl.value.trim().toUpperCase() : '';
         var fe = uf ? freteEnvio(cfg, uf, o.sub ? o.sub() : 0) : null;
@@ -182,6 +256,7 @@
       var d = cep.value.replace(/\D/g, '').slice(0, 8);
       cep.value = d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d;
       if (d.length === 8 && d !== ultimo) { ultimo = d; buscarCep(d); }
+      if (auto) cotar();
     });
     function buscarCep(d) {
       var st = $(p + 'CepSt'); if (st) st.textContent = 'buscando…';
@@ -239,8 +314,19 @@
       if (e.bairro.length < 2) return { ok: false, erro: 'bairro' };
       if (e.cidade.length < 2) return { ok: false, erro: 'cidade' };
       if (!UFS[e.uf]) return { ok: false, erro: 'uf' };
-      var fe = freteEnvio(cfg, e.uf, o.sub ? o.sub() : 0);
-      if (fe === null || fe < 0) return { ok: false, erro: 'envio_fora' };
+      var fe;
+      if (autoAtivo(cfg)) {
+        var st = AUTO[p] || {};
+        if (st.carregando) return { ok: false, erro: 'frete_calculando' };
+        var qa = Math.max(1, Number(o.qtd ? o.qtd() : 1) || 1) + '|' + JSON.stringify(o.itens ? (o.itens() || []) : []);
+        if (st.chave && st.assin !== qa) { st.chave = ''; if (st.recotar) st.recotar(); return { ok: false, erro: 'frete_recalcular' }; }
+        var sel = (st.opcoes || []).filter(function (x) { return x.id === st.serv; })[0];
+        if (!sel) return { ok: false, erro: st.erro || 'frete_escolher' };
+        e.servico = sel.id; fe = sel.preco;
+      } else {
+        fe = freteEnvio(cfg, e.uf, o.sub ? o.sub() : 0);
+        if (fe === null || fe < 0) return { ok: false, erro: 'envio_fora' };
+      }
       var lin = e.rua + ', ' + e.numero + (e.complemento ? ' - ' + e.complemento : '') + ' - ' + e.bairro + ' - ' + e.cidade + '/' + e.uf;
       return { ok: true, endereco: e, detalhe: lin.slice(0, 140), frete: fe };
     }
@@ -269,7 +355,13 @@
     uf: 'Escreva o estado (UF) com duas letras, como SP.',
     envio_fora: 'Este negócio ainda não envia para esse estado.',
     sem_envio: 'O envio para outras cidades não está disponível agora.',
-    item_local: 'Tem item no pedido que não vai pelo correio. Escolha retirar ou tire o item.'
+    item_local: 'Tem item no pedido que não vai pelo correio. Escolha retirar ou tire o item.',
+    frete_escolher: 'Escolha a forma de envio.',
+    frete_calculando: 'Ainda calculando o frete. Espere um segundo.',
+    frete_recalcular: 'A quantidade mudou e o frete foi recalculado. Confira a forma de envio e toque de novo.',
+    frete_indisponivel: 'Não deu para calcular o frete agora. Tente de novo em instantes.',
+    sem_opcao: 'Nenhuma transportadora atende esse CEP com este pedido. Escolha outra forma de receber.',
+    sem_auto: 'O cálculo do frete não está disponível agora.'
   };
   function msg(cod, extra) {
     if (cod === 'item_local' && extra && extra.nome) return '“' + extra.nome + '” não vai pelo correio: só retirada ou entrega no bairro. Tire o item ou escolha outra forma de receber.';
@@ -278,5 +370,5 @@
   }
 
   window.mvEnt = { html: html, ligar: ligar, ler: ler, freteDe: freteDe, temTabela: temTabela, msg: msg, real: real,
-    envioAtivo: envioAtivo, freteEnvio: freteEnvio, semEnvio: semEnvio };
+    envioAtivo: envioAtivo, freteEnvio: freteEnvio, semEnvio: semEnvio, autoAtivo: autoAtivo };
 })();

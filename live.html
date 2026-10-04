@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
+<!-- MOVIKI live.html (site) | versao no window.MOVIKI_VERSAO | 2026-10-04-freteauto (P70 etapa 6: frete automatico pelo Melhor Envio do lojista) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-10-03-carrinho (P70: carrinho na live, um Pix e um frete, so com o recurso ligado pelo dono para o lojista) + 2026-10-01-pillvivo (selo AO VIVO e contador sem quebrar linha com nome de loja longo em tela de 390 px) + 2026-09-30-estoque (P53: Esgotado e Restam N pelo estoque do produto; teto da quantidade pelo estoque) + 2026-09-30-reserva (Pix com prazo visivel; codigo vencido some da tela com "Gerar novo Pix"; oferta mostra as unidades reservadas por quem ja gerou o Pix; quadro "Confira antes de pagar") -->
 <!-- anterior: 2026-09-29-vitrine1 (faixa de produtos sempre a vista, painel do produto translucido sobre o video, trilho lateral com curtir e som) -->
 <meta charset="UTF-8">
 <title>Ao vivo no Moviki</title>
@@ -466,7 +466,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-03-vip';   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
+  window.MOVIKI_VERSAO='2026-10-04-freteauto';   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1261,7 +1261,7 @@ svg{display:block}
   function montarBox(modo){
     if(!window.mvEnt||ckBoxModo===modo)return;
     ckBoxModo=modo; ckFrete=null;
-    const o={p:'ckE',input:'campo',modo:modo,sub:ckSub};
+    const o={p:'ckE',input:'campo',modo:modo,sub:ckSub,uid:uid,qtd:ckQtdEnvio,itens:ckItensEnvio};
     el('ckEndBox').innerHTML=mvEnt.html(CK_CFG,o);mvEnt.ligar(CK_CFG,o,v=>{ckFrete=v;ckTotal();});
   }
   function trocarEntrega(){
@@ -1273,6 +1273,9 @@ svg{display:block}
     el('ckRetInfo').classList.toggle('escondido',!(ent==='retirada'&&el('ckRetInfo').textContent));
     ckTotal();
   }
+  /* 04/10 (P70 etapa 6): pecas do pedido, para o frete automatico cotar o pacote. */
+  function ckItensEnvio(){if(carrOn()&&!el('ckLista').classList.contains('escondido'))return carrItens().map(x=>({nome:x.p.nome,qtd:x.q}));return ckP?[{nome:ckP.nome,qtd:ckQ}]:[];}
+  function ckQtdEnvio(){if(carrOn()&&!el('ckLista').classList.contains('escondido'))return carrItens().reduce((t,x)=>t+x.q,0)||1;return ckQ;}
   function ckSub(){if(carrOn()&&!el('ckLista').classList.contains('escondido'))return carrItens().reduce((t,x)=>t+precoUnit(x.p)*x.q,0);return precoUnit(ckP)*ckQ;}
   function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;
     const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value, comFrete=(ent==='entrega'||ent==='envio');const fr=(comFrete&&ckFrete!=null)?ckFrete:0;
@@ -1293,7 +1296,7 @@ svg{display:block}
       if(!window.mvEnt){er.textContent='Recarregue a página e tente de novo.';er.classList.remove('escondido');return;}
       const fora=mvEnt.semEnvio(neg,ckNomesPedido());
       if(fora.length){er.textContent=mvEnt.msg('item_local',{nome:fora[0]});er.classList.remove('escondido');return;}
-      const L=mvEnt.ler(CK_CFG,{p:'ckE',modo:'envio',sub:ckSub});
+      const L=mvEnt.ler(CK_CFG,{p:'ckE',modo:'envio',sub:ckSub,uid:uid,qtd:ckQtdEnvio,itens:ckItensEnvio});
       if(!L.ok){er.textContent=mvEnt.msg(L.erro)||ERR_CK[L.erro]||'Confira o endereço.';er.classList.remove('escondido');return;}
       detalhe_=L.detalhe; endereco_=L.endereco;
     }
@@ -1313,7 +1316,7 @@ svg{display:block}
     let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)})).json();}catch(_){r={ok:false,erro:'rede'};}
     b.disabled=false; b.textContent='Gerar Pix';
     if(!r||!r.ok){
-      let msg=(r&&r.erro==='asaas')?(r.mensagem||'O banco recusou. Tente de novo.'):(ERR_CK[r&&r.erro]||'Não deu certo. Confira a internet e tente de novo.');
+      let msg=(r&&r.erro==='asaas')?(r.mensagem||'O banco recusou. Tente de novo.'):(ERR_CK[r&&r.erro]||(window.mvEnt&&r&&mvEnt.msg(r.erro))||'Não deu certo. Confira a internet e tente de novo.');
       if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
       /* 30/09/2026: a oferta segura a unidade de quem gerou o Pix. Esgotado
          pode ser "por enquanto": diz quando uma unidade pode voltar. */

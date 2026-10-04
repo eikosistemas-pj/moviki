@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- MOVIKI entregadores.html | versao 2026-10-04-logistica | NOVO | repo: moviki
+     04/10/2026 (P70 etapa 5): cadastro publico de PARCEIRO DE ENTREGA
+     (entregador, transportadora pequena, ponto de coleta). O dono aprova no
+     painel do dono; aprovado, aparece para as lojas com a chave "Quem entrega
+     na cidade" ligada. O Moviki so apresenta: nao contrata, nao cobra, nao
+     recebe nem repassa frete.
+     /entregadores            -> formulario (com medicao)
+     /entregadores/sair/<id>-<token> -> apaga o cadastro (SEM medicao: o
+                                 token esta no endereco).
+     noindex enquanto o Paulo nao decidir divulgar. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://moviki-robo.vercel.app https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0D1B2A">
+<title>Parceiro de entrega · Moviki</title>
+<meta name="description" content="Entregador, transportadora ou ponto de coleta: apareça para as lojas do Moviki na sua cidade. Sem taxa e sem vínculo.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/entregadores">
+<meta property="og:title" content="Faz entrega? Apareça para as lojas da sua cidade">
+<meta property="og:description" content="Cadastro gratuito para entregador, transportadora e ponto de coleta. O combinado é direto com a loja.">
+<meta property="og:image" content="https://www.moviki.com.br/ogmoviki.jpg">
+<link rel="icon" href="/favicon512.png">
+<script>
+  /* Medicao so no formulario; o link de sair carrega um token. */
+  if (!/^\/entregadores\/sair\//.test(location.pathname)) { var mvS = document.createElement('script'); mvS.src = '/mvmetrica.js'; document.head.appendChild(mvS); }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ciano:#00D4FF; --azul:#0066FF; --escuro:#0D1B2A; --claro:#F2F5F9;
+    --painel:rgba(13,27,42,.86); --linha:rgba(0,212,255,.18); --suave:#9fb2c6;
+    --ok:#2ecc71; --erro:#ff6b6b; --aviso:#ffd36b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',system-ui,sans-serif;color:var(--claro);background:var(--escuro);line-height:1.6;min-height:100vh;
+    background-image:linear-gradient(rgba(6,14,24,.88),rgba(6,14,24,.95)),url('/fundo.jpg');background-size:cover;background-position:center;background-attachment:fixed}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--linha);background:rgba(6,14,24,.7)}
+  .top .marca{font-weight:700;font-size:18px;letter-spacing:.5px;color:var(--claro);text-decoration:none}
+  .top .marca b{color:var(--ciano)}
+  main{max-width:640px;margin:0 auto;padding:28px 16px 64px}
+  .eyebrow{color:var(--ciano);font-weight:600;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+  h1{font-size:28px;line-height:1.25;margin-bottom:10px}
+  h2{font-size:19px;margin-bottom:10px}
+  .lead{color:var(--suave);font-size:16px}
+  .cartao{background:var(--painel);border:1px solid var(--linha);border-radius:18px;padding:20px;margin-top:16px}
+  .passos{list-style:none;display:grid;gap:10px;counter-reset:p}
+  .passos li{counter-increment:p;position:relative;padding-left:40px;color:var(--suave)}
+  .passos li b{color:var(--claro)}
+  .passos li::before{content:counter(p);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,255,.14);color:var(--ciano);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .duas{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .duas ul{list-style:none;display:grid;gap:6px;font-size:14px;color:var(--suave)}
+  .duas h3{font-size:15px;margin-bottom:6px}
+  .sim li::before{content:'✓ ';color:var(--ok);font-weight:700}
+  .nao li::before{content:'✕ ';color:var(--erro);font-weight:700}
+  @media (max-width:560px){.duas{grid-template-columns:1fr} h1{font-size:24px}}
+  label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
+  label small{font-weight:400;color:var(--suave)}
+  input[type=text],input[type=tel],input[type=email],select,textarea{width:100%;background:rgba(6,14,24,.7);border:1px solid #2f4a63;border-radius:10px;color:var(--claro);padding:11px 12px;font:inherit;font-size:15px}
+  textarea{min-height:70px;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--ciano);outline-offset:1px}
+  .linha2{display:grid;grid-template-columns:1fr 110px;gap:10px}
+  .opcoes{display:flex;flex-wrap:wrap;gap:8px}
+  .opcoes label{margin:0;font-weight:500;display:flex;align-items:center;gap:8px;background:rgba(6,14,24,.6);border:1px solid #2f4a63;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px}
+  .opcoes input{accent-color:var(--ciano);width:16px;height:16px}
+  .opcoes label:has(input:checked){border-color:var(--ciano);background:rgba(0,212,255,.12)}
+  .tipos{display:grid;gap:8px}
+  .tipos label{margin:0;display:flex;gap:10px;align-items:flex-start;background:rgba(6,14,24,.6);border:1px solid #2f4a63;border-radius:12px;padding:12px;cursor:pointer;font-weight:500}
+  .tipos label:has(input:checked){border-color:var(--ciano);background:rgba(0,212,255,.10)}
+  .tipos input{accent-color:var(--ciano);margin-top:4px}
+  .tipos span small{display:block;color:var(--suave);font-weight:400;font-size:13px}
+  .aceite{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font-size:13px;color:var(--suave);font-weight:400}
+  .aceite input{accent-color:var(--ciano);margin-top:4px;width:18px;height:18px;flex:none}
+  .btn{display:block;width:100%;margin-top:18px;border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;font-size:16px;color:#fff;cursor:pointer;background:linear-gradient(90deg,#0066FF,#00D4FF);text-align:center;text-decoration:none}
+  .btn[disabled]{opacity:.6;cursor:wait}
+  .msg{margin-top:12px;font-size:14px;min-height:20px}
+  .msg.erro{color:var(--erro)} .msg.ok{color:var(--ok)}
+  .nota{font-size:13px;color:var(--suave);margin-top:10px}
+  .sair{word-break:break-all;background:rgba(6,14,24,.7);border:1px dashed #2f4a63;border-radius:10px;padding:10px;font-size:13px;margin-top:8px;color:var(--claro)}
+  .sec{display:block;text-align:center;margin-top:12px;color:var(--suave);font-size:14px;background:none;border:0;font:inherit;cursor:pointer;width:100%}
+  details{border-top:1px solid var(--linha);padding:10px 0}
+  details:first-of-type{border-top:0}
+  summary{cursor:pointer;font-weight:600}
+  details p{color:var(--suave);font-size:14px;margin-top:6px}
+  footer{text-align:center;color:var(--suave);font-size:13px;padding:24px 16px}
+  footer a{color:var(--suave)}
+</style>
+</head>
+<body>
+<header class="top"><a class="marca" href="https://www.moviki.com.br/" rel="noreferrer">Movi<b>ki</b></a></header>
+<main>
+  <!-- ======== SAIR ======== -->
+  <section id="telaSair" hidden>
+    <div class="cartao"><h1 id="sairTit" style="font-size:22px">Um instante…</h1><p class="lead" id="sairTxt"></p>
+      <a class="btn" href="/entregadores" id="sairVolta" hidden>Voltar</a></div>
+  </section>
+
+  <!-- ======== FORMULARIO ======== -->
+  <section id="telaForm" hidden>
+    <p class="eyebrow">Parceiro de entrega</p>
+    <h1>Faz entrega? Apareça para as lojas da sua cidade.</h1>
+    <p class="lead">Motoboy, entregador de bike ou carro, transportadora pequena e ponto de coleta. As lojas do Moviki vendem ao vivo e pelo cardápio e precisam de quem leve o pedido. Cadastro gratuito.</p>
+
+    <div class="cartao">
+      <h2>Como funciona</h2>
+      <ol class="passos">
+        <li><b>Você se cadastra aqui</b> com a sua cidade, o que faz e o seu WhatsApp.</li>
+        <li><b>A equipe do Moviki confere</b> o cadastro antes de mostrar às lojas.</li>
+        <li><b>A loja chama você no WhatsApp</b> quando precisar. Preço, prazo e forma de pagamento vocês combinam direto.</li>
+      </ol>
+    </div>
+
+    <div class="cartao duas">
+      <div class="sim"><h3>O que o Moviki faz</h3><ul><li>Mostra o seu contato às lojas da sua região</li><li>Confere o cadastro antes de mostrar</li><li>Tira você da lista quando pedir</li></ul></div>
+      <div class="nao"><h3>O que o Moviki não faz</h3><ul><li>Não contrata nem cobra taxa</li><li>Não recebe nem repassa o frete</li><li>Não garante entrega nem quantidade de chamados</li></ul></div>
+    </div>
+
+    <form class="cartao" id="form" novalidate>
+      <h2>Seu cadastro</h2>
+      <label>Você é</label>
+      <div class="tipos">
+        <label><input type="radio" name="tipo" value="entregador" checked><span>Entregador<small>Moto, bicicleta ou carro, por conta própria</small></span></label>
+        <label><input type="radio" name="tipo" value="transportadora"><span>Transportadora ou empresa de entrega<small>Leva para a cidade, a região ou outros estados</small></span></label>
+        <label><input type="radio" name="tipo" value="coleta"><span>Ponto de coleta ou envio<small>Recebe o pacote da loja e posta no correio ou na transportadora</small></span></label>
+      </div>
+
+      <label for="fNome">Nome do serviço <small>(como as lojas vão ver)</small></label>
+      <input type="text" id="fNome" maxlength="60" autocomplete="organization" placeholder="Ex.: Zé Entregas">
+      <label for="fResp">Seu nome</label>
+      <input type="text" id="fResp" maxlength="60" autocomplete="name">
+      <label for="fWpp">WhatsApp</label>
+      <input type="tel" id="fWpp" maxlength="16" autocomplete="tel" inputmode="numeric" placeholder="(11) 99999-9999">
+      <label for="fEmail">E-mail <small>(opcional, só a equipe vê)</small></label>
+      <input type="email" id="fEmail" maxlength="120" autocomplete="email">
+      <div class="linha2">
+        <div><label for="fCidade">Cidade</label><input type="text" id="fCidade" maxlength="60" autocomplete="address-level2"></div>
+        <div><label for="fUf">Estado</label><select id="fUf" autocomplete="address-level1"><option value="">UF</option></select></div>
+      </div>
+
+      <label>O que você faz <small>(marque tudo que vale)</small></label>
+      <div class="opcoes" id="fServicos">
+        <label><input type="checkbox" value="bairro">Entrega no bairro</label>
+        <label><input type="checkbox" value="cidade">Entrega na cidade</label>
+        <label><input type="checkbox" value="regiao">Cidades vizinhas</label>
+        <label><input type="checkbox" value="estados">Outros estados</label>
+        <label><input type="checkbox" value="coleta">Busca na loja</label>
+        <label><input type="checkbox" value="postagem">Leva ao correio ou transportadora</label>
+      </div>
+
+      <div id="blocoVeic">
+        <label>Veículo</label>
+        <div class="opcoes" id="fVeiculos">
+          <label><input type="checkbox" value="bicicleta">Bicicleta</label>
+          <label><input type="checkbox" value="moto">Moto</label>
+          <label><input type="checkbox" value="carro">Carro</label>
+          <label><input type="checkbox" value="van">Van ou utilitário</label>
+          <label><input type="checkbox" value="caminhao">Caminhão</label>
+        </div>
+      </div>
+
+      <label for="fAtende">Onde e quando atende <small>(opcional)</small></label>
+      <textarea id="fAtende" maxlength="200" placeholder="Ex.: Centro, Batel e Água Verde. Seg a sáb, das 9h às 20h."></textarea>
+
+      <label class="aceite"><input type="checkbox" id="fAceite"><span id="termo"></span></label>
+      <button class="btn" type="submit" id="btnEnviar">Quero aparecer para as lojas</button>
+      <div class="msg" id="msg" role="status" aria-live="polite"></div>
+      <p class="nota">Seus dados são tratados como explica a <a href="/privacidade" style="color:var(--ciano)">Política de Privacidade</a>.</p>
+    </form>
+
+    <div class="cartao">
+      <h2>Perguntas</h2>
+      <details><summary>Quanto custa?</summary><p>Nada. O Moviki não cobra do parceiro de entrega e não fica com parte do frete.</p></details>
+      <details><summary>Quem paga a entrega?</summary><p>A loja, do jeito que vocês combinarem (Pix, dinheiro, semanal). O dinheiro não passa pelo Moviki.</p></details>
+      <details><summary>Tenho vínculo com o Moviki ou com a loja?</summary><p>Não. Você continua independente, sem exclusividade, e atende quem quiser.</p></details>
+      <details><summary>Quem vê o meu WhatsApp?</summary><p>Só as lojas do Moviki que usam a lista de entregadores no painel, e só depois que a equipe aprovar o seu cadastro.</p></details>
+      <details><summary>Como saio da lista?</summary><p>No fim do cadastro você recebe um link para sair. Sair apaga tudo na hora. Também dá para pedir em suporte@moviki.com.br.</p></details>
+    </div>
+  </section>
+
+  <!-- ======== PRONTO ======== -->
+  <section id="telaOk" hidden>
+    <div class="cartao">
+      <p class="eyebrow">Cadastro recebido</p>
+      <h1 style="font-size:22px">Pronto. Agora a equipe confere.</h1>
+      <p class="lead">Depois da aprovação, as lojas da sua região passam a ver o seu contato e chamam você no WhatsApp. O combinado é direto entre vocês.</p>
+      <h2 style="margin-top:16px;font-size:16px">Guarde o seu link para sair da lista</h2>
+      <p class="nota">Ele apaga o seu cadastro quando você quiser. Não compartilhe.</p>
+      <div class="sair" id="linkSair"></div>
+      <button class="btn" type="button" id="btnCopiar">Copiar link</button>
+      <a class="sec" href="https://www.moviki.com.br/" rel="noreferrer">Ir para o Moviki</a>
+    </div>
+  </section>
+</main>
+<footer><a href="/termos">Termos</a> · <a href="/privacidade">Privacidade</a> · suporte@moviki.com.br</footer>
+<script>
+(function () {
+  'use strict';
+  var ROBO = 'https://moviki-robo.vercel.app/api/pedido';
+  var UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+  var TERMO = 'Quero aparecer para as lojas do Moviki como parceiro de entrega. Entendo que o Moviki só apresenta: não me contrata, não cobra taxa, não recebe nem repassa pagamento e não garante serviço. Preço, prazo e responsabilidade eu combino direto com cada loja, sem vínculo de emprego nem exclusividade. Autorizo mostrar meu nome, WhatsApp, cidade e serviços às lojas aprovadas, e posso sair quando quiser.';
+  var ERROS = {
+    aceite: 'Marque a caixa do aceite para continuar.', tipo: 'Escolha o que você é.', nome: 'Escreva o nome do serviço (mínimo 3 letras).',
+    responsavel: 'Escreva o seu nome.', whatsapp: 'Confira o WhatsApp com DDD.', email: 'Confira o e-mail ou deixe em branco.',
+    cidade: 'Escreva a cidade.', uf: 'Escolha o estado.', servicos: 'Marque pelo menos um serviço.', veiculos: 'Marque o seu veículo.',
+    ja_cadastrado: 'Este WhatsApp já tem cadastro. Para mudar algo, use o link de sair e cadastre de novo, ou escreva para suporte@moviki.com.br.',
+    freio: 'Muitos cadastros deste aparelho agora. Tente de novo em uma hora.'
+  };
+  function el(id) { return document.getElementById(id); }
+  function ev(n, p) { try { if (window.mvEv) window.mvEv(n, p || {}); } catch (e) {} }
+  function marcados(id) { return Array.prototype.map.call(el(id).querySelectorAll('input:checked'), function (i) { return i.value; }); }
+
+  /* ---- sair ---- */
+  var m = /^\/entregadores\/sair\/?(.*)$/.exec(location.pathname);
+  if (m) {
+    el('telaSair').hidden = false;
+    var fim = function (t, x) { el('sairTit').textContent = t; el('sairTxt').textContent = x; el('sairVolta').hidden = false; };
+    var t = decodeURIComponent(m[1] || '').replace(/\/$/, '');
+    if (!/^l[0-9a-f]{30}-[0-9a-f]{24}$/.test(t)) { fim('Link inválido', 'Confira se copiou o link inteiro.'); return; }
+    fetch(ROBO, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acao: 'compra_logi_sair', t: t }), referrerPolicy: 'no-referrer' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || !j.ok) { fim('Link inválido', 'Confira se copiou o link inteiro ou escreva para suporte@moviki.com.br.'); return; }
+        fim('Pronto, você saiu da lista', j.ja ? 'Este cadastro já tinha sido apagado.' : 'O seu cadastro foi apagado e as lojas não veem mais o seu contato.');
+      })
+      .catch(function () { fim('Sem conexão', 'Tente de novo em instantes.'); });
+    return;
+  }
+
+  /* ---- formulario ---- */
+  el('telaForm').hidden = false;
+  el('termo').textContent = TERMO;
+  UFS.forEach(function (u) { var o = document.createElement('option'); o.value = u; o.textContent = u; el('fUf').appendChild(o); });
+  function tipo() { var r = document.querySelector('input[name=tipo]:checked'); return r ? r.value : ''; }
+  function veicVis() { el('blocoVeic').hidden = tipo() === 'coleta'; }
+  Array.prototype.forEach.call(document.querySelectorAll('input[name=tipo]'), function (r) { r.addEventListener('change', veicVis); });
+  veicVis();
+  el('fWpp').addEventListener('input', function () {
+    var d = this.value.replace(/\D/g, '').slice(0, 11);
+    var f = d.length > 10 ? '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7) : d.length > 6 ? '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6) : d.length > 2 ? '(' + d.slice(0, 2) + ') ' + d.slice(2) : d;
+    this.value = f;
+  });
+  var comecou = false;
+  el('form').addEventListener('input', function () { if (!comecou) { comecou = true; ev('logistica_form_inicio', { pagina: 'entregadores' }); } });
+
+  function aviso(t, ok) { var x = el('msg'); x.textContent = t; x.className = 'msg ' + (ok ? 'ok' : 'erro'); }
+  el('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var tp = tipo();
+    var dados = {
+      acao: 'compra_logi_entrar', aceite: el('fAceite').checked, tipo: tp,
+      nome: el('fNome').value.trim(), responsavel: el('fResp').value.trim(), whatsapp: el('fWpp').value,
+      email: el('fEmail').value.trim(), cidade: el('fCidade').value.trim(), uf: el('fUf').value,
+      servicos: marcados('fServicos'), veiculos: tp === 'coleta' ? [] : marcados('fVeiculos'), atende: el('fAtende').value.trim()
+    };
+    /* conferencia rapida antes de ir ao servidor (o servidor confere de novo) */
+    var erro = '';
+    if (dados.nome.length < 3) erro = 'nome'; else if (dados.responsavel.length < 3) erro = 'responsavel';
+    else if (dados.whatsapp.replace(/\D/g, '').length < 10) erro = 'whatsapp'; else if (dados.cidade.length < 2) erro = 'cidade';
+    else if (!dados.uf) erro = 'uf'; else if (!dados.servicos.length) erro = 'servicos';
+    else if (tp === 'entregador' && !dados.veiculos.length) erro = 'veiculos'; else if (!dados.aceite) erro = 'aceite';
+    if (erro) { aviso(ERROS[erro]); return; }
+    var b = el('btnEnviar'); b.disabled = true; aviso('Enviando…', true);
+    fetch(ROBO, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dados), referrerPolicy: 'no-referrer' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        b.disabled = false;
+        if (!j || !j.ok) { aviso(ERROS[j && j.erro] || 'Não deu certo agora. Tente de novo em instantes.'); return; }
+        ev('logistica_cadastro', { tipo: tp, uf: dados.uf });
+        el('telaForm').hidden = true; el('telaOk').hidden = false;
+        el('linkSair').textContent = j.sair || '';
+        window.scrollTo(0, 0);
+      })
+      .catch(function () { b.disabled = false; aviso('Sem conexão. Tente de novo.'); });
+  });
+  el('btnCopiar').addEventListener('click', function () {
+    var t = el('linkSair').textContent, btn = this;
+    var ok = function () { btn.textContent = 'Copiado'; setTimeout(function () { btn.textContent = 'Copiar link'; }, 2000); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () {});
+    else { var r = document.createRange(); r.selectNodeContents(el('linkSair')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  });
+})();
+</script>
+</body>
+</html>
