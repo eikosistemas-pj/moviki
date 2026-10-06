@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-09-15-og-live | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-10-06-cerca | antes 2026-09-15-og-live | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
@@ -112,6 +112,7 @@ async function lerDoc(caminho, token) {
   const url = token ? base : base + '?key=' + encodeURIComponent(API_KEY);
   const opcoes = token ? { headers: { Authorization: 'Bearer ' + token } } : {};
   try {
+    gauth.cerca(url);   // 06/10 (2.5): leitura fora da lista fechada e barrada aqui
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 2500);   // a funcao tem ~10s; nunca ficar pendurado
     opcoes.signal = ctrl.signal;

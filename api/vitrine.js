@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/vitrine.js | versao 2026-09-16-aovivo2 | repo: moviki (site publico)
+ * MOVIKI api/vitrine.js | versao 2026-10-06-cerca | antes 2026-09-16-aovivo2 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * O og.js nao era o unico pedaco do projeto que fala com o Firestore de fora
@@ -68,6 +68,7 @@ function corOk(c) { return /^#[0-9a-f]{6}$/i.test(String(c || '')) ? c : ''; }
 
 async function chamar(caminho, corpo, token) {
   const url = BASE_REST + caminho + (token ? '' : '?key=' + encodeURIComponent(API_KEY));
+  try { gauth.cerca(url, corpo); } catch (_) { return null; }   // 06/10 (2.5): fora da lista = falha fechada, como rede caida
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 6000);
   try {
@@ -163,6 +164,7 @@ function msDe(f) {
    vitrine: uma leitura a cada revalidacao do cache (20 s), nao por visitante. */
 async function lerDoc(caminho, token) {
   const url = BASE_REST + caminho + (token ? '' : '?key=' + encodeURIComponent(API_KEY));
+  try { gauth.cerca(url); } catch (_) { return null; }   // 06/10 (2.5)
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 5000);
   try {

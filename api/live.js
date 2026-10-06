@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-10-06-donogoogle | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-10-06-cerca | antes 2026-10-06-donogoogle | repo: moviki (site publico)
  *
  * 06/10/2026 (seguranca, plano de acao 1.1): ACAO DE DONO SO COM O GOOGLE.
  * Desde 03/10 o robo e as regras v32 exigem que o poder de dono venha de
@@ -281,6 +281,7 @@ async function lerAssinatura(uid) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 4000);
   try {
+    gauth.cerca(BASE_REST + '/assinaturas/' + encodeURIComponent(uid));   // 06/10 (2.5)
     const r = await fetch(BASE_REST + '/assinaturas/' + encodeURIComponent(uid), {
       signal: ctrl.signal, headers: { Authorization: 'Bearer ' + token }
     });
@@ -312,6 +313,7 @@ async function lerDoc(caminho) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 4000);
   try {
+    gauth.cerca(BASE_REST + '/' + caminho);   // 06/10 (2.5)
     const r = await fetch(BASE_REST + '/' + caminho, { signal: ctrl.signal, headers: { Authorization: 'Bearer ' + token } });
     clearTimeout(t);
     if (r.status === 404) return { doc: null };
