@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/sitemap.js | versao 2026-09-16-sitemap1 | repo: moviki (site publico)
+ * MOVIKI api/sitemap.js | versao 2026-10-06-cerca | antes 2026-09-16-sitemap1 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * Desde 15/09 cada pagina de negocio (moviki.com.br/apelido) e servida pelo
@@ -89,6 +89,7 @@ function indexavel(f) {
 
 async function chamar(caminho, corpo, token) {
   const url = BASE_REST + caminho + (token ? '' : '?key=' + encodeURIComponent(API_KEY));
+  try { gauth.cerca(url, corpo); } catch (_) { return null; }   // 06/10 (2.5): fora da lista = falha fechada, como rede caida
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 8000);
   try {

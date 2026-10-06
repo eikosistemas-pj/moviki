@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/criadores.js | versao 2026-10-06-donogoogle | repo: moviki (site publico)
+ * MOVIKI api/criadores.js | versao 2026-10-06-cerca | antes 2026-10-06-donogoogle | repo: moviki (site publico)
  *
  * 06/10/2026 (seguranca, plano de acao 1.1): ACAO DE DONO SO COM O GOOGLE.
  * Desde 03/10 o robo e as regras v32 exigem que o poder de dono venha de
@@ -109,6 +109,7 @@ async function chamar(url, opcoes, ms) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), ms || 6000);
   try {
+    gauth.cerca(url, opcoes && opcoes.body);   // 06/10 (2.5): so confere URL do Firestore; Analytics passa
     const r = await fetch(url, Object.assign({ signal: ctrl.signal }, opcoes));
     clearTimeout(t);
     const corpo = await r.json().catch(() => null);
