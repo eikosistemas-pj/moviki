@@ -1302,7 +1302,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      tem DDD + telefone depois dele (12 ou 13 digitos). */
   function mvWpp(n){let d=String(n||'').replace(/\D/g,'').replace(/^0+/,'');if(d.length>=12&&d.slice(0,2)==='55')d=d.slice(2);return d;}
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
+  import { initializeAppCheck, ReCaptchaV3Provider, getToken as appCheckGetToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, getDocs, query, where, limit, addDoc, increment, serverTimestamp, writeBatch }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -1314,7 +1314,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-06-pixtrava';   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-06-avalrobo';   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1326,8 +1326,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      com este bloco e o painel do Firebase mostrar o trafego verificado. Ligar
      antes derruba, CALADA, a pagina que tiver ficado de fora.
      try/catch de proposito: App Check com problema nunca derruba a pagina. */
+  let mvAppCheck = null;   /* 06/10 (plano 2.2): a avaliacao manda o token do App Check para o robo */
   try {
-    initializeAppCheck(app, {
+    mvAppCheck = initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'),
       isTokenAutoRefreshEnabled: true
     });
@@ -3175,6 +3176,16 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   window.pickNota=function(v){notaEscolhida=v;document.querySelectorAll('#estrelasPick .stp').forEach((sp,i)=>sp.classList.toggle('on',i<v));};
   window.abrirAvaliar=function(){el('modalAv').classList.remove('escondido');};
   window.fecharAvaliar=function(){el('modalAv').classList.add('escondido');};
+  /* 06/10/2026 (plano de seguranca 2.2, regras v34): A AVALIACAO PASSA PELO ROBO.
+     Antes a pagina gravava direto no Firestore e nao havia limite por pessoa:
+     concorrente com navegador automatizado afogava uma loja em notas 1. Agora o
+     robo (api/avaliacao.js) confere o App Check (o mesmo que o Firestore ja
+     exigia) e aplica limite por aparelho (1 por negocio/30 dias), por IP e por
+     negocio. Para o cliente nada muda: continua sem login. O id do aparelho e
+     aleatorio, fica so neste navegador e vai hasheado no servidor. */
+  function mvAparelho(){
+    try{ let d=localStorage.getItem('mv_dev'); if(!d||!/^[A-Za-z0-9_-]{16,64}$/.test(d)){ d=Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join(''); localStorage.setItem('mv_dev',d);} return d; }catch(_){ return ''; }
+  }
   window.enviarAvaliacao=async function(){
     const av=el('mavAviso');av.style.color='';
     if(!negocioUid){av.textContent='Recarregue a página e tente de novo.';return;}
@@ -3184,20 +3195,16 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const btn=el('mavEnviar');btn.disabled=true;const t=btn.textContent;btn.textContent='Enviando...';
     try{
       const _nm=(el('avNome').value||'').trim();
-      /* 23/09/2026 (seguranca, regras v30): a avaliacao e a soma no resumo vao
-         JUNTAS, numa escrita so, e o resumo aponta a avaliacao que acabou de
-         nascer (ultimaAv). Antes qualquer visitante somava +1 no resumo sem
-         avaliacao nenhuma e derrubava a nota de um concorrente em silencio.
-         A regra agora so aceita +1 se a avaliacao nova existir DEPOIS da
-         escrita e nao existia ANTES, com a mesma nota. */
-      const avRef=doc(collection(db,'negocios',negocioUid,'avaliacoes'));
-      const rsRef=doc(db,'negocios',negocioUid,'resumo','avaliacoes');
-      let temResumo=false; try{ temResumo=(await getDoc(rsRef)).exists(); }catch(_){}
-      const lote=writeBatch(db);
-      lote.set(avRef,{nota:notaEscolhida,nome:(_nm.length>=2?_nm:'Cliente').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),criadoEm:serverTimestamp()});
-      if(temResumo) lote.update(rsRef,{n:increment(1),soma:increment(notaEscolhida),ultimaAv:avRef.id});
-      else lote.set(rsRef,{n:1,soma:notaEscolhida,ultimaAv:avRef.id});
-      await lote.commit();
+      let tk='';
+      try{ if(mvAppCheck){ const r=await appCheckGetToken(mvAppCheck,false); tk=(r&&r.token)||''; } }catch(_){}
+      const r=await fetch(MV_ROBO+'/api/avaliacao',{method:'POST',headers:{'Content-Type':'application/json','X-Firebase-AppCheck':tk},
+        body:JSON.stringify({acao:'criar',negocio:negocioUid,nota:notaEscolhida,nome:(_nm.length>=2?_nm:'Cliente').slice(0,40),comentario:(el('avComent').value||'').slice(0,300),aparelho:mvAparelho()})});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok||!j.ok){
+        if(j.erro==='ja_avaliou'){ try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){} av.style.color='#25e39b'; av.textContent='Você já avaliou este negócio. Obrigado!'; }
+        else av.textContent=j.mensagem||'Não deu pra enviar agora. Tente mais tarde.';
+        btn.disabled=false;btn.textContent=t;return;
+      }
       try{localStorage.setItem('av_'+negocioUid,'1');}catch(_){}
       av.style.color='#25e39b';av.textContent='Obrigado pela sua avaliação!';
       ev('avaliacao_enviada',{nota:notaEscolhida});
