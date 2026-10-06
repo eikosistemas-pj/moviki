@@ -1,5 +1,13 @@
 /*!
- * MOVIKI api/live.js | versao 2026-09-19-cotalive | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-10-06-donogoogle | repo: moviki (site publico)
+ *
+ * 06/10/2026 (seguranca, plano de acao 1.1): ACAO DE DONO SO COM O GOOGLE.
+ * Desde 03/10 o robo e as regras v32 exigem que o poder de dono venha de
+ * sessao aberta pelo Google (a conta do dono tem verificacao em 2 etapas,
+ * que vira o segundo fator). Este arquivo ainda aceitava o dono por senha.
+ * Agora confere sign_in_provider == 'google.com' no proprio token, depois de
+ * conferir admins/{uid}. Emergencia: env ADMIN_ACEITA_SENHA = "1" NESTE
+ * projeto Vercel (site). Apagar assim que o Google voltar.
  *
  * 19/09/2026: mensagens da cota por lojista. A do teste gratis prometia
  * "a quantidade deixa de ter limite" — falso desde o teto de minutos por
@@ -233,26 +241,37 @@ function b64urlBuf(s) {
 
 /* Devolve o uid, ou '' se o token nao e valido. Nunca lanca. */
 async function uidDoToken(tk) {
+  return (await sessaoDoToken(tk)).uid;
+}
+
+/* 06/10/2026: dono so pelo Google. Mesma regra do moviki-robo/lib/admin.js. */
+function donoPeloGoogle(sessao) {
+  return !!sessao && (sessao.provedor === 'google.com' || process.env.ADMIN_ACEITA_SENHA === '1');
+}
+
+/* Devolve { uid, provedor }; uid '' se o token nao e valido. Nunca lanca. */
+async function sessaoDoToken(tk) {
+  const nada = { uid: '', provedor: '' };
   try {
     const partes = String(tk || '').split('.');
-    if (partes.length !== 3) return '';
+    if (partes.length !== 3) return nada;
     const cab = JSON.parse(b64urlBuf(partes[0]).toString('utf8'));
     const corpo = JSON.parse(b64urlBuf(partes[1]).toString('utf8'));
-    if (cab.alg !== 'RS256' || !cab.kid) return '';
+    if (cab.alg !== 'RS256' || !cab.kid) return nada;
     const certs = await certificados();
-    if (!certs || !certs[cab.kid]) return '';
+    if (!certs || !certs[cab.kid]) return nada;
     const ok = crypto.createVerify('RSA-SHA256')
       .update(partes[0] + '.' + partes[1])
       .verify(certs[cab.kid], b64urlBuf(partes[2]));
-    if (!ok) return '';
+    if (!ok) return nada;
     const agora = Math.floor(Date.now() / 1000);
-    if (corpo.aud !== PROJ) return '';
-    if (corpo.iss !== 'https://securetoken.google.com/' + PROJ) return '';
-    if (!corpo.exp || corpo.exp < agora) return '';
-    if (corpo.iat && corpo.iat > agora + 300) return '';
-    if (typeof corpo.sub !== 'string' || !corpo.sub || corpo.sub.length > 128) return '';
-    return corpo.sub;
-  } catch (e) { return ''; }
+    if (corpo.aud !== PROJ) return nada;
+    if (corpo.iss !== 'https://securetoken.google.com/' + PROJ) return nada;
+    if (!corpo.exp || corpo.exp < agora) return nada;
+    if (corpo.iat && corpo.iat > agora + 300) return nada;
+    if (typeof corpo.sub !== 'string' || !corpo.sub || corpo.sub.length > 128) return nada;
+    return { uid: corpo.sub, provedor: String((corpo.firebase && corpo.firebase.sign_in_provider) || '') };
+  } catch (e) { return nada; }
 }
 
 /* ---------------- 2. plano, lido no servidor ---------------- */
@@ -567,7 +586,8 @@ module.exports = async (req, res) => {
   if (typeof corpo === 'string') { try { corpo = JSON.parse(corpo); } catch (e) { corpo = {}; } }
   corpo = corpo || {};
 
-  const uid = await uidDoToken(corpo.idToken);
+  const sessaoTk = await sessaoDoToken(corpo.idToken);
+  const uid = sessaoTk.uid;
   if (!uid) return responder(res, 401, { erro: 'token' });
 
   /* ---- acoes do DONO do Moviki ---- */
@@ -576,6 +596,7 @@ module.exports = async (req, res) => {
     const adm0 = await lerDoc('admins/' + encodeURIComponent(uid));
     if (adm0.erro) return responder(res, 503, { erro: adm0.erro });
     if (!adm0.doc) return responder(res, 403, { erro: 'nao_admin' });
+    if (!donoPeloGoogle(sessaoTk)) return responder(res, 403, { erro: 'entre_com_google', mensagem: 'Acao de dono so com o login do Google. Saia e entre de novo pelo botao "Entrar com o Google".' });
     if (corpo.agora === true) consumoCache = { em: 0, mes: consumoCache.mes, semana: consumoCache.semana, erro: consumoCache.erro, desde: consumoCache.desde, ciclo: 0 };
     const t0 = await lerDoc('configuracoes/liveTermos');
     const teto = Number((t0.doc && t0.doc.tetoMinutosMes) || 0);
@@ -600,6 +621,7 @@ module.exports = async (req, res) => {
     const adm = await lerDoc('admins/' + encodeURIComponent(uid));
     if (adm.erro) return responder(res, 503, { erro: adm.erro });
     if (!adm.doc) return responder(res, 403, { erro: 'nao_admin' });
+    if (!donoPeloGoogle(sessaoTk)) return responder(res, 403, { erro: 'entre_com_google', mensagem: 'Acao de dono so com o login do Google. Saia e entre de novo pelo botao "Entrar com o Google".' });
     const alvo = String(corpo.uid || '');
     if (!/^[A-Za-z0-9]{10,128}$/.test(alvo)) return responder(res, 400, { erro: 'uid' });
     if (!process.env.CF_ACCOUNT_ID || !process.env.CF_STREAM_TOKEN) return responder(res, 503, { erro: 'config' });

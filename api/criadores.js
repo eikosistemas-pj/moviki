@@ -1,5 +1,13 @@
 /*!
- * MOVIKI api/criadores.js | versao 2026-09-22-criadores2 | repo: moviki (site publico)
+ * MOVIKI api/criadores.js | versao 2026-10-06-donogoogle | repo: moviki (site publico)
+ *
+ * 06/10/2026 (seguranca, plano de acao 1.1): ACAO DE DONO SO COM O GOOGLE.
+ * Desde 03/10 o robo e as regras v32 exigem que o poder de dono venha de
+ * sessao aberta pelo Google (a conta do dono tem verificacao em 2 etapas,
+ * que vira o segundo fator). Este arquivo ainda aceitava o dono por senha.
+ * Agora confere sign_in_provider == 'google.com' no proprio token, depois de
+ * conferir admins/{uid}. Emergencia: env ADMIN_ACEITA_SENHA = "1" NESTE
+ * projeto Vercel (site). Apagar assim que o Google voltar.
  *
  * TRES PORTAS DO PROGRAMA DE CRIADORES, NUM ARQUIVO SO
  *
@@ -129,23 +137,34 @@ function b64urlBuf(s) {
   return Buffer.from(String(s).replace(/-/g, '+').replace(/_/g, '/'), 'base64');
 }
 async function uidDoToken(tk) {
+  return (await sessaoDoToken(tk)).uid;
+}
+
+/* 06/10/2026: dono so pelo Google. Mesma regra do moviki-robo/lib/admin.js. */
+function donoPeloGoogle(sessao) {
+  return !!sessao && (sessao.provedor === 'google.com' || process.env.ADMIN_ACEITA_SENHA === '1');
+}
+
+/* Devolve { uid, provedor }; uid '' se o token nao e valido. Nunca lanca. */
+async function sessaoDoToken(tk) {
+  const nada = { uid: '', provedor: '' };
   try {
     const p = String(tk || '').split('.');
-    if (p.length !== 3) return '';
+    if (p.length !== 3) return nada;
     const cab = JSON.parse(b64urlBuf(p[0]).toString('utf8'));
     const corpo = JSON.parse(b64urlBuf(p[1]).toString('utf8'));
-    if (cab.alg !== 'RS256' || !cab.kid) return '';
+    if (cab.alg !== 'RS256' || !cab.kid) return nada;
     const certs = await certificados();
-    if (!certs || !certs[cab.kid]) return '';
+    if (!certs || !certs[cab.kid]) return nada;
     const ok = crypto.createVerify('RSA-SHA256').update(p[0] + '.' + p[1]).verify(certs[cab.kid], b64urlBuf(p[2]));
-    if (!ok) return '';
+    if (!ok) return nada;
     const agora = Math.floor(Date.now() / 1000);
-    if (corpo.aud !== PROJ || corpo.iss !== 'https://securetoken.google.com/' + PROJ) return '';
-    if (!corpo.exp || corpo.exp < agora) return '';
-    if (corpo.iat && corpo.iat > agora + 300) return '';
-    if (typeof corpo.sub !== 'string' || !corpo.sub || corpo.sub.length > 128) return '';
-    return corpo.sub;
-  } catch (e) { return ''; }
+    if (corpo.aud !== PROJ || corpo.iss !== 'https://securetoken.google.com/' + PROJ) return nada;
+    if (!corpo.exp || corpo.exp < agora) return nada;
+    if (corpo.iat && corpo.iat > agora + 300) return nada;
+    if (typeof corpo.sub !== 'string' || !corpo.sub || corpo.sub.length > 128) return nada;
+    return { uid: corpo.sub, provedor: String((corpo.firebase && corpo.firebase.sign_in_provider) || '') };
+  } catch (e) { return nada; }
 }
 
 /* ================= 1. GET — pecas liberadas para o robo ================= */
@@ -299,7 +318,8 @@ module.exports = async function (req, res) {
   corpo = corpo || {};
   if (corpo.acao !== 'trafego' && corpo.acao !== 'meu_trafego') return responder(res, 400, { erro: 'acao' });
 
-  const uid = await uidDoToken(corpo.idToken);
+  const sessao = await sessaoDoToken(corpo.idToken);
+  const uid = sessao.uid;
   if (!uid) return responder(res, 401, { erro: 'token' });
 
   if (corpo.acao === 'meu_trafego') {
@@ -316,6 +336,7 @@ module.exports = async function (req, res) {
   const adm = await lerDoc('admins/' + encodeURIComponent(uid), token);
   if (!adm) return responder(res, 503, { erro: 'leitura' });
   if (!adm.existe) return responder(res, 403, { erro: 'admin' });
+  if (!donoPeloGoogle(sessao)) return responder(res, 403, { erro: 'entre_com_google', mensagem: 'Acao de dono so com o login do Google. Saia e entre de novo pelo botao "Entrar com o Google".' });
 
   const r = await trafego(400);
   if (r.erro) return responder(res, 200, r);                       // o painel mostra o aviso
