@@ -1,0 +1,7 @@
+# 06/10/2026 (plano de seguranca 1.2): o que nao e pagina nem funcao nao sobe
+# para a Vercel. O repositorio do site e publico, mas o SITE nao precisa servir
+# o mapa da operacao nem as instrucoes do Claude em moviki.com.br/CLAUDE.md.
+# lib/ NAO entra aqui: as funcoes de api/ dependem dele pelo require.
+CLAUDE.md
+.claude
+.github
