@@ -17,5 +17,6 @@
   <url><loc>https://www.moviki.com.br/parceiros-ganhos.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.moviki.com.br/regulamento.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.moviki.com.br/termos.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.moviki.com.br/reembolso.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.moviki.com.br/privacidade.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
