@@ -49,6 +49,17 @@
  *    sai e so o aviso de conversao da campanha, com o gclid do url_passthrough.
  *  - Autorizado pelo Paulo em 26/09/2026. privacidade.html ajustada junto.
  *
+ * 07/10/2026 (versao visita1, P75 fase 0) — AVISO DE VISITA A META:
+ *  - Quem chegou por anuncio da Meta (fbc na sessao) passa a gerar PageView
+ *    (cada pagina, 1 vez por sessao) e ViewContent (clique para abrir o
+ *    painel). Antes a Meta via 2 paginas abertas em 41 cliques e o algoritmo
+ *    so enxergava o Lead. Continua SEM pixel e SEM cookie: o envio sai do
+ *    navegador para o nosso servidor (site: /api/visita; painel: robo direto)
+ *    e de la para a Meta pela Conversions API. Visita organica nao gera nada.
+ *    "Nao medir" desliga isto tambem. Politica de privacidade, item 4.
+ *  - versao cadastro1 (mesmo dia): o botao de criar conta da /aovivo leva
+ *    &ramo=<ramo da pagina>, e o painel abre o cadastro com o ramo escolhido.
+ *
  * 25/09/2026 (versao medicao3) — "NAO MEDIR" NAO CARREGA NADA DO GOOGLE:
  *  - Com mv_medicao=nao o gtag.js nem e baixado (antes baixava e so ficava
  *    com analytics_storage negado, o que ainda manda sinal sem cookie).
@@ -204,6 +215,77 @@
     try {
       var a = ev.target && ev.target.closest ? ev.target.closest('a[href]') : null;
       if (a) decorar(a);
+    } catch (e) {}
+  }, true);
+
+  // 2b) VISITA (07/10/2026, P75): PageView e ViewContent de quem veio de
+  //     anuncio da Meta, pelo servidor. Nada e gravado alem de uma marca em
+  //     sessionStorage que impede reenviar a mesma pagina na mesma sessao.
+  function lerLocalMeta(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function idEvento(prefixo) {
+    var n = '';
+    try {
+      var a = new Uint32Array(3);
+      (window.crypto || window.msCrypto).getRandomValues(a);
+      n = a[0].toString(36) + a[1].toString(36) + a[2].toString(36);
+    } catch (e) { n = String(Math.random()).slice(2) + String(Date.now()); }
+    return (prefixo + '_' + n).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+  }
+  function destinoVisita() {
+    var h = String(location.hostname || '').toLowerCase();
+    if (h === 'app.moviki.com.br') return 'https://moviki-robo.vercel.app/api/meta-visita';
+    if (h === 'www.moviki.com.br' || h === 'moviki.com.br') return '/api/visita';
+    return '';                                          // teste local ou previa: nao envia
+  }
+  function metaVisita(evento) {
+    try {
+      if (evento !== 'PageView' && evento !== 'ViewContent') return;
+      if (lerLocalMeta('mv_medicao') === 'nao') return;   // "Nao medir" vale aqui tambem
+      var fbc = lerSess(MV_FBC);
+      if (!fbc) return;                                   // so quem veio de anuncio da Meta
+      var url = destinoVisita();
+      if (!url) return;
+      var marca = 'mv_vis_' + evento + (evento === 'PageView' ? '_' + location.pathname : '');
+      if (lerSess(marca)) return;
+      gravarSess(marca, '1');
+      var corpo = JSON.stringify({
+        evento: evento,
+        fbc: fbc,
+        fbp: lerSess(MV_FBP),
+        url: String(location.href).split('#')[0].slice(0, 1000),
+        eventId: idEvento(evento === 'PageView' ? 'pv' : 'vc')
+      });
+      var foi = false;
+      try {
+        if (navigator.sendBeacon) foi = navigator.sendBeacon(url, new Blob([corpo], { type: 'text/plain' }));
+      } catch (e) {}
+      if (!foi) {
+        try {
+          fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: corpo,
+            keepalive: true, credentials: 'omit' }).catch(function () {});
+        } catch (e) {}
+      }
+    } catch (e) {}
+  }
+  window.mvMetaVisita = metaVisita;
+  metaVisita('PageView');
+  document.addEventListener('click', function (ev) {
+    try {
+      var a = ev.target && ev.target.closest ? ev.target.closest('a[href]') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (!/app\.moviki\.com\.br/i.test(href)) return;
+      metaVisita('ViewContent');
+      // 2c) RAMO NO CADASTRO (07/10/2026, versao cadastro1, P75): a /aovivo
+      //     sabe o ramo da pagina (window.avRamo). O botao de criar conta leva
+      //     ?ramo=<ramo> e o painel abre o cadastro com o ramo ja escolhido.
+      //     Vale para todo trafego, com ou sem anuncio. Ramo e so letra,
+      //     numero e hifen: nada mais entra na URL.
+      var ramo = String(window.avRamo || '');
+      if (ramo && /^[a-z0-9-]{2,40}$/.test(ramo) && /[?&]criar=/.test(href) && !/[?&]ramo=/.test(href)) {
+        var partes = href.split('#');
+        a.setAttribute('href', partes[0] + '&ramo=' + ramo + (partes.length > 1 ? '#' + partes.slice(1).join('#') : ''));
+      }
     } catch (e) {}
   }, true);
 
@@ -382,6 +464,21 @@
           carregarGtag();
         }));
         document.body.appendChild(b);
+        // 07/10/2026 (cadastro1, P75): no PAINEL o aviso cobria os botoes do
+        // cadastro no celular, justo na tela que mais perde gente. La ele sai
+        // no primeiro toque fora dele, SEM gravar escolha nenhuma: a medicao
+        // segue como estava (base legitimo interesse) e o aviso volta na
+        // proxima pagina ate a pessoa tocar em "Ok" ou "Nao medir".
+        if (/^app\.moviki\.com\.br$/i.test(location.hostname)) {
+          var fora = function (ev) {
+            try {
+              if (b.contains(ev.target)) return;
+              document.removeEventListener('pointerdown', fora, true);
+              if (b.parentNode) b.parentNode.removeChild(b);
+            } catch (e) {}
+          };
+          document.addEventListener('pointerdown', fora, true);
+        }
       }
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montar);
       else montar();
