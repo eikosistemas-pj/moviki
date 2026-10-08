@@ -1,5 +1,14 @@
 /*!
- * MOVIKI api/live.js | versao 2026-10-06-cerca | antes 2026-10-06-donogoogle | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ *
+ * 07/10/2026 (P75 fase 1, B7): LIVE DE ENSAIO. `iniciar` com `ensaio: true`
+ * passa pelas MESMAS portas da live (plano, chave-mestra, teto de video,
+ * beta, bloqueio, aceite, filtro de termos, freio) e pede ao robo
+ * `live_reservar` com ensaio — e la que se decide quem pode ensaiar, o teto
+ * de 5 por dia, e que a cota do teste gratis NAO anda. Depois do Cloudflare,
+ * chama `live_ensaio_abrir` (sessao em live_ensaios, nunca em live_sessoes) e
+ * devolve SO o WHIP: o WHEP do ensaio nao sai daqui para ninguem, entao nao ha
+ * como assistir. Duracao maxima de 10 min, aplicada no pulso do robo.
  *
  * 06/10/2026 (seguranca, plano de acao 1.1): ACAO DE DONO SO COM O GOOGLE.
  * Desde 03/10 o robo e as regras v32 exigem que o poder de dono venha de
@@ -426,7 +435,8 @@ async function chamarRobo(acao, dados) {
     if (!r.ok || !j) {
       console.error('live: robo recusou', acao, r.status, j && j.erro);
       return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota, escala: j && j.escala, teto: j && j.teto,
-               usadoMin: j && j.usadoMin, tetoMin: j && j.tetoMin, viraEm: j && j.viraEm, esperaSeg: j && j.esperaSeg };
+               usadoMin: j && j.usadoMin, tetoMin: j && j.tetoMin, viraEm: j && j.viraEm, esperaSeg: j && j.esperaSeg,
+               motivo: j && j.motivo, maxDia: j && j.maxDia };
     }
     return j;
   } catch (e) {
@@ -714,8 +724,21 @@ module.exports = async (req, res) => {
   /* BARREIRA 2 — freio duravel e cota, no robo, ANTES do Cloudflare.
      Contar a cota so depois (como era ate aqui) deixava a entrada do Cloudflare
      ja criada quando a cota estava estourada. */
-  const reserva = await chamarRobo('live_reservar', { uid, periodo: periodoDaAssinatura(a.doc), nivel: nivel.nivel });
+  const ensaio = corpo.ensaio === true;
+  const reserva = await chamarRobo('live_reservar', { uid, periodo: periodoDaAssinatura(a.doc), nivel: nivel.nivel, ensaio });
   if (!reserva.ok) {
+    /* 07/10 — recusas proprias do ensaio. */
+    if (reserva.erro === 'ensaio_dia') {
+      return responder(res, 429, { erro: 'ensaio_dia', maxDia: reserva.maxDia || 0,
+        mensagem: 'Voce ja fez os ensaios de hoje. Amanha libera de novo.' });
+    }
+    if (reserva.erro === 'ensaio_indisponivel') {
+      return responder(res, 403, { erro: 'ensaio_indisponivel', motivo: reserva.motivo || '',
+        mensagem: 'O ensaio e para quem ainda vai fazer a primeira live.' });
+    }
+    if (reserva.erro === 'live_no_ar') {
+      return responder(res, 409, { erro: 'live_no_ar', mensagem: 'Sua live esta no ar. Encerre a live antes de ensaiar.' });
+    }
     if (reserva.erro === 'cota') {
       return responder(res, 403, {
         erro: 'cota', usadas: reserva.usadas || 0, cota: reserva.cota || 0,
@@ -746,6 +769,26 @@ module.exports = async (req, res) => {
 
   const e = await entradaNovaDoLojista(uid, reserva.entradaId);
   if (!e) return responder(res, 502, { erro: 'cloudflare' });
+
+  /* ---- ENSAIO (07/10): sessao propria, sem publico ----
+     A sessao vai para live_ensaios, nao para live_sessoes: a pagina publica,
+     a vitrine, a Lista VIP, o Pix da live e a presenca de espectador so olham
+     live_sessoes. O WHEP nao e enviado a ninguem. */
+  if (ensaio) {
+    const se = await chamarRobo('live_ensaio_abrir', {
+      uid, entradaId: e.entradaId, nivel: nivel.nivel, periodo: periodoDaAssinatura(a.doc),
+    });
+    if (!se.ok) {
+      if (se.erro === 'live_no_ar') return responder(res, 409, { erro: 'live_no_ar', mensagem: 'Sua live esta no ar. Encerre a live antes de ensaiar.' });
+      return responder(res, 503, { erro: 'sessao', mensagem: 'Nao consegui abrir o ensaio agora. Tente de novo.' });
+    }
+    return responder(res, 200, {
+      ok: true, ensaio: true, nivel: nivel.nivel, limiteMin: se.limiteMin || reserva.limiteMin || 10,
+      sacolaMax: nivel.sacolaMax, ferramentas: nivel.ferramentas, whip: e.whip,
+      sessaoId: se.sessaoId || '',
+      ensaiosHoje: reserva.ensaiosHoje || 0, ensaiosMaxDia: reserva.ensaiosMaxDia || 0,
+    });
+  }
 
   /* ---- A SESSAO NASCE NO SERVIDOR ----
      Ate 15/09/2026 quem escrevia "estou no ar" e "toque este video" era o
