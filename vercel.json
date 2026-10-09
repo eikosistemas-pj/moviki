@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/tt",
+      "destination": "https://tiktok.me/moviki.oficial?ref=w61290063&message=%E2%80%8C%EF%BB%BF%E2%80%8C%EF%BB%BF%E2%80%8B%EF%BB%BF%E2%80%8C%E2%80%8D%E2%80%8B%EF%BB%BF%E2%80%8B%E2%80%8C%E2%80%8B%EF%BB%BF%E2%80%8B%E2%80%8D%E2%80%8B%EF%BB%BF%E2%80%8D%E2%80%8C%E2%80%8B%EF%BB%BF%E2%80%8B%E2%80%8B%E2%80%8B%EF%BB%BF%E2%80%8B%E2%80%8B%E2%80%8B%EF%BB%BF%E2%80%8C%E2%80%8D%E2%80%8B%EF%BB%BF%E2%80%8B%EF%BB%BFOi%2C%20Moviki%21%20Quero%20conhecer.",
+      "permanent": false
+    },
+    {
+      "source": "/ig",
+      "destination": "https://ig.me/m/moviki.oficial?ref=qr",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/pp/:slug",
