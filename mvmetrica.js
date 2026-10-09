@@ -60,6 +60,12 @@
  *  - versao cadastro1 (mesmo dia): o botao de criar conta da /aovivo leva
  *    &ramo=<ramo da pagina>, e o painel abre o cadastro com o ramo escolhido.
  *
+ * 09/10/2026 (versao origem1) — AS UTMs ATRAVESSAM PARA O PAINEL SEM ANUNCIO:
+ *  - Antes so o clique de anuncio (fbc) decorava os links para o painel. Quem
+ *    chegava pelo direct do Instagram (ManyChat), QR ou parceiro com UTM e
+ *    criava a conta pelo botao da /aovivo chegava no painel sem a UTM, e o
+ *    funil do dono contava "sem origem". Agora a UTM vai junto mesmo sem fbc.
+ *
  * 25/09/2026 (versao medicao3) — "NAO MEDIR" NAO CARREGA NADA DO GOOGLE:
  *  - Com mv_medicao=nao o gtag.js nem e baixado (antes baixava e so ficava
  *    com analytics_storage negado, o que ainda manda sinal sem cookie).
@@ -185,13 +191,22 @@
       var href = a.getAttribute('href') || '';
       if (!/app\.moviki\.com\.br/i.test(href)) return;
       var fbc = lerSess(MV_FBC);
-      if (!fbc) return;                                  // sem anuncio, sem sujeira na URL
-      if (/[?&]mvfbc=/.test(href)) { a.setAttribute('data-mvfb', '1'); return; }
-      var extra = 'mvfbc=' + encodeURIComponent(fbc);
-      var fbp = lerSess(MV_FBP);
-      if (fbp) extra += '&mvfbp=' + encodeURIComponent(fbp);
       var utm = lerSess(MV_UTM);
-      if (utm && !/[?&]utm_source=/.test(href)) extra += '&' + utm;
+      /* 09/10/2026: as UTMs atravessam o salto MESMO sem clique de anuncio —
+         quem vem do direct do Instagram (ManyChat) ou de um QR chega organico
+         na /aovivo e, sem isto, o cadastro no painel perdia a origem. Sem
+         anuncio e sem UTM, nada muda na URL. */
+      if (!fbc && !utm) return;
+      if (/[?&]mvfbc=/.test(href) || (!fbc && /[?&]utm_source=/.test(href))) { a.setAttribute('data-mvfb', '1'); return; }
+      var partes = [];
+      if (fbc) {
+        partes.push('mvfbc=' + encodeURIComponent(fbc));
+        var fbp = lerSess(MV_FBP);
+        if (fbp) partes.push('mvfbp=' + encodeURIComponent(fbp));
+      }
+      if (utm && !/[?&]utm_source=/.test(href)) partes.push(utm);
+      if (!partes.length) { a.setAttribute('data-mvfb', '1'); return; }
+      var extra = partes.join('&');
       var base = href.split('#');
       var hash = base.length > 1 ? ('#' + base.slice(1).join('#')) : '';
       a.setAttribute('href', base[0] + (base[0].indexOf('?') >= 0 ? '&' : '?') + extra + hash);
