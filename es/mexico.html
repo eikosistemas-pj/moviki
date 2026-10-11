@@ -4,29 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <!--
-  es/mexico.html — versao 2026-10-07-pruebamx (P75, item C1).
-  Pagina de TESTE DE INTERESSE no Mexico. O Moviki ainda NAO vende no Mexico: a pagina diz isso com clareza
-  depois do clique e NAO coleta nenhum dado pessoal (sem formulario, sem e-mail, sem telefone).
-  Mede so cliques por plano (evento GA4 "interes_pais", com pais e plano), com o mesmo consentimento do
-  mvmetrica.js (chave mv_medicao no localStorage), mas com o aviso em espanhol e sem carregar o mvmetrica.js
-  (o aviso dele e em portugues e o arquivo e identico nos repos moviki e moviki-app: nao se mexe nele por isso).
+  es/mexico.html — versao 2026-10-10-neni (P76 item M1; antes 2026-10-07-pruebamx, P77 item C1).
+  Pagina da NENI (vendedora que ja faz live) e TESTE DE INTERESSE no Mexico. O Moviki ainda NAO vende no
+  Mexico: a pagina diz isso com clareza depois do clique e NAO coleta nenhum dado pessoal (sem formulario,
+  sem e-mail, sem telefone). O dominio moviki.com.mx redireciona para ca (GoDaddy, 301).
+  Mede so cliques (evento GA4 "interes_pais": pais, plano e, se veio do anuncio, ramo), com o mesmo
+  consentimento do mvmetrica.js (chave mv_medicao), aviso em espanhol e sem carregar o mvmetrica.js.
+  plano = general | pro | premium | enterprise | fundadora. ramo = lista fechada (ropa, paca, cosmeticos,
+  perfumeria, bisuteria, joyeria, calzado, lenceria), por ?ramo= ou utm_content=; fora da lista, ignorado.
   Fora do menu, fora do sitemap e com noindex: so recebe trafego quando o Paulo decidir rodar o teste.
-  Precos: proposta da versao 2 de R - Precos por pais (IVA incluido). Trocar aqui se o Paulo mudar.
-  Regras: sem marca de terceiro; sem promessa de venda ou de publico; "prueba gratis", nunca "trial".
+  Na abertura: os botoes trocam de "me interesa" para o cadastro (com a camada de idiomas no painel).
+  Precos: versao 2 de R - Precos por pais (IVA incluido). Fundadoras Mexico: aprovada pelo Paulo em 07/10.
+  Regras: sem marca de terceiro (Spin by OXXO e Nu so como meio de pagamento, na pergunta do cartao);
+  sem promessa de venda ou de publico; "prueba gratis", nunca "trial".
 -->
 <meta http-equiv="Content-Security-Policy"
   content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#050b14">
-<title>Moviki: haz el live de tu tienda desde el celular</title>
-<meta name="description" content="Moviki llega pronto a México: live de tu tienda para los clientes que ya te compran. Sin app, sin mínimo de seguidores y sin comisión por venta.">
+<title>Moviki: tu live, tus clientas, tus ventas. Sin comisión.</title>
+<meta name="description" content="Moviki llega pronto a México: vende en vivo con apartado con plazo de pago, todos los pedidos en un solo lugar y sin comisión por venta.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Moviki">
 <meta property="og:locale" content="es_MX">
 <meta property="og:url" content="https://www.moviki.com.br/es/mexico.html">
-<meta property="og:title" content="Haz el live de tu tienda desde el celular">
-<meta property="og:description" content="Para los clientes que ya te compran. Sin app, sin mínimo de seguidores y sin comisión por venta. Próximamente en México.">
+<meta property="og:title" content="Tu live, tus clientas, tus ventas. Sin comisión.">
+<meta property="og:description" content="¿Te apartan y no pagan? Apartado con plazo de pago y los pedidos de tu live en un solo lugar. Próximamente en México.">
 <meta property="og:image" content="https://www.moviki.com.br/ogmoviki.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon512.png">
@@ -46,7 +50,7 @@
   gtag('consent','default',{ad_storage:'denied',ad_user_data:nao?'denied':'granted',ad_personalization:'denied',analytics_storage:nao?'denied':'granted',functionality_storage:'granted',security_storage:'granted'});
   gtag('set','url_passthrough',true);
   gtag('js',new Date());
-  gtag('config',GA,{page_title:'es-mexico'});
+  gtag('config',GA,{page_title:'es-mexico-neni'});
   var carregado=false;
   function carregar(){ if(carregado) return; carregado=true; try{ var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id='+GA; document.head.appendChild(s); }catch(e){} }
   if(!nao) carregar();
@@ -135,10 +139,32 @@ footer a{color:var(--texto2)}
 #avisoMed button{cursor:pointer;border-radius:10px;padding:8px 14px;font:600 13px system-ui,sans-serif}
 #avisoMed .si{border:0;background:var(--ciano);color:#04121f}
 #avisoMed .no{border:1px solid rgba(234,246,255,.35);background:transparent;color:var(--texto)}
+.dor{background:linear-gradient(160deg,rgba(255,207,77,.10),rgba(255,207,77,.02));border:1px solid rgba(255,207,77,.30);border-radius:22px;padding:24px;display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:start;margin-top:28px;text-align:left}
+.dor img{width:56px;height:56px;object-fit:contain}
+.dor h3{font-size:20px;margin-bottom:6px}
+.dor p{color:var(--texto2);font-size:15.5px}
+.dor p+p{margin-top:8px}
+.cards.dois{grid-template-columns:repeat(2,1fr)}
+.fund{background:linear-gradient(160deg,rgba(34,211,154,.12),rgba(0,102,255,.06));border:1px solid rgba(34,211,154,.35);border-radius:24px;padding:26px;max-width:820px;margin:28px auto 0;text-align:left}
+.fund ul{list-style:none;display:grid;gap:10px;margin:14px 0 20px}
+.fund li{padding-left:26px;position:relative;color:var(--texto2)}
+.fund li:before{content:"✓";position:absolute;left:0;color:var(--verde);font-weight:800}
+.fund .troca{font-size:14px;color:var(--texto3);margin-bottom:18px}
+.faq{max-width:820px;margin:28px auto 0;display:grid;gap:12px;text-align:left}
+.faq details{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:700;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--ciano);font-size:22px;line-height:1}
+.faq details[open] summary:after{content:"–"}
+.faq details p{color:var(--texto2);font-size:15px;padding-bottom:16px}
+.faq details p+p{margin-top:-8px}
+.ramo{display:none;margin-top:6px;font-size:14px;font-weight:600;color:var(--ouro)}
+.ramo.on{display:block}
 @media (max-width:860px){
-  .cards,.planos{grid-template-columns:1fr}
+  .cards,.planos,.cards.dois{grid-template-columns:1fr}
   section{padding:48px 0}
   .hero{padding:30px 0 44px}
+  .dor{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -153,16 +179,17 @@ footer a{color:var(--texto2)}
 
 <section class="hero">
   <div class="wrap">
-    <span class="kick"><i></i>Live shopping para tiendas pequeñas</span>
-    <h1>Haz el live de tu tienda <em>para los clientes que ya te compran</em></h1>
-    <p class="lead">Mandas el link por WhatsApp, tus clientes entran, ven el producto en vivo y te piden en el chat. Todo desde tu celular.</p>
+    <span class="kick"><i></i>Para las que venden en vivo</span>
+    <h1>Tu live, tus clientas, tus ventas. <em>Sin comisión.</em></h1>
+    <p class="ramo" id="ramoTxt"></p>
+    <p class="lead">Mandas el link por WhatsApp, tus clientas entran sin bajar app, apartan en el live y tienen un plazo para pagarte. Todos los pedidos quedan en un solo lugar.</p>
     <div class="ctas">
       <button class="btn btn-pri" type="button" data-plan="general">Quiero Moviki en México</button>
       <a class="btn btn-sec" href="#planes">Ver precios</a>
     </div>
     <div class="micro">
-      <span>Sin app ni estudio</span>
       <span>Sin mínimo de seguidores</span>
+      <span>Sin bajar app</span>
       <span>0% de comisión por venta</span>
     </div>
     <div class="gracias" id="gracias1" role="status" aria-live="polite"></div>
@@ -171,13 +198,21 @@ footer a{color:var(--texto2)}
 
 <section>
   <div class="wrap centro">
-    <span class="kick"><i></i>Por qué Moviki</span>
-    <h2>Tus clientes, <em>tu live</em></h2>
-    <p class="lead">Las redes te presentan clientes nuevos. Moviki es para vender otra vez a los que ya son tuyos.</p>
-    <div class="cards" style="text-align:left">
-      <div class="card"><img src="/icones-premium/zero-comissao.png" alt="" width="44" height="44" loading="lazy"><h3>Sin comisión por venta</h3><p>Pagas una mensualidad fija. Lo que vendes en el live es tuyo y te pagan directo a ti.</p></div>
-      <div class="card"><img src="/icones-premium/live.png" alt="" width="44" height="44" loading="lazy"><h3>Sin mínimo de seguidores</h3><p>Abres el live desde el panel con cero seguidores. Tu público es tu lista de WhatsApp, tu Instagram y tu mostrador.</p></div>
-      <div class="card"><img src="/icones-premium/loja.png" alt="" width="44" height="44" loading="lazy"><h3>La página es solo tuya</h3><p>En tu live no aparece la competencia. Y en el Enterprise, quien prefiere ir a la tienda toca "Cómo llegar".</p></div>
+    <span class="kick"><i></i>El apartado</span>
+    <h2>¿Te apartan <em>y no pagan?</em></h2>
+    <div class="dor">
+      <img src="/icones-premium/alerta.png" alt="" width="56" height="56" loading="lazy">
+      <div>
+        <h3>Apartado con plazo de pago</h3>
+        <p>Tu clienta aparta la pieza en el live y tiene un plazo para pagarte. Si no paga, la pieza vuelve sola para la siguiente clienta.</p>
+        <p>Ya no tienes que perseguir a nadie por mensaje ni guardar la pieza días enteros.</p>
+      </div>
+    </div>
+    <div class="cards dois" style="text-align:left">
+      <div class="card"><img src="/icones-premium/chat.png" alt="" width="44" height="44" loading="lazy"><h3>Los pedidos en un solo lugar</h3><p>Cada pedido del live queda anotado con nombre, piezas y si ya pagó. Nada se pierde en los comentarios.</p></div>
+      <div class="card"><img src="/icones-premium/whatsapp.png" alt="" width="44" height="44" loading="lazy"><h3>Entran por tu link de WhatsApp</h3><p>Tus clientas abren el link desde el celular y compran desde el navegador. No bajan nada.</p></div>
+      <div class="card"><img src="/icones-premium/live.png" alt="" width="44" height="44" loading="lazy"><h3>Sin mínimo de seguidores</h3><p>Abres el live con cero seguidores. Tu público son tus clientas de siempre: tu grupo, tu lista y tus estados.</p></div>
+      <div class="card"><img src="/icones-premium/zero-comissao.png" alt="" width="44" height="44" loading="lazy"><h3>Lo que vendes es tuyo</h3><p>Pagas una mensualidad fija. Moviki no cobra comisión por tus ventas y tus clientas te pagan directo a ti.</p></div>
     </div>
   </div>
 </section>
@@ -187,9 +222,9 @@ footer a{color:var(--texto2)}
     <span class="kick"><i></i>Cómo funciona</span>
     <h2>Tres pasos, <em>desde el celular</em></h2>
     <div class="passos" style="text-align:left">
-      <div class="passo"><div><h3>Crea tu tienda</h3><p>Sube tus productos con foto y precio. Tu tienda queda con un link propio.</p></div></div>
-      <div class="passo"><div><h3>Avisa a tus clientes</h3><p>Manda el link del live por WhatsApp, estados e Instagram. Ellos entran sin bajar nada.</p></div></div>
-      <div class="passo"><div><h3>Vende en vivo</h3><p>Muestras el producto, respondes en el chat y recibes el pedido. Te pagan como ya te pagan hoy: transferencia, efectivo o tarjeta.</p></div></div>
+      <div class="passo"><div><h3>Sube tus piezas</h3><p>Foto y precio de cada pieza. Tu tienda queda con un link propio.</p></div></div>
+      <div class="passo"><div><h3>Haz un ensayo</h3><p>Prueba un live de práctica que nadie ve, para perder el miedo antes del primero.</p></div></div>
+      <div class="passo"><div><h3>Vende en vivo</h3><p>Manda el link por WhatsApp, muestra las piezas y recibe los apartados. Te pagan como hoy: transferencia o efectivo.</p></div></div>
     </div>
   </div>
 </section>
@@ -198,7 +233,7 @@ footer a{color:var(--texto2)}
   <div class="wrap centro">
     <span class="kick"><i></i>Precios en México</span>
     <h2>Precios <em>previstos</em></h2>
-    <p class="lead">Mensualidad fija, sin contrato de permanencia. Al abrir en México: 30 días de prueba gratis, sin tarjeta.</p>
+    <p class="lead">Mensualidad fija, sin contrato de permanencia. Al abrir en México: 30 días de prueba gratis, sin tarjeta y con 2 lives.</p>
     <div class="planos" style="text-align:left">
       <div class="plano">
         <div class="nome">Pro</div>
@@ -211,7 +246,7 @@ footer a{color:var(--texto2)}
         <div class="nome">Premium · con live</div>
         <div class="preco">MX$ 349 <small>/mes</small></div>
         <div class="iva">IVA incluido</div>
-        <ul><li>Todo lo del Pro</li><li>Live de hasta 1 hora</li><li>Hasta 30 personas viendo al mismo tiempo</li><li>Tu logo en el mapa y fotos de productos</li></ul>
+        <ul><li>Todo lo del Pro</li><li>Live de hasta 1 hora</li><li>Hasta 30 personas viendo al mismo tiempo</li><li>Apartados y pedidos del live</li></ul>
         <button class="btn btn-pri" type="button" data-plan="premium">Me interesa el Premium</button>
       </div>
       <div class="plano">
@@ -222,16 +257,48 @@ footer a{color:var(--texto2)}
         <button class="btn btn-sec" type="button" data-plan="enterprise">Me interesa el Enterprise</button>
       </div>
     </div>
-    <p class="nota">Precios previstos para la apertura; pueden cambiar antes de la venta. Moviki no promete ventas ni público: es la herramienta para que vendas a tus clientes.</p>
+    <p class="nota">Precios previstos para la apertura; pueden cambiar antes de la venta. Moviki no promete ventas ni público: es la herramienta para que vendas a tus clientas.</p>
     <div class="gracias" id="gracias2" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap centro">
+    <span class="kick"><i></i>Fundadoras México</span>
+    <h2>Las primeras 30, <em>acompañadas de cerca</em></h2>
+    <div class="fund">
+      <p class="lead" style="margin:0">Al abrir en México, las primeras 30 vendedoras entran como fundadoras:</p>
+      <ul>
+        <li>Precio de fundadora que no sube mientras renueves cada mes</li>
+        <li>Te acompañamos en tu primer live y en las primeras semanas</li>
+      </ul>
+      <p class="troca">A cambio: un live por semana y tu permiso para un video contando cómo te fue. Cupo limitado. Este clic solo cuenta tu interés: no te compromete a nada.</p>
+      <button class="btn btn-pri" type="button" data-plan="fundadora">Quiero ser fundadora</button>
+      <div class="gracias" id="gracias3" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap centro">
+    <span class="kick"><i></i>Preguntas</span>
+    <h2>Lo que <em>más nos preguntan</em></h2>
+    <div class="faq">
+      <details><summary>¿Necesito tarjeta de crédito?</summary><p>Para probar, no: los 30 días de prueba son sin tarjeta. Para pagar la mensualidad sirve tarjeta de débito. Si no tienes, puedes abrir gratis una cuenta como Spin by OXXO o Nu, cargarla con efectivo en un OXXO y pagar con esa tarjeta.</p></details>
+      <details><summary>¿Mis clientas tienen que bajar una app?</summary><p>No. Entran por el link que tú les mandas por WhatsApp y compran desde el navegador del celular.</p></details>
+      <details><summary>¿Cómo me pagan mis clientas?</summary><p>Directo a ti, como ya te pagan hoy: transferencia o efectivo. Tú confirmas en el panel cuando recibes. Confirma solo después de ver el dinero en tu banco.</p></details>
+      <details><summary>¿Moviki cobra comisión por mis ventas?</summary><p>No. Pagas una mensualidad fija y lo que vendes es tuyo.</p></details>
+      <details><summary>¿Necesito muchos seguidores?</summary><p>No hay mínimo. El live es para tus clientas de siempre: las de tu grupo, tu lista y tus estados de WhatsApp.</p></details>
+      <details><summary>¿Cuándo llega a México?</summary><p>Todavía no tiene fecha. Con el interés de vendedoras como tú decidimos cuándo abrir. Síguenos en Instagram @moviki.mx: ahí avisamos la apertura.</p></details>
+    </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p><b>Moviki todavía no está disponible en México.</b> Esta página mide cuántas tiendas se interesan para decidir cuándo abrimos.</p>
+    <p><b>Moviki todavía no está disponible en México.</b> Esta página mide cuántas vendedoras se interesan para decidir cuándo abrimos.</p>
     <p><b>Privacidad:</b> esta página no pide tu nombre, correo ni teléfono. Si lo aceptas, usamos una cookie de medición (Google Analytics) para contar visitas y clics. Ninguna cookie de publicidad. <a href="#" id="cambiarMed">Cambiar mi elección</a>.</p>
-    <p>Moviki es un producto de EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · Curitiba, Brasil · <a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a> · Instagram <b>@moviki.oficial</b></p>
+    <p>Moviki es un producto de EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · Curitiba, Brasil · <a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a> · Instagram <b>@moviki.mx</b></p>
   </div>
 </footer>
 
@@ -242,7 +309,7 @@ footer a{color:var(--texto2)}
 </div>
 
 <script>
-window.MOVIKI_VERSAO='2026-10-07-pruebamx';
+window.MOVIKI_VERSAO='2026-10-10-neni';
 (function(){
   var aviso=document.getElementById('avisoMed');
   function fechar(){ aviso.classList.remove('on'); }
@@ -251,14 +318,32 @@ window.MOVIKI_VERSAO='2026-10-07-pruebamx';
   document.getElementById('medNo').addEventListener('click',function(){ window.mvMx.recusar(); fechar(); });
   document.getElementById('cambiarMed').addEventListener('click',function(e){ e.preventDefault(); aviso.classList.add('on'); });
 
-  var NOMES={general:'Moviki',pro:'el plan Pro',premium:'el plan Premium',enterprise:'el plan Enterprise'};
+  /* Ramo do anuncio (?ramo= ou utm_content=): so escolhe um texto de uma lista fechada e
+     vai junto no evento. Valor fora da lista e ignorado (nada do endereco vira texto na tela). */
+  var RAMOS={
+    ropa:'ropa', moda:'ropa', paca:'ropa de paca', cosmeticos:'cosméticos', maquillaje:'cosméticos',
+    perfumeria:'perfumería', bisuteria:'bisutería', joyeria:'joyería', calzado:'calzado', lenceria:'lencería'
+  };
+  var CHAVE={ropa:'ropa', moda:'ropa', paca:'paca', cosmeticos:'cosmeticos', maquillaje:'cosmeticos', perfumeria:'perfumeria', bisuteria:'bisuteria', joyeria:'joyeria', calzado:'calzado', lenceria:'lenceria'};
+  var ramo='';
+  try{
+    var q=new URLSearchParams(location.search);
+    var r=String(q.get('ramo')||q.get('utm_content')||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z]/g,'');
+    if(Object.prototype.hasOwnProperty.call(RAMOS,r)){
+      ramo=CHAVE[r];
+      var t=document.getElementById('ramoTxt'); t.textContent='Para tiendas de '+RAMOS[r]+' que venden en vivo'; t.classList.add('on');
+    }
+  }catch(e){}
+
+  var NOMES={general:'Moviki',pro:'el plan Pro',premium:'el plan Premium',enterprise:'el plan Enterprise',fundadora:'ser fundadora'};
+  var ALVO={general:'gracias1',fundadora:'gracias3'};
   var ja={};
   function agradecer(alvo,plano){
     var g=document.getElementById(alvo);
     g.textContent='';
     var h=document.createElement('h3'); h.textContent='¡Gracias! Tu interés en '+NOMES[plano]+' quedó contado.';
-    var p1=document.createElement('p'); p1.textContent='Moviki todavía no está disponible en México. Con el interés de tiendas como la tuya decidimos cuándo abrir.';
-    var p2=document.createElement('p'); p2.textContent='Mientras tanto, síguenos en Instagram @moviki.oficial: ahí avisamos la apertura.';
+    var p1=document.createElement('p'); p1.textContent='Moviki todavía no está disponible en México. Con el interés de vendedoras como tú decidimos cuándo abrir.';
+    var p2=document.createElement('p'); p2.textContent='Mientras tanto, síguenos en Instagram @moviki.mx: ahí avisamos la apertura.';
     g.appendChild(h); g.appendChild(p1); g.appendChild(p2);
     g.classList.add('on');
   }
@@ -266,8 +351,8 @@ window.MOVIKI_VERSAO='2026-10-07-pruebamx';
   for(var i=0;i<botoes.length;i++){
     botoes[i].addEventListener('click',function(){
       var plano=this.getAttribute('data-plan');
-      if(!ja[plano]){ ja[plano]=true; window.mvMx.ev('interes_pais',{pais:'MX',plano:plano}); }
-      agradecer(plano==='general'?'gracias1':'gracias2',plano);
+      if(!ja[plano]){ ja[plano]=true; var p={pais:'MX',plano:plano}; if(ramo) p.ramo=ramo; window.mvMx.ev('interes_pais',p); }
+      agradecer(ALVO[plano]||'gracias2',plano);
     });
   }
 })();
