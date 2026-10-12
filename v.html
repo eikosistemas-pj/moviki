@@ -20,8 +20,12 @@
 <meta name="description" content="Confira se a pessoa que está falando com você é mesmo um parceiro autorizado do Moviki.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="favicon512.png">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://app.moviki.com.br; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
 <script src="/mvmetrica.js"></script>
+<!-- 2026-10-12-ramoqr: catalogo unico de ramos (mora no app). Se nao carregar,
+     a pagina segue igual: o ramo ainda vai para o cadastro, so a live de
+     exemplo do ramo cai na pagina geral. -->
+<script src="https://app.moviki.com.br/ramos.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -151,7 +155,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-10-07-reembolso'; /* antes 2026-09-10-foto-parceiro */
+window.MOVIKI_VERSAO = '2026-10-12-ramoqr'; /* 12/10: QR com ramo (?ramo=) -> cadastro ja no formulario com o ramo marcado e 'entender melhor' na live de exemplo do ramo */ /* antes 2026-10-07-reembolso */
 const app = initializeApp(firebaseConfig);
 
 /* APP CHECK — 03/09/2026.
@@ -186,6 +190,33 @@ function apelidoDaUrl(){
   let s = m ? decodeURIComponent(m[1]) : (new URLSearchParams(location.search).get('p') || '');
   s = String(s).toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,40);
   return s.length >= 3 ? s : '';
+}
+
+/* RAMO DO QR — 12/10/2026.
+   O cracha do dono (e, depois, o do parceiro) pode levar ?ramo=farmacia.
+   Aqui ele so viaja: vai no link do cadastro (o painel abre direto no
+   formulario com o ramo marcado) e decide o "entender melhor" — live de
+   exemplo do ramo na /aovivo, quando o ramo tem pagina; senao, a pagina geral.
+   Nunca vira HTML: so [a-z0-9-], e so entra em href via encodeURIComponent. */
+function ramoDaUrl(){
+  let r = '';
+  try{ r = new URLSearchParams(location.search).get('ramo') || ''; }catch(e){ r = ''; }
+  r = String(r).toLowerCase().slice(0,40);
+  try{ r = r.normalize('NFD').replace(/[\u0300-\u036f]/g,''); }catch(e){}
+  r = r.replace(/[^a-z0-9-]+/g,'-').replace(/^-+|-+$/g,'');
+  return r.length >= 2 ? r : '';
+}
+function ramoDoCatalogo(r){
+  try{ return (r && window.MOVIKI_RAMOS) ? window.MOVIKI_RAMOS.achar(r) : null; }catch(e){ return null; }
+}
+/* O catalogo vem com defer de outro dominio: espera ate 1,5 s por ele, e
+   segue sem ele se nao vier. A verificacao do parceiro nunca espera por isso. */
+function esperarCatalogo(){
+  return new Promise(res => {
+    if(window.MOVIKI_RAMOS) return res();
+    let n = 0;
+    const iv = setInterval(() => { if(window.MOVIKI_RAMOS || ++n > 30){ clearInterval(iv); res(); } }, 50);
+  });
 }
 
 function mesAno(iso){
@@ -250,15 +281,24 @@ function pintarAutorizado(d, apelido){
 
   const ref = encodeURIComponent(apelido);
   const utm = 'utm_source=parceiro&utm_medium=verificacao&utm_campaign=programa_parceiros&utm_content=' + ref;
+  /* Com ramo: criar=1 pula a escolha "vender / indicar" e o ramo marca o tipo
+     de negocio. Sem ramo, o link e exatamente o de antes. */
+  const rUrl = ramoDaUrl(), rCat = ramoDoCatalogo(rUrl);
+  const rk = rCat ? rCat.k : rUrl;
+  const cadRamo = rk ? ('&criar=1&ramo=' + encodeURIComponent(rk)) : '';
+  const comDemo = !!(rCat && rCat.d === 1);
+  const linkConhecer = comDemo
+    ? ('/aovivo?ramo=' + encodeURIComponent(rCat.k) + '&' + utm + '&ref=' + ref)
+    : ('/comerciantes.html?' + utm + '&ref=' + ref);
   el('depois').innerHTML = blocoExplica() +
     '<a class="btn" data-ev="verificar_cadastrar" ' +
-      'href="https://app.moviki.com.br/?ref=' + ref + '&' + utm + '">' +
+      'href="https://app.moviki.com.br/?ref=' + ref + cadRamo + '&' + utm + '">' +
       'Quero me cadastrar agora</a>' +
     '<div class="rodape-cta">Leva 2 minutos e come&ccedil;a gr&aacute;tis. ' +
       'A indica&ccedil;&atilde;o de <b>@APELIDO@</b> fica registrada.</div>' +
-    '<a class="btn calmo" data-ev="verificar_conhecer" ' +
-      'href="/comerciantes.html?' + utm + '&ref=' + ref + '">' +
-      'Prefiro entender melhor antes</a>' +
+    '<a class="btn calmo" data-ev="' + (comDemo ? 'verificar_live_ramo' : 'verificar_conhecer') + '" ' +
+      'href="' + linkConhecer + '">' +
+      (comDemo ? 'Ver uma live de exemplo do meu ramo' : 'Prefiro entender melhor antes') + '</a>' +
     '<div class="linhaZap"><a data-ev="verificar_zap" href="https://wa.me/554120186848?text=' +
       encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /p/' + apelido) +
       '" target="_blank" rel="noopener">ou fale direto com o Moviki</a></div>';
@@ -352,7 +392,7 @@ document.addEventListener('click', function(e){
 
 (async function(){
   const apelido = apelidoDaUrl();
-  try{ if(window.mvEv) mvEv('verificar_parceiro', { ref: apelido || 'sem_ref' }); }catch(_){}
+  try{ if(window.mvEv) mvEv('verificar_parceiro', { ref: apelido || 'sem_ref', ramo: ramoDaUrl() || 'sem_ramo' }); }catch(_){}
 
   if(!apelido){ pintarNegado('', false); mostrar(); return; }
 
@@ -361,6 +401,7 @@ document.addEventListener('click', function(e){
     if(!snap.exists()){ pintarNegado(apelido, false); mostrar(); return; }
     const d = snap.data() || {};
     if(d.ativo !== true){ pintarNegado(apelido, true); mostrar(); return; }
+    if(ramoDaUrl()) await esperarCatalogo();
     pintarAutorizado(d, apelido);
     mostrar();
   }catch(e){
