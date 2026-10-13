@@ -2,6 +2,10 @@
  * mvefeitos.js - EFEITOS VISUAIS das paginas de venda do site (repo moviki).
  * Marca de versao: digitar  mvEfeitos.versao  no console do navegador.
  * 13/10/2026 (fx1): primeira versao, na /aovivo (vale para todos os ramos).
+ * 13/10/2026 (fx2): home. Destaques estilo Instagram, palavra que troca, carrossel de
+ *                   arrastar no celular, barra fixa, mapa com o pino andando, pedidos
+ *                   chegando, coracao no post, preco que rola e cartoes flutuando.
+ *                   Nada muda na /aovivo: tudo novo so liga por chave nova do MV_FX.
  *
  * Por que existe (separado do mvmotion.js):
  *  - O mvmotion.js e o movimento BASE dos dois dominios (paineis e site) e segue
@@ -16,6 +20,8 @@
  *       <div data-fx="faixa" data-fx-a="item|item" data-fx-b="item|item"></div>
  *       <div data-fx="numeros" data-fx-itens="30|dias gratis;0|app para instalar"></div>
  *       <div data-fx="chat"></div>   <div data-fx="ramos"></div>   <div data-fx="selo"></div>
+ *       <div data-fx="destaques" data-fx-itens="Live|#aovivo|icone.png|vivo;Mapa|#mapa|icone.png"></div>
+ *       <span data-fx="troca" data-fx-palavras="loja|otica|boutique">loja</span>  (palavra que troca)
  *     Sem JS, o marcador fica vazio: a pagina continua igual a de antes.
  *
  * MV_FX (todos opcionais):
@@ -26,6 +32,16 @@
  *   botoes:'sel'       brilho passando no botao + seta andando
  *   coracoes:'#id'     coracoes subindo no telefone da live (o mesmo coracao da live.html)
  *   claro:'#id'        secao clara com ondas em cima e embaixo
+ *   ramosBase:'/aovivo' para onde o carrossel de ramos leva (padrao: a propria pagina)
+ *   arrasta:'sel'      grade de cartoes vira carrossel de arrastar no celular (<=700px)
+ *   arrastaFoco:'sel'  cartao que ja aparece centralizado no carrossel (ex.: plano Premium)
+ *   barra:{texto,sub,href,ev,some}  barra fixa de cadastro no celular; some quando
+ *                      um dos seletores de 'some' esta na tela ou o aviso de cookie aparece
+ *   mapaVivo:'sel'     o pino 'voce' anda pela rota do mapinha (.fn-mapa)
+ *   pedidos:'sel'      chega um pedido novo e um status muda (.pdTela)
+ *   curtir:'sel'       coracao grande no post, como dois toques no Instagram (.lp-post)
+ *   precos:'sel'       o preco rola quando muda (troca mensal/anual)
+ *   flutua:'sel'       o elemento flutua de leve
  *
  * REGRAS (Meta/Google/CONAR e regras do Paulo):
  *  - Numero na tela e numero de REGRA (30 dias, 2 lives, 3 toques, 0 app).
@@ -50,7 +66,7 @@
   // >>> CHAVE-MESTRA. false = desliga todos os efeitos deste arquivo. <<<
   var FX_LIGADO = true;
 
-  var VERSAO = '2026-10-13-fx1';
+  var VERSAO = '2026-10-13-fx2';
   var W = window, D = document, H = D.documentElement;
   if (W.mvEfeitos) return;
   var api = W.mvEfeitos = { versao: VERSAO, ligado: false };
@@ -140,6 +156,9 @@
     'padding-top:calc(clamp(46px,6vw,88px) + 46px)!important;padding-bottom:calc(clamp(46px,6vw,88px) + 46px)!important}',
     '.fxClaro::before{content:"";position:absolute;left:0;right:0;top:58px;bottom:58px;background:#eef5ff;z-index:-1}',
     '.fxClaro .avH2 em{background:linear-gradient(135deg,#0090c0,#0052cc);-webkit-background-clip:text;background-clip:text;color:transparent}',
+    '.fxClaro .lp-tit h2 em{color:#0077cc}',
+    '.fxClaro .lp-passo{background:#fff;border:1px solid #d3e2f4;border-radius:18px;padding:18px 14px;box-shadow:0 12px 30px rgba(20,60,120,.10)}',
+    '.fxClaro.lp-sec--faixa{border-block:0}',
     '.fxClaro .avPasso{box-shadow:0 12px 30px rgba(20,60,120,.10)}',
     '.fxOnda{position:absolute;left:0;right:0;height:60px;overflow:hidden;z-index:-1;pointer-events:none}',
     '.fxOnda--cima{top:0}',
@@ -187,8 +206,76 @@
     '.fxSelo .fxSelo__anel{transform-origin:60px 60px;animation:fxRoda 20s linear infinite}',
     '@keyframes fxRoda{to{transform:rotate(360deg)}}',
 
+    /* destaques estilo Instagram */
+    '.fxDest{display:flex;gap:16px;justify-content:center;overflow-x:auto;scrollbar-width:none;padding:6px 16px 4px;margin:6px auto 0;max-width:760px;position:relative;z-index:2}',
+    '.fxDest::-webkit-scrollbar{display:none}',
+    '.fxDest a{flex:0 0 auto;width:70px;text-align:center;text-decoration:none;color:var(--mv-txt-2,#c6d8ee);font-size:11.5px;font-weight:600;line-height:1.25}',
+    '.fxDest__anel{position:relative;display:block;width:66px;height:66px;margin:0 auto 6px;border-radius:50%;padding:3px;',
+    'background:conic-gradient(from var(--fxAng),#00D4FF,#0066FF,#25e39b,#00D4FF);animation:fxGira 6s linear infinite}',
+    '.fxDest__anel--vivo{background:conic-gradient(from var(--fxAng),#ff3b46,#ff8a00,#ff4d7d,#ff3b46);animation-duration:3.5s}',
+    '.fxDest__miolo{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:#0b1626;border:2px solid #060d18}',
+    '.fxDest__miolo img{width:58%;height:58%;object-fit:contain}',
+    '.fxDest__vivo{position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);font-size:8.5px;font-weight:800;letter-spacing:.6px;color:#fff;',
+    'background:#ff3b46;border:2px solid #060d18;border-radius:5px;padding:1px 5px;line-height:1.2}',
+    '@media(max-width:560px){.fxDest{justify-content:flex-start}}',
+
+    /* palavra que troca (cada palavra com o proprio gradiente: transform dentro de texto recortado some no Chrome) */
+    '.fxTroca{display:inline-grid;grid-template-columns:minmax(0,1fr);vertical-align:bottom;overflow:hidden;transition:width .5s cubic-bezier(.2,0,0,1)}',
+    '.fxTroca>span{white-space:nowrap;justify-self:center}',
+    '.fxTroca>span{grid-area:1/1;background:var(--mv-grad,linear-gradient(135deg,#00D4FF,#0066FF));-webkit-background-clip:text;background-clip:text;color:transparent;',
+    'transition:transform .55s cubic-bezier(.2,0,0,1),opacity .4s ease}',
+    '.fxTroca>span.fxFora{transform:translateY(105%);opacity:0}',
+    '.fxTroca>span.fxSai{transform:translateY(-105%);opacity:0}',
+
+    /* carrossel de arrastar no celular */
+    '@media(max-width:700px){',
+    '.fxArrasta{display:flex!important;gap:12px!important;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;',
+    'margin-inline:-16px!important;padding:18px 16px 10px!important;max-width:none!important;align-items:stretch!important}',
+    '.fxArrasta::-webkit-scrollbar{display:none}',
+    '.fxArrasta>*{flex:0 0 80%;max-width:340px;scroll-snap-align:center}',
+    '.fxArrasta>*:hover{transform:none!important}',
+    '.fxPontos{display:flex;justify-content:center;gap:6px;margin-top:6px}',
+    '.fxPontos i{width:6px;height:6px;border-radius:999px;background:rgba(143,166,196,.4);transition:width .25s,background .25s}',
+    '.fxPontos i.on{width:18px;background:#00D4FF}',
+    '}',
+    '@media(min-width:701px){.fxPontos{display:none}}',
+
+    /* barra fixa de cadastro */
+    '.fxBarra{position:fixed;left:0;right:0;bottom:0;z-index:55;padding:10px 16px calc(10px + env(safe-area-inset-bottom));text-align:center;',
+    'background:rgba(6,13,24,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(28,52,87,.7);',
+    'transform:translateY(0);transition:transform .3s cubic-bezier(.2,0,0,1)}',
+    '.fxBarra.fora{transform:translateY(115%)}',
+    '.fxBarra a{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;max-width:440px;margin:0 auto;text-decoration:none;font-weight:700;font-size:15.5px;',
+    'padding:14px 20px;border-radius:14px;background:linear-gradient(135deg,#2ee6a8,#0fb87f);color:#04121f;box-shadow:0 0 22px rgba(37,227,155,.42)}',
+    '.fxBarra small{display:block;font-size:11.5px;color:#8fa6c4;margin-top:4px}',
+    '@media(min-width:701px){.fxBarra{display:none}}',
+    '@media(max-width:700px){body.fxComBarra{padding-bottom:calc(84px + env(safe-area-inset-bottom))}}',
+
+    /* pedidos chegando */
+    '.fxPedNovo{animation:fxPedEntra .6s cubic-bezier(.05,.7,.1,1) both;box-shadow:0 0 0 1px rgba(37,227,155,.55),0 0 22px rgba(37,227,155,.25)}',
+    '@keyframes fxPedEntra{from{opacity:0;transform:translateY(-14px) scale(.97)}to{opacity:1;transform:none}}',
+    '.fxPedSai{animation:fxPedSai .45s ease both}',
+    '@keyframes fxPedSai{to{opacity:0;transform:translateY(10px)}}',
+    '.fxStNovo{background:rgba(37,227,155,.16)!important;color:#7dffc8!important;border-color:rgba(37,227,155,.5)!important}',
+    '.fxPopSt{animation:fxPop .45s cubic-bezier(.3,1.6,.5,1) both}',
+
+    /* coracao grande no post */
+    '.fxCurtida{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;margin:-13% 0 0 -13%;color:#fff;z-index:5;pointer-events:none;',
+    'filter:drop-shadow(0 6px 16px rgba(0,0,0,.4));animation:fxCurte 1.1s cubic-bezier(.2,0,0,1) forwards}',
+    '.fxCurtida svg{display:block;width:100%;height:100%}',
+    '@keyframes fxCurte{0%{transform:scale(0);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(.95)}45%{transform:scale(1)}80%{opacity:1}100%{transform:scale(1) translateY(-14px);opacity:0}}',
+    '.fxCurtiu{color:#ff4d7d!important;transition:color .2s}',
+
+    /* preco que rola */
+    '.fxRola{animation:fxRola .45s cubic-bezier(.05,.7,.1,1)}',
+    '@keyframes fxRola{from{opacity:0;transform:translateY(60%)}to{opacity:1;transform:none}}',
+
+    /* flutuar */
+    '.fxFlutua{animation:fxFlutua 6s ease-in-out infinite}',
+    '@keyframes fxFlutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}',
+
     /* reduzir movimento: tudo parado e visivel */
-    '@media(prefers-reduced-motion:reduce){.fxTrilho,.fxOnda svg,.fxBorda::before,.fxBrilho::after,.fxSeta,.fxSelo .fxSelo__anel,.fxDig i,.fxCor{animation:none!important}',
+    '@media(prefers-reduced-motion:reduce){.fxTrilho,.fxOnda svg,.fxBorda::before,.fxBrilho::after,.fxSeta,.fxSelo .fxSelo__anel,.fxDig i,.fxCor,.fxDest__anel,.fxFlutua,.fxRola,.fxPedNovo,.fxPopSt{animation:none!important}',
     '.fxBrilho::after{display:none}}',
     '@media print{.fxProg,.fxCoracoes{display:none}html.fxOn .fxNit,html.fxOn .fxCas>*{opacity:1!important;filter:none!important;transform:none!important}}'
   ].join('\n');
@@ -223,10 +310,33 @@
     n.setAttribute('data-mv-sem-motion', '');
     n.classList.remove('mv-rv', 'mv-rv-in');
   }
+  // Rede de seguranca: num salto grande (atalho, ancora, "voltar ao topo") o navegador as vezes
+  // nao entrega o aviso do IntersectionObserver. A rolagem confere quem ainda espera e esta na tela.
+  var esperando = [], conferirAgendado = false;
+  function conferir() {
+    conferirAgendado = false;
+    var vh = W.innerHeight || 700;
+    for (var i = esperando.length - 1; i >= 0; i--) {
+      var x = esperando[i], r = x.n.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vh * 0.92 && x.n.getClientRects().length) { esperando.splice(i, 1); x.solta(); }
+    }
+  }
+  function pedeConferir() { if (!conferirAgendado && esperando.length) { conferirAgendado = true; W.requestAnimationFrame(conferir); } }
+  W.addEventListener('scroll', pedeConferir, { passive: true });
+  W.addEventListener('hashchange', function () { setTimeout(pedeConferir, 60); });
   function quandoVisivel(n, fn, limiar) {
     if (!TEM_IO) { fn(); return; }
-    var io = new IntersectionObserver(function (es) {
-      for (var i = 0; i < es.length; i++) if (es[i].isIntersecting) { io.disconnect(); fn(); return; }
+    var feito = false, io = null, item = null;
+    function solta() {
+      if (feito) return; feito = true;
+      if (io) io.disconnect();
+      var k = esperando.indexOf(item); if (k >= 0) esperando.splice(k, 1);
+      fn();
+    }
+    item = { n: n, solta: solta };
+    esperando.push(item);
+    io = new IntersectionObserver(function (es) {
+      for (var i = 0; i < es.length; i++) if (es[i].isIntersecting) { solta(); return; }
     }, { threshold: limiar || 0, rootMargin: '0px 0px -8% 0px' });
     io.observe(n);
   }
@@ -302,28 +412,29 @@
   function numeros() {
     $all('[data-fx="numeros"]').forEach(function (m) {
       var lista = String(m.getAttribute('data-fx-itens') || '').split(';').map(function (p) {
-        var x = p.split('|'); return { v: parseInt(x[0], 10), t: (x[1] || '').trim() };
+        // valor|texto|sufixo|prefixo  (ex.: 0|de comissao por venda|%  ou  38|ramos com pagina propria||+)
+        var x = p.split('|'); return { v: parseInt(x[0], 10), t: (x[1] || '').trim(), su: x[2] || '', pr: x[3] || '' };
       }).filter(function (o) { return !isNaN(o.v) && o.t; });
       if (!lista.length) return;
       m.className = 'fxNums';
       var bs = [];
       lista.forEach(function (o) {
         var c = el('div', 'fxNum');
-        var b = el('b', null, String(o.v));
+        var b = el('b', null, o.pr + o.v + o.su);
         c.appendChild(b);
         var s = el('span', null, o.t);
         c.appendChild(s);
         m.appendChild(c);
-        bs.push({ b: b, v: o.v, de: o.v === 0 ? 9 : 0 });
+        bs.push({ b: b, v: o.v, de: o.v === 0 ? 9 : 0, su: o.su, pr: o.pr });
       });
       if (!ANIMA) return;
-      bs.forEach(function (x) { x.b.textContent = String(x.de); });
+      bs.forEach(function (x) { x.b.textContent = x.pr + x.de + x.su; });
       quandoVisivel(m, function () {
         var t0 = null, dur = 1300;
         function passo(t) {
           if (t0 === null) t0 = t;
           var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
-          bs.forEach(function (x) { x.b.textContent = String(Math.round(x.de + (x.v - x.de) * e)); });
+          bs.forEach(function (x) { x.b.textContent = x.pr + Math.round(x.de + (x.v - x.de) * e) + x.su; });
           if (p < 1) W.requestAnimationFrame(passo);
         }
         W.requestAnimationFrame(passo);
@@ -530,9 +641,11 @@
   function linkDoRamo(k) {
     var q;
     try { q = new URLSearchParams(location.search); } catch (e) { q = null; }
-    if (!q) return location.pathname + '?ramo=' + encodeURIComponent(k);
+    var base = CFG.ramosBase || location.pathname;
+    if (!q) return base + '?ramo=' + encodeURIComponent(k);
+    q.delete('utm_content');
     q.set('ramo', k);
-    return location.pathname + '?' + q.toString();
+    return base + '?' + q.toString();
   }
   function ramos() {
     $all('[data-fx="ramos"]').forEach(function (m) {
@@ -548,9 +661,9 @@
         a.setAttribute('data-ev', 'aovivo_carrossel_ramo');
         var tel = el('span', 'fxRamo__tel');
         var pic = D.createElement('picture');
-        var so = D.createElement('source'); so.type = 'image/webp'; so.srcset = 'ramos/' + r[0] + '.webp' + V_RAMOS; pic.appendChild(so);
+        var so = D.createElement('source'); so.type = 'image/webp'; so.srcset = '/ramos/' + r[0] + '.webp' + V_RAMOS; pic.appendChild(so);
         var im = D.createElement('img');
-        im.src = 'ramos/' + r[0] + '.jpg' + V_RAMOS; im.width = 540; im.height = 1168;
+        im.src = '/ramos/' + r[0] + '.jpg' + V_RAMOS; im.width = 540; im.height = 1168;
         im.loading = 'lazy'; im.decoding = 'async'; im.alt = '';
         im.addEventListener('error', function () { if (a.parentNode) a.parentNode.removeChild(a); });
         pic.appendChild(im); tel.appendChild(pic); a.appendChild(tel);
@@ -605,12 +718,283 @@
     });
   }
 
+
+  /* ================================================================== */
+  /* fx2 - HOME                                                           */
+  /* ================================================================== */
+
+  /* 13. destaques estilo Instagram (atalhos para as secoes) */
+  function destaques() {
+    $all('[data-fx="destaques"]').forEach(function (m) {
+      var lista = String(m.getAttribute('data-fx-itens') || '').split(';').map(function (p) {
+        var x = p.split('|'); return { t: (x[0] || '').trim(), h: (x[1] || '').trim(), i: (x[2] || '').trim(), v: (x[3] || '').trim() === 'vivo' };
+      }).filter(function (o) { return o.t && /^#[a-zA-Z0-9_-]+$/.test(o.h) && D.querySelector(o.h); });
+      if (lista.length < 2) return;
+      m.className = 'fxDest';
+      m.setAttribute('role', 'navigation');
+      m.setAttribute('aria-label', 'Atalhos da página');
+      tomarDoMotion(m);
+      lista.forEach(function (o) {
+        var a = el('a'); a.href = o.h; a.setAttribute('data-ev', 'destaque_' + o.h.slice(1));
+        var anel = el('span', 'fxDest__anel' + (o.v ? ' fxDest__anel--vivo' : ''));
+        var mio = el('span', 'fxDest__miolo');
+        if (o.i && /^[a-z0-9-]+\.(png|webp)$/.test(o.i)) {
+          var im = D.createElement('img'); im.src = '/icones-premium/' + o.i; im.alt = ''; im.width = 64; im.height = 64; im.decoding = 'async';
+          im.addEventListener('error', function () { im.style.display = 'none'; });
+          mio.appendChild(im);
+        }
+        anel.appendChild(mio);
+        if (o.v) anel.appendChild(el('span', 'fxDest__vivo', 'AO VIVO'));
+        a.appendChild(anel);
+        a.appendChild(D.createTextNode(o.t));
+        m.appendChild(a);
+      });
+      if (REDUZ) $all('.fxDest__anel', m).forEach(function (n) { n.style.animation = 'none'; });
+    });
+  }
+
+  /* 14. palavra que troca (a largura acompanha a palavra da vez, sem buraco em volta) */
+  function troca() {
+    $all('[data-fx="troca"]').forEach(function (m) {
+      var pal = itens(m.getAttribute('data-fx-palavras'));
+      var atual = (m.textContent || '').trim();
+      if (!atual || pal.length < 2) return;
+      if (pal.indexOf(atual) < 0) pal.unshift(atual);
+      m.className = 'fxTroca';
+      m.textContent = '';
+      var sp = pal.map(function (t, i) {
+        var s = el('span', i ? 'fxFora' : null, t);
+        if (i) s.setAttribute('aria-hidden', 'true');
+        m.appendChild(s);
+        return s;
+      });
+      function larg(s) { m.style.width = Math.ceil(s.getBoundingClientRect().width) + 'px'; }
+      function daVez() { return sp.filter(function (x) { return !x.className; })[0] || sp[0]; }
+      function remede() { m.style.transition = 'none'; larg(daVez()); void m.offsetWidth; m.style.transition = ''; }
+      larg(sp[0]);
+      try { if (D.fonts && D.fonts.ready) D.fonts.ready.then(remede); } catch (e) {}
+      W.addEventListener('load', remede);
+      W.addEventListener('resize', remede);
+      if (REDUZ) return;
+      var i = 0, vis = !TEM_IO, timer = null;
+      function passo() {
+        timer = null;
+        if (!vis || D.hidden) return;
+        var a = sp[i], b = sp[(i + 1) % sp.length];
+        i = (i + 1) % sp.length;
+        a.classList.add('fxSai');
+        b.classList.remove('fxFora', 'fxSai');
+        larg(b);
+        setTimeout(function () { a.classList.remove('fxSai'); a.classList.add('fxFora'); }, 560);
+        timer = setTimeout(passo, i === 0 ? 3400 : 2200);
+      }
+      function liga() { if (!timer && vis && !D.hidden) timer = setTimeout(passo, i === 0 ? 3000 : 2200); }
+      if (TEM_IO) new IntersectionObserver(function (es) { vis = !!(es[0] && es[0].isIntersecting); if (vis) liga(); }).observe(m);
+      D.addEventListener('visibilitychange', liga);
+      liga();
+    });
+  }
+
+  /* 15. grade de cartoes vira carrossel de arrastar no celular */
+  function arrasta() {
+    if (!CFG.arrasta) return;
+    $all(CFG.arrasta).forEach(function (g) {
+      if (g.children.length < 2) return;
+      g.classList.add('fxArrasta');
+      tomarDoMotion(g);
+      var pts = el('div', 'fxPontos');
+      pts.setAttribute('aria-hidden', 'true');
+      var bol = [];
+      for (var i = 0; i < g.children.length; i++) { var b = el('i'); pts.appendChild(b); bol.push(b); }
+      if (g.nextSibling) g.parentNode.insertBefore(pts, g.nextSibling); else g.parentNode.appendChild(pts);
+      function marca(k) { bol.forEach(function (b, j) { b.classList.toggle('on', j === k); }); }
+      marca(0);
+      if (TEM_IO) {
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) marca(Array.prototype.indexOf.call(g.children, e.target)); });
+        }, { root: g, threshold: 0.6 });
+        for (var j = 0; j < g.children.length; j++) io.observe(g.children[j]);
+      }
+      // cartao que ja nasce no centro (ex.: Premium)
+      if (CFG.arrastaFoco) {
+        var f = g.querySelector(CFG.arrastaFoco);
+        if (f) W.requestAnimationFrame(function () {
+          if (g.scrollWidth <= g.clientWidth + 4) return;
+          g.scrollLeft = Math.max(0, f.offsetLeft - g.offsetLeft - (g.clientWidth - f.offsetWidth) / 2);
+        });
+      }
+    });
+  }
+
+  /* 16. barra fixa de cadastro no celular */
+  function barra() {
+    var c = CFG.barra;
+    if (!c || !c.href || !/^https:\/\/app\.moviki\.com\.br\//.test(c.href)) return;
+    var b = el('div', 'fxBarra fora');
+    var a = el('a', null, c.texto || 'Começar grátis');
+    a.href = c.href;
+    if (c.ev) a.setAttribute('data-ev', c.ev);
+    b.appendChild(a);
+    if (c.sub) b.appendChild(el('small', null, c.sub));
+    D.body.appendChild(b);
+    D.body.classList.add('fxComBarra');
+    if (!REDUZ) a.classList.add('fxBrilho');
+    if (!TEM_IO) { b.classList.remove('fora'); return; }
+    var vis = new Set(), passouTopo = false;
+    function decide() {
+      var aviso = D.getElementById('mvAvisoMed');
+      var some = vis.size > 0 || !passouTopo || (aviso && aviso.getClientRects().length);
+      b.classList.toggle('fora', !!some);
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) vis.add(e.target); else vis.delete(e.target); });
+      decide();
+    });
+    $all(c.some).forEach(function (n) { io.observe(n); });
+    var topo = D.querySelector(c.topo || 'section');
+    if (topo) new IntersectionObserver(function (es) {
+      var e = es[0]; passouTopo = !!(e && !e.isIntersecting && e.boundingClientRect.top < 0); decide();
+    }).observe(topo);
+    setInterval(decide, 1500);
+  }
+
+  /* 17. mapa: o pino "voce" anda pela rota do mapinha */
+  function mapaVivo() {
+    if (REDUZ || !CFG.mapaVivo) return;
+    $all(CFG.mapaVivo).forEach(function (m) {
+      var svg = m.querySelector('svg'), path = svg && svg.querySelector('path');
+      var eu = m.querySelector('.fn-mapa__eu'), onda = m.querySelector('.fn-mapa__onda');
+      if (!path || !eu || !path.getTotalLength) return;
+      var vb = (svg.getAttribute('viewBox') || '0 0 100 40').split(/\s+/).map(Number);
+      var L = path.getTotalLength(), vis = false, t0 = null, raf = null, DUR = 11000;
+      function quadro(t) {
+        raf = null;
+        if (!vis || D.hidden) { t0 = null; return; }
+        if (t0 === null) t0 = t - 0;
+        var p = ((t - t0) % DUR) / DUR;
+        var w = m.clientWidth, h = m.clientHeight;
+        var pt = path.getPointAtLength(L * (0.08 + 0.84 * p));
+        var x = pt.x / vb[2] * w - 0.5 * w, y = pt.y / vb[3] * h - 0.58 * h;
+        var op = p < 0.06 ? p / 0.06 : (p > 0.94 ? (1 - p) / 0.06 : 1);
+        // 'translate' separado: o pino ja usa transform:rotate(-45deg) e a onda anima transform
+        eu.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px'; eu.style.opacity = op.toFixed(2);
+        if (onda) { onda.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px'; onda.style.opacity = op.toFixed(2); }
+        raf = W.requestAnimationFrame(quadro);
+      }
+      function liga() { if (!raf && vis && !D.hidden) raf = W.requestAnimationFrame(quadro); }
+      if (TEM_IO) new IntersectionObserver(function (es) { vis = !!(es[0] && es[0].isIntersecting); liga(); }).observe(m);
+      D.addEventListener('visibilitychange', liga);
+    });
+  }
+
+  /* 18. pedidos chegando na tela de Pedidos (altura travada: nada abaixo pula) */
+  function pedidos() {
+    if (REDUZ || !CFG.pedidos) return;
+    $all(CFG.pedidos).forEach(function (t) {
+      var cards = $all('.pdCard', t);
+      if (cards.length < 2) return;
+      var cont = t.querySelector('.pdTopo span');
+      var st1 = cards[0].querySelector('.pdSt');
+      var ultimo = cards[cards.length - 1];
+      var orig = { cont: cont ? cont.textContent : '', st: st1 ? st1.textContent : '', stCls: st1 ? st1.className : '' };
+      var vis = false, rodando = false;
+      function novo() {
+        var c = el('div', 'pdCard fxPedNovo');
+        var l1 = el('div', 'pdL1'); l1.appendChild(el('b', null, '#0043 · Carla'));
+        l1.appendChild(el('span', 'pdSt pdSt--pronto fxStNovo', 'Novo · Pix pago'));
+        c.appendChild(l1);
+        c.appendChild(el('div', 'pdItem', '1× Bolsa tiracolo caramelo'));
+        c.appendChild(el('div', 'pdInfo', 'Retirada na loja · Pix pago'));
+        return c;
+      }
+      function ciclo() {
+        if (!vis || D.hidden) { rodando = false; return; }
+        rodando = true;
+        if (!t.style.height) { t.style.height = t.offsetHeight + 'px'; t.style.overflow = 'hidden'; }
+        var c = novo();
+        setTimeout(function () {
+          if (!vis) { rodando = false; return; }
+          ultimo.classList.add('fxPedSai');
+          setTimeout(function () { ultimo.style.display = 'none'; ultimo.classList.remove('fxPedSai'); }, 430);
+          cards[0].parentNode.insertBefore(c, cards[0]);
+          if (cont) { cont.textContent = '4 novos'; cont.classList.add('fxPopSt'); }
+        }, 900);
+        setTimeout(function () {
+          if (st1) { st1.textContent = 'Pronto para retirar'; st1.className = 'pdSt pdSt--pronto fxPopSt'; }
+        }, 3400);
+        setTimeout(function () {
+          c.classList.add('fxPedSai');
+          setTimeout(function () {
+            if (c.parentNode) c.parentNode.removeChild(c);
+            ultimo.style.display = '';
+            ultimo.classList.add('fxPedNovo');
+            setTimeout(function () { ultimo.classList.remove('fxPedNovo'); }, 700);
+            if (cont) { cont.textContent = orig.cont; cont.classList.remove('fxPopSt'); }
+            if (st1) { st1.textContent = orig.st; st1.className = orig.stCls; }
+            setTimeout(ciclo, 1800);
+          }, 430);
+        }, 7600);
+      }
+      if (TEM_IO) new IntersectionObserver(function (es) {
+        vis = !!(es[0] && es[0].isIntersecting);
+        if (vis && !rodando) setTimeout(ciclo, 600);
+      }, { threshold: 0.45 }).observe(t);
+    });
+  }
+
+  /* 19. coracao grande no post (dois toques do Instagram) */
+  function curtir() {
+    if (REDUZ || !CFG.curtir) return;
+    $all(CFG.curtir).forEach(function (post) {
+      var arte = post.querySelector('.lp-post__arte') || post;
+      var ic = post.querySelector('.lp-post__acoes span');
+      var vis = false, timer = null;
+      function uma() {
+        timer = null;
+        if (!vis || D.hidden) return;
+        var h = el('div', 'fxCurtida'); h.innerHTML = SVG_CORACAO; h.setAttribute('aria-hidden', 'true');
+        arte.appendChild(h);
+        if (ic) { ic.classList.add('fxCurtiu'); }
+        setTimeout(function () { if (h.parentNode) h.parentNode.removeChild(h); }, 1150);
+        setTimeout(function () { if (ic) ic.classList.remove('fxCurtiu'); }, 2600);
+        timer = setTimeout(uma, 5200);
+      }
+      if (TEM_IO) new IntersectionObserver(function (es) {
+        vis = !!(es[0] && es[0].isIntersecting);
+        if (vis && !timer) timer = setTimeout(uma, 900);
+      }, { threshold: 0.5 }).observe(post);
+    });
+  }
+
+  /* 20. preco que rola quando troca mensal/anual */
+  function precos() {
+    if (REDUZ || !CFG.precos || !W.MutationObserver) return;
+    $all(CFG.precos).forEach(function (p) {
+      var antes = p.textContent;
+      new MutationObserver(function () {
+        if (p.textContent === antes) return;
+        antes = p.textContent;
+        p.classList.remove('fxRola'); void p.offsetWidth; p.classList.add('fxRola');
+      }).observe(p, { childList: true, characterData: true, subtree: true });
+    });
+  }
+
+  /* 21. flutuar */
+  function flutua() {
+    if (REDUZ || !CFG.flutua) return;
+    $all(CFG.flutua).forEach(function (n, i) {
+      n.classList.add('fxFlutua');
+      n.style.animationDelay = (-i * 1.7) + 's';
+    });
+  }
+
   /* ------------------------------------------------------------------ */
   /* PARTIDA                                                              */
   /* ------------------------------------------------------------------ */
   function iniciar() {
     injetarCss();
-    var passos = [faixas, numeros, chat, ramos, selo, claro, bordas, botoes, progresso, nitido, cascata, coracoes];
+    var passos = [destaques, troca, faixas, numeros, chat, ramos, selo, claro, arrasta, bordas, botoes, barra, progresso, nitido, cascata, coracoes,
+                  mapaVivo, pedidos, curtir, precos, flutua];
     for (var i = 0; i < passos.length; i++) { try { passos[i](); } catch (e) {} }
     if (ANIMA && !location.hash) H.classList.add('fxOn');
     W.addEventListener('beforeprint', function () { H.classList.remove('fxOn'); });

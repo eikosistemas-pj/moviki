@@ -168,6 +168,10 @@
 
   <link rel="stylesheet" href="movikiui.css">
   <script src="/mvmetrica.js"></script>
+  <!-- 13/10/2026 - EFEITOS DE VITRINE: mvefeitos.js (regras e chave-mestra no topo do arquivo).
+       Desliga para um visitante com ?fx=0. "Reduzir movimento" do celular desliga tudo. -->
+  <script>window.MV_FX={progresso:1,nitido:'.lp-tit h2,.lp-final h2',cascata:'.lp-bul,.lp-faq,.lp-divulga-lista',borda:'.lp-plano--destaque',botoes:'.lp-btn-verde',coracoes:'.lp-lojaLaco',claro:'#como',ramosBase:'/aovivo',arrasta:'.lp-rec--3:not(.lp-rec--lista),.lp-rec--6,.lp-rec--dia,.lp-planos',arrastaFoco:'.lp-plano--destaque',barra:{texto:'Come\u00e7ar gr\u00e1tis',sub:'30 dias gr\u00e1tis \u00b7 sem cart\u00e3o',href:'https://app.moviki.com.br/?criar=1',ev:'cta_barra',some:'.lp-ctas,.lp-heroAcao,.lp-final,.lp-planos,.lp-foot',topo:'.lp-hero'},mapaVivo:'.fn-mapa',pedidos:'.pdTela',curtir:'.lp-post',precos:'.lp-plano .preco',flutua:'.pdFone,.lp-post'};</script>
+  <script src="/mvefeitos.js?v=20261013b" defer></script>
 
 <style>
 /* ===== FALLBACK DE TOKENS — segura a página se movikiui.css não carregar ===== */
@@ -1015,8 +1019,20 @@ a{color:inherit}
    secao propria, o recorte precisa vir junto — sem isto a pagina inteira
    ganha rolagem lateral no celular. */
 .lp-sec--mapa{overflow:hidden}
+/* 13/10/2026 - HERO NO CELULAR: o filme sobe para logo abaixo do titulo (igual a /aovivo, aprovado
+   em 02/10). Ordem: selo, titulo, filme, texto, lista e botoes. A coluna do topo vira
+   "display:contents" para os filhos entrarem na ordem junto com o filme. */
+@media(max-width:640px){
+  .lp-hero-grid.lp-hero-1col{display:flex;flex-direction:column}
+  .lp-hero-1col .lp-heroTopo{display:contents}
+  .lp-hero-1col .lp-tag{order:1;align-self:center}
+  .lp-hero-1col h1{order:2}
+  .lp-hero-1col .lp-heroVid{order:3;margin-top:6px}
+  .lp-hero-1col p.sub{order:4;margin:18px auto 4px}
+  .lp-hero-1col .lp-heroBaixo{order:5}
+}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-07-reembolso';</script>
+<script>window.MOVIKI_VERSAO='2026-10-13-efeitos';</script>
 <script>
 /* Reserva dos icones 3D — 21/09/2026: esta funcao ESTAVA no fim da pagina.
    O onerror de um PNG que falha dispara antes de o fim da pagina ser lido, e
@@ -1054,7 +1070,7 @@ window.lpIco = lpIco;
       </nav>
       <div class="lp-nav-cta">
         <a class="lp-entrar" href="https://app.moviki.com.br">Entrar</a>
-        <a class="mv-btn mv-btn--p lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_header">Começar grátis &nbsp;→</a>
+        <a class="mv-btn mv-btn--p lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_header">Começar grátis &nbsp;→</a>
       </div>
       <button class="lp-burger" type="button" aria-label="Abrir menu" aria-expanded="false" onclick="lpMenu(true)">☰</button>
     </div>
@@ -1080,7 +1096,7 @@ window.lpIco = lpIco;
       <a class="item" href="#parceiros" onclick="lpMenu(false)">Parceiros</a>
       <a class="item" href="#faq" onclick="lpMenu(false)">Dúvidas</a>
       <div style="margin-top:auto;display:grid;gap:10px;padding-top:20px">
-        <a class="mv-btn mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_menu">Começar grátis</a>
+        <a class="mv-btn mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_menu">Começar grátis</a>
         <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br">Entrar</a>
       </div>
     </div>
@@ -1100,7 +1116,7 @@ window.lpIco = lpIco;
         <span class="mv-tag lp-tag lp-tag--live">
           <b class="lp-tagAoVivo"><i aria-hidden="true"></i>AO VIVO</b>
           <span>Live shop para lojas<span class="lp-tagMais"> de shopping, de rua e de bairro</span></span></span>
-        <h1>O cliente não foi <span class="lp-nq">até a loja?</span><br><em>Leve a loja até ele, ao vivo.</em></h1>
+        <h1>O cliente não foi <span class="lp-nq">até a loja?</span><br><em>Leve a <span data-fx="troca" data-fx-palavras="loja|ótica|boutique|vitrine|padaria">loja</span> até ele, ao vivo.</em></h1>
         <p class="sub">Transmita pelo celular da loja, mostre o produto de perto e tire as dúvidas na hora. Quem assiste faz o pedido ali mesmo, pelo seu WhatsApp — e, no Enterprise, paga por Pix sem sair da live. Sem aplicativo para instalar e sem comissão por venda.</p>
       </div>
 
@@ -1142,7 +1158,7 @@ window.lpIco = lpIco;
 
         <div class="lp-heroAcao">
         <div class="lp-ctas">
-          <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_hero">Começar grátis</a>
+          <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_hero">Começar grátis</a>
           <a class="mv-btn mv-btn--fantasma mv-btn--g" href="#como" data-ev="cta_como">Ver como funciona ▷</a>
         </div>
 
@@ -1161,6 +1177,12 @@ window.lpIco = lpIco;
 
     </div>
   </section>
+
+  <!-- 13/10/2026 - DESTAQUES E FAIXAS (mvefeitos.js). Destaques = atalhos no formato dos destaques do
+       Instagram, para quem chega pela bio. Faixa so com REGRA do produto. Sem JS, os marcadores ficam vazios. -->
+  <div data-fx="destaques" data-fx-itens="Live|#aovivo|live.png|vivo;Mapa|#mapa|localizacao.png;Pedidos|#pedidos|presente.png;Cat&aacute;logo|#vender|cardapio.png;Planos|#planos|promocoes.png;D&uacute;vidas|#faq|chat.png"></div>
+  <div data-fx="faixa" data-fx-a="Ao vivo pelo celular|Sua loja no mapa|Pix direto na sua conta|Sem comiss&atilde;o por venda|30 dias gr&aacute;tis|Sem cart&atilde;o|Sem aplicativo para instalar" data-fx-b="Mostre|Responda|Venda|Seja encontrado"></div>
+  <div data-fx="numeros" data-fx-itens="30|dias gr&aacute;tis, sem cart&atilde;o;0|de comiss&atilde;o por venda|%;100|pessoas na mesma live (Enterprise);38|ramos com p&aacute;gina pr&oacute;pria||+"></div>
 
 
   <!-- ================= AO VIVO AGORA (16/09/2026) =================
@@ -1265,7 +1287,7 @@ window.lpIco = lpIco;
            que rolar para TRAS para agir. O convite agora vem no fim da
            cena, que e onde a vontade aparece. -->
       <div class="lp-ctas" style="margin-top:22px;justify-content:center">
-        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_live">Começar grátis</a>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_live">Começar grátis</a>
         <a class="mv-btn mv-btn--fantasma mv-btn--g" href="/aovivo" data-ev="cta_ver_aovivo">Ver o Modo Live ▷</a>
       </div>
       <p class="mv-muted" style="margin-top:12px;font-size:13px;text-align:center;max-width:720px;margin-inline:auto">O Modo Live faz parte dos planos Premium e Enterprise — e já vem liberado, em nível Premium, nos 30 dias de teste grátis. Nenhuma live fica gravada em servidor do Moviki, e o número de quem está assistindo é contado de verdade.</p>
@@ -1451,7 +1473,7 @@ window.lpIco = lpIco;
           <h3>Retirada na loja ou entrega</h3><p>O pedido chega com os itens e o contato do cliente. Você separa, e ele retira no balcão ou recebe em casa — no Premium, com taxa de entrega por bairro.</p></div>
       </div>
 
-      <ul class="lp-ramos" aria-label="Ramos que já vendem ao vivo">
+      <ul class="lp-ramos" aria-label="Ramos que podem vender ao vivo">
         <li>Moda feminina e masculina</li>
         <li>Calçados e esportes</li>
         <li>Moda infantil e bebê</li>
@@ -1462,8 +1484,11 @@ window.lpIco = lpIco;
         <li>Eletrônicos</li>
       </ul>
 
+      <!-- 13/10/2026 - carrossel "uma live para cada tipo de loja" (mvefeitos.js): leva para a /aovivo do ramo -->
+      <div data-fx="ramos"></div>
+
       <div class="lp-ctas" style="margin-top:24px;justify-content:center">
-        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_shopping">Começar grátis</a>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_shopping">Começar grátis</a>
         <a class="mv-btn mv-btn--fantasma mv-btn--g" href="/aovivo" data-ev="cta_shopping_aovivo">Ver o Modo Live ▷</a>
       </div>
     </div>
@@ -1499,7 +1524,7 @@ window.lpIco = lpIco;
       </div>
 
       <div class="lp-ctas" style="margin-top:22px;justify-content:center">
-        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_vender">Começar grátis</a>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_vender">Começar grátis</a>
         <a class="mv-btn mv-btn--fantasma mv-btn--g" href="#planos" data-ev="cta_vender_planos">Ver os planos</a>
       </div>
     </div>
@@ -1524,7 +1549,7 @@ window.lpIco = lpIco;
           <li><img class="ic3d ic3d--p" src="icones-premium/escudo.png" alt="" loading="lazy" onerror="lpIco(this,'🔒')">Código do pedido pra conferir na retirada e na entrega</li>
         </ul>
         <p class="mv-muted" style="font-size:13px;margin:0 0 18px">Pedidos com entrega são dos planos <b>Premium</b> e <b>Enterprise</b>. No Enterprise, todos os pedidos da live saem impressos de uma vez, com a lista do que separar.</p>
-        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_pedidos">Começar grátis</a>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_pedidos">Começar grátis</a>
       </div>
 
       <div aria-hidden="true">
@@ -1792,7 +1817,7 @@ window.lpIco = lpIco;
           <li><img class="ic3d" src="icones-premium/aberto.png" alt="" loading="lazy" onerror="lpIco(this,'🎚️')">
             <div><b>Você liga e desliga quando quiser</b><span>É um botão no seu painel, na aba <b>Divulgação e marca própria</b>. Sem autorização, nada é publicado.</span></div></li>
         </ul>
-        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_divulgacao">Quero ser divulgado</a>
+        <a class="mv-btn mv-btn--g lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_divulgacao">Quero ser divulgado</a>
       </div>
 
       <div class="lp-post">
@@ -1897,7 +1922,7 @@ window.lpIco = lpIco;
           <h3>Básico</h3><p class="desc">Pra começar a aparecer no mapa.</p>
           <div class="preco">Grátis</div><div class="ciclo">sem mensalidade</div>
           <ul><li>Localização ao vivo no mapa</li><li>Seu link personalizado</li><li>Status aberto/fechado e recado</li></ul>
-          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br" data-ev="cta_plano_basico">Começar grátis</a>
+          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br/?criar=1" data-ev="cta_plano_basico">Começar grátis</a>
         </div>
         <!-- 26/09/2026 - PLANOS: o selo "Mais escolhido" saiu. Sem lojista pagante
              real, era afirmacao falsa (CDC art. 37; politica de anuncio da Meta e
@@ -1909,7 +1934,7 @@ window.lpIco = lpIco;
           <div class="ciclo"><span data-ciclo-mensal>/mês · 30 dias grátis pra testar</span><span data-ciclo-anual hidden>/ano · 2 meses grátis</span></div>
           <ul><li>Tudo do Básico</li><li>Catálogo com categorias e preços</li><li>Promoções e eventos</li><li>Aviso de “acabando”</li></ul>
           <p class="mv-muted" style="margin:0 0 14px;font-size:12.5px">Modo Live e venda por Pix entram a partir do Premium.</p>
-          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br" data-ev="cta_plano_pro">Testar 30 dias grátis</a>
+          <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://app.moviki.com.br/?criar=1" data-ev="cta_plano_pro">Testar 30 dias grátis</a>
         </div>
         <div class="lp-plano lp-plano--destaque">
           <span class="lp-plano__selo">Para vender ao vivo</span>
@@ -1918,7 +1943,7 @@ window.lpIco = lpIco;
           <div class="ciclo"><span data-ciclo-mensal>/mês</span><span data-ciclo-anual hidden>/ano · 2 meses grátis</span></div>
           <ul><li>Tudo do Pró</li><li><b>Modo Live: transmita e venda ao vivo</b></li><li>Live de até 1 h, sacolinha de 5 produtos e até 30 pessoas assistindo</li><li><b>Catálogo que vende, com Pix na sua conta</b></li><li>Pedidos com retirada ou entrega, com taxa por bairro</li><li>Sua logo como pino no mapa</li><li>Galeria de fotos e cor da marca</li><li>Relatórios</li></ul>
           <p class="mv-muted" style="margin:0 0 14px;font-size:12.5px">No teste grátis de 30 dias o Modo Live já vem liberado: 2 lives de até 1 hora, sem cartão.</p>
-          <a class="mv-btn mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_plano_premium">Começar grátis com a live</a>
+          <a class="mv-btn mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_plano_premium">Começar grátis com a live</a>
         </div>
         <div class="lp-plano">
           <h3>Enterprise</h3><p class="desc">Pra quem vende em volume ou tem mais de uma loja.</p>
@@ -1940,7 +1965,7 @@ window.lpIco = lpIco;
   <!-- ================= CONFIANÇA ================= -->
   <section class="lp-sec lp-sec--faixa">
     <div class="mv-container">
-      <div class="lp-tit"><h2>Comece com a gente 💙</h2>
+      <div class="lp-tit"><div data-fx="selo"></div><h2>Comece com a gente 💙</h2>
         <p>O Moviki está começando agora, e a sua pode ser uma das primeiras lojas da sua cidade a vender ao vivo pelo celular. Sem pegadinha: teste por 30 dias, sem cartão, e veja funcionar antes de pagar qualquer coisa. No teste, o Modo Live já vem liberado.</p></div>
       <div class="lp-rec lp-rec--3">
         <div><img class="ic3d ic3d--g" src="icones-premium/promocoes.png" alt="" loading="lazy" onerror="lpIco(this,'🎁')"><h3>30 dias grátis</h3><p>Sem cartão de crédito.</p></div>
@@ -1982,7 +2007,7 @@ window.lpIco = lpIco;
           <p class="mv-muted" style="font-size:14.5px">Seja uma das primeiras lojas da sua cidade a vender ao vivo pelo Moviki.</p>
         </div>
         <div class="mv-col" style="gap:12px">
-          <a class="mv-btn mv-btn--g mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br" data-ev="cta_final">Começar grátis agora &nbsp;→</a>
+          <a class="mv-btn mv-btn--g mv-btn--bloco lp-btn-verde" href="https://app.moviki.com.br/?criar=1" data-ev="cta_final">Começar grátis agora &nbsp;→</a>
           <a class="mv-btn mv-btn--fantasma mv-btn--bloco" href="https://wa.me/554120186848" rel="noopener" data-ev="cta_whats"><img class="ic3d ic3d--p" src="icones-premium/whatsapp.png" alt="" style="width:24px;height:24px" onerror="lpIco(this,'💬')">Falar com especialista</a>
           <p class="mv-muted" style="text-align:center;margin:0">Teste grátis por 30 dias · Sem compromisso</p>
         </div>
