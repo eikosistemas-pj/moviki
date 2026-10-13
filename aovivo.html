@@ -42,6 +42,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="movikiui.css">
 <script src="/mvmetrica.js"></script>
+<!-- 13/10/2026 - EFEITOS DE VITRINE: mvefeitos.js (regras e chave-mestra no topo do arquivo).
+     Desliga para um visitante com ?fx=0. "Reduzir movimento" do celular desliga tudo. -->
+<script>window.MV_FX={progresso:1,nitido:'.avSec .avH2,.avFinal h2',cascata:'.avLista,.avFaq,.avTab tbody',borda:'.avCard--quente',botoes:'.avBtn--p',coracoes:'#avTel',claro:'#comofunciona'};</script>
+<script src="/mvefeitos.js?v=20261013" defer></script>
 
 <style>
 /* ===== REDE DE SEGURANCA DE TOKENS — se movikiui.css nao carregar, a pagina
@@ -351,7 +355,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-12-sertanejos';</script>
+<script>window.MOVIKI_VERSAO='2026-10-13-efeitos';</script>
 </head>
 
 <body>
@@ -668,6 +672,10 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
     </div>
   </div>
 </section>
+<!-- 13/10/2026 - FAIXAS E NUMEROS DE REGRA (mvefeitos.js). Numero aqui e so REGRA do produto:
+     nunca numero de cliente, nota ou venda. Sem JS, os dois marcadores ficam vazios. -->
+<div data-fx="faixa" data-fx-a="Ao vivo pelo seu celular|Sem instalar nada|30 dias gr&aacute;tis|Sem cart&atilde;o|Sem fidelidade|Duas lives no teste|Pix dentro da live no Enterprise" data-fx-b="Mostre|Responda|Venda em tempo real"></div>
+<div data-fx="numeros" data-fx-itens="30|dias gr&aacute;tis;2|lives no teste gr&aacute;tis;3|toques para entrar ao vivo;0|app para instalar"></div>
 
 <!-- ================= A DOR ================= -->
 <section class="avSec avSec--alt">
@@ -759,6 +767,8 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
         <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O cliente v&ecirc; o produto fixado, pergunta no chat e toca em &ldquo;Quero este&rdquo;, que abre o seu WhatsApp. No Enterprise, paga por Pix sem sair da live.</p>
       </div>
     </div>
+    <div data-fx="chat"></div>
+    <div data-fx="ramos"></div>
   </div>
 </section>
 
@@ -969,6 +979,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 <section class="avSec">
   <div class="avWrap">
     <div class="avFinal">
+      <div data-fx="selo"></div>
       <span class="avTag"><span class="avPonto"></span> Modo Live</span>
       <h2 style="margin-top:16px">Amanh&atilde; voc&ecirc; vai produzir de novo.<br>A diferen&ccedil;a &eacute; <em style="font-style:normal;color:var(--mv-ciano)">quem vai ver</em>.</h2>
       <p class="avLead" style="max-width:640px;margin-inline:auto">Ative o teste de 30 dias, monte a sacolinha da sua primeira live e abra a c&acirc;mera. Sem cart&atilde;o, sem fidelidade e sem instalar nada.</p>
