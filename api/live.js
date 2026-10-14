@@ -1,5 +1,9 @@
 /*!
- * MOVIKI api/live.js | versao 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ *
+ * 14/10/2026: o robo recusa a live aberta ao publico de quem esta no teste
+ * provisorio (e-mail ainda nao confirmado) com `email_nao_confirmado`; aqui so
+ * vira 403 com a mensagem. O ensaio continua liberado.
  *
  * 07/10/2026 (P75 fase 1, B7): LIVE DE ENSAIO. `iniciar` com `ensaio: true`
  * passa pelas MESMAS portas da live (plano, chave-mestra, teto de video,
@@ -738,6 +742,10 @@ module.exports = async (req, res) => {
     }
     if (reserva.erro === 'live_no_ar') {
       return responder(res, 409, { erro: 'live_no_ar', mensagem: 'Sua live esta no ar. Encerre a live antes de ensaiar.' });
+    }
+    if (reserva.erro === 'email_nao_confirmado') {
+      return responder(res, 403, { erro: 'email_nao_confirmado',
+        mensagem: 'Confirme seu e-mail para fazer a live aberta aos seus clientes. O ensaio, que ninguem ve, ja esta liberado.' });
     }
     if (reserva.erro === 'cota') {
       return responder(res, 403, {
