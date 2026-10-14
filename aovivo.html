@@ -83,6 +83,10 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 .avH3{font-size:18px;margin-bottom:8px}
 .avLead{font-size:clamp(15px,1.6vw,17.5px);line-height:1.68;color:var(--mv-txt-2)}
 .avMuted{font-size:13px;line-height:1.6;color:var(--mv-txt-3)}
+/* 13/10/2026: duvida vai para o WhatsApp (atendente de IA) ou para o direct (ManyChat) em vez de ir embora */
+.avDuvida{font-size:13.5px;line-height:1.55;color:var(--mv-txt-3);margin:4px 0 0}
+.avDuvida a{color:var(--mv-ciano);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.avFinal .avDuvida{margin-top:2px}
 .avCentro{text-align:center}
 .avCentro .avLead{max-width:760px;margin-inline:auto}
 
@@ -355,7 +359,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-13-efeitos';</script>
+<script>window.MOVIKI_VERSAO='2026-10-13-duvida';</script>
 </head>
 
 <body>
@@ -987,6 +991,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
         <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_final">Come&ccedil;ar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
         <a class="avBtn avBtn--s" href="/comerciantes.html" data-ev="aovivo_conhecer">Conhecer o Moviki inteiro</a>
       </div>
+      <p class="avDuvida">Ficou com d&uacute;vida? Pergunte no <a href="https://wa.me/554120186848?text=Oi!%20Vi%20a%20p%C3%A1gina%20da%20live%20no%20site%20e%20tenho%20uma%20d%C3%BAvida" rel="noopener" data-ev="aovivo_final_whats">WhatsApp</a> ou no <a href="https://ig.me/m/moviki.oficial?ref=w61527339" rel="noopener" data-ev="aovivo_final_direct">direct do Instagram</a>. A resposta &eacute; na hora.</p>
       <p class="avMuted" style="margin-top:6px">Medicamento, tabaco e os demais itens proibidos nas <a href="/regras-da-live.html">Regras da live</a> n&atilde;o podem ser vendidos ao vivo.</p>
     </div>
   </div>
@@ -1050,7 +1055,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
      quando o telefone esta inteiro na tela (para nao cobrir o chat da live). -->
 <div class="avBarra" id="avBarra">
   <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="aovivo_barra">Ativar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
-  <small>Sem cart&atilde;o &middot; sem fidelidade</small>
+  <small>Sem cart&atilde;o &middot; sem fidelidade &middot; d&uacute;vida? <a href="https://wa.me/554120186848?text=Oi!%20Vi%20a%20p%C3%A1gina%20da%20live%20no%20site%20e%20tenho%20uma%20d%C3%BAvida" rel="noopener" data-ev="aovivo_barra_whats" style="color:var(--mv-ciano);font-weight:700">WhatsApp</a></small>
 </div>
 <script>
 (function(){
