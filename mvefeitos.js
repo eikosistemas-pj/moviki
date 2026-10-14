@@ -6,6 +6,10 @@
  *                   arrastar no celular, barra fixa, mapa com o pino andando, pedidos
  *                   chegando, coracao no post, preco que rola e cartoes flutuando.
  *                   Nada muda na /aovivo: tudo novo so liga por chave nova do MV_FX.
+ * 13/10/2026 (fx3): palavra que troca embolava as palavras no Chrome de verdade. O titulo
+ *                   usa texto recortado no gradiente (background-clip:text) e esse recorte
+ *                   enxerga o texto dos filhos mesmo com opacity 0. Palavra fora agora fica
+ *                   visibility:hidden, que sai do recorte.
  *
  * Por que existe (separado do mvmotion.js):
  *  - O mvmotion.js e o movimento BASE dos dois dominios (paineis e site) e segue
@@ -66,7 +70,7 @@
   // >>> CHAVE-MESTRA. false = desliga todos os efeitos deste arquivo. <<<
   var FX_LIGADO = true;
 
-  var VERSAO = '2026-10-13-fx2';
+  var VERSAO = '2026-10-13-fx3';
   var W = window, D = document, H = D.documentElement;
   if (W.mvEfeitos) return;
   var api = W.mvEfeitos = { versao: VERSAO, ligado: false };
@@ -223,8 +227,8 @@
     '.fxTroca{display:inline-grid;grid-template-columns:minmax(0,1fr);vertical-align:bottom;overflow:hidden;transition:width .5s cubic-bezier(.2,0,0,1)}',
     '.fxTroca>span{white-space:nowrap;justify-self:center}',
     '.fxTroca>span{grid-area:1/1;background:var(--mv-grad,linear-gradient(135deg,#00D4FF,#0066FF));-webkit-background-clip:text;background-clip:text;color:transparent;',
-    'transition:transform .55s cubic-bezier(.2,0,0,1),opacity .4s ease}',
-    '.fxTroca>span.fxFora{transform:translateY(105%);opacity:0}',
+    'transition:transform .55s cubic-bezier(.2,0,0,1),opacity .4s ease,visibility 0s}',
+    '.fxTroca>span.fxFora{transform:translateY(105%);opacity:0;visibility:hidden}',
     '.fxTroca>span.fxSai{transform:translateY(-105%);opacity:0}',
 
     /* carrossel de arrastar no celular */
