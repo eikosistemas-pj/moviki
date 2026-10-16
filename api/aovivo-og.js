@@ -1,5 +1,6 @@
 /*!
- * MOVIKI api/aovivo-og.js | versao 2026-10-16-og-ramos | repo: moviki (site publico)
+ * MOVIKI api/aovivo-og.js | versao 2026-10-16-og-parceiro | repo: moviki (site publico)
+ * Antes: 2026-10-16-og-ramos.
  *
  * POR QUE EXISTE
  * Quem compartilha /aovivo?utm_content=<ramo> no WhatsApp, Facebook ou Instagram via
@@ -17,6 +18,13 @@
  * CASAMENTO DO RAMO: igual a aovivo.html (2026-09-30): primeiro o proprio ramo
  * (tirando shopping- e comercio-), depois comeco de palavra, na ordem do mapa.
  * Ramo novo na /aovivo: acrescentar aqui e gerar og/aovivo/<k>.jpg.
+ *
+ * LINK DO PARCEIRO COM RAMO (2026-10-16-og-parceiro)
+ * O Material de apoio por ramo agora gera /p/<apelido>?ramo=<k> (e /c/ do criador).
+ * O vercel.json manda para ca so os robos de previa desse link, com p=<apelido> e
+ * t=p|c. A miniatura e a mesma do ramo; o og:url continua sendo o PROPRIO link do
+ * parceiro: o Facebook usa o og:url como destino do clique, e apontar para /aovivo
+ * perderia o apelido (e a comissao) no caminho.
  */
 const fs = require('fs');
 const path = require('path');
@@ -46,13 +54,18 @@ module.exports = (req, res) => {
     if (!HTML) HTML = fs.readFileSync(path.join(process.cwd(), 'aovivo.html'), 'utf8');
     const q = (req.query && (req.query.ramo || req.query.utm_content)) || '';
     const e = acha(Array.isArray(q) ? q[0] : q);
+    /* link do parceiro (/p/) ou do criador (/c/) com ?ramo=: og:url fica no proprio link */
+    let pq = req.query && req.query.p;
+    pq = String((Array.isArray(pq) ? pq[0] : pq) || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
+    const pt = (req.query && req.query.t === 'c') ? 'c' : 'p';
+    const linkP = pq.length >= 3 ? BASE + '/' + pt + '/' + encodeURIComponent(pq) : '';
     let html = HTML;
     if (e) {
       const nome = e.s.replace(/^Para /, '');
       const titulo = 'Live shop para ' + nome + ' | Moviki';
       const texto = e.h[0] + ' ' + e.h[1] + e.h[2] + e.h[3] + ' Teste grátis por 30 dias, sem cartão.';
       const img = BASE + '/og/aovivo/' + e.k + '.jpg?v=' + V;
-      const url = BASE + '/aovivo?ramo=' + e.k;
+      const url = (linkP || BASE + '/aovivo') + '?ramo=' + e.k;
       const alt = 'Live do Moviki ' + e.s.charAt(0).toLowerCase() + e.s.slice(1) + ': loja mostrando o produto ao vivo pelo celular';
       html = html.replace(/<title>[^<]*<\/title>/i, '<title>' + esc(titulo) + '</title>');
       html = troca(html, 'og:title', titulo, 'property');
@@ -66,6 +79,7 @@ module.exports = (req, res) => {
       html = troca(html, 'twitter:image', img, 'name');
     } else {
       const img = BASE + '/og/aovivo/geral.jpg?v=' + V;
+      if (linkP) html = troca(html, 'og:url', linkP, 'property');
       html = troca(html, 'og:image', img, 'property');
       html = troca(html, 'og:image:secure_url', img, 'property');
       html = troca(html, 'twitter:image', img, 'name');

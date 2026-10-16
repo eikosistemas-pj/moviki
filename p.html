@@ -17,15 +17,19 @@
      parceiro. E acompanha o destino: a `comerciantes.html`. Mudou la, muda
      aqui. -->
 <meta name="description" content="Seu negócio no mapa em tempo real e ao vivo pela câmera do celular. Cardápio, promoções e um link só seu. 30 dias grátis, sem cartão e sem comissão por venda.">
-<!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
+<!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram
+     2026-10-16-ramo: imagem trocada da logo (ogmoviki.jpg, que o WhatsApp corta
+     no meio) pela miniatura geral da live (og/aovivo/geral.jpg).
+     Link COM ?ramo=<k> (Material de apoio por ramo): os robos de previa nem chegam
+     aqui; o vercel.json manda para api/aovivo-og, com a miniatura do ramo. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Moviki">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://www.moviki.com.br/comerciantes.html">
 <meta property="og:title" content="Moviki · Seu negócio no mapa, e agora também ao vivo">
 <meta property="og:description" content="Mostre o que você vende pela câmera do celular e apareça para quem está perto agora. 30 dias grátis, sem cartão e sem comissão por venda.">
-<meta property="og:image" content="https://www.moviki.com.br/ogmoviki.jpg">
-<meta property="og:image:secure_url" content="https://www.moviki.com.br/ogmoviki.jpg">
+<meta property="og:image" content="https://www.moviki.com.br/og/aovivo/geral.jpg?v=20261016">
+<meta property="og:image:secure_url" content="https://www.moviki.com.br/og/aovivo/geral.jpg?v=20261016">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -33,9 +37,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Moviki · Seu negócio no mapa, e agora também ao vivo">
 <meta name="twitter:description" content="Mostre o que você vende pela câmera do celular e apareça para quem está perto agora. 30 dias grátis, sem cartão.">
-<meta name="twitter:image" content="https://www.moviki.com.br/ogmoviki.jpg">
+<meta name="twitter:image" content="https://www.moviki.com.br/og/aovivo/geral.jpg?v=20261016">
 <script>
-/* MOVIKI p.html | versao 2026-09-19-linkcriador | redirecionador do link de parceiro /p/apelido e do criador /c/apelido
+/* MOVIKI p.html | versao 2026-10-16-ramo (antes: 2026-09-19-linkcriador) | redirecionador do link de parceiro /p/apelido e do criador /c/apelido
    NAO carrega Google Analytics de proposito: a pagina redireciona na hora e o GA nao
    teria tempo de enviar nada. Em vez disso, ela CARIMBA o destino com UTM — assim o
    comerciantes.html mede a visita ja sabendo que ela veio de indicacao, e de quem. */
@@ -71,7 +75,13 @@
     try{ document.cookie='mv_ref='+encodeURIComponent(ref)+
       '; Max-Age=7776000; Path=/; Domain=.moviki.com.br; SameSite=Lax; Secure'; }catch(e){}
   }
-  location.replace('/comerciantes.html?'+q);
+  /* 2026-10-16-ramo: ?ramo=<k> vem das pecas por ramo do Material de apoio.
+     Com ramo, a pessoa cai na live de exemplo do ramo (/aovivo le o ramo antes do
+     utm_content). Sem ramo, segue para a comerciantes.html, como sempre. O ref e o
+     cookie mv_ref sao os mesmos nos dois caminhos: a comissao nao muda. */
+  var ramo='';
+  try{ ramo=(new URLSearchParams(location.search).get('ramo')||'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40); }catch(e){}
+  location.replace(ramo.length>=2 ? '/aovivo?ramo='+encodeURIComponent(ramo)+'&'+q : '/comerciantes.html?'+q);
 })();
 </script>
 </head>
