@@ -1031,8 +1031,27 @@ a{color:inherit}
   .lp-hero-1col p.sub{order:4;margin:18px auto 4px}
   .lp-hero-1col .lp-heroBaixo{order:5}
 }
+/* 16/10/2026 - HERO PAMELA (2026-10-16-hero-pamela): o filme do topo e vertical (9:16) em
+   toda tela. No computador, filme a esquerda e lista + botoes a direita, para titulo, filme
+   e "Comecar gratis" caberem juntos. Celular e tablet: filme centralizado, como antes. */
+#lpvBoxLive{aspect-ratio:9/16;border-radius:26px}
+.lp-hero .lpv{max-width:360px}
+@media(min-width:641px){#lpvBoxLive .lpv__capa{align-items:center;padding-left:20px}}
+@media(min-width:961px){
+  .lp-hero-grid.lp-hero-1col{grid-template-columns:340px minmax(0,540px)!important;justify-content:center;
+    column-gap:clamp(36px,4.5vw,72px);align-items:center}
+  .lp-hero-1col .lp-heroTopo{grid-column:1/-1}
+  .lp-hero-1col .lp-heroVid{grid-column:1;margin-top:clamp(22px,2.6vw,32px)}
+  .lp-hero-1col .lp-heroBaixo{grid-column:2;margin-top:clamp(22px,2.6vw,32px);justify-items:start;gap:22px}
+  .lp-heroBaixo .lp-bul{grid-template-columns:minmax(0,1fr);gap:10px}
+  .lp-heroBaixo .lp-bul li{flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;
+    padding:12px 16px;gap:12px}
+  .lp-heroBaixo .lp-bul li .ic3d{width:34px;height:34px}
+  .lp-heroAcao{align-items:flex-start}
+  .lp-heroAcao .lp-ctas,.lp-heroAcao .lp-selos{justify-content:flex-start}
+}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-16-pino';</script>
+<script>window.MOVIKI_VERSAO='2026-10-16-hero-pamela';</script>
 <script>
 /* Reserva dos icones 3D — 21/09/2026: esta funcao ESTAVA no fim da pagina.
    O onerror de um PNG que falha dispara antes de o fim da pagina ser lido, e
@@ -1126,22 +1145,18 @@ window.lpIco = lpIco;
       <div class="lp-heroVid">
         <div class="lpv">
           <div class="lpv__box lpv__box--capa" id="lpvBoxLive">
-            <picture>
-              <source media="(max-width:640px)" srcset="/home-video-capa-9x16.jpg">
-              <img class="lpv__img" src="/home-video-capa-16x9.jpg" alt="" decoding="async" fetchpriority="high">
-            </picture>
-            <video class="lpv__loop" id="lpvLoop" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture>
-              <source src="/heroloop.webm" type="video/webm">
-              <source src="/heroloop.mp4" type="video/mp4">
-            </video>
-            <iframe id="lpvFrameLive" hidden title="Filme do Modo Live do Moviki"></iframe>
+            <!-- 16/10/2026 - HERO PAMELA: o filme principal passa a ser o video "tela dupla" da Live
+                 (apresentadora + telas reais, 9:16). Capa unica vertical em toda tela; o laco mudo
+                 (heroloop) saiu - video nao entra no repositorio. -->
+            <img class="lpv__img" src="/home-live-capa-9x16.jpg" alt="" width="720" height="1280" decoding="async" fetchpriority="high">
+            <iframe id="lpvFrameLive" hidden title="Vídeo: como a live do Moviki vende"></iframe>
             <button class="lpv__capa" type="button" id="lpvPlayLive"
-                    aria-label="Assistir ao filme do Modo Live do Moviki">
+                    aria-label="Assistir ao vídeo: como a live do Moviki vende">
               <span class="lpv__play" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
               </span>
-              <span class="lpv__rot">Ver uma venda ao vivo acontecendo</span>
-              <span class="lpv__sub">sem tutorial e sem termo dif&iacute;cil</span>
+              <span class="lpv__rot">Ver como a live do Moviki vende</span>
+              <span class="lpv__sub">1 minuto, com as telas de verdade</span>
             </button>
           </div>
         </div>
@@ -1414,12 +1429,13 @@ window.lpIco = lpIco;
         quadro=document.getElementById('lpvFrameLive'),
         laco=document.getElementById('lpvLoop');
     if(!caixa||!botao||!quadro) return;
-    var FILME='n2nmTfGY_mo', CURTO='3Q5b0Q0PPh4';
-    function nome(v){ return v===CURTO?'corte_vertical_60s':'filme_hero'; }
+    /* 16/10/2026 - um filme so (vertical) para celular e computador. */
+    var FILME='rUmSdWyfiXc';
+    function nome(v){ return 'tela_dupla_live_v5'; }
     window.mvPlay.liga({
       caixa:caixa, gatilho:botao, quadro:quadro,
-      titulo:'Filme do Modo Live do Moviki',
-      id:function(){ return window.matchMedia('(max-width:640px)').matches?CURTO:FILME; },
+      titulo:'Vídeo: como a live do Moviki vende',
+      id:FILME,
       aoAbrir:function(vid){
         if(laco){ try{ laco.pause(); }catch(e){} }
         try{ if(window.mvEv) window.mvEv('video_play',{video:nome(vid),pagina:'home'}); }catch(e){}
@@ -1430,27 +1446,6 @@ window.lpIco = lpIco;
     });
   })();
 
-  /* Filme mudo em laco do topo. So no computador, so se a pessoa nao pediu
-     menos movimento e so se o navegador nao estiver no modo de economia de
-     dados. Entra depois do carregamento da pagina, entao nao disputa com a
-     arte da capa, que continua sendo o que pinta primeiro. */
-  (function(){
-    var v=document.getElementById('lpvLoop');
-    var caixa=document.getElementById('lpvBoxLive');
-    if(!v||!caixa) return;
-    try{
-      if(window.matchMedia('(max-width:640px)').matches) return;
-      if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-      var c=navigator.connection;
-      if(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||''))) return;
-    }catch(e){}
-    v.addEventListener('playing',function(){ v.classList.add('on'); });
-    function liga(){
-      try{ v.preload='auto'; v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
-    }
-    if(document.readyState==='complete') setTimeout(liga,400);
-    else window.addEventListener('load',function(){ setTimeout(liga,400); });
-  })();
   </script>
 
   <!-- ================= LOJAS DE SHOPPING (26/09/2026) =================
