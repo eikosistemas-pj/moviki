@@ -13,6 +13,10 @@
   ],
   "rewrites": [
     {
+      "source": "/ramos.js",
+      "destination": "https://app.moviki.com.br/ramos.js"
+    },
+    {
       "source": "/pp/:slug",
       "destination": "/pp.html"
     },

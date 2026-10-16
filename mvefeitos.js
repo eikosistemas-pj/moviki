@@ -6,6 +6,10 @@
  *                   arrastar no celular, barra fixa, mapa com o pino andando, pedidos
  *                   chegando, coracao no post, preco que rola e cartoes flutuando.
  *                   Nada muda na /aovivo: tudo novo so liga por chave nova do MV_FX.
+ * 16/10/2026 (fx4): carrossel "uma live para cada tipo de loja" com TODOS os ramos que tem
+ *                   pagina na /aovivo, lidos do catalogo unico (/ramos.js, repassado do app; d:1).
+ *                   Os 12 de antes aparecem na hora; os outros entram no fim assim que o
+ *                   ramos.js chega. Ramo novo com d:1 entra sozinho, sem mexer aqui.
  * 13/10/2026 (fx3): palavra que troca embolava as palavras no Chrome de verdade. O titulo
  *                   usa texto recortado no gradiente (background-clip:text) e esse recorte
  *                   enxerga o texto dos filhos mesmo com opacity 0. Palavra fora agora fica
@@ -70,7 +74,7 @@
   // >>> CHAVE-MESTRA. false = desliga todos os efeitos deste arquivo. <<<
   var FX_LIGADO = true;
 
-  var VERSAO = '2026-10-13-fx3';
+  var VERSAO = '2026-10-16-fx4';
   var W = window, D = document, H = D.documentElement;
   if (W.mvEfeitos) return;
   var api = W.mvEfeitos = { versao: VERSAO, ligado: false };
@@ -633,8 +637,9 @@
   /* ------------------------------------------------------------------ */
   /* 11. carrossel "uma live para cada tipo de loja"                     */
   /* ------------------------------------------------------------------ */
-  // So ramos com telefone proprio em ramos/<k>.* (conferido no _arvore.txt em 13/10/2026).
-  // Fora de proposito: farmacia, suplementos, lingerie, bebe, brinquedos e moda infantil.
+  // Os 12 primeiros, na ordem de vitrine (aparecem na hora, sem esperar rede).
+  // 16/10/2026 (fx4): o resto vem do catalogo unico de ramos (ramos.js, so d:1 = pagina
+  // propria na /aovivo). Telefone que nao carregar (ramos/<k>.* ausente) some sozinho.
   var RAMOS_CARROSSEL = [
     ['moda', 'Moda feminina'], ['moda-masculina', 'Moda masculina'], ['acai', 'Açaí'],
     ['autopecas', 'Autopeças'], ['pet', 'Pet shop'], ['confeitaria', 'Confeitaria'],
@@ -642,6 +647,22 @@
     ['acessorios-celular', 'Acessórios de celular'], ['semijoias', 'Semijoias'], ['padaria', 'Padaria']
   ];
   var V_RAMOS = '?v=20261001';
+  // Mesmo dominio de proposito: o CSP da home e da /aovivo so libera script do proprio site.
+  // O vercel.json repassa /ramos.js para app.moviki.com.br/ramos.js (catalogo unico).
+  var RAMOS_JS = '/ramos.js';
+  function nomeCurto(n) {
+    return String(n || '').replace(/\s*\([^)]*\)\s*/g, ' ').split(' / ')[0].trim();
+  }
+  function catalogoRamos(cb) {
+    var R = W.MOVIKI_RAMOS;
+    if (R && R.lista) return cb(R);
+    var sc = D.getElementById('fxRamosJs');
+    if (!sc) {
+      sc = D.createElement('script'); sc.id = 'fxRamosJs'; sc.src = RAMOS_JS; sc.async = true;
+      D.head.appendChild(sc);
+    }
+    sc.addEventListener('load', function () { if (W.MOVIKI_RAMOS && W.MOVIKI_RAMOS.lista) cb(W.MOVIKI_RAMOS); });
+  }
   function linkDoRamo(k) {
     var q;
     try { q = new URLSearchParams(location.search); } catch (e) { q = null; }
@@ -658,8 +679,10 @@
       m.appendChild(el('h3', 'fxRamos__t', 'Uma live para cada tipo de loja'));
       m.appendChild(el('p', 'fxRamos__s', 'Toque no seu ramo e veja como fica.'));
       var tr = el('div', 'fxRamos__trilho');
-      RAMOS_CARROSSEL.forEach(function (r) {
-        if (r[0] === atual) return;
+      var ja = {};
+      function poe(r) {
+        if (r[0] === atual || ja[r[0]]) return;
+        ja[r[0]] = 1;
         var a = el('a', 'fxRamo');
         a.href = linkDoRamo(r[0]);
         a.setAttribute('data-ev', 'aovivo_carrossel_ramo');
@@ -674,7 +697,15 @@
         a.appendChild(el('span', 'fxRamo__n', r[1]));
         a.setAttribute('aria-label', 'Ver a live para ' + r[1]);
         tr.appendChild(a);
-      });
+      }
+      RAMOS_CARROSSEL.forEach(poe);
+      try {
+        catalogoRamos(function (R) {
+          R.lista.forEach(function (e) {
+            if (e && e.d && e.k && /^[a-z0-9-]{2,40}$/.test(e.k)) poe([e.k, nomeCurto(e.n) || e.k]);
+          });
+        });
+      } catch (e) {}
       m.appendChild(tr);
       m.appendChild(el('p', 'fxRamos__leg', 'Cenas ilustrativas · lojas fictícias'));
       // anda sozinho de leve; parou para sempre no primeiro toque da pessoa
