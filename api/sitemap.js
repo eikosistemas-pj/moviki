@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/sitemap.js | versao 2026-10-06-cerca | antes 2026-09-16-sitemap1 | repo: moviki (site publico)
+ * MOVIKI api/sitemap.js | versao 2026-10-16-revisao | antes 2026-10-06-cerca | antes 2026-09-16-sitemap1 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * Desde 15/09 cada pagina de negocio (moviki.com.br/apelido) e servida pelo
@@ -144,7 +144,8 @@ async function negocios(token) {
     vistos[slug.toLowerCase()] = 1;
     /* updateTime vem do proprio Firestore — nao depende de o painel gravar um
        campo de data. lastmod mentiroso e pior do que lastmod ausente. */
-    saida.push({ slug: slug, lastmod: (d.updateTime || '').slice(0, 10) });
+    /* 2026-10-16-revisao: em minusculas, igual ao canonical do og.js. */
+    saida.push({ slug: slug.toLowerCase(), lastmod: (d.updateTime || '').slice(0, 10) });
   }
   return saida;
 }

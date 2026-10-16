@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/vitrine.js | versao 2026-10-06-cerca | antes 2026-09-16-aovivo2 | repo: moviki (site publico)
+ * MOVIKI api/vitrine.js | versao 2026-10-16-revisao | antes 2026-10-06-cerca | antes 2026-09-16-aovivo2 | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * O og.js nao era o unico pedaco do projeto que fala com o Firestore de fora
@@ -62,7 +62,7 @@ function lista(f) {
    vem de onde a gente hospeda nao sai daqui. */
 function fotoOk(u) {
   return typeof u === 'string' &&
-    /^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);
+    /^https:\/\/([a-z0-9-]+\.)*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);
 }
 function corOk(c) { return /^#[0-9a-f]{6}$/i.test(String(c || '')) ? c : ''; }
 
@@ -254,11 +254,22 @@ async function totalBase(token) {
   return null;
 }
 
+function iguais(a, b) {
+  const x = Buffer.from(String(a)), y = Buffer.from(String(b));
+  return x.length === y.length && require('crypto').timingSafeEqual(x, y);
+}
+
 module.exports = async (req, res) => {
   const segredo = (process.env.VITRINE_SECRET || '').trim();
-  if (segredo) {
+  /* 2026-10-16-revisao: ?modo=aovivo (bloco "ao vivo agora" da home e da /aovivo)
+     fica FORA do segredo: so devolve slug, nome, ramo, logo e hora de inicio,
+     sem uid nem coordenada. Com o segredo ligado, a home chamava sem Bearer,
+     levava 401 e o bloco sumia. */
+  const modoAoVivo = String((req.query && req.query.modo) || '') === 'aovivo' ||
+      /[?&]modo=aovivo(&|$)/.test(String(req.url || ''));
+  if (segredo && !modoAoVivo) {
     const cab = String(req.headers.authorization || '');
-    if (cab !== 'Bearer ' + segredo) {
+    if (!iguais(cab, 'Bearer ' + segredo)) {
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
       res.setHeader('Cache-Control', 'no-store');
@@ -269,11 +280,8 @@ module.exports = async (req, res) => {
 
   const token = await gauth.tokenLeitura();
 
-  /* ?modo=aovivo -> so a vitrine de lives. Resposta curta, cache curto e
-     ABERTA mesmo com VITRINE_SECRET ligado... nao: o segredo, se existir, vale
-     para tudo, e o bloco acima ja barrou. Aqui so desviamos o trabalho. */
-  if (String((req.query && req.query.modo) || '') === 'aovivo' ||
-      /[?&]modo=aovivo(&|$)/.test(String(req.url || ''))) {
+  /* ?modo=aovivo -> so a vitrine de lives: resposta curta, cache curto, aberta. */
+  if (modoAoVivo) {
     const ligada = await vitrineLigada(token);
     const lives = ligada ? await aoVivo(token) : [];
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -313,7 +321,9 @@ module.exports = async (req, res) => {
   res.statusCode = 200;
   /* 15 min na CDN, 1 h servindo velho enquanto revalida. O robo roda poucas
      vezes por dia; nao ha motivo para tocar o Firestore em toda chamada. */
-  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=900, stale-while-revalidate=3600');
+  /* 2026-10-16-revisao: com segredo, a lista nunca vai para cache compartilhado
+     (um GET sem Bearer poderia receber a copia da CDN). */
+  res.setHeader('Cache-Control', segredo ? 'private, no-store' : 'public, max-age=0, s-maxage=900, stale-while-revalidate=3600');
   res.setHeader('X-Robots-Tag', 'noindex');
   res.end(JSON.stringify({
     atualizado: new Date().toISOString(),

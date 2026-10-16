@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-10-16-revisao | antes 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
  *
  * 14/10/2026: o robo recusa a live aberta ao publico de quem esta no teste
  * provisorio (e-mail ainda nao confirmado) com `email_nao_confirmado`; aqui so
@@ -680,7 +680,9 @@ module.exports = async (req, res) => {
     lerDoc('negocios/' + uid + '/estado/live'),
     lerDoc('configuracoes/liveTermos'),
   ]);
-  if (bl.erro || ac.erro || es.erro) return responder(res, 503, { erro: 'firestore' });
+  /* 2026-10-16-revisao: liveTermos (chave-mestra, beta, teto) tambem fecha na falha.
+     Antes, um timeout nessa leitura soltava as quatro travas juntas. */
+  if (bl.erro || ac.erro || es.erro || te.erro) return responder(res, 503, { erro: 'firestore' });
 
   /* Chave-mestra: o dono desliga TODA live pelo painel, sem deploy e sem mexer
      em env. Falha FECHADA de proposito — se o documento nao pode ser lido, a

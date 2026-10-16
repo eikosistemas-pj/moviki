@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-10-06-cerca | antes 2026-09-15-og-live | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-10-16-revisao | antes 2026-10-06-cerca | antes 2026-09-15-og-live | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
@@ -101,7 +101,7 @@ function qtd(f) {
 }
 function fotoOk(u) {
   return typeof u === 'string' &&
-    /^https:\/\/[a-z0-9.-]*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);
+    /^https:\/\/([a-z0-9-]+\.)*(ibb\.co|firebasestorage\.googleapis\.com|firebasestorage\.app)\//i.test(u);
 }
 
 /* Com token: leitura autenticada por conta de servico (imune ao App Check).
@@ -261,12 +261,14 @@ module.exports = async (req, res) => {
   /* 1) apelido do negocio; 2) apelido de unidade Enterprise */
   let uid = '', pontoNome = '', achou = false;
   const s = await lerDoc('slugs/' + slug, token);
-  if (s && txt(s.uid)) { uid = txt(s.uid); achou = true; }
+  /* 2026-10-16-revisao: id que vira caminho do Firestore so no formato de id. */
+  const idOk = function (v) { return /^[A-Za-z0-9_-]{1,128}$/.test(v); };
+  if (s && idOk(txt(s.uid))) { uid = txt(s.uid); achou = true; }
   else {
     const ps = await lerDoc('ponto_slugs/' + slug, token);
-    if (ps && txt(ps.ownerUid)) {
+    if (ps && idOk(txt(ps.ownerUid))) {
       uid = txt(ps.ownerUid); achou = true;
-      const pt = txt(ps.pid) ? await lerDoc('pontos/' + txt(ps.pid), token) : null;
+      const pt = idOk(txt(ps.pid)) ? await lerDoc('pontos/' + txt(ps.pid), token) : null;
       if (pt) pontoNome = txt(pt.nome);
     }
   }

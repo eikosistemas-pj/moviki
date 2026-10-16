@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/visita.js | versao 2026-10-07-visita1 | repo: moviki (site publico)
+ * MOVIKI api/visita.js | versao 2026-10-16-revisao | antes 2026-10-07-visita1 | repo: moviki (site publico)
  *
  * P75, fase 0 — ponte do aviso de VISITA a Meta, so para quem chegou por
  * anuncio da Meta (o navegador so chama isto quando tem fbc na sessao).
@@ -19,7 +19,13 @@
 'use strict';
 
 const ORIGENS = ['https://www.moviki.com.br', 'https://moviki.com.br'];
-const ROBO = String(process.env.ROBO_URL || 'https://moviki-robo.vercel.app').replace(/\/+$/, '');
+/* 2026-10-16-revisao: a mesma ROBO_URL e usada pelo api/live.js com o caminho
+   completo (.../api/pontos). Aqui vale so a ORIGEM; antes, com o caminho junto,
+   o aviso ia para .../api/pontos/api/meta-visita (404 calado). */
+const ROBO = (function () {
+  const bruto = String(process.env.ROBO_URL || 'https://moviki-robo.vercel.app');
+  try { return new URL(bruto).origin; } catch (_) { return 'https://moviki-robo.vercel.app'; }
+})();
 
 function corpoDe(req) {
   const b = req.body;
