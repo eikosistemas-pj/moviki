@@ -42,6 +42,17 @@
     },
     {
       "source": "/aovivo",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|Pinterest|SkypeUriPreview|Iframely|Embedly).*"
+        }
+      ],
+      "destination": "/api/aovivo-og"
+    },
+    {
+      "source": "/aovivo",
       "destination": "/aovivo.html"
     },
     {
@@ -136,6 +147,9 @@
   "functions": {
     "api/og.js": {
       "includeFiles": "{404,live}.html"
+    },
+    "api/aovivo-og.js": {
+      "includeFiles": "aovivo.html"
     }
   }
 }
