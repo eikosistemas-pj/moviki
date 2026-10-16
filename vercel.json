@@ -18,6 +18,36 @@
     },
     {
       "source": "/p/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|Pinterest|SkypeUriPreview|Iframely|Embedly).*"
+        },
+        {
+          "type": "query",
+          "key": "ramo"
+        }
+      ],
+      "destination": "/api/aovivo-og?p=:slug&t=p"
+    },
+    {
+      "source": "/c/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Slackbot|Discordbot|Pinterest|SkypeUriPreview|Iframely|Embedly).*"
+        },
+        {
+          "type": "query",
+          "key": "ramo"
+        }
+      ],
+      "destination": "/api/aovivo-og?p=:slug&t=c"
+    },
+    {
+      "source": "/p/:slug",
       "destination": "/p.html"
     },
     {
