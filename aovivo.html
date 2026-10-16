@@ -169,6 +169,22 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 .avFoto .avTel--arte{aspect-ratio:auto;height:auto;border:0;border-radius:0;overflow:visible;box-shadow:none;background:none}
 .avFoto .avTel--arte img{position:static;width:auto;max-width:100%;height:auto;max-height:min(760px,80vh);margin-inline:auto;border-radius:22px;box-shadow:0 24px 50px rgba(0,0,0,.5)}
 .avTelLeg{font-size:11px;color:var(--mv-txt-3);text-align:center;margin:8px 0 0;line-height:1.4}
+/* 16/10/2026 - capa do video tela dupla no lugar do telefone (ramos com v) */
+.avFoto .avTel--video{aspect-ratio:9/16;border-radius:26px}
+.avFoto .avTel--video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2}
+.avFoto .avTel--video iframe[hidden]{display:none}
+.avTelPlay{position:absolute;inset:0;z-index:3;display:grid;place-items:center;border:0;background:transparent;cursor:pointer;padding:0}
+.avTelPlay__b{width:78px;height:78px;border-radius:999px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#00D4FF,#0066FF);box-shadow:0 0 0 10px rgba(0,212,255,.12),0 14px 40px rgba(0,120,255,.45);transition:transform .2s ease}
+.avTelPlay:hover .avTelPlay__b,.avTelPlay:focus-visible .avTelPlay__b{transform:scale(1.06)}
+.avTelPlay__b svg{width:31px;height:31px;margin-left:5px;fill:#03121f}
+.avTel--video.mv-carregando img,.avTel--video.mv-preso img{filter:brightness(.45)}
+.avTel--video.mv-carregando .avTelPlay__b svg,.avTel--video.mv-preso .avTelPlay__b svg{display:none}
+.avTel--video.mv-carregando .avTelPlay__b::after{content:"";width:28px;height:28px;border-radius:50%;border:3px solid rgba(3,18,31,.28);border-top-color:#03121f;animation:avGira .8s linear infinite}
+.avTel--video.mv-preso .avTelPlay__b::after{content:"";width:0;height:0;margin-left:5px;border-left:18px solid #03121f;border-top:11px solid transparent;border-bottom:11px solid transparent}
+.avTel--video.mv-tocando .avTelPlay,.avTel--video.mv-tocando picture{display:none}
+@keyframes avGira{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.avTel--video.mv-carregando .avTelPlay__b::after{animation:none}}
 /* barra fixa de cadastro (so celular): some quando um botao da pagina esta na tela */
 .avBarra{display:none;position:fixed;left:0;right:0;bottom:0;z-index:55;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(6,13,24,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--mv-linha);text-align:center;transition:transform .25s ease}
 .avBarra .avBtn{width:100%;max-width:440px}
@@ -321,6 +337,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
   .avFoto img,.avFoto video{max-height:calc(100vh - 80px);max-height:calc(100svh - 80px)}
   .avFoto .avTel{height:auto;width:min(100%,calc((100vh - 80px)*.4623));width:min(100%,calc((100svh - 80px)*.4623));border-radius:28px}
   .avFoto .avTel--arte{width:100%;height:auto}
+  .avFoto .avTel--video{width:min(100%,calc((100vh - 80px)*.5625));width:min(100%,calc((100svh - 80px)*.5625))}
   .avFoto .avTel--arte img{max-height:calc(100vh - 80px);max-height:calc(100svh - 80px)}
   .avTelLeg{font-size:11px;margin-top:8px}
   .avFotoNota{display:none}
@@ -359,7 +376,7 @@ h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
 }
 h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
 </style>
-<script>window.MOVIKI_VERSAO='2026-10-13-duvida';</script>
+<script>window.MOVIKI_VERSAO='2026-10-16-moda-pamela';</script>
 </head>
 
 <body>
@@ -440,7 +457,7 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
             {k:'cosmeticos',a:['cosmet','beleza','maquiag'],s:'Para lojas de cosméticos e perfumaria',t:1,
              h:['Sua cliente já assiste live de maquiagem.','Que seja ','a da sua loja','.'],
              l:'Mostre a cor na pele, responda “tem tom mais escuro?” no chat e lance a oferta.'},
-            {k:'boutique',a:['boutique'],s:'Para boutiques de bairro',
+            {k:'boutique',a:['boutique'],s:'Para boutiques de bairro',v:'rUmSdWyfiXc',
              h:['Arara cheia de peça nova e a rua vazia.','Suas clientes ','estão no celular','.'],
              l:'Mostre a peça de perto, responda “tem no M?” e “qual o comprimento?” no chat e lance a oferta.'},
             {k:'brecho',a:['brecho'],s:'Para brechós',
@@ -449,19 +466,19 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
             {k:'lingerie',a:['linger','intim','pijam'],s:'Para lojas de moda íntima',
              h:['Presente de Réveillon, peça no cabide.','Mostre ','o tecido de perto, ao vivo','.'],
              l:'Mostre o cetim de perto e o caimento no cabide, responda “tem no G?” e “embrulha pra presente?” no chat e lance a oferta.'},
-            {k:'moda-fitness',a:['legging','academ'],s:'Para lojas de moda fitness',
+            {k:'moda-fitness',a:['legging','academ'],s:'Para lojas de moda fitness',v:'rUmSdWyfiXc',
              h:['Tecido que só convence de perto.','Mostre ','a costura ao vivo','.'],
              l:'Mostre o tecido de perto, a costura e as cores, responda “fica transparente?” e “tem GG?” no chat e lance a oferta.'},
             {k:'moda-infantil',a:[],s:'Para lojas de moda infantil',
              h:['Roupa de festa infantil só vende no provador.','Mostre ','a peça aberta, ao vivo','.'],
              l:'Mostre a peça aberta e o tecido de perto, responda “tem de 4 anos?” e “é de algodão?” no chat e lance a oferta.'},
-            {k:'moda-praia',a:['praia','biquin','bikin'],s:'Para lojas de moda praia',
+            {k:'moda-praia',a:['praia','biquin','bikin'],s:'Para lojas de moda praia',v:'rUmSdWyfiXc',
              h:['Verão chegando e a moda praia na arara.','Mostre ','a estampa ao vivo','.'],
              l:'Mostre a estampa e o tecido de perto, responda “tem no M?” e “tem em outra cor?” no chat e lance a oferta.'},
             {k:'moda-masculina',a:['masculin'],s:'Para lojas de moda masculina',
              h:['Camisa boa na arara e a loja sem movimento.','Seu cliente de sempre ','est\u00e1 no celular','.'],
              l:'Mostre o caimento da camisa, tire a d\u00favida do tamanho no chat e lance a oferta.'},
-            {k:'moda',a:['moda','roupa','vestu'],s:'Para lojas de moda',t:1,
+            {k:'moda',a:['moda','roupa','vestu'],s:'Para lojas de moda',t:1,v:'rUmSdWyfiXc',
              h:['O corredor anda vazio no meio da semana.','Sua cliente está ','no celular, no sofá','.'],
              l:'Mostre a peça, responda tamanho e caimento no chat e deixe o produto em destaque na tela.'},
             {k:'suplementos',a:['suplement','fitness','nutri','whey'],s:'Para lojas de suplementos',t:1,
@@ -562,6 +579,8 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
           var e=achou;
           window.avRamo=e.k;
           if(e.f!==0) window.avRamoFoto=e.k;
+          /* 16/10/2026 - v = video tela dupla do ramo (YouTube): no lugar do telefone em laco */
+          if(e.v && /^[A-Za-z0-9_-]{11}$/.test(e.v)) window.avRamoVideo=e.v;
           var tag=document.getElementById('avTagRamo');
           if(tag) tag.textContent='Modo Live · '+e.s;
           var antes=(e.t===1 && Date.now()<Date.parse('2026-10-03T00:00:00-03:00'));
@@ -626,6 +645,34 @@ h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
           var box=document.getElementById('avTel');
           if(!box) return;
           if(!r || !RAMOS[r]) r='moda';
+          /* 16/10/2026 - MODA COM A APRESENTADORA (2026-10-16-moda-pamela): nos ramos com
+             video tela dupla (campo v do mapa), o topo vira a capa do video (9:16) com play,
+             no lugar do telefone em laco. O iframe do YouTube so nasce no toque (mvPlay).
+             Capa em ramos/moda-video-capa.*. Sem ramo: telefone de moda, como antes. */
+          if(window.avRamoVideo && !window.avRamoTeste){
+            var vid=window.avRamoVideo;
+            box.className='avTel avTel--video';
+            var pc=document.createElement('picture');
+            var sc=document.createElement('source'); sc.type='image/webp'; sc.srcset='ramos/moda-video-capa.webp'; pc.appendChild(sc);
+            var ic=document.createElement('img'); ic.id='avFotoImg'; ic.src='ramos/moda-video-capa.jpg'; ic.width=720; ic.height=1280;
+            ic.alt='Capa do vídeo: onde a cliente desiste da compra e como a live do Moviki resolve. Cena ilustrativa, lojas fictícias.';
+            ic.setAttribute('fetchpriority','high'); ic.decoding='async';
+            pc.appendChild(ic); box.appendChild(pc);
+            var fr=document.createElement('iframe'); fr.hidden=true; fr.title='Vídeo: como a live do Moviki vende'; box.appendChild(fr);
+            var bt=document.createElement('button'); bt.type='button'; bt.className='avTelPlay';
+            bt.setAttribute('aria-label','Assistir ao vídeo: como a live do Moviki vende'); bt.setAttribute('data-ev','aovivo_video_ramo');
+            bt.innerHTML='<span class="avTelPlay__b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>';
+            box.appendChild(bt);
+            var ev=function(n){ try{ if(window.mvEv) window.mvEv(n,{video:'tela_dupla_live_v5',pagina:'aovivo',ramo:window.avRamo||''}); }catch(_){} };
+            var liga=function(){
+              if(!window.mvPlay) return;
+              window.mvPlay.liga({caixa:box, gatilho:bt, quadro:fr, id:vid,
+                titulo:'Vídeo: como a live do Moviki vende',
+                aoAbrir:function(){ ev('video_play'); }, aoTocar:function(){ ev('video_pronto'); }});
+            };
+            if(window.mvPlay) liga(); else window.addEventListener('DOMContentLoaded',liga);
+            return;
+          }
           var tag=document.getElementById('avTagRamo');
           var nome=(window.avRamoFoto && tag) ? tag.textContent.replace(/^.*·\s*Para\s+/,'') : '';
           var alt='Tela de uma live no Moviki'+(nome?' para '+nome:'')+': oferta da live com preço e contagem, chat dos clientes e produto em destaque com o botão Comprar. Cena ilustrativa, loja fictícia.';
