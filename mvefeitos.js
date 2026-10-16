@@ -10,8 +10,9 @@
  *                   pagina na /aovivo, lidos do catalogo unico (/ramos.js, repassado do app; d:1).
  *                   Os 12 de antes aparecem na hora; os outros entram no fim assim que o
  *                   ramos.js chega. Ramo novo com d:1 entra sozinho, sem mexer aqui.
- * 16/10/2026 (fx5): fora da secao clara (home), o carrossel vira painel claro (.fxRamos--claro),
- *                   igual ao visual da pagina do ramo. Ondas do 'claro' nao mudam.
+ * 16/10/2026 (fx5): fora da secao clara (home), o carrossel vira painel claro (.fxRamos--claro).
+ * 16/10/2026 (fx6): o painel vira FAIXA clara de ponta a ponta, com as mesmas ondas da secao
+ *                   clara da /aovivo (pedido do Paulo: igual a pagina do ramo).
  * 13/10/2026 (fx3): palavra que troca embolava as palavras no Chrome de verdade. O titulo
  *                   usa texto recortado no gradiente (background-clip:text) e esse recorte
  *                   enxerga o texto dos filhos mesmo com opacity 0. Palavra fora agora fica
@@ -76,7 +77,7 @@
   // >>> CHAVE-MESTRA. false = desliga todos os efeitos deste arquivo. <<<
   var FX_LIGADO = true;
 
-  var VERSAO = '2026-10-16-fx5';
+  var VERSAO = '2026-10-16-fx6';
   var W = window, D = document, H = D.documentElement;
   if (W.mvEfeitos) return;
   var api = W.mvEfeitos = { versao: VERSAO, ligado: false };
@@ -209,10 +210,14 @@
     '.fxRamo:hover .fxRamo__tel,.fxRamo:focus-visible .fxRamo__tel{transform:translateY(-4px);box-shadow:0 16px 30px rgba(6,20,45,.3)}',
     '.fxRamo__n{display:block;font-size:12.5px;font-weight:700;margin-top:8px;line-height:1.25}',
     '.fxRamos__leg{font-size:11px;color:var(--mv-txt-3,#5a7190);margin-top:8px}',
-    /* 16/10/2026 (fx5): fora de secao clara (home), o carrossel vira um painel claro,
-       igual ao que aparece na /aovivo dentro do "Como funciona" */
-    '.fxRamos--claro{background:linear-gradient(180deg,#ffffff 0%,#eef5ff 100%);color:#0b1a2e;border-radius:28px;',
-    'padding:clamp(22px,3vw,34px) clamp(12px,2.5vw,28px) 16px;box-shadow:0 24px 60px rgba(0,0,0,.35)}',
+    /* 16/10/2026 (fx6): fora de secao clara (home), o carrossel vira uma FAIXA clara de ponta a
+       ponta com as mesmas ondas do "Como funciona" da /aovivo (antes, fx5: painel de cantos
+       arredondados, que o Paulo achou diferente da pagina do ramo) */
+    '.fxRamosSec{overflow-x:clip}',
+    '.fxRamos--claro{position:relative;isolation:isolate;color:#0b1a2e;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);',
+    'padding:calc(clamp(30px,4vw,56px) + 46px) 16px calc(clamp(30px,4vw,56px) + 46px)}',
+    '.fxRamos--claro::before{content:"";position:absolute;left:0;right:0;top:58px;bottom:58px;background:#eef5ff;z-index:-1}',
+    '.fxRamos--claro .fxRamos__trilho{max-width:1120px;margin-left:auto;margin-right:auto}',
     '.fxRamos--claro .fxRamos__t,.fxRamos--claro .fxRamo{color:#0b1a2e}',
     '.fxRamos--claro .fxRamos__s{color:#2a4361}.fxRamos--claro .fxRamos__leg{color:#5a7190}',
 
@@ -687,7 +692,13 @@
       // fora da secao clara do MV_FX (home): painel claro, igual a /aovivo
       var naClara = false;
       try { naClara = !!(CFG.claro && m.closest(CFG.claro)); } catch (e) {}
-      if (!naClara && !(m.closest && m.closest('.fxClaro'))) m.className += ' fxRamos--claro';
+      if (!naClara && !(m.closest && m.closest('.fxClaro'))) {
+        m.className += ' fxRamos--claro';
+        var sec = m.closest && m.closest('section');
+        if (sec) sec.classList.add('fxRamosSec');
+        m.appendChild(onda('cima'));
+        m.appendChild(onda('baixo'));
+      }
       m.appendChild(el('h3', 'fxRamos__t', 'Uma live para cada tipo de loja'));
       m.appendChild(el('p', 'fxRamos__s', 'Toque no seu ramo e veja como fica.'));
       var tr = el('div', 'fxRamos__trilho');
