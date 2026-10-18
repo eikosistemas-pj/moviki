@@ -54,6 +54,7 @@
 const fs = require('fs');
 const path = require('path');
 const gauth = require('../lib/gauth');
+const vocab = require('../vocab.js');
 const seo = require('../lib/seo');
 
 const PROJ = 'moviki-app';
@@ -301,7 +302,11 @@ module.exports = async (req, res) => {
     : (liberaLogo && fotoOk(logo)) ? logo
     : OG_PADRAO;
 
-  const segmento = txt(neg.segmento);
+  /* 17/10/2026: nome do ramo e termo certo (vocab.js) — antes ia o id cru
+     ("roupas", "perfumariacosmeticos") e "cardápio" para loja de roupa. */
+  const vb = vocab.info(txt(neg.segmento), txt(neg.segmentoMacro));
+  const segmento = vb.rotulo;
+  const segmentoCru = txt(neg.segmento);
   const endereco = txt(neg.endereco);
   const recado = txt(neg.recado);
   const aberto = txt(neg.status) === 'aberto';
@@ -313,7 +318,7 @@ module.exports = async (req, res) => {
   partes.push(aberto ? 'Aberto agora' : 'Veja onde estamos agora');
   const descricao = corta(
     (recado ? recado + ' · ' : '') + partes.join(' · ') +
-    '. Localização em tempo real, cardápio, promoções e avaliações no Moviki.', 180);
+    '. Localização em tempo real, ' + vb.t + ', promoções e avaliações no Moviki.', 180);
 
   const lat = num(neg.lat), lng = num(neg.lng);
   const n = resumo ? num(resumo.n) : null;
@@ -371,7 +376,7 @@ module.exports = async (req, res) => {
      NAO exigir endereco: o produto e feito pra quem NAO tem endereco fixo. Cadastro de teste e cadastro pela
      metade viram noindex,follow — pagina magra em quantidade derruba a
      reputacao do dominio inteiro, e o dominio e um so pra todos os lojistas. */
-  const temConteudo = !!(segmento || endereco ||
+  const temConteudo = !!(segmentoCru || endereco ||
                          qtd(neg.fotos) || qtd(neg.cardapio) || qtd(neg.promocoes));
   const completo = !!(txt(neg.nome) &&
                       typeof lat === 'number' && typeof lng === 'number' &&
