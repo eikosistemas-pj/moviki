@@ -1314,7 +1314,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-06-avalrobo';   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-17-vippadrao';   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3540,8 +3540,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      a chave listaVip ligada pelo dono e plano com live (o robo confere de novo). */
   function ligarVip(uid){
     try{
-      if(!window.mvVip||!COMPRA||!COMPRA.recursos||COMPRA.recursos.listaVip!==true)return;
-      if(planoAtual!=='premium'&&planoAtual!=='enterprise')return;
+      /* 17/10/2026 (P84): ligada por padrao; so some se o dono desligou (false). Teste gratis tem live. */
+      if(!window.mvVip||(COMPRA&&COMPRA.recursos&&COMPRA.recursos.listaVip===false))return;
+      if(planoAtual!=='premium'&&planoAtual!=='enterprise'&&periodoAtual!=='trial')return;
       if(!window.mvVip.montar({uid:uid,loja:function(){return (el('nome')||{}).textContent||'';},origem:'pagina'}))return;
       const b=el('btnVip'); if(!b||b._vip)return; b._vip=1;
       b.classList.remove('escondido');

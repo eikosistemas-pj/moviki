@@ -567,7 +567,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-16-tiktok';   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
+  window.MOVIKI_VERSAO='2026-10-17-vippadrao';   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -730,7 +730,7 @@ svg{display:block}
       /* 03/10/2026 (P70 etapa 4): Lista VIP, so com a chave listaVip ligada pelo dono (o robo confere de novo). */
       if(nivel&&window.mvVip)getDoc(doc(db,'checkout_publico',uid)).then(c=>{
         const r=c.exists()?((c.data()||{}).recursos||{}):{};
-        if(r.listaVip!==true)return;
+        if(r.listaVip===false)return; /* 17/10 (P84): ligada por padrao para quem tem live */
         if(!window.mvVip.montar({uid,loja:()=>neg&&neg.nome,origem:'live'}))return;
         ['btnSeguir','btnVipFora'].forEach(id=>{const b=el(id);if(!b)return;b.classList.remove('escondido');b.addEventListener('click',()=>{window.mvVip.abrir();ev('vip_aberto',{slug,onde:id});});});
       }).catch(()=>{});
