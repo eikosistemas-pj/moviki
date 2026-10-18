@@ -1,5 +1,9 @@
 /*!
- * MOVIKI mvvip.js | versao 2026-10-03-vip | NOVO | repo: moviki (site publico)
+ * MOVIKI mvvip.js | versao 2026-10-17-basepropria | antes 2026-10-03-vip | repo: moviki (site publico)
+ * P84 (17/10/2026): origem por rede (?vip=tiktok|instagram|kwai|facebook|youtube|whatsapp,
+ * o link da bio de cada rede); quem chega de uma rede ja abre com o WhatsApp marcado
+ * (navegador de dentro do app quase nunca aceita notificacao); depois da inscricao,
+ * botao para o canal da loja (Canal do WhatsApp, grupo ou Telegram) que o robo devolve.
  * LISTA VIP — "Me avise da proxima live" (P70, etapa 4, 03/10/2026).
  * Usado pela live (live.html) e pela pagina do negocio (404.html). So aparece
  * quando a pagina chama mvVip.montar(): a pagina so chama com a chave
@@ -141,16 +145,30 @@
       if (quer.push && !j.push) h += '<p>A notificação não foi liberada neste aparelho; os outros avisos estão valendo.</p>';
       if (j.email) h += '<p>✉️ Mandamos um link para <b>' + esc(email) + '</b>. Confirme por lá para começar a receber' + (j.emailAtrasado ? ' (pode demorar algumas horas para chegar)' : '') + '.</p>';
       if (j.whatsapp) h += '<p>💬 Seu WhatsApp está na lista da loja. Para sair, é só pedir para ela.</p>';
-      h += '</div><button type="button" class="mvvBtn2" id="mvvOkFechar">Fechar</button>';
+      var cn = canalOk(j.canal);
+      if (cn) h += '<p style="margin-top:10px">Novidades, bastidores e o dia da próxima live também saem no canal da loja.</p>';
+      h += '</div>';
+      if (cn) h += '<a class="mvvBtn" id="mvvCanal" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" href="' + esc(cn.url) + '" target="_blank" rel="noopener noreferrer">' + esc(cn.rot) + '</a>';
+      h += '<button type="button" class="mvvBtn2" id="mvvOkFechar">Fechar</button>';
       el('mvvForm').hidden = true; var f = el('mvvFeito'); f.innerHTML = h; f.hidden = false;
       el('mvvOkFechar').onclick = fechar;
+      if (cn) el('mvvCanal').onclick = function () { try { if (window.mvEv) window.mvEv('lista_vip_canal', { tipo: String(j.canal.tipo || ''), origem: corpo.origem }); } catch (_) {} };
       try { if (window.mvEv) window.mvEv('lista_vip_inscricao', { origem: corpo.origem, canais: [j.push ? 'push' : '', j.email ? 'email' : '', j.whatsapp ? 'whatsapp' : ''].filter(Boolean).join(',') }); } catch (_) {}
     }).catch(function () {
       msg(quer.push ? 'A notificação não foi liberada neste aparelho. Escolha e-mail ou WhatsApp, ou libere a notificação.' : ERROS.rede, true);
     }).then(function () { b.disabled = false; b.textContent = 'Quero ser avisado(a)'; });
   }
 
-  function origemDaUrl() { try { var m = /[?&]vip=(1|link|qr)(?:&|$)/.exec(location.search); return m ? (m[1] === 'qr' ? 'qr' : 'link') : ''; } catch (_) { return ''; } }
+  var REDES = ['tiktok', 'instagram', 'kwai', 'facebook', 'youtube', 'whatsapp'];
+  function origemDaUrl() { try { var m = /[?&]vip=(1|link|qr|tiktok|instagram|kwai|facebook|youtube|whatsapp)(?:&|$)/.exec(location.search); if (!m) return ''; return m[1] === '1' ? 'link' : m[1]; } catch (_) { return ''; } }
+  function deRede() { return REDES.indexOf(origemDaUrl()) >= 0; }
+  /* Mesmos tres formatos que o robo aceita: nada de endereco qualquer na tela. */
+  function canalOk(c) {
+    var u = c && String(c.url || '');
+    if (!/^https:\/\/(whatsapp\.com\/channel\/[A-Za-z0-9]{10,40}|chat\.whatsapp\.com\/[A-Za-z0-9]{10,40}|t\.me\/(\+[A-Za-z0-9_-]{10,40}|joinchat\/[A-Za-z0-9_-]{10,40}|[A-Za-z][A-Za-z0-9_]{4,31}))$/.test(u)) return null;
+    var rot = c.tipo === 'telegram' ? 'Entrar no canal da loja no Telegram' : (c.tipo === 'wpp_grupo' ? 'Entrar no grupo da loja no WhatsApp' : 'Seguir o canal da loja no WhatsApp');
+    return { url: u, rot: rot };
+  }
   function origemAtual() { return origemDaUrl() || (cfg && cfg.origem === 'live' ? 'live' : 'pagina'); }
   function fechar() { var f = el('mvvFundo'); if (f) f.classList.add('mvvEsc'); document.body.style.overflow = ''; }
   function abrir() {
@@ -171,6 +189,8 @@
     el('mvvSub').textContent = loja() + ' avisa você quando entrar ao vivo. Escolha como prefere receber.';
     el('mvvAceiteTxt').innerHTML = esc(textoConsentimento()) + ' <a href="/privacidade.html" target="_blank" rel="noopener">Privacidade</a>';
     if (pushOk()) pintarPush();
+    /* Veio da bio de uma rede: o WhatsApp ja vem marcado (o mais simples para quem chega pelo app). */
+    if (deRede() && !el('mvvWpp').checked) { el('mvvWpp').checked = true; el('mvvWppBox').hidden = false; }
     f.classList.remove('mvvEsc'); document.body.style.overflow = 'hidden';
   }
 
