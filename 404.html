@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/vendor/leaflet-1.9.4/leaflet.css">
 <link rel="stylesheet" href="/movikiui.css">
 <script src="/mvmetrica.js"></script>
+<script src="/vocab.js"></script>
 <script src="/vendor/leaflet-1.9.4/leaflet.js"></script>
 <style>
 /* ==========================================================================
@@ -1314,7 +1315,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-17-vippadrao';   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-17-vocab';   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1379,6 +1380,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   }
 
   /* ============ ícones (SVG inline — emoji nunca faz papel de ícone) ============ */
+  let VB=null; /* vocabulario do ramo (vocab.js), preenchido ao pintar o negocio */
   const IC={
     mapa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
     cardapio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a3 3 0 0 0 6 0V3M9 10v11M17 3c-1.5 0-3 1.8-3 5s1.5 4 3 4v9"/></svg>',
@@ -3137,7 +3139,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const temEv=listaEventos(d).length>0;
     const temFotos=liberaFotos()&&(d.fotos||[]).filter(fotoOk).length>0;
     const temVideo=listaVideos(d).length>0;
-    if(temCard)its.push({k:'cardapio',lb:'Cardápio',ic:IC.cardapio});
+    if(temCard)its.push({k:'cardapio',lb:(VB?VB.T:'Cardápio'),ic:IC.cardapio});
     if(temPromo)its.push({k:'promocoes',lb:'Promoções',ic:IC.promocoes});
     if(temEv)its.push({k:'eventos',lb:'Eventos',ic:IC.eventos});
     if(temVideo)its.push({k:'videos',lb:'Vídeos',ic:IC.videos});
@@ -3465,8 +3467,13 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     s.className='selo '+(aberto?'aberto':'fechado');
     s.innerHTML='<span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento');
     pintarFrescor(d);
-    const seg=[d.segmento,d.segmentoMacro].filter(x=>typeof x==='string'&&x.trim());
-    if(seg.length){el('subNeg').textContent=seg[0];el('subNeg').classList.remove('escondido');}
+    /* 17/10/2026: termo e icone por ramo (vocab.js). Loja de roupa via "Cardapio"
+       com garfo e faca na barra de baixo; agora so comida e bebida ve "Cardapio".
+       O subtitulo mostrava o id cru do ramo ("roupas", "perfumariacosmeticos"):
+       passa a mostrar o nome do ramo, e some se o ramo nao for conhecido. */
+    VB=null;
+    try{ if(window.mvVocab){ VB=window.mvVocab.aplicar(d.segmento,d.segmentoMacro); IC.cardapio=window.mvVocab.svgTexto(VB.desenho); } }catch(_v){ VB=null; }
+    if(VB&&VB.rotulo){el('subNeg').textContent=VB.rotulo;el('subNeg').classList.remove('escondido');}
     else el('subNeg').classList.add('escondido');
     atualizarBtnWpp();
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
