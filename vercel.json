@@ -110,6 +110,22 @@
       "destination": "/guia-taxas-live-shop.html"
     },
     {
+      "source": "/guia/como-fazer-live-de-vendas",
+      "destination": "/guias/como-fazer-live-de-vendas.html"
+    },
+    {
+      "source": "/guia/roteiro-de-live",
+      "destination": "/guias/roteiro-de-live.html"
+    },
+    {
+      "source": "/guia/receber-pix-na-live",
+      "destination": "/guias/receber-pix-na-live.html"
+    },
+    {
+      "source": "/guia/live-sem-seguidores",
+      "destination": "/guias/live-sem-seguidores.html"
+    },
+    {
       "source": "/fundador",
       "destination": "/fundador.html"
     },
@@ -166,6 +182,46 @@
       "destination": "/live-shop-ramos/moda-infantil.html"
     },
     {
+      "source": "/live-shop/bebe",
+      "destination": "/live-shop-ramos/bebe.html"
+    },
+    {
+      "source": "/live-shop/brinquedos",
+      "destination": "/live-shop-ramos/brinquedos.html"
+    },
+    {
+      "source": "/live-shop/moda-masculina",
+      "destination": "/live-shop-ramos/moda-masculina.html"
+    },
+    {
+      "source": "/live-shop/moda-fitness",
+      "destination": "/live-shop-ramos/moda-fitness.html"
+    },
+    {
+      "source": "/live-shop/moda-praia",
+      "destination": "/live-shop-ramos/moda-praia.html"
+    },
+    {
+      "source": "/live-shop/acessorios-celular",
+      "destination": "/live-shop-ramos/acessorios-celular.html"
+    },
+    {
+      "source": "/live-shop/eletroportateis",
+      "destination": "/live-shop-ramos/eletroportateis.html"
+    },
+    {
+      "source": "/live-shop/presentes",
+      "destination": "/live-shop-ramos/presentes.html"
+    },
+    {
+      "source": "/live-shop/confeitaria",
+      "destination": "/live-shop-ramos/confeitaria.html"
+    },
+    {
+      "source": "/live-shop/sertanejos",
+      "destination": "/live-shop-ramos/sertanejos.html"
+    },
+    {
       "source": "/vip/:acao/:t",
       "destination": "/vip.html"
     },
@@ -187,6 +243,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/guias/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
     {
       "source": "/live-shop-ramos/(.*)",
       "headers": [
