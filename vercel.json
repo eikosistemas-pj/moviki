@@ -118,6 +118,54 @@
       "destination": "/clientela.html"
     },
     {
+      "source": "/live-shop/moda",
+      "destination": "/live-shop-ramos/moda.html"
+    },
+    {
+      "source": "/live-shop/cosmeticos",
+      "destination": "/live-shop-ramos/cosmeticos.html"
+    },
+    {
+      "source": "/live-shop/perfumaria",
+      "destination": "/live-shop-ramos/perfumaria.html"
+    },
+    {
+      "source": "/live-shop/semijoias",
+      "destination": "/live-shop-ramos/semijoias.html"
+    },
+    {
+      "source": "/live-shop/bijuteria",
+      "destination": "/live-shop-ramos/bijuteria.html"
+    },
+    {
+      "source": "/live-shop/calcados",
+      "destination": "/live-shop-ramos/calcados.html"
+    },
+    {
+      "source": "/live-shop/suplementos",
+      "destination": "/live-shop-ramos/suplementos.html"
+    },
+    {
+      "source": "/live-shop/pet",
+      "destination": "/live-shop-ramos/pet.html"
+    },
+    {
+      "source": "/live-shop/farmacia",
+      "destination": "/live-shop-ramos/farmacia.html"
+    },
+    {
+      "source": "/live-shop/otica",
+      "destination": "/live-shop-ramos/otica.html"
+    },
+    {
+      "source": "/live-shop/lingerie",
+      "destination": "/live-shop-ramos/lingerie.html"
+    },
+    {
+      "source": "/live-shop/moda-infantil",
+      "destination": "/live-shop-ramos/moda-infantil.html"
+    },
+    {
       "source": "/vip/:acao/:t",
       "destination": "/vip.html"
     },
@@ -139,6 +187,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/live-shop-ramos/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
     {
       "source": "/sw-vip.js",
       "headers": [
