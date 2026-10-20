@@ -567,7 +567,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-17-vippadrao';   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
+  window.MOVIKI_VERSAO='2026-10-19-gratis';   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X no Pix da live — o mventrega.js mostra a taxa riscada ou "faltam R$ Y" e a taxa e repintada quando a quantidade muda. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1534,7 +1534,9 @@ svg{display:block}
     el('ckFreteLin').classList.toggle('escondido',!(comFrete&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
     el('ckTotal').textContent=brl(ckSub()+fr);}
   /* frete gratis acima de X depende do subtotal: repinta quando a quantidade muda */
-  function ckRepintarFrete(){const box=el('ckEFrete');if(ckBoxModo==='envio'&&box){const uf=el('ckEUf');if(uf)uf.dispatchEvent(new Event('input'));}}
+  function ckRepintarFrete(){const box=el('ckEFrete');if(ckBoxModo==='envio'&&box){const uf=el('ckEUf');if(uf)uf.dispatchEvent(new Event('input'));}
+    /* 2026-10-19-gratis: entrega gratis acima de R$ X depende do subtotal */
+    if(ckBoxModo==='local'){const bb=el('ckEBairro');if(bb&&bb.tagName==='SELECT')bb.dispatchEvent(new Event('change'));}}
   el('ckMenos').onclick=()=>{if(ckQ>1){ckQ--;ckTotal();ckRepintarFrete();}};
   el('ckMais').onclick=()=>{if(ckQ<limiteQtd(ckP)){ckQ++;ckTotal();ckRepintarFrete();}else toast('Limite desta compra.');};
   document.querySelectorAll('input[name="ckEnt"]').forEach(x=>x.addEventListener('change',trocarEntrega));
