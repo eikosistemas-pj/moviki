@@ -14,7 +14,7 @@
   FAQPage so com perguntas que aparecem na pagina. CSP por meta, como o resto do repo.
 -->
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://api.reclameaqui.com.br; frame-src https://verificada.reclameaqui.com.br; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#050b14">
 <meta property="og:type" content="website">
@@ -459,6 +459,34 @@ footer a{text-decoration:underline}
 </section>
 </main>
 
+<!-- ================= CONFIANCA - RECLAME AQUI (2026-10-18-selo-ra) =================
+     Selo oficial dinamico: some sozinho se a verificacao cair. Nunca trocar por imagem.
+     O texto ao lado nao afirma "verificada" de proposito: quem afirma e o selo.
+     Um selo por pagina (o codigo do Reclame AQUI usa id fixo). -->
+<style>
+.mvra{padding:28px 16px;background:#081221;border-top:1px solid #16304f;border-bottom:1px solid #16304f}
+.mvra-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center}
+.mvra-selo{flex:0 0 auto;min-width:142px;min-height:52px;display:flex;align-items:center;justify-content:center}
+.mvra-txt{flex:1 1 320px;max-width:640px;color:#c6d8ee;font-size:14px;line-height:1.5}
+.mvra-tit{margin:0 0 4px;color:#eaf6ff;font-size:17px;font-weight:700}
+.mvra-sub{margin:0 0 6px}
+.mvra-cnpj{margin:0 0 8px;color:#8fa6c4;font-size:12.5px}
+.mvra-link{color:#00D4FF;font-weight:600;text-decoration:none}
+.mvra-link:hover,.mvra-link:focus-visible{text-decoration:underline}
+@media (max-width:560px){.mvra-txt{text-align:center}}
+</style>
+<section class="mvra" aria-label="Reputação do Moviki no Reclame AQUI">
+  <div class="mvra-in">
+    <div class="mvra-selo"><div id="ra-verified-seal"><script type="text/javascript" id="ra-embed-verified-seal" src="https://s3.amazonaws.com/raichu-beta/ra-verified/bundle.js" data-id="c2NUbk1iQ2ZXSU45RWgyaTplaWtvLXNpc3RlbWFzLWRlc2Vudm9sdmltZW50by1kZS1zb2Z0d2FyZS1sdGRh" data-target="ra-verified-seal" data-model="horizontal_1"></script></div></div>
+    <div class="mvra-txt">
+      <p class="mvra-tit">Confira o Moviki no Reclame AQUI</p>
+      <p class="mvra-sub">Antes de contratar, veja a nossa página no Reclame AQUI: dados da empresa, canais de atendimento e o histórico de atendimento ao cliente.</p>
+      <p class="mvra-cnpj">EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02</p>
+      <a class="mvra-link" href="https://www.reclameaqui.com.br/empresa/eiko-sistemas-desenvolvimento-de-software-ltda/" target="_blank" rel="noopener">Ver a nossa página no Reclame AQUI &rarr;</a>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <p>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02 · Curitiba/PR · <a href="tel:+554120186848">(41) 2018-6848</a></p>
@@ -492,7 +520,7 @@ footer a{text-decoration:underline}
   }catch(e){}
 })();
 </script>
-<script>window.MOVIKI_VERSAO='2026-10-20-onda3';</script>
+<script>window.MOVIKI_VERSAO='2026-10-20-selo-ra';</script><!-- 2026-10-20-selo-ra: bloco Reclame AQUI antes do rodape (PR #68 refeito sobre 2026-10-20-onda3) -->
 <script>
 /* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
 (function(){
