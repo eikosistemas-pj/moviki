@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-19-gratis (P85 Fase 2b: entrega gratis acima de R$ X com "faltam R$ Y" na sacola; adicionar a tela inicial com o nome da loja) + 2026-10-19-vitrine2 (+ 2026-10-16-lojaonline, botao Loja online; P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-19-variacao (P85 Fase 2b: tamanho, cor ou sabor no produto, escolhidos antes de por na sacola) + 2026-10-19-gratis (P85 Fase 2b: entrega gratis acima de R$ X com "faltam R$ Y" na sacola; adicionar a tela inicial com o nome da loja) + 2026-10-19-vitrine2 (+ 2026-10-16-lojaonline, botao Loja online; P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1357,7 +1357,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-19-gratis';   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X (checkout_publico.gratisAcima; o robo zera a taxa) com "faltam R$ Y" na barra da sacola e no pedido; "Adicionar a tela inicial" no Mais, com manifest da loja (/api/manifest). */ /* antes: 2026-10-19-vitrine2 */   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-19-variacao';   /* 19/10 (P85 Fase 2b): produto com variacoes (negocios.cardapio[].produtos[].variacoes) abre a escolha de tamanho/cor antes da sacola; cada escolha e uma linha da sacola; o teto de quantidade e do produto somado; o pedido manda itens[].escolha e o robo confere (erro 'opcao'). */ /* antes: 2026-10-19-gratis */   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X (checkout_publico.gratisAcima; o robo zera a taxa) com "faltam R$ Y" na barra da sacola e no pedido; "Adicionar a tela inicial" no Mais, com manifest da loja (/api/manifest). */ /* antes: 2026-10-19-vitrine2 */   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2377,6 +2377,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      tela seguinte. No 1, o menos vira lixeira — "menos" ali removeria o item
      sem avisar. */
   function htmlControle(ci,pi){
+    /* 2026-10-19-variacao: produto com tamanho/cor sempre passa pela escolha */
+    const _base=itemDoCardapio(ci,pi);
+    if(_base&&_base.vs.length){
+      const n=qtdProduto(ci,pi);
+      return '<button class="addBtn" type="button" onclick="mvEscolher('+ci+','+pi+')">'+SVG_ADD+(n?'Escolher outro':'Escolher e adicionar')+'</button>'+(n?'<div class="varNaSacola">'+n+(n===1?' na sacola':' na sacola')+'</div>':'');
+    }
     const it=SACOLA.find(x=>x.k===chaveItem(ci,pi));
     if(!it)return '<button class="addBtn" type="button" onclick="mvAdd('+ci+','+pi+')">'+SVG_ADD+'Adicionar</button>';
     return '<div class="qtdBox">'+
@@ -2431,6 +2437,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const _eq=podeComprar()?estoquePub(p):null;
     const ac=(p.acabando?'<span class="acabando">ACABANDO!</span>':'')+((_eq!==null&&_eq>0&&_eq<=5)?'<span class="restamPub">Restam '+_eq+'</span>':'');
     const desc=(p.descricao&&String(p.descricao).trim())?('<div class="desc">'+esc(String(p.descricao).trim())+'</div>'):'';
+    const _vs=variacoesDe(p);   /* 2026-10-19-variacao */
+    const varTxt=_vs.length?('<div class="varOps">'+_vs.map(g=>'<span><b>'+esc(g.nome)+':</b> '+g.ops.map(esc).join(' · ')+'</span>').join('')+'</div>'):'';
     let fotos=[];
     if(mostrarFotos&&Array.isArray(p.fotos))fotos=p.fotos.filter(fotoOk).slice(0,3);
     let thumb='', guardadas='';
@@ -2445,7 +2453,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     }
     return '<div class="itemPub'+(fotos.length?' comFoto':'')+'">'+
       '<div class="itemLinha"><div class="itemTxt">'+
-        '<div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+'</div>'+desc+preco+
+        '<div class="itemTopo"><div class="nm">'+esc(p.nome)+'</div>'+ac+'</div>'+desc+varTxt+preco+
       '</div>'+thumb+'</div>'+guardadas+comprar+'</div>';
   }
   function categoriasValidas(){ return (cardapioAtual||[]).map((c,i)=>({c:c,i:i})).filter(o=>o.c&&(o.c.categoria||(o.c.produtos&&o.c.produtos.length))); }
@@ -2608,10 +2616,17 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const p=(c.produtos||[])[pi]; if(!p||!p.nome)return null;
     const preco=precoNumPub(p.preco);
     if(!(preco>0))return null;
-    return {nome:String(p.nome),preco:preco,sku:String(p.sku||'')};
+    return {nome:String(p.nome),preco:preco,sku:String(p.sku||''),vs:variacoesDe(p)};
   }
+  /* 2026-10-19-variacao: mesmas regras de limpeza do robo (lib/checkout.js lerVariacoes) */
+  function variacoesDe(p){
+    const vs=Array.isArray(p&&p.variacoes)?p.variacoes.slice(0,2):[];
+    return vs.map(g=>({nome:String((g&&g.nome)||'').trim().slice(0,20),ops:(Array.isArray(g&&g.ops)?g.ops:[]).map(o=>String(o||'').replace(/\s+/g,' ').trim().slice(0,20)).filter(Boolean).slice(0,15)})).filter(g=>g.nome&&g.ops.length);
+  }
+  function qtdProduto(ci,pi){ return SACOLA.filter(x=>x.ci===ci&&x.pi===pi).reduce((s,x)=>s+x.qtd,0); }
   window.mvAdd=function(ci,pi){
     const it=itemDoCardapio(ci,pi); if(!it)return;
+    if(it.vs.length){ mvEscolher(ci,pi); return; }   /* 2026-10-19-variacao */
     const k=chaveItem(ci,pi);
     const ja=SACOLA.find(x=>x.k===k);
     const teto=tetoQtd(ci,pi);
@@ -2630,12 +2645,34 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const alvo=SACOLA[i];
     const nova=alvo.qtd+d;
     if(nova<1)SACOLA.splice(i,1);
-    else alvo.qtd=Math.max(1,Math.min(tetoQtd(alvo.ci,alvo.pi)||1,nova));
+    else alvo.qtd=Math.max(1,Math.min(Math.max(1,(tetoQtd(alvo.ci,alvo.pi)||1)-(qtdProduto(alvo.ci,alvo.pi)-alvo.qtd)),nova));
     pintarBotao(alvo.ci,alvo.pi);
     pintarSacola();
     return alvo;
   }
   window.mvAddQtd=function(ci,pi,d){ mudarQtd(chaveItem(ci,pi),d); };
+  /* 2026-10-19-variacao: abre a folha de escolha e recebe a escolha de volta */
+  window.mvEscolher=function(ci,pi){
+    const it=itemDoCardapio(ci,pi); if(!it||!it.vs.length)return;
+    const livre=Math.max(0,tetoQtd(ci,pi)-qtdProduto(ci,pi));
+    if(livre<1){ try{toast('Você já pôs o máximo deste produto na sacola.');}catch(_){} return; }
+    if(window.mvVarAbrir)mvVarAbrir({ci:ci,pi:pi,nome:it.nome,precoTxt:fmtReal(it.preco),vs:it.vs,esc:it.vs.map(g=>g.ops.length===1?g.ops[0]:''),q:1,max:livre,aviso:''});
+    ev('variacao_aberta',{});
+  };
+  window.mvVarPor=function(ci,pi,escolha,q){
+    const it=itemDoCardapio(ci,pi); if(!it)return false;
+    if(it.vs.some((g,gi)=>g.ops.indexOf(escolha[gi])<0))return false;
+    const livre=Math.max(0,tetoQtd(ci,pi)-qtdProduto(ci,pi)); if(livre<1)return false;
+    const n=Math.max(1,Math.min(livre,q|0||1));
+    const k=chaveItem(ci,pi)+':'+escolha.join('|');
+    const ja=SACOLA.find(x=>x.k===k);
+    if(ja)ja.qtd+=n;
+    else SACOLA.push({k:k,ci:ci,pi:pi,nome:it.nome,preco:it.preco,sku:it.sku,qtd:n,esc:escolha.slice(),op:escolha.join(' · ')});
+    pintarBotao(ci,pi);
+    pintarSacola();
+    ev('sacola_add',{variacao:1});
+    return true;
+  };
   window.mvQtd=function(k,d){
     if(!mudarQtd(k,d))return;
     if(el('folhaPedido').classList.contains('on')){ if(SACOLA.length)telaDados(); else fecharPedido(); }
@@ -2682,7 +2719,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   function linhasSacola(){
     return SACOLA.map(x=>
       '<div class="sacLinha"><div class="sNome">'+esc(x.nome)+
-      '<div class="sUn">'+fmtReal(x.preco)+' cada</div></div>'+
+      '<div class="sUn">'+(x.op?esc(x.op)+' · ':'')+fmtReal(x.preco)+' cada</div></div>'+
       '<div class="sacPasso">'+
         '<button type="button" onclick="mvQtd(\''+esc(x.k)+'\',-1)" aria-label="Menos um">−</button>'+
         '<span>'+x.qtd+'</span>'+
@@ -2797,6 +2834,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       aceite:'Marque o aceite para continuar.',
       produto:'Um item do seu pedido saiu do cardápio. Atualize a página.',
       sem_preco:'Um item do seu pedido está sem preço definido.',
+      opcao:'Escolha '+String((extra&&extra.grupo)||'a opção').toLowerCase()+(extra&&extra.nome?' de “'+extra.nome+'”':'')+' de novo: tire o item da sacola e adicione outra vez.',
       minimo:'Pedido mínimo de '+fmtReal((extra&&extra.minimo)||COMPRA.minimo)+' neste negócio.',
       freio:'Muitos pedidos ao mesmo tempo. Tente de novo em alguns minutos.',
       indisponivel:'As vendas deste negócio estão fechadas neste momento.',
@@ -2860,7 +2898,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         nome:nome, whatsapp:wpp, cpf:cpf,
         entrega:PD_ENT, detalhe:end, aceite:true,
         ...(endObj&&(PD_ENT==='entrega'||PD_ENT==='envio')?{endereco:endObj}:{}),
-        itens:SACOLA.map(x=>({sku:x.sku,nome:x.nome,qtd:x.qtd}))
+        itens:SACOLA.map(x=>(x.esc?{sku:x.sku,nome:x.nome,qtd:x.qtd,escolha:x.esc}:{sku:x.sku,nome:x.nome,qtd:x.qtd}))
       });
       if(!j.ok){ av.textContent=erroPedido(j.erro,j); PD_ENVIANDO=false; btn.disabled=false; btn.textContent=rot; return; }
       PEDIDO=j; PD_COMPROV=null;
@@ -4334,6 +4372,72 @@ html.mvClaro .sacolaBar .sGratis.ok{color:#167C40}
 .mvInstOk{width:100%;height:48px;border:0;border-radius:14px;background:#00D4FF;color:#04121f;font:inherit;font-weight:800;font-size:16px}
 html.mvClaro .mvInstCx{background:#fff;color:#111827}
 html.mvClaro .mvInstOk{background:var(--loja);color:#fff}
+</style>
+
+<script>
+/* 2026-10-19-variacao (P85 Fase 2b): ESCOLHA DE TAMANHO/COR antes da sacola.
+   Fica fora do script module de proposito: e so a folha; quem poe na sacola e
+   window.mvVarPor, exposta pelo module. */
+(function(){
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var ST=null;
+  function folha(){
+    var f=document.getElementById('mvVarFolha');
+    if(!f){f=document.createElement('div');f.id='mvVarFolha';f.setAttribute('role','dialog');f.setAttribute('aria-modal','true');document.body.appendChild(f);
+      f.addEventListener('click',function(ev){if(ev.target===f||ev.target.closest('[data-fechar]'))f.classList.remove('on');});}
+    return f;
+  }
+  function pintar(){
+    var f=folha(), d=ST; if(!d)return;
+    var falta=d.vs.some(function(g,gi){return !d.esc[gi];});
+    var h='<div class="mvVarCx"><div class="mvVarTopo"><div><div class="mvVarNome">'+esc(d.nome)+'</div><div class="mvVarPreco">'+esc(d.precoTxt)+'</div></div><button type="button" class="mvVarX" data-fechar aria-label="Fechar">✕</button></div>';
+    d.vs.forEach(function(g,gi){
+      h+='<div class="mvVarGrupo"><div class="mvVarG">'+esc(g.nome)+(d.esc[gi]?': <b>'+esc(d.esc[gi])+'</b>':'')+'</div><div class="mvVarOps">'+
+        g.ops.map(function(o){return '<button type="button" class="mvVarOp'+(d.esc[gi]===o?' on':'')+'" data-g="'+gi+'" data-o="'+esc(o)+'">'+esc(o)+'</button>';}).join('')+'</div></div>';
+    });
+    h+='<div class="mvVarRod"><div class="mvVarQ"><button type="button" data-q="-1" aria-label="Menos">−</button><span>'+d.q+'</span><button type="button" data-q="1" aria-label="Mais">+</button></div>'+
+      '<button type="button" class="mvVarOk"'+(falta?' disabled':'')+'>'+(falta?'Escolha '+esc(d.vs.filter(function(g,gi){return !d.esc[gi];})[0].nome.toLowerCase()):'Pôr na sacola')+'</button></div>'+
+      (d.aviso?'<div class="mvVarAviso">'+esc(d.aviso)+'</div>':'')+'</div>';
+    f.innerHTML=h;
+    Array.prototype.forEach.call(f.querySelectorAll('.mvVarOp'),function(b){b.onclick=function(){d.esc[+b.getAttribute('data-g')]=b.getAttribute('data-o');d.aviso='';pintar();};});
+    Array.prototype.forEach.call(f.querySelectorAll('[data-q]'),function(b){b.onclick=function(){var n=d.q+(+b.getAttribute('data-q'));if(n<1)n=1;if(n>d.max){n=d.max;d.aviso='Limite deste produto: '+d.max+'.';}d.q=n;pintar();};});
+    var ok=f.querySelector('.mvVarOk'); if(ok)ok.onclick=function(){ if(window.mvVarPor&&mvVarPor(d.ci,d.pi,d.esc.slice(),d.q))f.classList.remove('on'); };
+    f.classList.add('on');
+  }
+  window.mvVarAbrir=function(d){ ST=d; pintar(); };
+})();
+</script>
+<style id="cfVariacao">
+/* 2026-10-19-variacao */
+.varOps{display:flex;flex-direction:column;gap:2px;font-size:12.5px;color:var(--mv-txt-3,#8fa6c4);margin:4px 0 2px}
+.varOps b{font-weight:700}
+.varNaSacola{font-size:12.5px;font-weight:700;color:var(--mv-ok,#22c55e);text-align:center;margin-top:6px}
+#mvVarFolha{position:fixed;inset:0;z-index:9998;background:rgba(5,10,20,.55);display:none;align-items:flex-end;justify-content:center}
+#mvVarFolha.on{display:flex}
+.mvVarCx{width:100%;max-width:480px;max-height:86vh;overflow:auto;background:var(--mv-fundo-2,#0d1a2c);color:var(--mv-txt,#fff);border-radius:20px 20px 0 0;padding:18px 18px calc(16px + env(safe-area-inset-bottom))}
+.mvVarTopo{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+.mvVarNome{font-size:17px;font-weight:800;line-height:1.25}
+.mvVarPreco{font-size:15px;font-weight:700;color:var(--mv-ok,#22c55e);margin-top:3px}
+.mvVarX{border:0;background:rgba(127,127,127,.15);color:inherit;width:36px;height:36px;border-radius:50%;font-size:15px;flex:none}
+.mvVarGrupo{margin:12px 0}
+.mvVarG{font-size:13.5px;margin-bottom:8px;opacity:.85}
+.mvVarOps{display:flex;flex-wrap:wrap;gap:8px}
+.mvVarOp{min-width:48px;height:42px;padding:0 14px;border-radius:11px;border:1.5px solid var(--mv-linha,#1c3457);background:transparent;color:inherit;font:inherit;font-weight:700;font-size:14.5px}
+.mvVarOp.on{border-color:#00D4FF;background:rgba(0,212,255,.12)}
+.mvVarRod{display:flex;gap:10px;align-items:center;margin-top:16px}
+.mvVarQ{display:flex;align-items:center;gap:6px;border:1.5px solid var(--mv-linha,#1c3457);border-radius:12px;height:48px;padding:0 4px}
+.mvVarQ button{width:38px;height:38px;border:0;background:transparent;color:inherit;font-size:20px;font-weight:700}
+.mvVarQ span{min-width:20px;text-align:center;font-weight:800}
+.mvVarOk{flex:1;height:48px;border:0;border-radius:12px;background:#00D4FF;color:#04121f;font:inherit;font-weight:800;font-size:15.5px}
+.mvVarOk:disabled{opacity:.45}
+.mvVarAviso{font-size:12.5px;color:#ffcf6b;margin-top:8px}
+html.mvClaro .mvVarCx{background:#fff;color:#111827}
+html.mvClaro .mvVarPreco{color:#167C40}
+html.mvClaro .mvVarOp{border-color:#d1d5db}
+html.mvClaro .mvVarOp.on{border-color:var(--loja);background:var(--loja-suave);color:var(--loja)}
+html.mvClaro .mvVarQ{border-color:#d1d5db}
+html.mvClaro .mvVarOk{background:var(--loja);color:#fff}
+html.mvClaro .varNaSacola{color:#167C40}
 </style>
 </body>
 </html>
