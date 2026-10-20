@@ -222,6 +222,70 @@
       "destination": "/live-shop-ramos/sertanejos.html"
     },
     {
+      "source": "/live-shop/boutique",
+      "destination": "/live-shop-ramos/boutique.html"
+    },
+    {
+      "source": "/live-shop/brecho",
+      "destination": "/live-shop-ramos/brecho.html"
+    },
+    {
+      "source": "/live-shop/esportes",
+      "destination": "/live-shop-ramos/esportes.html"
+    },
+    {
+      "source": "/live-shop/acai",
+      "destination": "/live-shop-ramos/acai.html"
+    },
+    {
+      "source": "/live-shop/autopecas",
+      "destination": "/live-shop-ramos/autopecas.html"
+    },
+    {
+      "source": "/live-shop/emporio",
+      "destination": "/live-shop-ramos/emporio.html"
+    },
+    {
+      "source": "/live-shop/naturais",
+      "destination": "/live-shop-ramos/naturais.html"
+    },
+    {
+      "source": "/live-shop/utilidades",
+      "destination": "/live-shop-ramos/utilidades.html"
+    },
+    {
+      "source": "/live-shop/cama-mesa-banho",
+      "destination": "/live-shop-ramos/cama-mesa-banho.html"
+    },
+    {
+      "source": "/live-shop/acougue",
+      "destination": "/live-shop-ramos/acougue.html"
+    },
+    {
+      "source": "/live-shop/cabelo",
+      "destination": "/live-shop-ramos/cabelo.html"
+    },
+    {
+      "source": "/live-shop/chocolateria",
+      "destination": "/live-shop-ramos/chocolateria.html"
+    },
+    {
+      "source": "/live-shop/festa",
+      "destination": "/live-shop-ramos/festa.html"
+    },
+    {
+      "source": "/live-shop/floricultura",
+      "destination": "/live-shop-ramos/floricultura.html"
+    },
+    {
+      "source": "/live-shop/games",
+      "destination": "/live-shop-ramos/games.html"
+    },
+    {
+      "source": "/live-shop/padaria",
+      "destination": "/live-shop-ramos/padaria.html"
+    },
+    {
       "source": "/vip/:acao/:t",
       "destination": "/vip.html"
     },
