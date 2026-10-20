@@ -1,5 +1,11 @@
 /*!
- * MOVIKI mventrega.js | versao 2026-10-04-freteauto | repo: moviki (site publico)
+ * MOVIKI mventrega.js | versao 2026-10-19-gratis | repo: moviki (site publico)
+ *
+ * 19/10/2026 (P85 Fase 2b): ENTREGA GRATIS ACIMA DE R$ X na tabela de bairros
+ * (checkout_publico.gratisAcima). A taxa do bairro aparece riscada e "gratis"
+ * quando os produtos passam do valor, e "faltam R$ Y" quando nao passam. A
+ * pagina passa o.sub() tambem no modo bairro. Quem zera a taxa no Pix e o robo
+ * (lib/checkout.js 2026-10-19-gratis); aqui e so vitrine.
  *
  * 04/10/2026 (P70 etapa 6): FRETE AUTOMATICO. Com a chave freteAuto ligada
  * pelo dono e o Melhor Envio do lojista conectado (checkout_publico.envio.auto),
@@ -109,6 +115,14 @@
     return fora;
   }
 
+  function gratisAcima(cfg) { return Math.max(0, Number(cfg && cfg.gratisAcima) || 0); }
+  /* taxa do bairro depois da entrega gratis (null = bairro fora/sem tabela) */
+  function freteLocal(cfg, bairro, sub) {
+    var v = freteDe(cfg, bairro);
+    if (v === null) return null;
+    var g = gratisAcima(cfg);
+    return (g > 0 && v > 0 && Number(sub || 0) >= g) ? 0 : v;
+  }
   function freteDe(cfg, bairro) {
     if (!temTabela(cfg)) return null;
     var alvo = norm(bairro);
@@ -170,6 +184,7 @@
     }
     if (temTabela(cfg)) info.push('Seu bairro não está na lista? Este negócio ainda não entrega aí — escolha retirar no local.');
     else info.push('A taxa de entrega, se houver, é combinada com o negócio pelo WhatsApp.');
+    if (temTabela(cfg) && gratisAcima(cfg) > 0) info.push('Entrega grátis acima de ' + real(gratisAcima(cfg)) + ' em produtos.');
     if (cfg && Number(cfg.minimoEntrega) > 0) info.push('Pedido mínimo para entrega: ' + real(cfg.minimoEntrega) + ' em produtos.');
     if (cfg && cfg.prazo) info.push('Prazo de entrega: ' + esc(cfg.prazo) + '.');
     h += '<div class="mvEInfo">' + info.join(' ') + '</div>';
@@ -247,9 +262,13 @@
       }
       var v = temTabela(cfg) && bai ? freteDe(cfg, bai.value) : null;
       if (v === null) { box.style.display = 'none'; if (onFrete) onFrete(null); return; }
+      var sub = o.sub ? Number(o.sub()) || 0 : 0, g = gratisAcima(cfg), vf = freteLocal(cfg, bai.value, sub);
       box.style.display = '';
-      box.innerHTML = '<span>Taxa de entrega' + (cfg.prazo ? ' · ' + esc(cfg.prazo) : '') + '</span><b>' + (v > 0 ? real(v) : 'grátis') + '</b>';
-      if (onFrete) onFrete(v);
+      var rot = 'Taxa de entrega' + (cfg.prazo ? ' · ' + esc(cfg.prazo) : '');
+      if (v > 0 && vf === 0) rot += '<small style="display:block;opacity:.75;font-size:12px">Grátis: seu pedido passou de ' + real(g) + '</small>';
+      else if (v > 0 && g > 0 && o.sub) rot += '<small style="display:block;opacity:.75;font-size:12px">Faltam ' + real(g - sub) + ' em produtos para a entrega sair grátis</small>';
+      box.innerHTML = '<span>' + rot + '</span><b>' + (vf > 0 ? real(vf) : (v > 0 ? '<s style="opacity:.55;font-weight:500;margin-right:6px">' + real(v) + '</s>grátis' : 'grátis')) + '</b>';
+      if (onFrete) onFrete(vf);
     }
     if (bai) bai.addEventListener('change', pintarFrete);
     if (cep) cep.addEventListener('input', function () {
@@ -369,6 +388,6 @@
     return MSG[cod] || '';
   }
 
-  window.mvEnt = { html: html, ligar: ligar, ler: ler, freteDe: freteDe, temTabela: temTabela, msg: msg, real: real,
+  window.mvEnt = { html: html, ligar: ligar, ler: ler, freteDe: freteDe, freteLocal: freteLocal, gratisAcima: gratisAcima, temTabela: temTabela, msg: msg, real: real,
     envioAtivo: envioAtivo, freteEnvio: freteEnvio, semEnvio: semEnvio, autoAtivo: autoAtivo };
 })();

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-19-vitrine2 (+ 2026-10-16-lojaonline, botao Loja online; P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-19-gratis (P85 Fase 2b: entrega gratis acima de R$ X com "faltam R$ Y" na sacola; adicionar a tela inicial com o nome da loja) + 2026-10-19-vitrine2 (+ 2026-10-16-lojaonline, botao Loja online; P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -1235,6 +1235,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       <div class="sInfo">
         <div class="sQtd" id="sacolaQtd">0 itens</div>
         <div class="sTot" id="sacolaTotal">R$ 0,00</div>
+        <div class="sGratis" id="sacolaGratis"></div>
       </div>
       <button class="sIr" type="button" onclick="abrirPedido()">Fazer pedido</button>
     </div>
@@ -1356,7 +1357,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-19-vitrine2';   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-19-gratis';   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X (checkout_publico.gratisAcima; o robo zera a taxa) com "faltam R$ Y" na barra da sacola e no pedido; "Adicionar a tela inicial" no Mais, com manifest da loja (/api/manifest). */ /* antes: 2026-10-19-vitrine2 */   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2586,6 +2587,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         entrega:String((d&&d.entrega)||'retirada'),
         bairros:(d&&Array.isArray(d.bairros))?d.bairros.filter(x=>x&&x.nome).slice(0,80):[],
         minimoEntrega:Number((d&&d.minimoEntrega)||0)||0,
+        gratisAcima:Number((d&&d.gratisAcima)||0)||0,   /* 2026-10-19-gratis */
         prazo:String((d&&d.prazo)||''),
         cidadeEntrega:String((d&&d.cidadeEntrega)||''),
         retirada:String((d&&d.retirada)||''),
@@ -2649,6 +2651,15 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(!n)return;
     el('sacolaQtd').textContent=n+(n===1?' item':' itens');
     el('sacolaTotal').textContent=fmtReal(totalSacola());
+    const sg=el('sacolaGratis'); if(sg){ const t=textoGratis(totalSacola(),true); sg.textContent=t; sg.classList.toggle('ok',/^Entrega grátis/.test(t)); }
+  }
+  /* 2026-10-19-gratis (P85 Fase 2b): "faltam R$ X para a entrega gratis". So
+     com a tabela de bairros e a entrega ligada; quem zera a taxa e o robo. */
+  function textoGratis(tot,curto){
+    const g=Number(COMPRA&&COMPRA.gratisAcima)||0;
+    const ent=COMPRA&&COMPRA.entrega;
+    if(!(g>0)||COMPRA.entregaSuspensa||!(ent==='entrega'||ent==='ambos')||!(COMPRA.bairros&&COMPRA.bairros.length))return '';
+    return tot>=g?'Entrega grátis no seu bairro ✓':('Faltam '+fmtReal(Math.round((g-tot)*100)/100)+(curto?' p/ entrega grátis':' para entrega grátis'));
   }
   /* A faixa do video mostra quantidade e total. Sem repintar aqui, tirar um
      item pela folha do pedido deixaria o video mostrando o numero antigo. */
@@ -2698,6 +2709,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 
     let h=passos(1);
     h+=linhasSacola();
+    { const tg=textoGratis(tot); if(tg){ const g=COMPRA.gratisAcima, pc=Math.max(4,Math.min(100,Math.round(tot/g*100))); h+='<div class="pdGratis'+(tot>=g?' ok':'')+'"><div class="t">'+esc(tg)+'</div><div class="bar"><i style="width:'+pc+'%"></i></div></div>'; } }
     h+='<div class="sacTotal" id="pdFreteLin" style="display:none;font-size:14px;font-weight:600;padding-top:8px"><span>Entrega</span><span id="pdFreteVal"></span></div>';
     h+='<div class="sacTotal"><span>Total</span><b id="pdTotVal">'+fmtReal(tot)+'</b></div>';
     if(falta)h+='<div class="pdAviso">Pedido mínimo de '+fmtReal(COMPRA.minimo)+' neste negócio.</div>';
@@ -2720,7 +2732,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
          lista do lojista com a taxa). Se o arquivo nao carregar, volta o
          campo de texto de antes — a venda nao pode depender dele. */
       if(window.mvEnt){
-        h+='<div id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+mvEnt.html(COMPRA,{p:'pd',wrap:'pdCampo'})+'</div>';
+        h+='<div id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+mvEnt.html(COMPRA,{p:'pd',wrap:'pdCampo',sub:totalSacola})+'</div>';
       }else{
         h+='<div class="pdCampo" id="pdEndBox" style="margin-top:11px;'+(PD_ENT==='entrega'?'':'display:none')+'">'+
            '<label>Endereço da entrega</label><textarea id="pdEnd" rows="2" maxlength="140" placeholder="Rua, número, bairro e ponto de referência"></textarea></div>';
@@ -2739,7 +2751,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
     PD_FRETE=null; PD_FRETE_ENV=null;
-    if(window.mvEnt&&el('pdCep'))mvEnt.ligar(COMPRA,{p:'pd'},function(v){PD_FRETE=v;pintarTotalPedido();});
+    if(window.mvEnt&&el('pdCep'))mvEnt.ligar(COMPRA,{p:'pd',sub:totalSacola},function(v){PD_FRETE=v;pintarTotalPedido();});
     if(window.mvEnt&&el('pvCep'))mvEnt.ligar(COMPRA,{p:'pv',modo:'envio',sub:totalSacola,uid:negocioUid,qtd:pdQtdEnvio,itens:pdItensEnvio},function(v){PD_FRETE_ENV=v;pintarTotalPedido();});
     pintarTotalPedido();
   }
@@ -3172,6 +3184,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(dadosNeg&&liberaConteudo()&&listaFaq(dadosNeg).length)its.push({ic:IC.info,lb:'Perguntas frequentes',fn:'fecharFolha(\'folhaMais\');var _f=document.getElementById(\'secFaq\');if(_f)_f.scrollIntoView({behavior:\'smooth\',block:\'start\'})'});
     its.push({ic:IC.avaliacoes,lb:'Avaliar este negócio',fn:'fecharFolha(\'folhaMais\');abrirAvaliar()'});
     its.push({ic:IC.compartilhar,lb:'Compartilhar a página',fn:'compartilhar()'});
+    if(!mvInstalado())its.push({ic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 8v6M9 11h6"/><path d="M11 18h2"/></svg>',lb:'Adicionar à tela inicial',fn:'fecharFolha(\'folhaMais\');mvInstalar()'});   /* 2026-10-19-gratis */
     its.push({ic:IC.coracao,lb:(ehFavorito()?'Tirar dos meus lugares':'Salvar nos meus lugares'),fn:'alternarFavorito();fecharFolha(\'folhaMais\')'});
     its.push({ic:IC.info,lb:'Informações do negócio',fn:'fecharFolha(\'folhaMais\');irParaAba(\'info\')'});
     el('listaMais').innerHTML=its.map(i=>'<button class="itMais" type="button" onclick="'+i.fn+'">'+i.ic+'<span>'+i.lb+'</span></button>').join('');
@@ -4264,6 +4277,63 @@ html.mvClaro #mvvCaixa .mvvBtn{background:var(--loja);}
 .semDia.hoje b{font-weight:700;}
 html.mvClaro .agVip{background:var(--loja);color:#fff;}
 html.mvClaro .agTxt small,html.mvClaro .semana summary{color:var(--loja);}
+</style>
+<style id="cfGratis">
+/* 2026-10-19-gratis (P85 Fase 2b): faltam R$ X para a entrega gratis */
+.sacolaBar .sGratis{font-size:12px;font-weight:600;color:var(--mv-txt-3,#8fa6c4);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw}
+.sacolaBar .sGratis:empty{display:none}
+.sacolaBar .sGratis.ok{color:var(--mv-ok,#22c55e)}
+.pdGratis{margin:10px 0 2px;padding:10px 12px;border-radius:12px;border:1px solid var(--mv-linha,#1c3457);background:rgba(0,212,255,.05)}
+.pdGratis .t{font-size:13.5px;font-weight:700;margin-bottom:7px}
+.pdGratis .bar{height:6px;border-radius:9px;background:rgba(127,127,127,.22);overflow:hidden}
+.pdGratis .bar i{display:block;height:100%;border-radius:9px;background:#00D4FF;transition:width .3s}
+.pdGratis.ok .bar i{background:var(--mv-ok,#22c55e)}
+html.mvClaro .pdGratis{background:var(--loja-suave);border-color:var(--loja-borda)}
+html.mvClaro .pdGratis .bar i{background:var(--loja)}
+html.mvClaro .pdGratis.ok .bar i{background:#167C40}
+html.mvClaro .sacolaBar .sGratis.ok{color:#167C40}
+</style>
+
+<script>
+/* 2026-10-19-gratis (P85 Fase 2b): ADICIONAR A TELA INICIAL. O manifest vem do
+   api/manifest.js com o nome da loja. Android/Chrome: usa o pedido nativo
+   quando o navegador oferece; senao, e no iPhone, mostra o caminho em 2 toques. */
+(function(){
+  var pedido=null;
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();pedido=e;});
+  window.addEventListener('appinstalled',function(){pedido=null;try{if(window.gtag)gtag('event','loja_instalada',{});}catch(_){}});
+  window.mvInstalado=function(){try{return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(_){return false;}};
+  function folha(html){
+    var f=document.getElementById('mvInstFolha');
+    if(!f){f=document.createElement('div');f.id='mvInstFolha';f.setAttribute('role','dialog');f.setAttribute('aria-modal','true');document.body.appendChild(f);
+      f.addEventListener('click',function(ev){if(ev.target===f||ev.target.closest('[data-fechar]'))f.classList.remove('on');});}
+    f.innerHTML='<div class="mvInstCx">'+html+'<button type="button" class="mvInstOk" data-fechar>Entendi</button></div>';
+    f.classList.add('on');
+  }
+  window.mvInstalar=function(){
+    try{if(window.gtag)gtag('event','loja_instalar_toque',{nativo:!!pedido});}catch(_){}
+    if(pedido){var p=pedido;pedido=null;p.prompt();return;}
+    var h1=document.querySelector('h1.nomeNeg');var nome=((h1&&h1.textContent)||(document.querySelector('meta[name="apple-mobile-web-app-title"]')||{}).content||'').trim()||'Esta loja';
+    var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    var esc=function(t){return String(t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+    var passos=ios
+      ?'<li>Toque em <b>Compartilhar</b> <span class="mvInstIc">⬆︎</span> na barra do Safari.</li><li>Escolha <b>Adicionar à Tela de Início</b>.</li>'
+      :'<li>Toque nos <b>três pontinhos ⋮</b> do navegador, no alto.</li><li>Escolha <b>Adicionar à tela inicial</b> (ou <b>Instalar app</b>).</li>';
+    folha('<h3>'+esc(nome)+' na sua tela inicial</h3><p>Um toque e você volta para a loja, sem procurar o link.</p><ol>'+passos+'</ol>');
+  };
+})();
+</script>
+<style id="cfInstalar">
+#mvInstFolha{position:fixed;inset:0;z-index:9999;background:rgba(5,10,20,.55);display:none;align-items:flex-end;justify-content:center}
+#mvInstFolha.on{display:flex}
+.mvInstCx{width:100%;max-width:480px;background:var(--mv-fundo-2,#0d1a2c);color:var(--mv-txt,#fff);border-radius:20px 20px 0 0;padding:22px 20px calc(18px + env(safe-area-inset-bottom))}
+.mvInstCx h3{margin:0 0 6px;font-size:18px}
+.mvInstCx p{margin:0 0 12px;font-size:14px;opacity:.8}
+.mvInstCx ol{margin:0 0 16px;padding-left:20px;font-size:15px;line-height:1.6}
+.mvInstIc{display:inline-block;font-size:14px}
+.mvInstOk{width:100%;height:48px;border:0;border-radius:14px;background:#00D4FF;color:#04121f;font:inherit;font-weight:800;font-size:16px}
+html.mvClaro .mvInstCx{background:#fff;color:#111827}
+html.mvClaro .mvInstOk{background:var(--loja);color:#fff}
 </style>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/og.js | versao 2026-10-16-revisao | antes 2026-10-06-cerca | antes 2026-09-15-og-live | repo: moviki (site publico)
+ * MOVIKI api/og.js | versao 2026-10-19-gratis (manifest da loja para Adicionar a tela inicial) | antes 2026-10-16-revisao | antes 2026-10-06-cerca | antes 2026-09-15-og-live | repo: moviki (site publico)
  *
  * POR QUE ESTE ARQUIVO EXISTE
  * A pagina publica (404.html) e 100% montada no navegador. O robo do WhatsApp,
@@ -165,6 +165,12 @@ function tags(o) {
     '<meta name="twitter:image" content="' + esc(o.imagem) + '">'
   ];
   if (!o.indexar) linhas.push('<meta name="robots" content="noindex,follow">');
+  /* 19/10/2026 (P85 Fase 2b): o atalho na tela inicial leva o nome da LOJA. */
+  if (o.manifest) {
+    linhas.push('<link rel="manifest" href="/api/manifest?s=' + encodeURIComponent(o.manifest) + '">');
+    linhas.push('<link rel="apple-touch-icon" href="/icone-180.png">');
+    linhas.push('<meta name="apple-mobile-web-app-title" content="' + esc(o.nomeApp || 'Moviki') + '">');
+  }
   if (o.jsonld) {
     linhas.push('<script type="application/ld+json">' +
       JSON.stringify(o.jsonld).replace(/</g, '\\u003c') + '</script>');
@@ -394,7 +400,9 @@ module.exports = async (req, res) => {
        lib/seo.js porque o api/sitemap.js precisa da MESMA resposta. */
     indexar: completo && seo.indexavelPeloSlug(slug),
     negocio: true,
-    jsonld: ld
+    jsonld: ld,
+    manifest: ehLive ? '' : slug,
+    nomeApp: (pontoNome ? pontoNome : nome).slice(0, 30)
   });
 
   return responder(res, injetar(casca, bloco), 200, via);
