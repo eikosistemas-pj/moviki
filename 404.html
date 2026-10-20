@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-19-vitrine2 (P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-19-vitrine2 (+ 2026-10-16-lojaonline, botao Loja online; P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -137,6 +137,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .acao svg{width:20px;height:20px;flex:0 0 auto;}
 .acao.wpp{background:linear-gradient(135deg,#2bd96f,#13a45a);box-shadow:0 10px 26px rgba(37,211,102,.28);}
 .acao.rota{background:linear-gradient(135deg,#1a7dff,#0b4fd4);box-shadow:0 10px 26px rgba(0,102,255,.30);}
+.acao.loja{grid-column:1/-1;background:transparent;border:1px solid rgba(255,255,255,.22);color:#e8f1ff;box-shadow:none;height:48px;font-size:15px;}
+.acao.loja .lojaDom{font-weight:500;opacity:.7;font-size:13.5px;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 /* 03/10/2026 (P70 etapa 4): Lista VIP, linha inteira e discreta */
 .acao.vip{grid-column:1/-1;background:transparent;border:1px solid rgba(0,212,255,.35);color:#cfefff;box-shadow:none;height:48px;font-size:15px;}
 
@@ -1045,6 +1047,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 2.6a1 1 0 0 0-1.1-.22l-17 7a1 1 0 0 0 .06 1.87l7 2.4 2.4 7a1 1 0 0 0 1.87.06l7-17a1 1 0 0 0-.23-1.11z"/></svg>
           Como chegar
         </a>
+        <!-- 2026-10-16-lojaonline: link da loja online do lojista (campo lojaOnline, regra v35).
+             nofollow/ugc: link de terceiro nao leva a reputacao do moviki.com.br. -->
+        <a class="acao loja escondido" id="btnLoja" href="#" target="_blank" rel="nofollow ugc noopener noreferrer" data-ev="loja_online">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Loja online</span><span class="lojaDom" id="btnLojaDom"></span>
+        </a>
         <button type="button" class="acao vip escondido" id="btnVip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
           Me avise da próxima live
@@ -1348,7 +1356,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-19-vitrine2';   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v35). */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-19-vitrine2';   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -3601,6 +3609,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(VB&&VB.rotulo){el('subNeg').textContent=VB.rotulo;el('subNeg').classList.remove('escondido');}
     else el('subNeg').classList.add('escondido');
     atualizarBtnWpp();
+    montarLoja(d);
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
     sincronizarCardapio();
     montarRapidos(d); montarOndeInfo(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarVideos(d); montarConfianca(d); montarAgenda(d); montarFaq(d); montarRedes(d); montarAbas(d); montarTabbar(d); pintarFav(); pintarConvite(d);
@@ -3811,6 +3820,18 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(doPonto)return doPonto;
     return ((dadosNeg&&dadosNeg.whatsapp)||'').replace(/\D/g,'');
   }
+  /* 2026-10-16-lojaonline: botao Loja online. Confere o link de novo aqui (a regra v35 ja
+     exige https com dominio, mas e esta pagina que poe o link num href). */
+  function montarLoja(d){
+    const b=el('btnLoja'); if(!b)return;
+    const u=(d&&typeof d.lojaOnline==='string')?d.lojaOnline.trim():'';
+    const ok=u.length<=300&&/^https:\/\/[A-Za-z0-9.-]+\.[A-Za-z]{2,}([\/?#][^ "<>]*)?$/.test(u);
+    if(!ok){b.classList.add('escondido');b.removeAttribute('href');return;}
+    b.href=u;
+    const dom=(/^https:\/\/([^\/?#]+)/i.exec(u)||[])[1]||'';
+    const dl=el('btnLojaDom'); if(dl)dl.textContent=dom?('· '+dom.replace(/^www\./i,'').toLowerCase()):'';
+    b.classList.remove('escondido');
+  }
   function atualizarBtnWpp(){
     const bw=el('btnWpp'); if(!bw)return;
     const w=wppDaUnidade();
@@ -3997,6 +4018,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 .acao.wpp{background:#1fae5b;box-shadow:none}
 .acao.rota{background:transparent;box-shadow:none;border:1px solid #2a3d58;color:var(--mv-txt)}
 .acao.rota svg{color:var(--mv-txt)}
+.acao.loja{border-color:#2a3d58;color:var(--mv-txt)}   /* 2026-10-16-lojaonline: contorno, como o Como chegar */
 .selo.fechado{color:#b4c2d3;background:rgba(255,255,255,.06);border-color:#2a3d58}
 .selo.fechado .bol,.selo.fechado i{background:#8d9db2!important;box-shadow:none!important}
 .rapido .ico svg,.infoIt .ico svg{color:#9fb0c4}
@@ -4096,6 +4118,8 @@ html.mvClaro .acao.cat{background:var(--loja);color:#fff;}
 html.mvClaro .acao.wpp{background:#167C40;color:#fff;}
 html.mvClaro .acao.rota{background:transparent;border:1.5px solid var(--mv-linha-forte);color:var(--mv-txt);}
 html.mvClaro .acao.rota svg{color:var(--mv-txt);}
+html.mvClaro .acao.loja{grid-column:1 / -1;background:transparent;border:1.5px solid var(--mv-linha-forte);color:var(--mv-txt);}   /* 2026-10-16-lojaonline no tema claro */
+html.mvClaro .acao.loja svg{color:var(--mv-txt);}
 html.mvClaro .acao.vip{grid-column:1 / -1;background:var(--loja-suave);border:1.5px solid var(--loja-borda);color:var(--loja);}
 /* informações rápidas viram fichas que rolam de lado */
 html.mvClaro .rapidos{display:flex;overflow-x:auto;scrollbar-width:none;gap:8px;margin-top:14px;padding-bottom:2px;}
