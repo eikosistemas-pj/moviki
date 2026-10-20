@@ -1,0 +1,1 @@
+export function initializeAppCheck(){return {};} export class ReCaptchaV3Provider{constructor(){}} export async function getToken(){return {token:"t"};}
