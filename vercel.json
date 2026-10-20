@@ -126,6 +126,22 @@
       "destination": "/guias/live-sem-seguidores.html"
     },
     {
+      "source": "/guia/como-divulgar-live",
+      "destination": "/guias/como-divulgar-live.html"
+    },
+    {
+      "source": "/guia/melhor-horario-para-live",
+      "destination": "/guias/melhor-horario-para-live.html"
+    },
+    {
+      "source": "/guia/equipamento-para-live",
+      "destination": "/guias/equipamento-para-live.html"
+    },
+    {
+      "source": "/guia/ideias-de-live-de-vendas",
+      "destination": "/guias/ideias-de-live-de-vendas.html"
+    },
+    {
       "source": "/fundador",
       "destination": "/fundador.html"
     },
