@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!-- MOVIKI 404.html | versao 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
+<!-- MOVIKI 404.html | versao 2026-10-19-vitrine2 (+ 2026-10-16-lojaonline, botao Loja online; P85 Fase 2a: horario por dia com fecha/abre as Xh, agenda de lives com Me avise e Por na agenda, perguntas frequentes, redes da loja) + 2026-10-19-claro (P85 Fase 1: tema claro com a cor da loja, botao Ver catalogo, barra Inicio/Catalogo/Sacola/Mapa/Mais, busca e filtro no catalogo, rotas Maps/Waze/Uber, bloco Compre com tranquilidade, convite no rodape) + 2026-10-04-freteauto (P70 etapa 6: envio com frete calculado pelo Melhor Envio do lojista, escolha da forma de envio) + 2026-10-03-vip (P70 etapa 4: Lista VIP) + 2026-10-03-rastreio (P70 etapa 3: tela de pedido pago de envio fala do rastreio) + 2026-10-03-envio (P70 etapa 2: envio para outras cidades por tabela do lojista, so produto marcado e so com o recurso ligado) + 2026-09-30-estoque (Esgotado e Restam N no cardapio pelo estoque do lojista; teto da quantidade pelo estoque) + 2026-09-26-a2 (avaliacoes sem resumo: no maximo 50 leituras) + 2026-09-26-pedidos (entrega por bairro com taxa, endereco por CEP, acompanhamento do pedido depois do Pix) | antes 2026-09-25-leaflet (mapa servido do proprio site, sem unpkg) | pagina publica (Fase 2a rev2) + contador de metricas e resumo de avaliacoes (Fase 6). Confira no navegador com: MOVIKI_VERSAO -->
 
 <meta charset="UTF-8">
 <title>Moviki</title>
@@ -137,6 +137,8 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .acao svg{width:20px;height:20px;flex:0 0 auto;}
 .acao.wpp{background:linear-gradient(135deg,#2bd96f,#13a45a);box-shadow:0 10px 26px rgba(37,211,102,.28);}
 .acao.rota{background:linear-gradient(135deg,#1a7dff,#0b4fd4);box-shadow:0 10px 26px rgba(0,102,255,.30);}
+.acao.loja{grid-column:1/-1;background:transparent;border:1px solid rgba(255,255,255,.22);color:#e8f1ff;box-shadow:none;height:48px;font-size:15px;}
+.acao.loja .lojaDom{font-weight:500;opacity:.7;font-size:13.5px;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 /* 03/10/2026 (P70 etapa 4): Lista VIP, linha inteira e discreta */
 .acao.vip{grid-column:1/-1;background:transparent;border:1px solid rgba(0,212,255,.35);color:#cfefff;box-shadow:none;height:48px;font-size:15px;}
 
@@ -1045,6 +1047,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 2.6a1 1 0 0 0-1.1-.22l-17 7a1 1 0 0 0 .06 1.87l7 2.4 2.4 7a1 1 0 0 0 1.87.06l7-17a1 1 0 0 0-.23-1.11z"/></svg>
           Como chegar
         </a>
+        <!-- 2026-10-16-lojaonline: link da loja online do lojista (campo lojaOnline, regra v35).
+             nofollow/ugc: link de terceiro nao leva a reputacao do moviki.com.br. -->
+        <a class="acao loja escondido" id="btnLoja" href="#" target="_blank" rel="nofollow ugc noopener noreferrer" data-ev="loja_online">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Loja online</span><span class="lojaDom" id="btnLojaDom"></span>
+        </a>
         <button type="button" class="acao vip escondido" id="btnVip">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
           Me avise da próxima live
@@ -1081,6 +1089,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     </button>
   </section>
 
+  <!-- ======================= PROXIMA LIVE (P85 Fase 2a, 19/10/2026) =======================
+       negocios/{uid}.agendaLives, so em plano com live. Live que ja passou nao aparece. -->
+  <section class="sec escondido" id="secAgenda"></section>
+
   <!-- ======================= PROMOÇÃO EM DESTAQUE ======================= -->
   <section class="sec escondido" id="secPromo"></section>
 
@@ -1112,6 +1124,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   <section class="sec escondido" id="secConfia">
     <div class="secTit"><h2>Compre com tranquilidade</h2></div>
     <div class="card confia" id="confiaLista"></div>
+  </section>
+
+  <!-- ======================= PERGUNTAS FREQUENTES (P85 Fase 2a) ======================= -->
+  <section class="sec escondido" id="secFaq">
+    <div class="secTit"><h2>Perguntas frequentes</h2></div>
+    <div class="card faqLista" id="faqLista"></div>
   </section>
 
   <!-- ======================= ONDE ESTAMOS ======================= -->
@@ -1151,6 +1169,12 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
   <section class="sec" id="secAbas">
     <div class="abas" id="abas"></div>
     <div class="abaConteudo" id="abaConteudo"></div>
+  </section>
+
+  <!-- ======================= REDES DA LOJA (P85 Fase 2a) ======================= -->
+  <section class="sec escondido" id="secRedes">
+    <div class="secTit"><h2>A loja nas redes</h2></div>
+    <div class="redesGrade" id="redesGrade"></div>
   </section>
 
   <div class="rodapeLoja">
@@ -1332,7 +1356,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-19-claro';   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-19-vitrine2';   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -1611,15 +1635,15 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const ent=(d&&d.entrega||'').trim();
     if(ent) its.push({ic:IC.moto,vl:ent});
     if(minhaPos&&negocioPos) its.push({ic:IC.seta,vl:'a '+fmtKm(distanciaKm(minhaPos,negocioPos))+' de você'});
-    box.innerHTML=its.map(i=>'<div class="ondeIt">'+i.ic+'<span>'+esc(i.vl)+'</span></div>').join('');
+    box.innerHTML=its.map(i=>'<div class="ondeIt">'+i.ic+'<span>'+esc(i.vl)+'</span></div>').join('')+semanaHtml(d);
   }
   function montarRapidos(d){
     const box=el('rapidos'); const its=[];
     const aberto=d.status==='aberto';
     its.push({ico:IC.relogio,lb:'Agora',vl:aberto?'Aberto':'Fechado',verde:aberto});
     /* --- Fase 2b: horário, entrega e preço médio. Campo vazio some; em ?demo=1 vira exemplo. --- */
-    const _hor=d.horario||(demoOn?'Seg a Sáb, 11h às 23h':'');
-    if(_hor) its.push({ico:IC.relogio,lb:'Horário',vl:_hor,demo:!d.horario});
+    const _hor=hojeTexto(d)||d.horario||(demoOn?'Seg a Sáb, 11h às 23h':'');
+    if(_hor) its.push({ico:IC.relogio,lb:'Horário',vl:_hor,demo:!d.horario&&!horariosDe(d)});
     if(locais.length>1){ its.push({ico:IC.unidades,lb:'Unidades',vl:locais.length+' no mapa'}); }
     else if(minhaPos&&negocioPos){ its.push({ico:IC.pino,lb:'Distância',vl:fmtKm(distanciaKm(minhaPos,negocioPos))+' de você'}); }
     const _ent=d.entrega||(demoOn?'Entrega R$ 5,00':'');
@@ -3145,6 +3169,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(TB_EXTRAS.video)its.push({ic:IC.videos,lb:'Vídeos',fn:'fecharFolha(\'folhaMais\');var _s=document.getElementById(\'secVideos\');if(_s)_s.scrollIntoView({behavior:\'smooth\',block:\'start\'})'});
     if(TB_EXTRAS.fotos)its.push({ic:IC.fotos,lb:'Fotos',fn:'fecharFolha(\'folhaMais\');irParaAba(\'fotos\')'});
     its.push({ic:IC.avaliacoes,lb:'Ver avaliações',fn:'fecharFolha(\'folhaMais\');irParaAba(\'avaliacoes\')'});
+    if(dadosNeg&&liberaConteudo()&&listaFaq(dadosNeg).length)its.push({ic:IC.info,lb:'Perguntas frequentes',fn:'fecharFolha(\'folhaMais\');var _f=document.getElementById(\'secFaq\');if(_f)_f.scrollIntoView({behavior:\'smooth\',block:\'start\'})'});
     its.push({ic:IC.avaliacoes,lb:'Avaliar este negócio',fn:'fecharFolha(\'folhaMais\');abrirAvaliar()'});
     its.push({ic:IC.compartilhar,lb:'Compartilhar a página',fn:'compartilhar()'});
     its.push({ic:IC.coracao,lb:(ehFavorito()?'Tirar dos meus lugares':'Salvar nos meus lugares'),fn:'alternarFavorito();fecharFolha(\'folhaMais\')'});
@@ -3573,7 +3598,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const aberto=d.status==='aberto';
     const s=el('seloStatus');
     s.className='selo '+(aberto?'aberto':'fechado');
-    s.innerHTML='<span class="bol"></span>'+(aberto?'Aberto agora':'Fechado no momento');
+    s.innerHTML='<span class="bol"></span>'+esc(textoStatus(d,aberto));
     pintarFrescor(d);
     /* 17/10/2026: termo e icone por ramo (vocab.js). Loja de roupa via "Cardapio"
        com garfo e faca na barra de baixo; agora so comida e bebida ve "Cardapio".
@@ -3584,11 +3609,150 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(VB&&VB.rotulo){el('subNeg').textContent=VB.rotulo;el('subNeg').classList.remove('escondido');}
     else el('subNeg').classList.add('escondido');
     atualizarBtnWpp();
+    montarLoja(d);
     el('ondeNome').textContent=(locais.length>1&&locais[localAtivo])?locais[localAtivo].nome:(d.nome||'—');
     sincronizarCardapio();
-    montarRapidos(d); montarOndeInfo(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarVideos(d); montarConfianca(d); montarAbas(d); montarTabbar(d); pintarFav(); pintarConvite(d);
+    montarRapidos(d); montarOndeInfo(d); montarUnidades(); montarPromo(d); montarEvento(d); montarDestaques(d); montarVideos(d); montarConfianca(d); montarAgenda(d); montarFaq(d); montarRedes(d); montarAbas(d); montarTabbar(d); pintarFav(); pintarConvite(d);
     if(demoOn)el('demoAviso').classList.remove('escondido');
   }
+  /* ============ P85 Fase 2a (19/10/2026) ============
+     Le so campos do proprio negocio (regra v35): horarios, agendaLives, faq,
+     redes. Todo texto do lojista passa por esc(); o @ das redes so vira link
+     se passar no mesmo formato que a regra exige. */
+  const DIAS_K=['dom','seg','ter','qua','qui','sex','sab'];
+  const DIAS_N=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+  const DIAS_C=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+  function hmMin(t){ const m=/^(\d\d):(\d\d)$/.exec(t||''); return m?(+m[1]*60+(+m[2])):null; }
+  function fmtH(min){ min=((min%1440)+1440)%1440; const h=Math.floor(min/60), m=min%60; return h+'h'+(m?('0'+m).slice(-2):''); }
+  function faixaDia(v){
+    const m=/^(\d\d:\d\d)-(\d\d:\d\d)$/.exec(v||''); if(!m)return null;
+    const a=hmMin(m[1]); let f=hmMin(m[2]); if(a===null||f===null)return null;
+    if(f<=a)f+=1440;
+    return {a:a,f:f};
+  }
+  function horariosDe(d){
+    const h=d&&d.horarios; if(!h||typeof h!=='object')return null;
+    return DIAS_K.some(k=>faixaDia(h[k]))?h:null;
+  }
+  function proximaAbertura(H,agora){
+    const dw=agora.getDay(), min=agora.getHours()*60+agora.getMinutes();
+    const hj=faixaDia(H[DIAS_K[dw]]);
+    if(hj&&min<hj.a)return 'hoje às '+fmtH(hj.a);
+    for(let i=1;i<=7;i++){
+      const k=(dw+i)%7, t=faixaDia(H[DIAS_K[k]]);
+      if(t)return (i===1?'amanhã':DIAS_N[k])+' às '+fmtH(t.a);
+    }
+    return '';
+  }
+  function textoStatus(d,aberto){
+    const H=horariosDe(d);
+    if(!H)return aberto?'Aberto agora':'Fechado no momento';
+    const agora=new Date(), min=agora.getHours()*60+agora.getMinutes();
+    if(aberto){
+      const t=faixaDia(H[DIAS_K[agora.getDay()]]);
+      return (t&&min>=t.a&&min<t.f)?('Aberto · fecha às '+fmtH(t.f)):'Aberto agora';
+    }
+    const p=proximaAbertura(H,agora);
+    return p?('Fechado · abre '+p):'Fechado no momento';
+  }
+  function hojeTexto(d){
+    const H=horariosDe(d); if(!H)return '';
+    const t=faixaDia(H[DIAS_K[new Date().getDay()]]);
+    return t?('Hoje '+fmtH(t.a)+' às '+fmtH(t.f)):'Hoje fechado';
+  }
+  function semanaHtml(d){
+    const H=horariosDe(d); if(!H)return '';
+    const hoje=new Date().getDay();
+    const ordem=[1,2,3,4,5,6,0];
+    return '<details class="semana"><summary>Horário da semana</summary><div class="semLista">'+ordem.map(k=>{
+      const t=faixaDia(H[DIAS_K[k]]);
+      return '<div class="semDia'+(k===hoje?' hoje':'')+'"><span>'+DIAS_N[k]+(k===hoje?' (hoje)':'')+'</span><b>'+(t?(fmtH(t.a)+' às '+fmtH(t.f)):'fechado')+'</b></div>';
+    }).join('')+'</div></details>';
+  }
+
+  /* ---- agenda de lives ---- */
+  let AGENDA=[];
+  function temLiveNoPlano(){ return planoAtual==='premium'||planoAtual==='enterprise'||periodoAtual==='trial'; }
+  function quandoTxt(ms){
+    const d=new Date(ms), hoje=new Date(); const z=(x)=>{const y=new Date(x);y.setHours(0,0,0,0);return y.getTime();};
+    const dias=Math.round((z(ms)-z(hoje))/86400000), h=fmtH(d.getHours()*60+d.getMinutes());
+    if(ms<=Date.now())return 'Começando agora';
+    if(dias===0)return 'Hoje às '+h;
+    if(dias===1)return 'Amanhã às '+h;
+    if(dias<7)return ((d.getDay()===0||d.getDay()===6)?'No ':'Na ')+DIAS_N[d.getDay()]+' às '+h;
+    return 'Dia '+d.getDate()+'/'+(d.getMonth()+1)+' às '+h;
+  }
+  function montarAgenda(d){
+    const sec=el('secAgenda'); if(!sec)return;
+    AGENDA=(temLiveNoPlano()&&Array.isArray(d&&d.agendaLives)?d.agendaLives:[])
+      .filter(x=>x&&typeof x.em==='number'&&isFinite(x.em)&&x.em>Date.now()-3600000&&x.em<Date.now()+180*86400000)
+      .sort((a,b)=>a.em-b.em).slice(0,5);
+    if(!AGENDA.length){ sec.classList.add('escondido'); sec.innerHTML=''; return; }
+    const p=AGENDA[0], dt=new Date(p.em);
+    const vip=!!(window.mvVip&&window.mvVip.pronto&&window.mvVip.pronto());
+    let h='<div class="card agCard"><div class="agTopo">'+
+      '<div class="agData"><span>'+DIAS_C[dt.getDay()]+'</span><b>'+dt.getDate()+'</b><span>'+fmtH(dt.getHours()*60+dt.getMinutes())+'</span></div>'+
+      '<div class="agTxt"><small>PRÓXIMA LIVE</small><b>'+esc(String(p.titulo||'Live da loja').slice(0,80))+'</b><span>'+esc(quandoTxt(p.em))+'</span></div></div>'+
+      '<div class="agBtns">'+(vip?'<button type="button" class="agBt agVip" onclick="agendaAvisar()">Me avise</button>':'')+
+      '<button type="button" class="agBt agCal" onclick="agendaPor(0)">Pôr na agenda</button></div>';
+    if(AGENDA.length>1){
+      h+='<div class="agMais"><small>Depois</small>'+AGENDA.slice(1).map((x,i)=>'<button type="button" class="agLin" onclick="agendaPor('+(i+1)+')"><span>'+esc(quandoTxt(x.em))+'</span><b>'+esc(String(x.titulo||'Live da loja').slice(0,80))+'</b></button>').join('')+'</div>';
+    }
+    sec.innerHTML=h+'</div>';
+    sec.classList.remove('escondido');
+  }
+  window.agendaAvisar=function(){ try{ if(window.mvVip&&window.mvVip.abrir){ window.mvVip.abrir(); ev('vip_aberto',{onde:'agenda'}); } }catch(_){} };
+  function icsData(ms){ return new Date(ms).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''); }
+  window.agendaPor=function(i){
+    const x=AGENDA[i]; if(!x)return;
+    const nome=(dadosNeg&&dadosNeg.nome)||'Loja';
+    const tit='Live: '+nome+(x.titulo?(' — '+String(x.titulo).slice(0,80)):'');
+    const sl=(dadosNeg&&dadosNeg.slug)||slug||'';
+    const url='https://www.moviki.com.br/live/'+encodeURIComponent(sl);
+    const fim=x.em+3600000;
+    const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if(ios){
+      const limpa=(t)=>String(t).replace(/[\\;,]/g,' ').replace(/[\r\n]+/g,' ');
+      const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Moviki//Agenda//PT','BEGIN:VEVENT','UID:'+x.em+'-'+encodeURIComponent(sl)+'@moviki.com.br',
+        'DTSTAMP:'+icsData(Date.now()),'DTSTART:'+icsData(x.em),'DTEND:'+icsData(fim),'SUMMARY:'+limpa(tit),'DESCRIPTION:Assista em '+url,'URL:'+url,
+        'BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:'+limpa(tit),'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+      const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'})); a.download='live.ics';
+      document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+    } else {
+      const g='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(tit)+'&dates='+icsData(x.em)+'/'+icsData(fim)+'&details='+encodeURIComponent('Assista em '+url);
+      window.open(g,'_blank','noopener');
+    }
+    ev('agenda_live',{qual:i});
+  };
+
+  /* ---- perguntas frequentes ---- */
+  function listaFaq(d){ return (Array.isArray(d&&d.faq)?d.faq:[]).filter(f=>f&&typeof f.p==='string'&&typeof f.r==='string'&&f.p.trim()&&f.r.trim()).slice(0,8); }
+  function montarFaq(d){
+    const sec=el('secFaq'), box=el('faqLista'); if(!sec||!box)return;
+    const fs=liberaConteudo()?listaFaq(d):[];
+    if(!fs.length){ sec.classList.add('escondido'); return; }
+    const w=wppDaUnidade();
+    box.innerHTML=fs.map((f,i)=>'<details class="faqIt"'+(i===0?' open':'')+'><summary>'+esc(f.p.trim().slice(0,120))+'</summary><p>'+esc(f.r.trim().slice(0,400))+'</p></details>').join('')+
+      (w?'<a class="faqWpp" href="https://wa.me/55'+mvWpp(w)+'" target="_blank" rel="noopener" data-ev="wpp">Outra dúvida? Pergunte no WhatsApp da loja</a>':'');
+    sec.classList.remove('escondido');
+  }
+
+  /* ---- redes da loja ---- */
+  const REDES=[
+    ['instagram','Instagram','https://www.instagram.com/{h}/','<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/>'],
+    ['tiktok','TikTok','https://www.tiktok.com/@{h}','<path d="M14 3v11a4 4 0 1 1-4-4"/><path d="M14 3c0 3 2 5 5 5"/>'],
+    ['youtube','YouTube','https://www.youtube.com/@{h}','<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/>'],
+    ['facebook','Facebook','https://www.facebook.com/{h}','<path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z"/>']
+  ];
+  function montarRedes(d){
+    const sec=el('secRedes'), box=el('redesGrade'); if(!sec||!box)return;
+    const r=(d&&d.redes&&typeof d.redes==='object')?d.redes:{};
+    const its=REDES.filter(x=>typeof r[x[0]]==='string'&&/^[A-Za-z0-9._-]{1,60}$/.test(r[x[0]]));
+    if(!its.length){ sec.classList.add('escondido'); return; }
+    box.innerHTML=its.map(x=>'<a class="redeBt" href="'+esc(x[2].replace('{h}',encodeURIComponent(r[x[0]])))+'" target="_blank" rel="noopener" data-ev="rede_'+x[0]+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+x[3]+'</svg><span>'+x[1]+'</span></a>').join('');
+    sec.classList.remove('escondido');
+  }
+
   /* ---- P85 (19/10/2026): "Compre com tranquilidade" ----
      So com venda ligada na pagina. Cada linha sai de dado real do
      checkout_publico; selo que a loja nao tem nao aparece. */
@@ -3656,6 +3820,18 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(doPonto)return doPonto;
     return ((dadosNeg&&dadosNeg.whatsapp)||'').replace(/\D/g,'');
   }
+  /* 2026-10-16-lojaonline: botao Loja online. Confere o link de novo aqui (a regra v35 ja
+     exige https com dominio, mas e esta pagina que poe o link num href). */
+  function montarLoja(d){
+    const b=el('btnLoja'); if(!b)return;
+    const u=(d&&typeof d.lojaOnline==='string')?d.lojaOnline.trim():'';
+    const ok=u.length<=300&&/^https:\/\/[A-Za-z0-9.-]+\.[A-Za-z]{2,}([\/?#][^ "<>]*)?$/.test(u);
+    if(!ok){b.classList.add('escondido');b.removeAttribute('href');return;}
+    b.href=u;
+    const dom=(/^https:\/\/([^\/?#]+)/i.exec(u)||[])[1]||'';
+    const dl=el('btnLojaDom'); if(dl)dl.textContent=dom?('· '+dom.replace(/^www\./i,'').toLowerCase()):'';
+    b.classList.remove('escondido');
+  }
   function atualizarBtnWpp(){
     const bw=el('btnWpp'); if(!bw)return;
     const w=wppDaUnidade();
@@ -3718,6 +3894,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       if(!window.mvVip||(COMPRA&&COMPRA.recursos&&COMPRA.recursos.listaVip===false))return;
       if(planoAtual!=='premium'&&planoAtual!=='enterprise'&&periodoAtual!=='trial')return;
       if(!window.mvVip.montar({uid:uid,loja:function(){return (el('nome')||{}).textContent||'';},origem:'pagina'}))return;
+      try{ if(dadosNeg)montarAgenda(dadosNeg); }catch(_){}
       const b=el('btnVip'); if(!b||b._vip)return; b._vip=1;
       b.classList.remove('escondido');
       b.addEventListener('click',function(){window.mvVip.abrir();ev('vip_aberto',{onde:'pagina'});});
@@ -3841,6 +4018,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 .acao.wpp{background:#1fae5b;box-shadow:none}
 .acao.rota{background:transparent;box-shadow:none;border:1px solid #2a3d58;color:var(--mv-txt)}
 .acao.rota svg{color:var(--mv-txt)}
+.acao.loja{border-color:#2a3d58;color:var(--mv-txt)}   /* 2026-10-16-lojaonline: contorno, como o Como chegar */
 .selo.fechado{color:#b4c2d3;background:rgba(255,255,255,.06);border-color:#2a3d58}
 .selo.fechado .bol,.selo.fechado i{background:#8d9db2!important;box-shadow:none!important}
 .rapido .ico svg,.infoIt .ico svg{color:#9fb0c4}
@@ -3940,6 +4118,8 @@ html.mvClaro .acao.cat{background:var(--loja);color:#fff;}
 html.mvClaro .acao.wpp{background:#167C40;color:#fff;}
 html.mvClaro .acao.rota{background:transparent;border:1.5px solid var(--mv-linha-forte);color:var(--mv-txt);}
 html.mvClaro .acao.rota svg{color:var(--mv-txt);}
+html.mvClaro .acao.loja{grid-column:1 / -1;background:transparent;border:1.5px solid var(--mv-linha-forte);color:var(--mv-txt);}   /* 2026-10-16-lojaonline no tema claro */
+html.mvClaro .acao.loja svg{color:var(--mv-txt);}
 html.mvClaro .acao.vip{grid-column:1 / -1;background:var(--loja-suave);border:1.5px solid var(--loja-borda);color:var(--loja);}
 /* informações rápidas viram fichas que rolam de lado */
 html.mvClaro .rapidos{display:flex;overflow-x:auto;scrollbar-width:none;gap:8px;margin-top:14px;padding-bottom:2px;}
@@ -4043,5 +4223,47 @@ html.mvClaro #mvvCaixa .mvvAceite a{color:var(--loja);}
 html.mvClaro #mvvCaixa .mvvBtn{background:var(--loja);}
 </style>
 
+<style id="cfVitrine2">
+/* P85 Fase 2a (19/10/2026): agenda de lives, perguntas frequentes, redes e semana. */
+.agCard{padding:14px;}
+.agTopo{display:flex;gap:12px;align-items:center;}
+.agData{width:58px;flex:0 0 auto;border-radius:12px;background:var(--mv-surf-2);text-align:center;padding:6px 0;display:flex;flex-direction:column;}
+.agData span{font-size:11px;font-weight:700;color:#e11d48;}
+.agData span+b+span{color:var(--mv-txt-3);font-weight:600;}
+.agData b{font-size:22px;line-height:1.1;color:var(--mv-txt);}
+.agTxt{min-width:0;display:flex;flex-direction:column;}
+.agTxt small{font-size:11.5px;font-weight:700;letter-spacing:.5px;color:var(--ciano);}
+.agTxt b{font-size:16px;color:var(--mv-txt);overflow-wrap:anywhere;}
+.agTxt span{font-size:12.5px;color:var(--mv-txt-3);}
+.agBtns{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;margin-top:12px;}
+.agBt{height:46px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;}
+.agVip{border:0;background:var(--ciano);color:#04121f;}
+.agCal{border:1.5px solid var(--mv-linha-forte);background:transparent;color:var(--mv-txt);}
+.agMais{margin-top:12px;border-top:1px solid var(--mv-linha);padding-top:8px;}
+.agMais small{display:block;font-size:11.5px;color:var(--mv-txt-3);margin-bottom:4px;}
+.agLin{display:flex;justify-content:space-between;gap:10px;width:100%;text-align:left;background:none;border:0;padding:8px 0;color:var(--mv-txt);font-family:inherit;cursor:pointer;}
+.agLin span{font-size:12.5px;color:var(--mv-txt-3);white-space:nowrap;}
+.agLin b{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.faqLista{padding:4px 14px;}
+.faqIt{border-bottom:1px solid var(--mv-linha);}
+.faqIt summary{list-style:none;cursor:pointer;padding:13px 0;font-weight:600;font-size:14px;display:flex;justify-content:space-between;gap:10px;color:var(--mv-txt);}
+.faqIt summary::-webkit-details-marker{display:none;}
+.faqIt summary::after{content:'+';color:var(--mv-txt-3);font-weight:400;font-size:18px;line-height:1;}
+.faqIt[open] summary::after{content:'−';}
+.faqIt p{margin:0 0 13px;font-size:13.5px;line-height:1.5;color:var(--mv-txt-2);white-space:pre-line;overflow-wrap:anywhere;}
+.faqWpp{display:block;padding:13px 0;font-size:13.5px;font-weight:700;color:var(--mv-ok);text-decoration:none;}
+.redesGrade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.redeBt{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:var(--mv-r);border:1px solid var(--mv-linha);background:var(--mv-surf);color:var(--mv-txt);font-weight:600;font-size:14px;text-decoration:none;}
+.redeBt svg{width:19px;height:19px;}
+.semana{margin-top:8px;}
+.semana summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--ciano);padding:6px 0;}
+.semLista{margin-top:4px;}
+.semDia{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--mv-txt-3);}
+.semDia b{font-weight:500;}
+.semDia.hoje{color:var(--mv-txt);font-weight:700;}
+.semDia.hoje b{font-weight:700;}
+html.mvClaro .agVip{background:var(--loja);color:#fff;}
+html.mvClaro .agTxt small,html.mvClaro .semana summary{color:var(--loja);}
+</style>
 </body>
 </html>
