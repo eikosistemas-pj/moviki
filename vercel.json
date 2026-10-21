@@ -146,6 +146,10 @@
       "destination": "/fundador.html"
     },
     {
+      "source": "/black-friday",
+      "destination": "/black-friday.html"
+    },
+    {
       "source": "/live-shop/clientela",
       "destination": "/clientela.html"
     },
