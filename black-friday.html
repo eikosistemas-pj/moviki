@@ -1,0 +1,1516 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Black Friday ao vivo — venda pela live da sua loja | Moviki</title>
+<meta name="description" content="Monte a Black Friday da sua loja ao vivo pelo celular: mostre a oferta de perto, responda no chat na hora e receba o pedido ali mesmo. Ensaie antes com as duas lives do teste grátis, sem cartão.">
+<link rel="canonical" href="https://www.moviki.com.br/black-friday">
+
+<!-- ===== CSP DESTA PAGINA =====
+     No repo moviki a politica e por ARQUIVO (meta http-equiv), nao header de
+     servidor: nada a mexer no vercel.json. O que esta pagina precisa e apenas
+     frame-src https://www.youtube-nocookie.com — o player so nasce no clique e
+     a capa e CSS puro, entao NAO ha dependencia de img-src https://i.ytimg.com.
+     Sem o frame-src, o filme nao abre e NAO da erro visivel. -->
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googleapis.com https://api.reclameaqui.com.br; frame-src https://www.youtube-nocookie.com https://verificada.reclameaqui.com.br; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/black-friday">
+<meta property="og:title" content="Black Friday ao vivo, direto da sua loja | Moviki">
+<meta property="og:description" content="Na Black Friday, o cliente compara tudo pelo celular. Mostre a oferta ao vivo, responda na hora e receba o pedido ali mesmo. Sem estúdio e sem app.">
+<meta property="og:image" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:image:secure_url" content="https://www.moviki.com.br/livehero.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Venda ao vivo pelo celular com o Moviki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Black Friday ao vivo, direto da sua loja | Moviki">
+<meta name="twitter:description" content="Na Black Friday, o cliente compara tudo pelo celular. Mostre a oferta ao vivo, responda na hora e receba o pedido ali mesmo. Sem estúdio e sem app.">
+<meta name="twitter:image" content="https://www.moviki.com.br/livehero.jpg">
+
+<link rel="icon" href="favicon512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="movikiui.css">
+<script src="/mvmetrica.js"></script>
+<!-- 13/10/2026 - EFEITOS DE VITRINE: mvefeitos.js (regras e chave-mestra no topo do arquivo).
+     Desliga para um visitante com ?fx=0. "Reduzir movimento" do celular desliga tudo. -->
+<script>window.MV_FX={progresso:1,nitido:'.avSec .avH2,.avFinal h2',cascata:'.avLista,.avFaq,.avTab tbody',borda:'.avCard--quente',botoes:'.avBtn--p',coracoes:'#avTel',claro:'#comofunciona'};</script>
+<script src="/mvefeitos.js?v=20261013" defer></script>
+
+<style>
+/* ===== REDE DE SEGURANCA DE TOKENS — se movikiui.css nao carregar, a pagina
+   nao vira texto preto no fundo preto (licao 25/08). ===== */
+:root{
+  --mv-ciano:#00D4FF;--mv-azul:#0066FF;--mv-grad:linear-gradient(135deg,#00D4FF,#0066FF);
+  --mv-bg:#060d18;--mv-bg-2:#0a1424;--mv-surf:#0e1c30;--mv-surf-2:#13263d;
+  --mv-campo:#0b1728;--mv-linha:#1c3457;--mv-linha-forte:#284a78;
+  --mv-txt:#eaf6ff;--mv-txt-2:#c6d8ee;--mv-txt-3:#8fa6c4;
+  --mv-ok:#25e39b;--mv-alerta:#ffb020;--mv-erro:#ff6b6b;--mv-roxo:#a855f7;
+  --mv-laranja:#ff8a00;--mv-whats:#25D366;--mv-ouro:linear-gradient(135deg,#ffd76a,#d99b12);
+  --mv-r-sm:10px;--mv-r:14px;--mv-r-lg:18px;--mv-r-xl:24px;--mv-r-pill:999px;
+  --mv-sombra:0 10px 30px rgba(0,0,0,.35);
+  --mv-fonte:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mv-vivo:#ff3b46;
+}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+@supports not (overflow:clip){body{overflow-x:hidden}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--mv-fonte);color:var(--mv-txt);-webkit-font-smoothing:antialiased;line-height:1.5;
+  background:
+    radial-gradient(1200px 700px at 78% -6%,rgba(0,102,255,.16),transparent 62%),
+    radial-gradient(900px 600px at 8% 14%,rgba(255,59,70,.08),transparent 60%),
+    var(--mv-bg);
+  background-attachment:fixed}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font-family:inherit}
+.avWrap{width:min(1140px,100% - 30px);margin-inline:auto}
+.avSec{position:relative;z-index:1;padding:clamp(46px,6vw,88px) 0}
+.avSec--alt{background:linear-gradient(180deg,rgba(10,20,36,0),rgba(10,20,36,.85) 12%,rgba(10,20,36,.85) 88%,rgba(10,20,36,0))}
+h1,h2,h3{letter-spacing:-.8px;line-height:1.12;font-weight:800}
+.avH2{font-size:clamp(24px,3.5vw,38px);margin-bottom:14px}
+.avH2 em{font-style:normal;background:var(--mv-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.avH3{font-size:18px;margin-bottom:8px}
+.avLead{font-size:clamp(15px,1.6vw,17.5px);line-height:1.68;color:var(--mv-txt-2)}
+.avMuted{font-size:13px;line-height:1.6;color:var(--mv-txt-3)}
+/* 13/10/2026: duvida vai para o WhatsApp (atendente de IA) ou para o direct (ManyChat) em vez de ir embora */
+.avDuvida{font-size:13.5px;line-height:1.55;color:var(--mv-txt-3);margin:4px 0 0}
+.avDuvida a{color:var(--mv-ciano);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.avFinal .avDuvida{margin-top:2px}
+.avCentro{text-align:center}
+.avCentro .avLead{max-width:760px;margin-inline:auto}
+
+/* ---------- selo / pilulas ---------- */
+.avTag{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;font-weight:700;letter-spacing:.9px;
+  text-transform:uppercase;padding:9px 15px;border-radius:var(--mv-r-pill);
+  background:rgba(255,59,70,.12);border:1px solid rgba(255,59,70,.45);color:#ffb7bb}
+.avPonto{width:9px;height:9px;border-radius:50%;background:var(--mv-vivo);box-shadow:0 0 12px rgba(255,59,70,.9);
+  animation:avPulso 1.8s ease-in-out infinite}
+@keyframes avPulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
+@media(prefers-reduced-motion:reduce){.avPonto{animation:none}}
+.avSelo{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:var(--mv-r-pill);background:var(--mv-ouro);color:#2a1c00;white-space:nowrap}
+.avSeloP{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:var(--mv-r-pill);background:rgba(0,212,255,.16);
+  border:1px solid rgba(0,212,255,.45);color:#7ff0ff;white-space:nowrap}
+
+/* ---------- botoes ---------- */
+.avBtn{display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;cursor:pointer;
+  font-weight:700;font-size:15.5px;padding:15px 22px;border-radius:var(--mv-r);border:1px solid transparent;
+  text-align:center;transition:transform .15s ease,box-shadow .15s ease}
+.avBtn:hover{transform:translateY(-1px)}
+.avBtn--p{background:linear-gradient(135deg,#2ee6a8,#0fb87f);color:#04121f;box-shadow:0 0 22px rgba(37,227,155,.42)}
+.avBtn--s{background:var(--mv-surf-2);color:var(--mv-txt);border-color:var(--mv-linha-forte)}
+.avBtn--s:hover{border-color:var(--mv-ciano)}
+.avCtas{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 14px}
+.avProva{display:inline-flex;align-items:center;gap:10px;background:rgba(19,38,61,.75);
+  border:1px solid var(--mv-linha);border-radius:var(--mv-r-pill);padding:9px 16px;font-size:13px;color:var(--mv-txt-2)}
+.avProva b{color:var(--mv-ok)}
+
+/* ---------- cabecalho ---------- */
+.avHead{position:sticky;top:0;z-index:60;background:rgba(6,13,24,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(28,52,87,.7)}
+.avNav{display:flex;align-items:center;gap:18px;height:70px}
+.avBrand{display:flex;align-items:center;gap:9px;text-decoration:none;font-weight:800;font-size:23px;letter-spacing:-1px}
+.avBrand img{height:32px;width:auto;object-fit:contain}
+.avBrand b{color:var(--mv-ciano)}
+.avLinks{display:flex;gap:24px;margin-left:20px}
+.avLinks a{text-decoration:none;font-size:14.5px;font-weight:500;color:var(--mv-txt-2)}
+.avLinks a:hover{color:var(--mv-ciano)}
+.avNavCta{margin-left:auto;display:flex;align-items:center;gap:14px}
+.avEntrar{text-decoration:none;font-size:14.5px;font-weight:600;color:var(--mv-txt-2)}
+.avEntrar:hover{color:#fff}
+.avHead .avBtn{padding:11px 17px;font-size:14.5px}
+.avBurger{display:none;margin-left:auto;width:46px;height:46px;border-radius:12px;border:1px solid var(--mv-linha);
+  background:var(--mv-surf-2);color:var(--mv-txt);font-size:20px;cursor:pointer;align-items:center;justify-content:center}
+.avMenu{position:fixed;inset:0;z-index:70;background:rgba(4,10,20,.74);backdrop-filter:blur(4px);display:none}
+.avMenu.on{display:block}
+.avMenu__p{position:absolute;top:0;right:0;width:min(340px,88vw);height:100%;overflow-y:auto;background:var(--mv-bg-2);
+  border-left:1px solid var(--mv-linha);padding:18px 18px calc(26px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;gap:6px}
+.avMenu__topo{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.avMenu__fechar{width:44px;height:44px;border-radius:12px;border:1px solid var(--mv-linha);
+  background:var(--mv-surf-2);color:var(--mv-txt);font-size:20px;cursor:pointer}
+.avMenu__p a.item{display:block;padding:15px 14px;border-radius:12px;text-decoration:none;font-size:16px;
+  font-weight:600;color:var(--mv-txt-2)}
+.avMenu__p a.item:hover{background:rgba(255,255,255,.05);color:#fff}
+
+/* ---------- hero ---------- */
+.avHero{position:relative;z-index:1;padding:clamp(26px,3vw,40px) 0 clamp(32px,4vw,56px);overflow:hidden}
+.avHeroGrid{display:grid;gap:clamp(20px,3vw,44px);grid-template-columns:minmax(0,1.04fr) minmax(0,.86fr);align-items:center}
+.avHero h1{font-size:clamp(31px,3.9vw,50px);letter-spacing:-1.9px;margin:16px 0 14px}
+.avHero h1 em{font-style:normal;background:var(--mv-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.avBul{list-style:none;display:grid;gap:11px;margin:22px 0 0;padding-top:20px;border-top:1px solid var(--mv-linha)}
+.avBul li{display:flex;align-items:flex-start;gap:11px;font-size:14.8px;color:var(--mv-txt-2);line-height:1.55}
+.avBul li>span:last-child{flex:1 1 auto}
+.avBul .avSelo{margin-left:2px}
+.avCheck{flex:0 0 21px;width:21px;height:21px;border-radius:50%;margin-top:1px;
+  background:rgba(37,227,155,.16);border:1px solid rgba(37,227,155,.5);color:var(--mv-ok);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.avFoto{position:relative;justify-self:center;width:100%;max-width:430px}
+.avFoto img,.avFoto video{display:block;width:auto;max-width:100%;max-height:min(760px,80vh);margin-inline:auto;border-radius:22px;box-shadow:0 24px 50px rgba(0,0,0,.5)}
+/* o brilho em volta do aparelho vem da propria arte, em PNG/WebP com alfa */
+.avFotoNota{font-size:11.5px;color:var(--mv-txt-3);text-align:center;margin-top:10px;line-height:1.5}
+/* 01/10/2026: telefone com a live em laco (mesmo formato do laco da home) */
+.avFoto .avTel{position:relative;display:block;margin-inline:auto;aspect-ratio:540/1168;height:min(640px,76vh);width:auto;max-width:100%;border-radius:30px;overflow:hidden;border:3px solid rgba(255,255,255,.14);box-shadow:0 24px 50px rgba(0,0,0,.5);background:#0b1626}
+.avFoto .avTel img,.avFoto .avTel video{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;display:block;margin:0;border-radius:0;box-shadow:none}
+.avFoto .avTel video{opacity:0;transition:opacity .35s ease}
+.avFoto .avTel video.on{opacity:1}
+.avFoto .avTel--arte{aspect-ratio:auto;height:auto;border:0;border-radius:0;overflow:visible;box-shadow:none;background:none}
+.avFoto .avTel--arte img{position:static;width:auto;max-width:100%;height:auto;max-height:min(760px,80vh);margin-inline:auto;border-radius:22px;box-shadow:0 24px 50px rgba(0,0,0,.5)}
+.avTelLeg{font-size:11px;color:var(--mv-txt-3);text-align:center;margin:8px 0 0;line-height:1.4}
+/* 16/10/2026 - capa do video tela dupla no lugar do telefone (ramos com v) */
+.avFoto .avTel--video{aspect-ratio:9/16;border-radius:26px}
+.avFoto .avTel--video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2}
+.avFoto .avTel--video iframe[hidden]{display:none}
+.avTelPlay{position:absolute;inset:0;z-index:3;display:grid;place-items:center;border:0;background:transparent;cursor:pointer;padding:0}
+.avTelPlay__b{width:78px;height:78px;border-radius:999px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#00D4FF,#0066FF);box-shadow:0 0 0 10px rgba(0,212,255,.12),0 14px 40px rgba(0,120,255,.45);transition:transform .2s ease}
+.avTelPlay:hover .avTelPlay__b,.avTelPlay:focus-visible .avTelPlay__b{transform:scale(1.06)}
+.avTelPlay__b svg{width:31px;height:31px;margin-left:5px;fill:#03121f}
+.avTel--video.mv-carregando img,.avTel--video.mv-preso img{filter:brightness(.45)}
+.avTel--video.mv-carregando .avTelPlay__b svg,.avTel--video.mv-preso .avTelPlay__b svg{display:none}
+.avTel--video.mv-carregando .avTelPlay__b::after{content:"";width:28px;height:28px;border-radius:50%;border:3px solid rgba(3,18,31,.28);border-top-color:#03121f;animation:avGira .8s linear infinite}
+.avTel--video.mv-preso .avTelPlay__b::after{content:"";width:0;height:0;margin-left:5px;border-left:18px solid #03121f;border-top:11px solid transparent;border-bottom:11px solid transparent}
+.avTel--video.mv-tocando .avTelPlay,.avTel--video.mv-tocando picture{display:none}
+@keyframes avGira{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.avTel--video.mv-carregando .avTelPlay__b::after{animation:none}}
+/* barra fixa de cadastro (so celular): some quando um botao da pagina esta na tela */
+.avBarra{display:none;position:fixed;left:0;right:0;bottom:0;z-index:55;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(6,13,24,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--mv-linha);text-align:center;transition:transform .25s ease}
+.avBarra .avBtn{width:100%;max-width:440px}
+.avBarra small{display:block;font-size:11.5px;color:var(--mv-txt-3);margin-top:4px}
+.avBarra.fora{transform:translateY(115%)}
+@media(prefers-reduced-motion:reduce){.avBarra{transition:none}}
+
+/* ---------- antes x depois ---------- */
+.avDuplo{display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:26px}
+.avCard{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:22px}
+.avCard--frio{background:rgba(14,28,48,.55)}
+.avCard--quente{border-color:rgba(0,212,255,.4);box-shadow:0 0 0 1px rgba(0,212,255,.08),0 18px 46px rgba(0,80,160,.22)}
+.avRot{font-size:11.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;margin-bottom:12px;color:var(--mv-txt-3)}
+.avCard--quente .avRot{color:var(--mv-ciano)}
+.avLista{list-style:none;display:grid;gap:11px}
+.avLista li{display:flex;gap:10px;font-size:14.3px;color:var(--mv-txt-2);line-height:1.55;flex-wrap:nowrap}
+.avLista li span{flex:0 0 auto;font-weight:800}
+.avCard--frio .avLista li span{color:var(--mv-erro)}
+.avCard--quente .avLista li span{color:var(--mv-ok)}
+
+/* ---------- video em fachada (sem imagem externa) ---------- */
+.avVideo{position:relative;width:min(880px,100%);margin-inline:auto;aspect-ratio:16/9;border-radius:var(--mv-r-xl);
+  overflow:hidden;border:1px solid var(--mv-linha-forte);box-shadow:0 26px 70px rgba(0,0,0,.5);cursor:pointer;
+  background:
+    radial-gradient(700px 380px at 50% 40%,rgba(0,102,255,.42),transparent 70%),
+    linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px) 0 0/46px 46px,
+    linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px) 0 0/46px 46px,
+    #071223}
+.avVideo iframe{width:100%;height:100%;border:0;display:block}
+.avVideo--v{aspect-ratio:9/16;max-width:min(330px,78vw);margin-inline:auto}
+.soMob{display:none}
+.avTrocar{margin:14px auto 0;background:none;border:0;cursor:pointer;
+  font-size:13.5px;font-weight:600;color:var(--mv-txt-3);text-decoration:underline;text-underline-offset:3px}
+.avTrocar:hover{color:var(--mv-ciano)}
+.avVideo__c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;text-align:center;padding:20px}
+.avPlay{width:78px;height:78px;border-radius:50%;border:0;cursor:pointer;background:var(--mv-grad);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 34px rgba(0,150,255,.6);transition:transform .18s ease}
+.avVideo:hover .avPlay{transform:scale(1.07)}
+.avPlay svg{width:30px;height:30px;fill:#02131f;margin-left:4px}
+.avVideo__t{font-size:clamp(16px,2.2vw,21px);font-weight:800;letter-spacing:-.5px;max-width:560px}
+.avVideo__s{font-size:12.5px;color:var(--mv-txt-3)}
+
+/* ===== PLAYER — 2026-09-21-player2 ======================================
+   O iframe criado no clique NAO herda o gesto do toque em Chrome de Android,
+   Safari de iPhone e Chrome de computador com pouco uso do dominio: o player
+   abria, ficava PRETO esperando um segundo toque e a pessoa achava que nao
+   tinha funcionado. Agora a fachada nao e apagada no toque — ela vira
+   "carregando" e so sai quando o player avisa que esta tocando. */
+.avVideo iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2}
+.avVideo iframe[hidden]{display:none}
+.avVideo__c{z-index:3}
+.avVideo.mv-carregando .avPlay svg,.avVideo.mv-preso .avPlay svg{display:none}
+.avVideo.mv-carregando .avPlay::after{content:"";width:30px;height:30px;border-radius:50%;
+  border:3px solid rgba(2,19,31,.28);border-top-color:#02131f;animation:mvGira .8s linear infinite}
+.avVideo.mv-preso .avPlay::after{content:"";width:0;height:0;margin-left:5px;
+  border-left:18px solid #02131f;border-top:11px solid transparent;border-bottom:11px solid transparent}
+.avVideo.mv-carregando .avVideo__s::after,.avVideo.mv-preso .avVideo__s::after{
+  display:block;margin-top:8px;font-size:13.5px;font-weight:700;color:#eaf6ff}
+.avVideo.mv-carregando .avVideo__s::after{content:"Carregando o vídeo…"}
+.avVideo.mv-preso .avVideo__s::after{content:"Toque para começar"}
+.avVideo.mv-tocando .avVideo__c{display:none}
+@keyframes mvGira{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.avVideo.mv-carregando .avPlay::after{animation:none}}
+
+/* ---------- passos ---------- */
+.avPassos{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
+.avPasso{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:22px;position:relative}
+.avNum{width:34px;height:34px;border-radius:10px;background:var(--mv-grad);color:#02131f;font-weight:800;
+  display:flex;align-items:center;justify-content:center;margin-bottom:13px;font-size:16px}
+
+/* ---------- grade de recursos ---------- */
+.avRec{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
+.avRec .avCard{padding:20px}
+.avRec h3{font-size:16.5px;margin-bottom:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ---------- tabela de planos ---------- */
+.avTab{width:100%;border-collapse:collapse;margin-top:24px;font-size:14.3px;
+  background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);overflow:hidden}
+.avTab th,.avTab td{padding:13px 15px;text-align:left;border-bottom:1px solid var(--mv-linha);vertical-align:top}
+.avTab thead th{background:rgba(19,38,61,.8);font-size:12.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--mv-txt-3)}
+.avTab thead th:nth-child(2){color:#7ff0ff}
+.avTab thead th:nth-child(3){color:#ffd76a}
+.avTab td{color:var(--mv-txt-2)}
+.avTab tr:last-child td{border-bottom:0}
+.avSim{color:var(--mv-ok);font-weight:800}
+.avNao{color:var(--mv-txt-3)}
+.avTabBox{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- objecoes ---------- */
+.avObj{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:28px}
+.avObj .avCard{border-left:3px solid var(--mv-ciano)}
+.avObj h3{font-size:16.5px;color:#fff;margin-bottom:8px}
+
+/* ---------- faixa palco ---------- */
+.avPalco{background:
+    radial-gradient(620px 320px at 80% 50%,rgba(0,102,255,.3),transparent 70%),#071223;
+  border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r-xl);padding:clamp(26px,4vw,46px)}
+
+/* ---------- faq ---------- */
+.avFaq{margin-top:24px;display:grid;gap:10px}
+.avFaq details{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r);overflow:hidden}
+.avFaq summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:700;font-size:15px;
+  display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.avFaq summary::-webkit-details-marker{display:none}
+.avFaq summary::after{content:"+";color:var(--mv-ciano);font-size:22px;line-height:1;flex:0 0 auto}
+.avFaq details[open] summary::after{content:"\2212"}
+.avFaq p{padding:0 18px 17px;font-size:14.3px;color:var(--mv-txt-2);line-height:1.68}
+
+/* ---------- cta final ---------- */
+.avFinal{background:
+    radial-gradient(620px 320px at 50% 0%,rgba(0,102,255,.36),transparent 70%),
+    linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px) 0 0/44px 44px,
+    linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px) 0 0/44px 44px,#071223;
+  border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r-xl);padding:clamp(30px,4.5vw,56px);text-align:center}
+.avFinal h2{font-size:clamp(24px,3.4vw,37px);margin-bottom:13px}
+.avFinal .avCtas{justify-content:center}
+
+/* ---------- rodape ---------- */
+.avFoot{border-top:1px solid var(--mv-linha);padding:42px 0 26px;background:var(--mv-bg-2);position:relative;z-index:1}
+.avFootGrid{display:grid;gap:26px;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,.85fr))}
+.avFoot h4{font-size:12.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mv-txt-3);margin-bottom:13px}
+.avFoot ul{list-style:none;display:grid;gap:9px}
+.avFoot a{font-size:14px;color:var(--mv-txt-2);text-decoration:none}
+.avFoot a:hover{color:var(--mv-ciano)}
+.avLegal{margin-top:30px;padding-top:18px;border-top:1px solid var(--mv-linha);font-size:12px;color:var(--mv-txt-3);line-height:1.7}
+
+/* ---------- breakpoints ---------- */
+@media(max-width:980px){
+  .avLinks,.avNavCta{display:none}
+  .avBurger{display:flex}
+  .avHeroGrid{grid-template-columns:minmax(0,1fr)}
+  .avHeroGrid>div:first-child{text-align:center}
+  /* 02/10/2026: no celular o telefone vem logo ABAIXO DO TITULO e ocupa a tela
+     (largura toda, altura ate a parte visivel abaixo do cabecalho). Ordem:
+     selo, titulo, telefone, texto, botoes, prova, lista. A coluna de texto vira
+     "display:contents" para os filhos entrarem na ordem junto com o telefone.
+     O cadastro fica na barra fixa de baixo (.avBarra), que sai da frente
+     quando o telefone inteiro ou um botao da pagina esta na tela. */
+  .avHeroGrid{display:flex;flex-direction:column;gap:0}
+  .avHeroGrid>div:first-child{display:contents;text-align:center}
+  .avHero .avTag{order:1;align-self:center}
+  .avHero h1{order:2}
+  .avFoto{order:3;max-width:none;width:100%;margin:4px 0 0}
+  .avHero .avLead{order:4;margin-top:18px}
+  #avNotaRamo{order:5}
+  .avHero .avCtas{order:6}
+  .avHero .avProva{order:7;align-self:center}
+  .avHero .avBul{order:8;align-self:center}
+  .avFoto img,.avFoto video{max-height:calc(100vh - 80px);max-height:calc(100svh - 80px)}
+  .avFoto .avTel{height:auto;width:min(100%,calc((100vh - 80px)*.4623));width:min(100%,calc((100svh - 80px)*.4623));border-radius:28px}
+  .avFoto .avTel--arte{width:100%;height:auto}
+  .avFoto .avTel--video{width:min(100%,calc((100vh - 80px)*.5625));width:min(100%,calc((100svh - 80px)*.5625))}
+  .avFoto .avTel--arte img{max-height:calc(100vh - 80px);max-height:calc(100svh - 80px)}
+  .avTelLeg{font-size:11px;margin-top:8px}
+  .avFotoNota{display:none}
+  .avBarra{display:block}
+  body{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+  .avHero .avTag,.avCtas,.avProva{justify-content:center}
+  .avHero h1{margin:13px 0 11px}
+  .avHero .avLead{font-size:15px}
+  .avHero .avCtas{margin:18px 0 12px}
+  .avCtas{justify-content:center}
+  .avBul{display:inline-grid;text-align:left;justify-items:start}
+  .avLead{margin-inline:auto}
+  .avPassos,.avRec{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .avFootGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* tela baixa (celular pequeno / navegador com barras): titulo menor; o
+   telefone continua do tamanho da tela visivel (o botao esta na barra fixa) */
+@media(max-width:980px) and (max-height:780px){
+  .avHero{padding-top:18px}
+  .avHero h1{font-size:clamp(27px,7.4vw,34px)}
+}
+@media(max-width:760px){
+  /* No celular toca o corte vertical de 60 s; o filme de 2:38 fica a um toque
+     de distancia. Video horizontal longo em tela de celular e abandono. */
+  .soMob{display:block}
+  .soDesk{display:none}
+  em.soMob,span.soMob{display:inline}
+}
+@media(max-width:640px){
+  .avNav{height:62px}
+  .avDuplo,.avObj,.avPassos,.avRec{grid-template-columns:minmax(0,1fr)}
+  .avCtas .avBtn{width:100%}
+  .avProva{width:100%;justify-content:center}
+  .avTab{font-size:13.4px}
+  .avTab th,.avTab td{padding:11px 12px}
+}
+h1,h2,h3,.avLista li,.avRec h3{overflow-wrap:anywhere}
+
+/* ===== 2026-10-21-black-friday: contagem e calendario ===== */
+.bfConta{display:flex;gap:10px;margin:18px 0 6px;flex-wrap:wrap}
+.bfConta__c{min-width:64px;background:var(--mv-surf);border:1px solid var(--mv-linha-forte);border-radius:var(--mv-r);padding:10px 8px;text-align:center}
+.bfConta__n{display:block;font-size:26px;font-weight:800;line-height:1;background:var(--mv-ouro);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bfConta__r{display:block;font-size:11.5px;color:var(--mv-txt-3);margin-top:6px;letter-spacing:.04em;text-transform:uppercase}
+.bfConta__fim{font-size:14px;color:var(--mv-txt-2)}
+.bfCal{display:grid;gap:14px;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:28px}
+.bfCal__i{background:var(--mv-surf);border:1px solid var(--mv-linha);border-radius:var(--mv-r-lg);padding:20px}
+.bfCal__q{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#02131f;background:var(--mv-ouro);border-radius:var(--mv-r-pill);padding:4px 10px;margin-bottom:10px}
+.bfCal__i h3{font-size:17px;margin:0 0 6px}
+.bfCal__i p{font-size:14.2px;color:var(--mv-txt-2);margin:0}
+.bfNota{font-size:13px;color:var(--mv-txt-3);margin-top:18px;text-align:center}
+@media (max-width:900px){.bfCal{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.bfCal{grid-template-columns:minmax(0,1fr)}.bfConta{justify-content:center}}
+</style>
+<script>window.MOVIKI_VERSAO='2026-10-21-black-friday';window.avBF=1;</script><!-- 2026-10-21-black-friday: pagina dedicada da campanha Black Friday ao vivo, montada sobre aovivo.html 2026-10-20-selo-ra (mesmo player, mesma CSP, mesma medicao). Some do ar no planejamento de 01/12: vira Natal ao vivo. window.avBF=1 mantem o titulo de Black Friday mesmo quando o anuncio chega com ramo no utm_content. -->
+</head>
+
+<body>
+<!-- ================= CABECALHO ================= -->
+<header class="avHead">
+  <div class="avWrap avNav">
+    <a class="avBrand" href="/">
+      <img src="logo.png" alt="Moviki" onerror="this.style.display='none';var t=document.getElementById('brandtxt');if(t)t.style.display='inline-flex'">
+      <span id="brandtxt" style="display:none">mo<b>viki</b></span>
+    </a>
+    <nav class="avLinks">
+      <a href="#calendario">Calend&aacute;rio</a>
+      <a href="#comofunciona">Como funciona</a>
+      <a href="#recursos">O que d&aacute; pra fazer</a>
+      <a href="#planos">Planos</a>
+      <a href="#duvidas">D&uacute;vidas</a>
+    </nav>
+    <div class="avNavCta">
+      <a class="avEntrar" href="https://app.moviki.com.br">Entrar</a>
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_header">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+    </div>
+    <button class="avBurger" type="button" aria-label="Abrir menu" aria-expanded="false" onclick="avMenu(true)">&#9776;</button>
+  </div>
+</header>
+
+<div class="avMenu" id="avMenu" onclick="if(event.target===this)avMenu(false)">
+  <div class="avMenu__p" role="dialog" aria-label="Menu">
+    <div class="avMenu__topo">
+      <img src="logo.png" alt="Moviki" style="height:28px" onerror="this.style.display='none'">
+      <button class="avMenu__fechar" type="button" aria-label="Fechar menu" onclick="avMenu(false)">&times;</button>
+    </div>
+    <a class="item" href="#calendario" onclick="avMenu(false)">Calend&aacute;rio at&eacute; a Black Friday</a>
+    <a class="item" href="#comofunciona" onclick="avMenu(false)">Como funciona</a>
+    <a class="item" href="#recursos" onclick="avMenu(false)">O que d&aacute; pra fazer</a>
+    <a class="item" href="#planos" onclick="avMenu(false)">Planos</a>
+    <a class="item" href="#duvidas" onclick="avMenu(false)">D&uacute;vidas</a>
+    <a class="item" href="/comerciantes.html" onclick="avMenu(false)">O Moviki para o seu neg&oacute;cio</a>
+    <a class="item" href="https://app.moviki.com.br">Entrar</a>
+    <a class="avBtn avBtn--p" style="margin-top:10px" href="https://app.moviki.com.br/?criar=1" data-ev="bf_menu">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="avHero">
+  <div class="avWrap avHeroGrid">
+    <div>
+      <span class="avTag"><span class="avPonto"></span> <span id="avTagRamo">Black Friday ao vivo &middot; 27 de novembro</span></span>
+      <h1 id="avH1">Na Black Friday, o cliente compara tudo pelo celular.<br>Fa&ccedil;a a sua <em>ao vivo</em>.</h1>
+      <p class="avLead" id="avLeadRamo">Enquanto todo mundo disputa o mesmo an&uacute;ncio, voc&ecirc; abre a c&acirc;mera do celular, mostra a oferta de perto e responde no chat na hora. Quem est&aacute; assistindo pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, pagando por Pix sem sair da transmiss&atilde;o.</p>
+      <p class="avMuted" id="avNotaRamo" hidden style="font-size:13.5px;margin-top:10px"></p>
+      <!-- 29/09/2026 - PAGINA POR RAMO (substitui o bloco de 26/09).
+           O anuncio chega com utm_content (ou ramo=) = ramo do video. Cada ramo
+           tem selo, titulo, texto e a tela da live do MESMO video do anuncio.
+           Casamento por PALAVRA do utm_content (shopping-pet -> pet), nunca por
+           pedaco solto: /pet/ casava com "tapete" e "infantil" mandava brinquedos
+           para a tela de bebe. Ordem importa: o mais especifico vem primeiro.
+           So textContent/createTextNode: nada vindo da URL vira HTML.
+           TESTE DOS 7 DIAS: os ramos que ja rodam no Meta (t:1) so trocam titulo e
+           texto a partir de 03/10 00h (janela do dia 7). Ate la, igual ao que
+           estava no ar: selo, foto e aviso da farmacia. -->
+      <script>
+      (function(){
+        try{
+          var q=new URLSearchParams(location.search);
+          var r=(q.get('ramo')||q.get('utm_content')||'').toLowerCase().slice(0,80);
+          if(!r) return;
+          try{ r=r.normalize('NFD').replace(/[̀-ͯ]/g,''); }catch(_){}
+          var P=r.split(/[^a-z0-9]+/);
+          var W=' Quem assiste pede ali mesmo: pelo seu WhatsApp ou, no Enterprise, por Pix sem sair da transmissão.';
+          /* k=chave/foto, a=palavras, s=selo, h=[titulo linha 1, antes do destaque, destaque, depois],
+             l=texto, n=aviso, t=1 ramo em teste no Meta, f=0 sem foto propria */
+          var M=[
+            {k:'farmacia',a:['farm','drog'],s:'Para farmácias e drogarias',t:1,
+             h:['A rede grande abriu na esquina.','Seu cliente de sempre ','volta pela live','.'],
+             l:'Mostre o protetor solar de perto, responda “serve pra pele oleosa?” no chat e lance a oferta.',
+             n:'Dermocosméticos, higiene e beleza ao vivo. Medicamento não pode ser vendido na live (Regras da live).'},
+            {k:'perfumaria',a:['perfum'],s:'Para perfumarias',v:'LqAjMBKsi3w',c:'perfumaria',
+             h:['Perfume não tem cheiro na foto.','Ele tem ','a sua voz, ao vivo','.'],
+             l:'Descreva as notas de cada fragrância, mostre o frasco de perto, monte o kit presente com a cliente no chat e lance a oferta.'},
+            {k:'cosmeticos',a:['cosmet','beleza','maquiag'],s:'Para lojas de cosméticos e perfumaria',t:1,
+             h:['Sua cliente já assiste live de maquiagem.','Que seja ','a da sua loja','.'],
+             l:'Mostre a cor na pele, responda “tem tom mais escuro?” no chat e lance a oferta.'},
+            {k:'boutique',a:['boutique'],s:'Para boutiques de bairro',v:'IdlnPRxwEzM',
+             h:['Arara cheia de peça nova e a rua vazia.','Suas clientes ','estão no celular','.'],
+             l:'Mostre a peça de perto, responda “tem no M?” e “qual o comprimento?” no chat e lance a oferta.'},
+            {k:'brecho',a:['brecho'],s:'Para brechós',
+             h:['Peça única na arara.','Mostre ao vivo e ','quem pagar primeiro leva','.'],
+             l:'Mostre a peça no corpo, conte a história dela, tire a dúvida de tamanho no chat e avise que é peça única.'},
+            {k:'lingerie',a:['linger','intim','pijam'],s:'Para lojas de moda íntima',
+             h:['Presente de Réveillon, peça no cabide.','Mostre ','o tecido de perto, ao vivo','.'],
+             l:'Mostre o cetim de perto e o caimento no cabide, responda “tem no G?” e “embrulha pra presente?” no chat e lance a oferta.'},
+            {k:'moda-fitness',a:['legging','academ'],s:'Para lojas de moda fitness',v:'IdlnPRxwEzM',
+             h:['Tecido que só convence de perto.','Mostre ','a costura ao vivo','.'],
+             l:'Mostre o tecido de perto, a costura e as cores, responda “fica transparente?” e “tem GG?” no chat e lance a oferta.'},
+            {k:'moda-infantil',a:[],s:'Para lojas de moda infantil',
+             h:['Roupa de festa infantil só vende no provador.','Mostre ','a peça aberta, ao vivo','.'],
+             l:'Mostre a peça aberta e o tecido de perto, responda “tem de 4 anos?” e “é de algodão?” no chat e lance a oferta.'},
+            {k:'moda-praia',a:['praia','biquin','bikin'],s:'Para lojas de moda praia',v:'IdlnPRxwEzM',
+             h:['Verão chegando e a moda praia na arara.','Mostre ','a estampa ao vivo','.'],
+             l:'Mostre a estampa e o tecido de perto, responda “tem no M?” e “tem em outra cor?” no chat e lance a oferta.'},
+            {k:'moda-masculina',a:['masculin'],s:'Para lojas de moda masculina',
+             h:['Camisa boa na arara e a loja sem movimento.','Seu cliente de sempre ','est\u00e1 no celular','.'],
+             l:'Mostre o caimento da camisa, tire a d\u00favida do tamanho no chat e lance a oferta.'},
+            {k:'moda',a:['moda','roupa','vestu'],s:'Para lojas de moda',t:1,v:'IdlnPRxwEzM',
+             h:['O corredor anda vazio no meio da semana.','Sua cliente está ','no celular, no sofá','.'],
+             l:'Mostre a peça, responda tamanho e caimento no chat e deixe o produto em destaque na tela.'},
+            {k:'suplementos',a:['suplement','fitness','nutri','whey'],s:'Para lojas de suplementos',t:1,
+             h:['Seu cliente compara sabor e preço no celular.','Mostre ','o pote ao vivo','.'],
+             l:'Mostre o pote de perto, responda “tem sabor chocolate?” e “tem sem lactose?” no chat e lance a oferta.',
+             n:'Anabolizante e emagrecedor não podem ser vendidos na live (Regras da live).'},
+            {k:'pet',a:['pet'],s:'Para pet shops',t:1,
+             h:['O tutor está no sofá, com o pet no colo.','Mostre ','a roupinha ao vivo','.'],
+             l:'Mostre a roupinha no pet, responda “tem no P?” e “serve em gato?” no chat e lance a oferta.'},
+            {k:'brinquedos',a:['brinq'],s:'Para lojas de brinquedos',
+             h:['Brinquedo parado na prateleira.','Mostre ele ','funcionando, ao vivo','.'],
+             l:'Mostre o brinquedo funcionando, responda “serve pra qual idade?” e “faz embrulho?” no chat e lance a oferta para quem vai dar o presente.'},
+            {k:'bebe',a:['bebe','infantil','kids'],s:'Para lojas de bebê e infantil',
+             h:['Quem monta o enxoval pesquisa pelo celular.','Mostre ','o tecido ao vivo','.'],
+             l:'Mostre o body de pertinho, responda “tem RN?” e “é 100% algodão?” no chat e lance a oferta.'},
+            {k:'calcados',a:['calcad','sapat'],s:'Para lojas de calçados',
+             h:['Chegou a numeração que faltava.','Avise ','ao vivo','.'],
+             l:'Mostre a sola, calçe no pé, confirme a numeração e a forma no chat e lance a oferta.'},
+            {k:'esportes',a:['esport','tenis'],s:'Para lojas de calçados e esportes',
+             h:['Tênis parado na vitrine.','Seu cliente está ','procurando no celular','.'],
+             l:'Mostre o tênis de perto, tire a dúvida de numeração no chat e lance a oferta.'},
+            {k:'acai',a:['acai','lanch','sorvet'],s:'Para açaí e lanchonetes',
+             h:['O aplicativo leva uma fatia de cada pedido.','Venda ','direto, ao vivo','.'],
+             l:'Mostre o copo sendo montado, responda “tem paçoca?” e “entrega no meu bairro?” no chat e lance a oferta. Quem preferir retira no balcão.'},
+            {k:'confeitaria',a:['confeit','doceria','bolo'],s:'Para confeitarias',
+             h:['O bolo mais bonito do bairro.','Mostre ','a fatia ao vivo','.'],
+             l:'Corte a fatia ao vivo, mostre o recheio, combine a encomenda com a data no chat e lance a oferta.'},
+            {k:'acessorios-celular',a:['acessorio','celular','capinha'],s:'Para lojas de acessórios de celular',
+             h:['Ele vê a capinha no balcão e compra pela internet.','Venda ','antes, ao vivo','.'],
+             l:'Mostre a capinha de pertinho, teste o fone ao vivo, responda “tem pro meu modelo?” no chat e lance a oferta.'},
+            {k:'semijoias',a:['semijoia','joia','relog'],s:'Para lojas de semijoias',
+             h:['Presente de Natal escolhido pelo celular.','Que seja ','na sua loja, ao vivo','.'],
+             l:'Mostre o brilho na luz e o fecho de perto, responda “é banhado a ouro 18k?” e “embrulha pra presente?” no chat e lance a oferta.'},
+            {k:'bijuteria',a:['bijut'],s:'Para lojas de bijuteria e acessórios',
+             h:['Ninguém entra pra ver o brilho de perto.','Leve ','o brilho até ela','.'],
+             l:'Mostre o brilho da peça de pertinho, monte o conjunto com a cliente no chat e lance a oferta.'},
+            {k:'autopecas',a:['autopeca','autopecas','motopeca','pecas'],s:'Para lojas de autopeças',
+             h:['Três ligações pra saber se tem a peça.','Mostre ','na mão, ao vivo','.'],
+             l:'Mostre a peça na mão, confirme no chat se serve no carro do cliente, separe para retirada e lance a oferta.'},
+            {k:'sertanejos',a:['sertanej','nordestin','regionai'],s:'Para produtos sertanejos',
+             h:['O supermercado agora vende queijo coalho.','Seu freguês de sempre ','compra pela live','.'],
+             l:'Mostre o queijo coalho de perto, responda “é bom pra assar?” e “tem carne de sol hoje?” no chat e lance a oferta. Quem preferir retira no balcão.'},
+            {k:'emporio',a:['emporio','queij','frios'],s:'Para empórios',
+             h:['Cesta de Natal montada. Pedido por telefone.','Monte ','a cesta ao vivo','.'],
+             l:'Mostre o queijo cortado, monte a cesta ao vivo, responda “separa pro dia 23?” no chat e lance a oferta.'},
+            {k:'naturais',a:['natura','granel'],s:'Para empórios de produtos naturais',
+             h:['Chegou novidade no granel.','Conte ','ao bairro inteiro, ao vivo','.'],
+             l:'Pese na hora, mostre o chá e a castanha de perto, responda no chat quanto a cliente quer levar e lance a oferta.',
+             n:'Medicamento e emagrecedor não podem ser vendidos na live (Regras da live).'},
+            {k:'utilidades',a:['utilid','cozinh'],s:'Para lojas de utilidades',
+             h:['Panela boa na prateleira do fundo.','Traga ela ','para a frente, ao vivo','.'],
+             l:'Mostre a tampa, o pote e a garrafa térmica em uso, tire a dúvida no chat e lance a oferta.'},
+            {k:'cama-mesa-banho',a:['cama','banho','lencol'],s:'Para lojas de cama, mesa e banho',
+             h:['O toque do lençol não passa na foto.','Mostre ','o tecido de perto, ao vivo','.'],
+             l:'Mostre o tecido de perto, confirme a medida no chat, apresente o jogo completo e lance a oferta.'},
+            {k:'acougue',a:['acoug','carne','churras'],s:'Para açougues e casas de carnes',
+             h:['Sábado de churrasco. Pedido só no balcão.','Monte ','o kit ao vivo','.'],
+             l:'Mostre o corte na hora, monte o kit churrasco, responda “dá pra 5 pessoas?” e “separa pro sábado?” no chat e deixe o pedido pronto para retirada.'},
+            {k:'cabelo',a:['cabel','aplique','peruc'],s:'Para lojas de cabelo e apliques',
+             h:['Cor de cabelo que a foto muda.','Mostre ','o tom ao vivo','.'],
+             l:'Mostre o tom na luz do dia e a textura de perto, responda “tem na cor mel?” e “qual o comprimento?” no chat e lance a oferta.'},
+            {k:'chocolateria',a:['chocolat','bombon','trufa'],s:'Para chocolaterias',
+             h:['Chocolate artesanal que o bairro nem conhece.','Mostre ','o recheio ao vivo','.'],
+             l:'Mostre o recheio ao vivo, monte a caixa de presente, responda “qual o recheio?” e “separa pro sábado?” no chat e lance a oferta.'},
+            {k:'eletroportateis',a:['eletropor','eletrodom','airfryer','fritadeir'],s:'Para lojas de eletroportáteis',
+             h:['Air fryer na vitrine e o cliente no app.','Ligue ','o aparelho ao vivo','.'],
+             l:'Ligue o aparelho ao vivo, mostre a voltagem, responda “é 110 ou 220?” e “tem garantia?” no chat e lance a oferta.'},
+            {k:'festa',a:['festa','balao','baloe'],s:'Para lojas de artigos de festa',
+             h:['Réveillon chegando e a decoração parada.','Mostre ','o kit montado, ao vivo','.'],
+             l:'Mostre a decoração montada e o kit completo, responda “tem em prata?” e “separa pro dia 30?” no chat e lance a oferta.'},
+            {k:'floricultura',a:['floric','flores','buque','arranjo'],s:'Para floriculturas',
+             h:['Arranjo pronto esperando cliente.','Mostre ','a flor de perto, ao vivo','.'],
+             l:'Mostre o arranjo girando e a flor de perto, responda “tem em branco também?” e “separa pro dia 24?” no chat e lance a oferta.'},
+            {k:'games',a:['game','informat','periferic'],s:'Para lojas de games e informática',
+             h:['Teclado que ele só testa no vídeo dos outros.','Teste ','ao vivo, na sua loja','.'],
+             l:'Teste o teclado ao vivo, mostre a luz do mouse, responda “qual o switch?” e “tem ABNT2?” no chat e lance a oferta.'},
+            {k:'padaria',a:['padar','panific','panetone','rabanada'],s:'Para padarias',
+             h:['Pão saindo às 17h e só o vizinho sabe.','Mostre ','a fornada ao vivo','.'],
+             l:'Mostre a fornada ao vivo e o panetone de perto, responda “tem panetone de gotas?” e “separa 2 pra véspera?” no chat e lance a oferta.'},
+            {k:'presentes',a:['present','lembranc'],s:'Para lojas de presentes',
+             h:['Dezembro: fila só na véspera.','Venda ','o mês inteiro, ao vivo','.'],
+             l:'Mostre o presente de perto, embrulhe ao vivo, responda “tem outra cor de caneca?” e “embrulha pra presente?” no chat e lance a oferta.'},
+            {k:'otica',a:['otica','oculos'],s:'Para óticas',
+             h:['Óculos de sol que só se prova na loja.','Prove ','a armação ao vivo','.'],
+             l:'Prove a armação ao vivo, mostre os modelos de perto, responda “tem proteção UV?” e “dá pra provar na loja?” no chat e lance a oferta.'}
+          ];
+          var achou=null;
+          /* 30/09/2026: o proprio ramo vence (moda-fitness nao cai em moda, semijoias nao cai em bijuteria). */
+          var base=r.replace(/^(shopping|comercio)-/,'');
+          for(var x=0;x<M.length;x++){ if(M[x].k===base){ achou=M[x]; break; } }
+          for(var i=0;i<M.length && !achou;i++){
+            for(var w=0;w<P.length && !achou;w++){
+              if(!P[w]) continue;
+              for(var z=0;z<M[i].a.length;z++){ if(P[w].indexOf(M[i].a[z])===0){ achou=M[i]; break; } }
+            }
+          }
+          if(!achou) return;
+          var e=achou;
+          window.avRamo=e.k;
+          if(e.f!==0) window.avRamoFoto=e.k;
+          /* 16/10/2026 - v = video tela dupla do ramo (YouTube): no lugar do telefone em laco */
+          if(e.v && /^[A-Za-z0-9_-]{11}$/.test(e.v)){ window.avRamoVideo=e.v; window.avRamoCapa=(e.c && /^[a-z-]{2,30}$/.test(e.c)) ? e.c : 'moda'; }
+          var tag=document.getElementById('avTagRamo');
+          if(tag) tag.textContent=(window.avBF?'Black Friday ao vivo · ':'Modo Live · ')+e.s;
+          var antes=(e.t===1 && Date.now()<Date.parse('2026-10-03T00:00:00-03:00'));
+          window.avRamoTeste=antes;
+          if(window.avBF && e.l){ var ldb=document.getElementById('avLeadRamo'); if(ldb) ldb.textContent='Na Black Friday: '+e.l.charAt(0).toLowerCase()+e.l.slice(1)+W; }
+          if(e.h && !antes && !window.avBF){
+            var h1=document.getElementById('avH1');
+            if(h1){
+              h1.textContent='';
+              h1.appendChild(document.createTextNode(e.h[0]));
+              h1.appendChild(document.createElement('br'));
+              h1.appendChild(document.createTextNode(e.h[1]));
+              var em=document.createElement('em'); em.textContent=e.h[2]; h1.appendChild(em);
+              h1.appendChild(document.createTextNode(e.h[3]));
+            }
+            var ld=document.getElementById('avLeadRamo');
+            if(ld && e.l) ld.textContent=e.l+W;
+            try{ document.title='Live '+e.s.charAt(0).toLowerCase()+e.s.slice(1)+' | Moviki'; }catch(_){}
+          }
+          var nt=e.n;
+          if(e.t===1 && antes && e.k!=='farmacia') nt='';
+          if(nt){ var n=document.getElementById('avNotaRamo'); if(n){ n.textContent=nt; n.hidden=false; } }
+        }catch(err){}
+      })();
+      </script>
+
+      <div class="avCtas">
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_hero">Montar minha Black Friday ao vivo &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--s" href="#calendario" data-ev="bf_hero_calendario">Ver o calend&aacute;rio</a>
+      </div>
+      <div class="bfConta" id="bfConta" aria-label="Contagem para a Black Friday" hidden>
+        <div class="bfConta__c"><span class="bfConta__n" id="bfD">--</span><span class="bfConta__r">dias</span></div>
+        <div class="bfConta__c"><span class="bfConta__n" id="bfH">--</span><span class="bfConta__r">horas</span></div>
+        <div class="bfConta__c"><span class="bfConta__n" id="bfM">--</span><span class="bfConta__r">min</span></div>
+      </div>
+      <p class="bfConta__fim" id="bfContaTxt">Black Friday: sexta, 27 de novembro.</p>
+      <script>
+      (function(){
+        try{
+          var alvo=Date.parse('2026-11-27T00:00:00-03:00'), fimSemana=Date.parse('2026-12-01T00:00:00-03:00');
+          var box=document.getElementById('bfConta'), t=document.getElementById('bfContaTxt');
+          function pinta(){
+            var agora=Date.now(), r=alvo-agora;
+            if(r<=0){ box.hidden=true; if(t) t.textContent=(agora<fimSemana)?'É Black Friday: hora de entrar ao vivo.':'A próxima data forte é o Natal: a mesma live serve.'; return; }
+            box.hidden=false;
+            var d=Math.floor(r/864e5), h=Math.floor(r%864e5/36e5), m=Math.floor(r%36e5/6e4);
+            document.getElementById('bfD').textContent=d; document.getElementById('bfH').textContent=h; document.getElementById('bfM').textContent=m;
+          }
+          pinta(); setInterval(pinta,30000);
+        }catch(e){}
+      })();
+      </script>
+      <span class="avProva"><b>Duas lives</b>&nbsp;no teste gr&aacute;tis para ensaiar antes do dia 27, sem cart&atilde;o.</span>
+
+      <ul class="avBul">
+        <li><span class="avCheck">&#10003;</span><span>Transmite do seu pr&oacute;prio celular, direto do painel</span></li>
+        <li><span class="avCheck">&#10003;</span><span>O produto fica fixo na tela, com pre&ccedil;o e bot&atilde;o para pedir</span></li>
+        <li><span class="avCheck">&#10003;</span><span>Pix dentro da live, com o dinheiro caindo na <b>sua</b> conta <span class="avSelo">Enterprise</span></span></li>
+        <li><span class="avCheck">&#10003;</span><span>J&aacute; funciona no teste gr&aacute;tis: <b>duas lives</b> para experimentar, sem cart&atilde;o</span></li>
+      </ul>
+
+    </div>
+
+    <div class="avFoto">
+      <!-- 01/10/2026 - TELEFONE COM A LIVE EM LACO, POR RAMO (substitui o recorte 700x738 de 29/09).
+           Igual a home: a tela REAL da live publica (moviki/live.html) com a loja ficticia,
+           o produto, o preco e o chat do proprio video do anuncio, e a camera do mesmo video
+           por baixo. Laco sem emenda e sem ida e volta (ponte por fluxo optico); o chat some
+           e volta no fecho, sem texto dobrado. Arquivos em ramos/ (mesmos nomes de antes):
+           <ramo>.jpg/.webp = 1o quadro do laco (540x1168), e o que pinta primeiro;
+           <ramo>.mp4 = laco de 4 a 4,5 s, mudo, H.264, ate 600 KB.
+           Sem ramo (bio do TikTok, link direto): ramos/moda.
+           O video so e buscado depois do load, so aparece quando ja esta tocando (fade),
+           pausa fora da tela e nao entra com "reduzir movimento", "economizar dados" ou 2G:
+           fica a foto, no mesmo tamanho.
+           Ramo em teste no Meta (window.avRamoTeste) fica com a tela cheia de 26/09 ate
+           03/10 00h e troca sozinho para o laco depois. -->
+      <div class="avTel" id="avTel"></div>
+      <script>
+      (function(){
+        try{
+          var RAMOS={farmacia:1,cosmeticos:1,moda:1,suplementos:1,pet:1,bebe:1,esportes:1,'moda-masculina':1,boutique:1,brecho:1,perfumaria:1,brinquedos:1,calcados:1,acai:1,confeitaria:1,'acessorios-celular':1,bijuteria:1,autopecas:1,naturais:1,utilidades:1,'cama-mesa-banho':1,lingerie:1,'moda-fitness':1,'moda-infantil':1,'moda-praia':1,semijoias:1,emporio:1,acougue:1,cabelo:1,chocolateria:1,eletroportateis:1,festa:1,floricultura:1,games:1,padaria:1,presentes:1,otica:1,sertanejos:1};
+          var V='?v=20261001';
+          var r=window.avRamoFoto;
+          var box=document.getElementById('avTel');
+          if(!box) return;
+          if(!r || !RAMOS[r]) r='moda';
+          /* 16/10/2026 - MODA COM A APRESENTADORA (2026-10-16-moda-pamela): nos ramos com
+             video tela dupla (campo v do mapa), o topo vira a capa do video (9:16) com play,
+             no lugar do telefone em laco. O iframe do YouTube so nasce no toque (mvPlay).
+             Capa em ramos/<c>-video-capa.* (c do mapa; padrao moda). 16/10 (2026-10-16-site-toque): versao do site, final 'Toque no botao'; perfumaria com video proprio. Sem ramo: telefone de moda, como antes. */
+          if(window.avRamoVideo && !window.avRamoTeste){
+            var vid=window.avRamoVideo;
+            box.className='avTel avTel--video';
+            var pc=document.createElement('picture');
+            var sc=document.createElement('source'); sc.type='image/webp'; sc.srcset='ramos/'+(window.avRamoCapa||'moda')+'-video-capa.webp'; pc.appendChild(sc);
+            var ic=document.createElement('img'); ic.id='avFotoImg'; ic.src='ramos/'+(window.avRamoCapa||'moda')+'-video-capa.jpg'; ic.width=720; ic.height=1280;
+            ic.alt=((window.avRamoCapa||'moda')==='moda') ? 'Capa do vídeo: onde a cliente desiste da compra e como a live do Moviki resolve. Cena ilustrativa, lojas fictícias.' : 'Capa do vídeo: loja ao vivo pelo celular, sem aplicativo, com a apresentadora do Moviki. Cena ilustrativa, loja fictícia.';
+            ic.setAttribute('fetchpriority','high'); ic.decoding='async';
+            pc.appendChild(ic); box.appendChild(pc);
+            var fr=document.createElement('iframe'); fr.hidden=true; fr.title='Vídeo: como a live do Moviki vende'; box.appendChild(fr);
+            var bt=document.createElement('button'); bt.type='button'; bt.className='avTelPlay';
+            bt.setAttribute('aria-label','Assistir ao vídeo: como a live do Moviki vende'); bt.setAttribute('data-ev','bf_video_ramo');
+            bt.innerHTML='<span class="avTelPlay__b" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>';
+            box.appendChild(bt);
+            var ev=function(n){ try{ if(window.mvEv) window.mvEv(n,{video:'tela_dupla_site_'+(window.avRamoCapa||'moda'),pagina:'black-friday',ramo:window.avRamo||''}); }catch(_){} };
+            var liga=function(){
+              if(!window.mvPlay) return;
+              window.mvPlay.liga({caixa:box, gatilho:bt, quadro:fr, id:vid,
+                titulo:'Vídeo: como a live do Moviki vende',
+                aoAbrir:function(){ ev('video_play'); }, aoTocar:function(){ ev('video_pronto'); }});
+            };
+            if(window.mvPlay) liga(); else window.addEventListener('DOMContentLoaded',liga);
+            return;
+          }
+          var tag=document.getElementById('avTagRamo');
+          var nome=(window.avRamoFoto && tag) ? tag.textContent.replace(/^.*·\s*Para\s+/,'') : '';
+          var alt='Tela de uma live no Moviki'+(nome?' para '+nome:'')+': oferta da live com preço e contagem, chat dos clientes e produto em destaque com o botão Comprar. Cena ilustrativa, loja fictícia.';
+          var base='ramos/'+r, w=540, h=1168, arte=false;
+          if(window.avRamoTeste && window.avRamoFoto){
+            arte=true; w=700; h=1273;
+            base=(r==='moda') ? 'live-moda' : 'ramos/'+r+'-tela';
+          }
+          if(arte) box.className='avTel avTel--arte';
+          var pic=document.createElement('picture');
+          var so=document.createElement('source'); so.type='image/webp'; so.srcset=base+'.webp'+(arte?'':V); pic.appendChild(so);
+          var im=document.createElement('img'); im.id='avFotoImg';
+          im.src=base+'.jpg'+(arte?'':V); im.width=w; im.height=h; im.alt=alt;
+          im.setAttribute('fetchpriority','high'); im.decoding='async';
+          pic.appendChild(im); box.appendChild(pic);
+          if(arte) return;
+          try{
+            if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var c=navigator.connection;
+            if(c && (c.saveData || /(^|-)2g$/.test(c.effectiveType||''))) return;
+          }catch(_){}
+          function ligar(){
+            try{
+              var v=document.createElement('video');
+              v.muted=true; v.defaultMuted=true; v.loop=true; v.playsInline=true;
+              v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('loop','');
+              v.setAttribute('preload','auto'); v.setAttribute('disablepictureinpicture','');
+              v.setAttribute('aria-hidden','true'); v.setAttribute('tabindex','-1');
+              v.width=540; v.height=1168;
+              v.addEventListener('playing',function(){ v.classList.add('on'); });
+              v.addEventListener('error',function(){ try{ if(v.parentNode && !v.classList.contains('on')) v.parentNode.removeChild(v); }catch(_){} },true);
+              v.src=base+'.mp4'+V;
+              box.appendChild(v);
+              var toca=function(){ var p=v.play(); if(p && p.catch) p.catch(function(){}); };
+              if('IntersectionObserver' in window){
+                new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting) toca(); else { try{ v.pause(); }catch(_){} } }); }).observe(box);
+              } else toca();
+            }catch(_){}
+          }
+          if(document.readyState==='complete') setTimeout(ligar,150);
+          else window.addEventListener('load',function(){ setTimeout(ligar,150); });
+        }catch(e){}
+      })();
+      </script>
+      <noscript><div class="avTel"><img src="ramos/moda.jpg" width="540" height="1168" alt="Tela de uma live no Moviki: oferta da live, chat dos clientes e produto em destaque. Cena ilustrativa, loja fictícia."></div></noscript>
+      <p class="avTelLeg">Cena ilustrativa · loja fictícia</p>
+      <p class="avFotoNota">Os n&uacute;meros s&atilde;o exemplo. Oferta com contagem e Pix dentro da live s&atilde;o do Enterprise. Na live de verdade, tudo o que aparece na tela &eacute; contado.</p>
+    </div>
+  </div>
+</section>
+<!-- 13/10/2026 - FAIXAS E NUMEROS DE REGRA (mvefeitos.js). Numero aqui e so REGRA do produto:
+     nunca numero de cliente, nota ou venda. Sem JS, os dois marcadores ficam vazios. -->
+<div data-fx="faixa" data-fx-a="Ao vivo pelo seu celular|Sem instalar nada|30 dias gr&aacute;tis|Sem cart&atilde;o|Sem fidelidade|Duas lives no teste|Pix dentro da live no Enterprise" data-fx-b="Mostre|Responda|Venda em tempo real"></div>
+<div data-fx="numeros" data-fx-itens="30|dias gr&aacute;tis;2|lives no teste gr&aacute;tis;3|toques para entrar ao vivo;0|app para instalar"></div>
+
+<!-- ================= BLACK FRIDAY (2026-10-21) =================
+     Numero aqui e so REGRA do produto ou data do calendario: nunca numero de
+     cliente, nota ou venda. Sem promessa de resultado. -->
+<section class="avSec avSec--alt">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">Na Black Friday, todo mundo anuncia. <em>Pouca loja mostra.</em></h2>
+      <p class="avLead">Em novembro o an&uacute;ncio fica mais disputado e a cliente recebe oferta de todo lado. Ela compara pre&ccedil;o pelo celular, abre a loja virtual, se perde no meio dos produtos, chega no carrinho&hellip; e desiste. Na live, ela v&ecirc; a pe&ccedil;a de perto, pergunta e pede sem sair da tela.</p>
+    </div>
+    <div class="avDuplo">
+      <div class="avCard avCard--frio">
+        <div class="avRot">A Black Friday de sempre</div>
+        <ul class="avLista">
+          <li><span>&times;</span> A oferta vira mais uma foto no meio de centenas</li>
+          <li><span>&times;</span> A d&uacute;vida de tamanho, cor ou cheiro fica sem resposta at&eacute; esfriar</li>
+          <li><span>&times;</span> &ldquo;Te passo o Pix depois&rdquo; e a pe&ccedil;a fica presa</li>
+          <li><span>&times;</span> Pedido anotado no papel, no meio da correria</li>
+        </ul>
+      </div>
+      <div class="avCard avCard--quente">
+        <div class="avRot">A Black Friday ao vivo, no Moviki</div>
+        <ul class="avLista">
+          <li><span>&#10003;</span> A oferta aparece na sua m&atilde;o, ao vivo, com pre&ccedil;o fixo na tela</li>
+          <li><span>&#10003;</span> Uma resposta no chat atende todo mundo que est&aacute; assistindo</li>
+          <li><span>&#10003;</span> Oferta com contagem e Pix dentro da live <span class="avSelo">Enterprise</span></li>
+          <li><span>&#10003;</span> Cada pedido entra organizado no seu painel</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="avSec" id="calendario">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">Seu calend&aacute;rio <em>at&eacute; o dia 27</em></h2>
+      <p class="avLead">Quem chega na Black Friday j&aacute; tendo feito live vende com calma. Use as duas lives do teste gr&aacute;tis para ensaiar com os clientes que j&aacute; conhecem a sua loja.</p>
+    </div>
+    <div class="bfCal">
+      <div class="bfCal__i">
+        <span class="bfCal__q">Hoje</span>
+        <h3>Crie a sua loja</h3>
+        <p>Cadastro sem cart&atilde;o. Coloque as pe&ccedil;as da Black Friday com foto e pre&ccedil;o.</p>
+      </div>
+      <div class="bfCal__i">
+        <span class="bfCal__q">Nos pr&oacute;ximos dias</span>
+        <h3>Live de ensaio 1</h3>
+        <p>Entre ao vivo pelo celular, mostre duas ou tr&ecirc;s pe&ccedil;as e veja o chat funcionando.</p>
+      </div>
+      <div class="bfCal__i">
+        <span class="bfCal__q">Semana seguinte</span>
+        <h3>Live de ensaio 2</h3>
+        <p>Avise no WhatsApp e no Status que a loja entra ao vivo. Teste a oferta fixada na tela.</p>
+      </div>
+      <div class="bfCal__i">
+        <span class="bfCal__q">27 de novembro</span>
+        <h3>A sua Black Friday ao vivo</h3>
+        <p>A loja entra no ar com as ofertas do dia. No Enterprise, oferta com contagem e Pix dentro da live.</p>
+      </div>
+    </div>
+    <div class="avCtas" style="justify-content:center;margin-top:26px">
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_calendario">Come&ccedil;ar o ensaio agora &nbsp;&rarr;</a>
+    </div>
+    <p class="bfNota">O teste gr&aacute;tis dura 30 dias a partir do cadastro e inclui duas lives. Para entrar ao vivo depois disso, a live est&aacute; nos planos Premium e Enterprise.</p>
+  </div>
+</section>
+
+<!-- ================= A DOR ================= -->
+<section class="avSec avSec--alt">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">A vitrine est&aacute; pronta. <em>E o cliente n&atilde;o veio.</em></h2>
+      <p class="avLead">Voc&ecirc; arrumou a loja, fotografou a novidade, postou &mdash; e ficou olhando o celular. A foto n&atilde;o tira d&uacute;vida, n&atilde;o mostra o caimento, n&atilde;o responde &ldquo;tem em outra cor?&rdquo; e n&atilde;o fecha venda nenhuma sozinha. Ela s&oacute; espera.</p>
+    </div>
+
+    <div class="avDuplo">
+      <div class="avCard avCard--frio">
+        <div class="avRot">O jeito de sempre</div>
+        <ul class="avLista">
+          <li><span>&times;</span> A foto fica parada esperando algu&eacute;m parar de rolar</li>
+          <li><span>&times;</span> A d&uacute;vida vira mensagem, a mensagem vira &ldquo;depois eu vejo&rdquo;</li>
+          <li><span>&times;</span> Voc&ecirc; responde o mesmo pre&ccedil;o vinte vezes no privado</li>
+          <li><span>&times;</span> Quem se interessou &agrave;s 9h j&aacute; esqueceu &agrave;s 15h</li>
+        </ul>
+      </div>
+      <div class="avCard avCard--quente">
+        <div class="avRot">Ao vivo, no Moviki</div>
+        <ul class="avLista">
+          <li><span>&#10003;</span> Voc&ecirc; mostra o produto de perto, girando na m&atilde;o</li>
+          <li><span>&#10003;</span> A d&uacute;vida &eacute; respondida na hora, para todo mundo de uma vez</li>
+          <li><span>&#10003;</span> O pre&ccedil;o fica fixo na tela, junto do bot&atilde;o de comprar</li>
+          <li><span>&#10003;</span> A decis&atilde;o acontece enquanto o desejo ainda est&aacute; quente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FILME ================= -->
+<section class="avSec" id="filme">
+  <div class="avWrap">
+    <div class="avCentro" style="margin-bottom:26px">
+      <h2 class="avH2">Entenda o Modo Live <em class="soDesk">em poucos minutos</em><em class="soMob">em 1 minuto</em></h2>
+      <p class="avLead soDesk">Sem jarg&atilde;o e sem tutorial. &Eacute; a hist&oacute;ria de um dia de trabalho que quase n&atilde;o acontece &mdash; e do que muda quando a vitrine passa a falar.</p>
+      <p class="avLead soMob">Sem jarg&atilde;o e sem tutorial. Um minuto para ver o que muda quando a vitrine passa a falar.</p>
+    </div>
+
+    <div class="avVideo" id="avPlayer" onclick="avAbrirVideo()">
+      <div class="avVideo__c" id="avFachada">
+        <span class="avTag"><span class="avPonto"></span> <span class="soDesk">Filme do Modo Live</span><span class="soMob">Moviki ao vivo &middot; 1 min</span></span>
+        <button class="avPlay" type="button" aria-label="Assistir ao v&iacute;deo do Modo Live" data-ev="bf_play">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <p class="avVideo__t soDesk">Vender ao vivo pelo celular, sem loja e sem est&uacute;dio</p>
+        <p class="avVideo__t soMob">Mostre. Responda. Venda em tempo real.</p>
+        <p class="avVideo__s">O v&iacute;deo s&oacute; carrega quando voc&ecirc; toca em assistir.</p>
+      </div>
+      <iframe id="avFrame" hidden title="Filme do Modo Live do Moviki"></iframe>
+    </div>
+    <button class="avTrocar soMob" type="button" data-ev="bf_filme_completo" onclick="avAbrirVideo(AV_FILME)">Prefere a hist&oacute;ria inteira? Ver o filme completo &middot; 2:38</button>
+  </div>
+</section>
+
+<!-- ================= COMO FUNCIONA ================= -->
+
+  <!-- ================= AO VIVO AGORA (16/09/2026) =================
+       O bloco so aparece quando ha alguem transmitindo; vazio, ele some
+       sozinho. Ate hoje nenhuma pagina publica do Moviki mostrava quem esta
+       no ar: a live so era descoberta pelo link que o lojista mandava, e o
+       Moviki nao entregava um unico espectador. -->
+  <div id="mvAoVivo" style="display:none"></div>
+  <script src="/mvaovivo.js" defer></script>
+
+  <section class="avSec avSec--alt" id="comofunciona">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">Tr&ecirc;s toques e voc&ecirc; <em>est&aacute; no ar</em></h2>
+      <p class="avLead">Sem instalar nada, sem equipamento e sem n&uacute;mero m&iacute;nimo de seguidores. O celular que voc&ecirc; usa pra tirar foto j&aacute; serve.</p>
+    </div>
+
+    <div class="avPassos">
+      <div class="avPasso">
+        <div class="avNum">1</div>
+        <h3 class="avH3">Escolha o que vai mostrar</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">No painel, voc&ecirc; monta a sacolinha da live com os produtos do dia, com foto e pre&ccedil;o. D&aacute; pra deixar um em destaque na tela.</p>
+      </div>
+      <div class="avPasso">
+        <div class="avNum">2</div>
+        <h3 class="avH3">Toque em &ldquo;Entrar ao vivo&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">A c&acirc;mera abre no navegador do pr&oacute;prio celular. Seu neg&oacute;cio ganha o selo vermelho <b>AO VIVO</b> na p&aacute;gina p&uacute;blica na mesma hora.</p>
+      </div>
+      <div class="avPasso">
+        <div class="avNum">3</div>
+        <h3 class="avH3">Quem entra, pede ali</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O cliente v&ecirc; o produto fixado, pergunta no chat e toca em &ldquo;Quero este&rdquo;, que abre o seu WhatsApp. No Enterprise, paga por Pix sem sair da live.</p>
+      </div>
+    </div>
+    <div data-fx="chat"></div>
+    <div data-fx="ramos"></div>
+  </div>
+</section>
+
+<!-- ================= RECURSOS ================= -->
+<section class="avSec" id="recursos">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">As ferramentas que fazem a <em>venda acontecer</em></h2>
+      <p class="avLead">Cada uma existe por um motivo: transformar quem est&aacute; olhando em quem decide.</p>
+    </div>
+
+    <div class="avRec">
+      <div class="avCard">
+        <h3 class="avH3">Produto fixado na tela <span class="avSeloP">Premium</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Foto, nome e pre&ccedil;o sempre &agrave; vista. Quem chegou no meio da live n&atilde;o precisa perguntar o que &eacute; nem quanto custa.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Chat com modera&ccedil;&atilde;o <span class="avSeloP">Premium</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">A d&uacute;vida de um vira resposta para todos. Voc&ecirc; apaga qualquer mensagem, e h&aacute; filtro autom&aacute;tico de palavra ofensiva.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Quem est&aacute; assistindo <span class="avSeloP">Premium</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Contagem real de presen&ccedil;a, medida pelo sistema. N&uacute;mero na tela &eacute; n&uacute;mero contado &mdash; aqui n&atilde;o existe plateia inflada.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Pix dentro da live <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">QR na hora e o dinheiro caindo direto na sua conta &mdash; nunca na conta do Moviki. Com a sua chave Pix, voc&ecirc; confirma com um toque quando o dinheiro cai; com a conta Asaas conectada, a confirma&ccedil;&atilde;o &eacute; autom&aacute;tica.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Oferta rel&acirc;mpago <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Pre&ccedil;o especial com tempo e estoque de verdade. O &ldquo;Restam N&rdquo; s&oacute; aparece com estoque informado por voc&ecirc;, e baixa sozinho a cada pagamento.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Estou aqui agora <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O bot&atilde;o &ldquo;Como chegar&rdquo; dentro da pr&oacute;pria transmiss&atilde;o. Quem est&aacute; perto recebe o caminho at&eacute; a sua loja.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Cupom por tempo assistindo <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Quem fica ganha o c&oacute;digo. &Eacute; recompensa por aten&ccedil;&atilde;o, n&atilde;o sorteio &mdash; o Moviki n&atilde;o faz sorteio.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Brinde aos primeiros <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Por ordem de chegada, com o n&uacute;mero que voc&ecirc; definir. Simples de cumprir e f&aacute;cil de anunciar.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Corte de 60 s pro Reels <span class="avSelo">Enterprise</span></h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Voc&ecirc; grava um trecho da pr&oacute;pria live e o arquivo fica no seu celular. A live em si n&atilde;o &eacute; gravada em servidor nenhum.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PALCO E MEGAFONE ================= -->
+<section class="avSec avSec--alt">
+  <div class="avWrap">
+    <div class="avPalco">
+      <h2 class="avH2">O Moviki &eacute; o palco. <em>O megafone voc&ecirc; j&aacute; tem.</em></h2>
+      <p class="avLead" style="max-width:780px">Aqui ningu&eacute;m vai te prometer plateia pronta. O Moviki entrega o lugar onde a venda acontece: a transmiss&atilde;o, a vitrine na tela, o chat e o pagamento. Chamar a sua gente &mdash; o grupo do WhatsApp, o status, o Instagram, os clientes que j&aacute; te conhecem &mdash; continua sendo com voc&ecirc;.</p>
+      <p class="avLead" style="max-width:780px;margin-top:14px">E &eacute; por isso que o teste gr&aacute;tis vem com a <b>Academia Moviki</b>: as aulas ensinam justamente isso &mdash; como avisar, como abrir a live com poucas pessoas na sala e como conduzir at&eacute; a primeira venda.</p>
+      <div class="avCtas" style="margin-bottom:0">
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_palco">Come&ccedil;ar com a Academia inclusa &nbsp;&rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OBJECOES ================= -->
+<section class="avSec">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">&ldquo;Legal, mas <em>eu</em> n&atilde;o consigo fazer isso.&rdquo;</h2>
+      <p class="avLead">Foi o que a maioria pensou antes da primeira vez. Veja o que est&aacute; realmente no caminho.</p>
+    </div>
+
+    <div class="avObj">
+      <div class="avCard">
+        <h3>&ldquo;E se ningu&eacute;m entrar?&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">A primeira aula da Academia prepara voc&ecirc; exatamente para 0, 1 ou poucas pessoas na sala. A regra: nunca abrir perguntando &ldquo;tem algu&eacute;m a&iacute;?&rdquo;. Voc&ecirc; come&ccedil;a como quem grava um conte&uacute;do &uacute;til &mdash; e quem chega depois j&aacute; encontra voc&ecirc; falando de produto.</p>
+      </div>
+      <div class="avCard">
+        <h3>&ldquo;N&atilde;o tenho seguidores.&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">N&atilde;o existe m&iacute;nimo de seguidores no Moviki. A sua live tem um link pr&oacute;prio: d&aacute; pra mandar no grupo de clientes, no status, na lista de transmiss&atilde;o e pro cliente que perguntou ontem. Dez pessoas que j&aacute; te conhecem valem mais que mil desconhecidos.</p>
+      </div>
+      <div class="avCard">
+        <h3>&ldquo;N&atilde;o sei falar na c&acirc;mera.&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">Voc&ecirc; n&atilde;o precisa ser apresentador &mdash; precisa mostrar o que j&aacute; sabe fazer. Descreva o produto como descreve no balc&atilde;o. O que prende n&atilde;o &eacute; o seu texto: &eacute; o produto de perto e a sua resposta &agrave; pergunta de quem est&aacute; assistindo.</p>
+      </div>
+      <div class="avCard">
+        <h3>&ldquo;Meu celular &eacute; simples.&rdquo;</h3>
+        <p class="avMuted" style="font-size:14.3px;color:var(--mv-txt-2)">Roda no navegador do celular, sem app e sem instala&ccedil;&atilde;o. N&atilde;o precisa de ilumina&ccedil;&atilde;o, microfone nem trip&eacute;. Se o seu aparelho tira foto e abre a internet, ele transmite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLANOS ================= -->
+<section class="avSec avSec--alt" id="planos">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">O que vem em cada plano</h2>
+      <p class="avLead">A live come&ccedil;a no Premium. As ferramentas que fecham a venda dentro da transmiss&atilde;o ficam no Enterprise.</p>
+    </div>
+
+    <div class="avTabBox">
+      <table class="avTab">
+        <thead>
+          <tr><th>Na live</th><th>Premium</th><th>Enterprise</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Transmitir do celular</td><td>at&eacute; 60 min</td><td>at&eacute; 3 h</td></tr>
+          <tr><td>Sacolinha de produtos na tela</td><td>5 itens</td><td>20 itens</td></tr>
+          <tr><td>Pessoas assistindo ao mesmo tempo</td><td>at&eacute; 30</td><td>at&eacute; 100</td></tr>
+          <tr><td>Minutos de v&iacute;deo por m&ecirc;s (espectadores &times; dura&ccedil;&atilde;o)</td><td>3.000</td><td>10.000</td></tr>
+          <tr><td>Produto em destaque, com link</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Chat com modera&ccedil;&atilde;o e filtro</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Contagem de quem est&aacute; assistindo</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Selo AO VIVO na p&aacute;gina do neg&oacute;cio</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Agendar live e avisar clientes</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Bot&atilde;o &ldquo;Quero este&rdquo; abrindo seu WhatsApp</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Pedidos com retirada ou entrega, com taxa por bairro</td><td class="avSim">&#10003;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td><b>Pix dentro da live, na sua conta</b></td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Oferta rel&acirc;mpago com tempo e estoque reais</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Pedidos pagos na hora, avisados no chat</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Cupom por tempo assistindo</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Brinde aos primeiros pedidos</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Fila de quem tocou em &ldquo;Quero&rdquo;</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Impress&atilde;o de pedidos em lote e lista de separa&ccedil;&atilde;o</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>&ldquo;Estou aqui agora&rdquo; com Como chegar</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Dados ao vivo e resumo por produto</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+          <tr><td>Corte de 60 s para Reels e status</td><td class="avNao">&mdash;</td><td class="avSim">&#10003;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="avMuted" style="margin-top:14px">Durante os 30 dias gr&aacute;tis voc&ecirc; faz <b>duas lives</b> de at&eacute; 60 minutos, para experimentar. Assinando, n&atilde;o h&aacute; limite de quantidade de lives: o que conta &eacute; o pacote de minutos de v&iacute;deo do m&ecirc;s (3.000 no Premium, 10.000 no Enterprise). O Pix dentro da live &eacute; recurso Enterprise.</p>
+
+    <div class="avCtas">
+      <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_planos">Come&ccedil;ar gr&aacute;tis &nbsp;&rarr;</a>
+      <a class="avBtn avBtn--s" href="/premium.html" data-ev="bf_ver_premium">Ver o Premium</a>
+      <a class="avBtn avBtn--s" href="/enterprise.html" data-ev="bf_ver_enterprise">Ver o Enterprise</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIANCA ================= -->
+<section class="avSec">
+  <div class="avWrap">
+    <div class="avCentro">
+      <h2 class="avH2">O que a gente <em>n&atilde;o</em> faz</h2>
+      <p class="avLead">Confian&ccedil;a se constr&oacute;i mais r&aacute;pido pelo que a ferramenta se recusa a fazer do que pelo que ela promete.</p>
+    </div>
+    <div class="avRec" style="margin-top:26px">
+      <div class="avCard">
+        <h3 class="avH3">Seu dinheiro n&atilde;o passa por n&oacute;s</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">O Pix cai numa conta aberta no seu nome, no seu CPF ou CNPJ. O Moviki n&atilde;o fica com o dinheiro da sua venda em nenhum momento.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">Sua live n&atilde;o &eacute; gravada</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Nenhum v&iacute;deo seu fica guardado em servidor do Moviki. O &uacute;nico arquivo que existe &eacute; o corte que voc&ecirc; escolher gravar, e ele fica no seu celular.</p>
+      </div>
+      <div class="avCard">
+        <h3 class="avH3">N&uacute;mero na tela &eacute; n&uacute;mero contado</h3>
+        <p class="avMuted" style="font-size:14.2px;color:var(--mv-txt-2)">Presen&ccedil;a, estoque e pedidos s&atilde;o reais. Escassez inventada &eacute; propaganda enganosa, e a ferramenta simplesmente n&atilde;o permite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="avSec avSec--alt" id="duvidas">
+  <div class="avWrap">
+    <div class="avCentro"><h2 class="avH2">D&uacute;vidas de quem ainda n&atilde;o fez a primeira</h2></div>
+
+    <div class="avFaq">
+      <details open>
+        <summary>Preciso instalar algum aplicativo?</summary>
+        <p>N&atilde;o. A transmiss&atilde;o abre no navegador do seu celular, pelo pr&oacute;prio painel do Moviki. Quem assiste tamb&eacute;m n&atilde;o instala nada: recebe um link e entra.</p>
+      </details>
+      <details>
+        <summary>A live j&aacute; funciona no teste gr&aacute;tis?</summary>
+        <p>Sim. Durante os 30 dias gr&aacute;tis, sem cart&atilde;o, voc&ecirc; faz <b>duas lives</b> em n&iacute;vel Premium: at&eacute; 60 minutos cada e 5 produtos na sacolinha. S&atilde;o duas para experimentar &mdash; assinando, a quantidade de lives deixa de ter limite e passa a valer o pacote de minutos de v&iacute;deo do m&ecirc;s. O Pix dentro da live &eacute; recurso Enterprise.</p>
+      </details>
+      <details>
+        <summary>Como o cliente paga?</summary>
+        <p>No Enterprise, ele toca no produto e paga por Pix sem sair da live: aparece o QR e o valor cai direto na sua conta. Com a sua chave Pix, voc&ecirc; confirma o pagamento com um toque quando o dinheiro cai; com a conta Asaas conectada, a confirma&ccedil;&atilde;o &eacute; autom&aacute;tica. No Premium, o bot&atilde;o &ldquo;Quero este&rdquo; abre o seu WhatsApp com a mensagem j&aacute; pronta.</p>
+      </details>
+      <details>
+        <summary>Preciso de quantos seguidores?</summary>
+        <p>Nenhum. N&atilde;o existe m&iacute;nimo. A sua live tem link pr&oacute;prio e a p&aacute;gina do seu neg&oacute;cio ganha o selo AO VIVO enquanto voc&ecirc; estiver transmitindo. Chamar a sua audi&ecirc;ncia continua sendo com voc&ecirc; &mdash; e a Academia ensina como.</p>
+      </details>
+      <details>
+        <summary>E se a internet cair no meio?</summary>
+        <p>A transmiss&atilde;o tenta se reconectar sozinha. Se a live ficar sem sinal por alguns minutos, ela &eacute; considerada encerrada e o selo AO VIVO some da sua p&aacute;gina. Basta entrar ao vivo de novo &mdash; e, no teste gr&aacute;tis, reabrir logo em seguida conta como a mesma live, n&atilde;o gasta a segunda.</p>
+      </details>
+      <details>
+        <summary>Tenho loja no shopping. Funciona pra mim?</summary>
+        <p>Funciona. Voc&ecirc; chama a sua pr&oacute;pria lista de clientes para a live &mdash; WhatsApp, Instagram, quem j&aacute; comprou &mdash;, mostra a cole&ccedil;&atilde;o de perto e tira a d&uacute;vida de tamanho, cor e uso na hora. O pedido chega pelo seu WhatsApp ou, no Enterprise, pago por Pix dentro da live; o cliente retira na loja ou recebe em casa.</p>
+      </details>
+      <details>
+        <summary>Vender ao vivo garante mais vendas?</summary>
+        <p>N&atilde;o existe garantia, e desconfie de quem prometer. O que o Modo Live faz &eacute; tirar os obst&aacute;culos entre a d&uacute;vida do cliente e o pagamento: ele v&ecirc; o produto de perto, pergunta, recebe a resposta e faz o pedido ali mesmo. O resultado depende do seu produto, do seu pre&ccedil;o e de quantas pessoas voc&ecirc; chamar.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="avSec">
+  <div class="avWrap">
+    <div class="avFinal">
+      <div data-fx="selo"></div>
+      <span class="avTag"><span class="avPonto"></span> Modo Live</span>
+      <h2 style="margin-top:16px">Amanh&atilde; voc&ecirc; vai produzir de novo.<br>A diferen&ccedil;a &eacute; <em style="font-style:normal;color:var(--mv-ciano)">quem vai ver</em>.</h2>
+      <p class="avLead" style="max-width:640px;margin-inline:auto">Ative o teste de 30 dias, monte a sacolinha da sua primeira live e abra a c&acirc;mera. Sem cart&atilde;o, sem fidelidade e sem instalar nada.</p>
+      <div class="avCtas">
+        <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_final">Come&ccedil;ar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
+        <a class="avBtn avBtn--s" href="/comerciantes.html" data-ev="bf_conhecer">Conhecer o Moviki inteiro</a>
+      </div>
+      <p class="avDuvida">Ficou com d&uacute;vida? Pergunte no <a href="https://wa.me/554120186848?text=Oi!%20Vi%20a%20p%C3%A1gina%20da%20live%20no%20site%20e%20tenho%20uma%20d%C3%BAvida" rel="noopener" data-ev="bf_final_whats">WhatsApp</a> ou no <a href="https://ig.me/m/moviki.oficial?ref=w61527339" rel="noopener" data-ev="bf_final_direct">direct do Instagram</a>. A resposta &eacute; na hora.</p>
+      <p class="avMuted" style="margin-top:6px">Medicamento, tabaco e os demais itens proibidos nas <a href="/regras-da-live.html">Regras da live</a> n&atilde;o podem ser vendidos ao vivo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RODAPE ================= -->
+<!-- ================= CONFIANCA - RECLAME AQUI (2026-10-18-selo-ra) =================
+     Selo oficial dinamico: some sozinho se a verificacao cair. Nunca trocar por imagem.
+     O texto ao lado nao afirma "verificada" de proposito: quem afirma e o selo.
+     Um selo por pagina (o codigo do Reclame AQUI usa id fixo). -->
+<style>
+.mvra{padding:28px 16px;background:#081221;border-top:1px solid #16304f;border-bottom:1px solid #16304f}
+.mvra-in{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center}
+.mvra-selo{flex:0 0 auto;min-width:142px;min-height:52px;display:flex;align-items:center;justify-content:center}
+.mvra-txt{flex:1 1 320px;max-width:640px;color:#c6d8ee;font-size:14px;line-height:1.5}
+.mvra-tit{margin:0 0 4px;color:#eaf6ff;font-size:17px;font-weight:700}
+.mvra-sub{margin:0 0 6px}
+.mvra-cnpj{margin:0 0 8px;color:#8fa6c4;font-size:12.5px}
+.mvra-link{color:#00D4FF;font-weight:600;text-decoration:none}
+.mvra-link:hover,.mvra-link:focus-visible{text-decoration:underline}
+@media (max-width:560px){.mvra-txt{text-align:center}}
+</style>
+<section class="mvra" aria-label="Reputação do Moviki no Reclame AQUI">
+  <div class="mvra-in">
+    <div class="mvra-selo"><div id="ra-verified-seal"><script type="text/javascript" id="ra-embed-verified-seal" src="https://s3.amazonaws.com/raichu-beta/ra-verified/bundle.js" data-id="c2NUbk1iQ2ZXSU45RWgyaTplaWtvLXNpc3RlbWFzLWRlc2Vudm9sdmltZW50by1kZS1zb2Z0d2FyZS1sdGRh" data-target="ra-verified-seal" data-model="horizontal_1"></script></div></div>
+    <div class="mvra-txt">
+      <p class="mvra-tit">Confira o Moviki no Reclame AQUI</p>
+      <p class="mvra-sub">Antes de contratar, veja a nossa página no Reclame AQUI: dados da empresa, canais de atendimento e o histórico de atendimento ao cliente.</p>
+      <p class="mvra-cnpj">EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02</p>
+      <a class="mvra-link" href="https://www.reclameaqui.com.br/empresa/eiko-sistemas-desenvolvimento-de-software-ltda/" target="_blank" rel="noopener">Ver a nossa página no Reclame AQUI &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer class="avFoot">
+  <div class="avWrap">
+    <div class="avFootGrid">
+      <div>
+        <a class="avBrand" href="/">
+          <img src="logo.png" alt="Moviki" onerror="this.style.display='none';var t=document.getElementById('brandtxt2');if(t)t.style.display='inline-flex'">
+          <span id="brandtxt2" style="display:none">mo<b>viki</b></span>
+        </a>
+        <p class="avMuted" style="margin-top:12px;max-width:320px">O Moviki leva a sua loja ao vivo at&eacute; o celular do cliente &mdash; e a p&otilde;e no mapa pra quem est&aacute; perto. Para lojas de shopping, de rua e de bairro.</p>
+      </div>
+      <div>
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="/comerciantes.html">Para o seu neg&oacute;cio</a></li>
+          <li><a href="/aovivo">Modo Live</a></li>
+          <li><a href="/live-shop" data-ev="bf_rodape_liveshop">Live shop para lojista</a></li>
+          <li><a href="/guia/taxas-live-shop" data-ev="bf_rodape_guia">Taxas de live shop em 2026</a></li>
+          <li><a href="/premium.html">Plano Premium</a></li>
+          <li><a href="/enterprise.html">Enterprise</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Parceiros</h4>
+        <ul>
+          <li><a href="/parceiros.html">Programa de parceiros</a></li>
+          <li><a href="/parceiros-ganhos.html">Como funcionam os ganhos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a href="https://app.moviki.com.br">Entrar no painel</a></li>
+          <li><a href="/regras-da-live.html">Regras da live</a></li>
+          <li><a href="/termos.html">Termos de uso</a></li>
+          <li><a href="/reembolso.html">Reembolso</a></li>
+          <li><a href="/privacidade.html">Privacidade</a></li>
+          <li><a href="mailto:suporte@moviki.com.br">suporte@moviki.com.br</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- 19/10/2026 (P86): links para o cluster de SEO (guias e live shop por ramo). Pagina forte
+     apontando para as paginas novas ajuda o Google a rastrear o que esta "detectado, nao indexado". -->
+    <nav aria-label="Guias e live shop por ramo" style="border-top:1px solid rgba(255,255,255,.08);margin-top:26px;padding-top:18px;font-size:13.5px;line-height:1.9;color:#9db4d0">
+      <p style="margin:0 0 6px"><b>Guias:</b> <a href="/guia/como-fazer-live-de-vendas" data-ev="bf_rodape_guia_como_fazer_live_de_vendas" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Como fazer live de vendas</a> · <a href="/guia/roteiro-de-live" data-ev="bf_rodape_guia_roteiro_de_live" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Roteiro de live de vendas</a> · <a href="/guia/receber-pix-na-live" data-ev="bf_rodape_guia_receber_pix_na_live" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Como receber Pix na live</a> · <a href="/guia/live-sem-seguidores" data-ev="bf_rodape_guia_live_sem_seguidores" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Live de vendas sem seguidores</a> · <a href="/guia/taxas-live-shop" data-ev="bf_rodape_guia_taxas_live_shop" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Taxas de live shop em 2026</a></p>
+      <p style="margin:0"><b>Live shop por ramo:</b> <a href="/live-shop/moda" data-ev="bf_rodape_ramo_moda" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Moda</a> · <a href="/live-shop/farmacia" data-ev="bf_rodape_ramo_farmacia" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Farmácia</a> · <a href="/live-shop/cosmeticos" data-ev="bf_rodape_ramo_cosmeticos" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Cosméticos</a> · <a href="/live-shop/calcados" data-ev="bf_rodape_ramo_calcados" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Calçados</a> · <a href="/live-shop/suplementos" data-ev="bf_rodape_ramo_suplementos" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Suplementos</a> · <a href="/live-shop/pet" data-ev="bf_rodape_ramo_pet" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Pet shop</a> · <a href="/live-shop/semijoias" data-ev="bf_rodape_ramo_semijoias" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Semijoias</a> · <a href="/live-shop/otica" data-ev="bf_rodape_ramo_otica" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Ótica</a> · <a href="/live-shop/bebe" data-ev="bf_rodape_ramo_bebe" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Bebê e enxoval</a> · <a href="/live-shop/presentes" data-ev="bf_rodape_ramo_presentes" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">Presentes</a> · <a href="/live-shop#por-tipo-de-loja" data-ev="bf_rodape_ramos_todos" style="color:#cfe0f5;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25)">todos os ramos</a></p>
+    </nav>
+    <p class="avLegal">
+      EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA &middot; CNPJ 68.289.841/0001-02 &middot;
+      Rua Visconde do Rio Branco, 1488, Conj. 909, Centro, Curitiba/PR, CEP 80.420-210 &middot;
+      (41) 2018-6848.<br>
+      O Moviki fornece a ferramenta de transmiss&atilde;o e de venda. A oferta, o pre&ccedil;o, a entrega e o cumprimento
+      do que for anunciado na live s&atilde;o responsabilidade do pr&oacute;prio lojista, nos termos do C&oacute;digo de Defesa do Consumidor.
+      O Moviki n&atilde;o promete resultado de vendas nem realiza sorteios.
+    </p>
+  </div>
+</footer>
+
+<!-- 02/10/2026: barra fixa de cadastro no celular. O telefone grande empurra os
+     botoes do topo para baixo da primeira dobra; a barra garante o cadastro a um
+     toque e sai da frente quando um botao da pagina (.avCtas) esta na tela ou
+     quando o telefone esta inteiro na tela (para nao cobrir o chat da live). -->
+<div class="avBarra" id="avBarra">
+  <a class="avBtn avBtn--p" href="https://app.moviki.com.br/?criar=1" data-ev="bf_barra">Ativar meus 30 dias gr&aacute;tis &nbsp;&rarr;</a>
+  <small>Sem cart&atilde;o &middot; sem fidelidade &middot; d&uacute;vida? <a href="https://wa.me/554120186848?text=Oi!%20Vi%20a%20p%C3%A1gina%20da%20live%20no%20site%20e%20tenho%20uma%20d%C3%BAvida" rel="noopener" data-ev="bf_barra_whats" style="color:var(--mv-ciano);font-weight:700">WhatsApp</a></small>
+</div>
+<script>
+(function(){
+  try{
+    var bar=document.getElementById('avBarra');
+    if(!bar || !('IntersectionObserver' in window)) return;
+    var vis=new Set(), tel=document.getElementById('avTel');
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(x){
+        var dentro=(x.target===tel) ? x.intersectionRatio>=.85 : x.isIntersecting;
+        if(dentro) vis.add(x.target); else vis.delete(x.target);
+      });
+      bar.classList.toggle('fora', vis.size>0);
+    },{threshold:[0,.5,.85,1]});
+    document.querySelectorAll('.avCtas').forEach(function(el){ io.observe(el); });
+    if(tel) io.observe(tel);
+  }catch(e){}
+})();
+</script>
+
+<script>
+/* menu */
+function avMenu(abrir){
+  var m=document.getElementById('avMenu');
+  if(!m)return;
+  m.classList.toggle('on',!!abrir);
+  document.body.style.overflow=abrir?'hidden':'';
+  var b=document.querySelector('.avBurger');
+  if(b)b.setAttribute('aria-expanded',abrir?'true':'false');
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')avMenu(false); });
+
+/* player em fachada: o iframe do YouTube so nasce no toque.
+   Sem miniatura externa de proposito — assim a pagina NAO depende de img-src
+   para i.ytimg.com. O que a CSP do dominio precisa liberar e apenas:
+   frame-src https://www.youtube-nocookie.com
+   Sem isso, o video nao abre e NAO da erro visivel. */
+var AV_FILME='n2nmTfGY_mo';   /* 2:38, 16:9  — a historia inteira */
+var AV_CURTO='3Q5b0Q0PPh4';   /* 60 s, 9:16  — corte vertical, canal Moviki App */
+function avPecaDaVez(){
+  return (window.matchMedia && window.matchMedia('(max-width:760px)').matches) ? AV_CURTO : AV_FILME;
+}
+/* o palco nasce vertical no celular para nao deixar tarja preta em volta do corte */
+(function(){
+  function ajustar(){
+    var cx=document.getElementById('avPlayer');
+    if(!cx||cx.dataset.mvOn==='1')return;
+    cx.classList.toggle('avVideo--v', avPecaDaVez()===AV_CURTO);
+  }
+  ajustar();
+  window.addEventListener('resize',ajustar);
+})();
+/* ===== MECANISMO DO PLAYER — 2026-09-21-player2 =========================
+   1) o iframe nasce no pointerdown, nao no click: ganha o tempo do toque;
+   2) a capa vira "carregando" e so sai quando o player avisa, por
+      postMessage, que esta tocando (enablejsapi=1 — nenhum script do
+      YouTube e carregado, a CSP nao muda);
+   3) se em 2,6 s nao tocar (autoplay bloqueado pelo navegador), a capa vira
+      "Toque para comecar" e o toque manda playVideo direto no player.
+   Medicao: video_play continua saindo no toque e video_pronto sai quando o
+   filme comeca de verdade. A diferenca entre os dois numeros e quanta gente
+   o player estava perdendo na tela preta. */
+window.mvPlay=(function(){
+  var ORIGEM='https://www.youtube-nocookie.com';
+  var quadros=[];
+  function fala(q,msg){ try{ q.contentWindow.postMessage(JSON.stringify(msg),ORIGEM); }catch(e){} }
+  function registra(q){ if(q && quadros.indexOf(q)<0) quadros.push(q); }
+  /* ===== TRAVA DE UM FILME POR VEZ =====
+     Antes, abrir o segundo filme sem fechar o primeiro deixava os dois
+     tocando juntos, um por cima do outro. Isto escuta TODOS os players da
+     pagina e, assim que um comeca a tocar, manda pausar os outros — vale
+     inclusive para o play dado por dentro do proprio YouTube, que o nosso
+     botao nao enxerga. O filme mudo em laco do topo tambem para. */
+  function pausaOutros(menos){
+    for(var k=0;k<quadros.length;k++){
+      var q=quadros[k];
+      if(q!==menos && q.src) fala(q,{event:'command',func:'pauseVideo',args:[]});
+    }
+    var laco=document.getElementById('lpvLoop');
+    if(laco){ try{ laco.pause(); }catch(e){} }
+  }
+  window.addEventListener('message',function(e){
+    if(e.origin!==ORIGEM) return;
+    var d=e.data;
+    if(typeof d==='string'){ try{ d=JSON.parse(d); }catch(err){ return; } }
+    var i=d&&d.info;
+    if(!i||i.playerState!==1) return;
+    var quem=null;
+    for(var k=0;k<quadros.length;k++){ if(quadros[k].contentWindow===e.source){ quem=quadros[k]; break; } }
+    if(quem) pausaOutros(quem);
+  });
+  function abrir(o){
+    var caixa=o.caixa, quadro=o.quadro;
+    if(!caixa||!quadro||caixa.dataset.mvOn==='1') return;
+    caixa.dataset.mvOn='1';
+    var tocou=false;
+    var vid=(typeof o.id==='function')?o.id():o.id;
+    registra(quadro);
+    pausaOutros(quadro);
+    caixa.classList.add('mv-carregando');
+    if(o.aoAbrir){ try{ o.aoAbrir(vid); }catch(e){} }
+    quadro.title=o.titulo||'';
+    quadro.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    quadro.setAttribute('allowfullscreen','');
+    quadro.referrerPolicy='strict-origin-when-cross-origin';
+    quadro.src=ORIGEM+'/embed/'+vid+'?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+    quadro.hidden=false;
+    function pronto(){
+      if(tocou) return; tocou=true;
+      clearTimeout(relogio); clearInterval(bate);
+      window.removeEventListener('message',ouve);
+      caixa.classList.remove('mv-carregando','mv-preso');
+      caixa.classList.add('mv-tocando');
+      if(o.aoTocar){ try{ o.aoTocar(vid); }catch(e){} }
+    }
+    function ouve(e){
+      if(e.origin!==ORIGEM) return;
+      var d=e.data;
+      if(typeof d==='string'){ try{ d=JSON.parse(d); }catch(err){ return; } }
+      var i=d&&d.info;
+      if(!i) return;
+      if(i.playerState===1 || (typeof i.currentTime==='number' && i.currentTime>0.2)) pronto();
+    }
+    window.addEventListener('message',ouve);
+    var voltas=0;
+    var bate=setInterval(function(){
+      voltas++;
+      fala(quadro,{event:'listening',id:1,channel:'widget'});
+      if(voltas>24) clearInterval(bate);
+    },250);
+    var relogio=setTimeout(function(){
+      if(tocou) return;
+      caixa.classList.remove('mv-carregando');
+      caixa.classList.add('mv-preso');
+    },2600);
+    if(o.gatilho){
+      o.gatilho.addEventListener('click',function(){
+        if(!caixa.classList.contains('mv-preso')) return;
+        fala(quadro,{event:'command',func:'playVideo',args:[]});
+        setTimeout(function(){
+          if(tocou) return;
+          caixa.classList.remove('mv-preso');
+          caixa.classList.add('mv-tocando');
+        },900);
+      });
+    }
+  }
+  function liga(o){
+    if(!o.gatilho||!o.caixa||!o.quadro) return;
+    registra(o.quadro);
+    var disparado=false;
+    function vai(){ if(disparado) return; disparado=true; abrir(o); }
+    o.gatilho.addEventListener('pointerdown',vai);
+    o.gatilho.addEventListener('click',function(e){ e.preventDefault(); vai(); });
+    o.gatilho.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); vai(); } });
+  }
+  return {liga:liga,abrir:abrir};
+})();
+
+function avAbrirVideo(id){
+  var cx=document.getElementById('avPlayer');
+  var quadro=document.getElementById('avFrame');
+  if(!cx||!quadro||!window.mvPlay) return;
+  var vid=(typeof id==='string'&&id)?id:avPecaDaVez();
+  cx.classList.toggle('avVideo--v', vid===AV_CURTO);
+  window.mvPlay.abrir({
+    caixa:cx, quadro:quadro, id:vid,
+    gatilho:cx,
+    titulo:'Filme do Modo Live do Moviki',
+    aoAbrir:function(v){
+      cx.style.cursor='default';
+      try{ if(window.mvEv) window.mvEv('video_play',{video:(v===AV_CURTO?'corte_vertical_60s':'filme_hero'),pagina:'black-friday'}); }catch(e){}
+    },
+    aoTocar:function(v){
+      try{ if(window.mvEv) window.mvEv('video_pronto',{video:(v===AV_CURTO?'corte_vertical_60s':'filme_hero'),pagina:'black-friday'}); }catch(e){}
+    }
+  });
+}
+/* o toque comeca no pointerdown, nao no click: o iframe ganha o tempo do
+   dedo descendo, que e onde estavam os primeiros segundos de tela preta. */
+(function(){
+  var cx=document.getElementById('avPlayer');
+  if(cx) cx.addEventListener('pointerdown',function(){ avAbrirVideo(); });
+})();
+</script>
+
+<script>
+/* ===== MEDICAO — mesmo padrao de comerciantes.html, parceiros.html e enterprise.html.
+   page_view e cta_painel saem sozinhos do mvmetrica.js. O VALOR de data-ev e o
+   nome do CTA; o evento enviado e sempre cta_click. ===== */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+    if (!a) return;
+    try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'black-friday', ramo: window.avRamo || 'generico' }); } catch(err){}
+  }, true);
+  /* Veio de um link de parceiro (/p/apelido)? Registra a origem uma vez. */
+  try {
+    var ref = (new URLSearchParams(location.search).get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
+    if (ref.length >= 3 && window.mvEv) window.mvEv('chegou_por_indicacao', { ref: ref, destino: 'black-friday' });
+  } catch(err){}
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Preciso instalar algum aplicativo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não. A transmissão abre no navegador do seu celular, pelo próprio painel do Moviki. Quem assiste também não instala nada: recebe um link e entra."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "A live já funciona no teste grátis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. Durante os 30 dias grátis, sem cartão, você faz duas lives em nível Premium: até 60 minutos cada e 5 produtos na sacolinha. São duas para experimentar — assinando, a quantidade de lives deixa de ter limite e passa a valer o pacote de minutos de vídeo do mês. O Pix dentro da live é recurso Enterprise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como o cliente paga?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No Enterprise, ele toca no produto e paga por Pix sem sair da live: aparece o QR e o valor cai direto na sua conta. Com a sua chave Pix, você confirma o pagamento com um toque quando o dinheiro cai; com a conta Asaas conectada, a confirmação é automática. No Premium, o botão “Quero este” abre o seu WhatsApp com a mensagem já pronta."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Preciso de quantos seguidores?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nenhum. Não existe mínimo. A sua live tem link próprio e a página do seu negócio ganha o selo AO VIVO enquanto você estiver transmitindo. Chamar a sua audiência continua sendo com você — e a Academia ensina como."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "E se a internet cair no meio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A transmissão tenta se reconectar sozinha. Se a live ficar sem sinal por alguns minutos, ela é considerada encerrada e o selo AO VIVO some da sua página. Basta entrar ao vivo de novo — e, no teste grátis, reabrir logo em seguida conta como a mesma live, não gasta a segunda."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Tenho loja no shopping. Funciona pra mim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Funciona. Você chama a sua própria lista de clientes para a live — WhatsApp, Instagram, quem já comprou —, mostra a coleção de perto e tira a dúvida de tamanho, cor e uso na hora. O pedido chega pelo seu WhatsApp ou, no Enterprise, pago por Pix dentro da live; o cliente retira na loja ou recebe em casa."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vender ao vivo garante mais vendas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não existe garantia, e desconfie de quem prometer. O que o Modo Live faz é tirar os obstáculos entre a dúvida do cliente e o pagamento: ele vê o produto de perto, pergunta, recebe a resposta e faz o pedido ali mesmo. O resultado depende do seu produto, do seu preço e de quantas pessoas você chamar."
+      }
+    }
+  ]
+}
+</script>
+</body>
+</html>
