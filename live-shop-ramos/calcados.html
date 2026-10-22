@@ -7,7 +7,7 @@
 <meta name="description" content="Live shop para loja de calçados: mostre a sola, calce no pé, confirme a numeração no chat e receba o pedido. Sem app e sem comissão do Moviki.">
 <link rel="canonical" href="https://www.moviki.com.br/live-shop/calcados">
 <!--
-  live-shop-ramos/calcados.html — 2026-10-20-onda3 (rota /live-shop/calcados no vercel.json). P86.
+  live-shop-ramos/calcados.html — 2026-10-22-video-ramos (rota /live-shop/calcados no vercel.json). P86.
   Pagina de busca organica por ramo, filha da /live-shop. Gerada a partir do conteudo
   proprio do ramo; o estilo, os planos e o rodape vem da live-shop.html. Mudou plano ou
   rodape la, regerar as paginas de ramo.
@@ -16,7 +16,7 @@
   FAQPage so com perguntas que aparecem na pagina.
 -->
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/ https://i.ytimg.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://api.reclameaqui.com.br; frame-src https://verificada.reclameaqui.com.br https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#050b14">
 <meta property="og:type" content="website">
@@ -102,6 +102,12 @@ p+p{margin-top:12px}
 .passo:before{counter-increment:p;content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:18px}
 .passo h3{font-size:17px;margin-bottom:4px}
 .passo p{color:var(--texto2);font-size:15px}
+.video-yt{position:relative;display:block;width:100%;max-width:820px;aspect-ratio:16/9;margin:26px auto 0;border:1px solid var(--linha);border-radius:20px;overflow:hidden;background:#000;cursor:pointer;padding:0}
+.video-yt img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
+.video-yt .play{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:#ff2d55;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.video-yt .play:after{content:"";position:absolute;left:34px;top:26px;border-left:24px solid #fff;border-top:16px solid transparent;border-bottom:16px solid transparent}
+.video-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-leg{text-align:center;color:var(--texto3);font-size:14px;margin-top:10px}
 .telas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
 .telas figure{background:var(--card);border:1px solid var(--linha);border-radius:20px;padding:12px}
 .telas img{width:100%;height:auto;aspect-ratio:600/1298;object-fit:cover;border-radius:12px}
@@ -189,6 +195,10 @@ footer a{text-decoration:underline}
 .cuid{list-style:none;display:grid;gap:10px;margin-top:22px;max-width:820px}
 .cuid li{position:relative;padding:14px 16px 14px 44px;background:rgba(255,207,77,.07);border:1px solid rgba(255,207,77,.28);border-radius:14px;color:var(--texto2);font-size:15px}
 .cuid li:before{content:"!";position:absolute;left:14px;top:13px;width:20px;height:20px;border-radius:50%;background:var(--ouro);color:#1a1300;font-weight:800;font-size:13px;display:grid;place-items:center}
+/* 22/10/2026 (P87): Short vertical do canal */
+.video-yt.vert{aspect-ratio:9/16;max-width:340px}
+.video-leg{color:var(--texto3);font-size:14px;margin-top:12px}
+.video-leg a{color:var(--texto2);text-decoration:underline}
 @media (max-width:900px){.mostrar{grid-template-columns:1fr}.datas{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
@@ -256,6 +266,18 @@ footer a{text-decoration:underline}
       })();
       </script>
     </div>
+  </div>
+</section>
+
+<section id="video">
+  <div class="wrap centro">
+    <span class="kick"><i></i>Em vídeo</span>
+    <h2>Uma live de loja de calçados <em>em menos de um minuto</em></h2>
+    <button type="button" class="video-yt vert" data-yt="6RR4LoBYE5U" data-ev="liveshop_calcados_video" aria-label="Assistir: Live shop para loja de calçados: venda ao vivo pelo celular | Moviki">
+      <img src="https://i.ytimg.com/vi/6RR4LoBYE5U/hqdefault.jpg" alt="Live shop para loja de calçados: venda ao vivo pelo celular | Moviki" width="480" height="360" loading="lazy">
+      <span class="play" aria-hidden="true"></span>
+    </button>
+    <p class="video-leg">Cena ilustrativa, loja fictícia. Vídeo do canal <a href="https://www.youtube.com/@movikiliveshop" rel="noopener" data-ev="liveshop_calcados_canal_yt">Moviki Live Shop no YouTube</a></p>
   </div>
 </section>
 
@@ -423,7 +445,7 @@ footer a{text-decoration:underline}
   }catch(e){}
 })();
 </script>
-<script>window.MOVIKI_VERSAO='2026-10-20-onda3';</script>
+<script>window.MOVIKI_VERSAO='2026-10-22-video-ramos';</script>
 <script>
 /* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
 (function(){
@@ -432,6 +454,21 @@ footer a{text-decoration:underline}
     if(!a) return;
     try{ if(window.mvEv) window.mvEv('cta_click',{cta:a.getAttribute('data-ev'),pagina:"live-shop-calcados",ramo:"calcados"}); }catch(err){}
   },true);
+})();
+</script>
+<script>
+(function(){
+  document.querySelectorAll('.video-yt[data-yt]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-yt'); if(!/^[\w-]{11}$/.test(id)) return;
+      var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0';
+      f.title=b.getAttribute('aria-label')||'Vídeo';
+      f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen=true;
+      b.innerHTML=''; b.appendChild(f); b.style.cursor='default';
+    },{once:true});
+  });
 })();
 </script>
 <script type="application/ld+json">
@@ -497,6 +534,24 @@ footer a{text-decoration:underline}
      }
     }
    ]
+  },
+  {
+   "@type": "VideoObject",
+   "name": "Live shop para loja de calçados: venda ao vivo pelo celular | Moviki",
+   "description": "Chegou a numeração que faltava, e o cliente nem sabe. Enquanto isso, o seu cliente de sempre está em casa, com o celular na mão.",
+   "thumbnailUrl": "https://i.ytimg.com/vi/6RR4LoBYE5U/hqdefault.jpg",
+   "uploadDate": "2026-10-22",
+   "duration": "PT40S",
+   "embedUrl": "https://www.youtube.com/embed/6RR4LoBYE5U",
+   "contentUrl": "https://www.youtube.com/shorts/6RR4LoBYE5U",
+   "publisher": {
+    "@type": "Organization",
+    "name": "Moviki",
+    "logo": {
+     "@type": "ImageObject",
+     "url": "https://www.moviki.com.br/logo.png"
+    }
+   }
   }
  ]
 }
