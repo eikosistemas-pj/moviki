@@ -98,6 +98,10 @@
       "destination": "/criadores.html"
     },
     {
+      "source": "/imprensa",
+      "destination": "/imprensa.html"
+    },
+    {
       "source": "/sitemap-negocios.xml",
       "destination": "/api/sitemap"
     },
