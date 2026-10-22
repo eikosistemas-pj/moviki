@@ -7,14 +7,14 @@
 <meta name="description" content="Como fazer live de vendas da sua loja pelo celular: o que preparar, 7 passos, o que mostrar na câmera e os erros que derrubam a live. Guia prático.">
 <link rel="canonical" href="https://www.moviki.com.br/guia/como-fazer-live-de-vendas">
 <!--
-  guias/como-fazer-live-de-vendas.html — 2026-10-20-guias2 (rota /guia/como-fazer-live-de-vendas no vercel.json). P86, cluster de cauda longa.
+  guias/como-fazer-live-de-vendas.html — 2026-10-22-video (rota /guia/como-fazer-live-de-vendas no vercel.json). P86, cluster de cauda longa.
   Guia de intencao de lojista ligado a /live-shop. Regras: nenhuma marca de terceiro; descreve a
   REGRA, nunca o resultado; sem promessa de venda; recurso Enterprise dito como Enterprise;
   "teste gratis", nunca "trial". FAQPage so com perguntas visiveis. Data no Article = data real
   da ultima revisao do texto.
 -->
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://api.reclameaqui.com.br; frame-src https://verificada.reclameaqui.com.br; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/ https://i.ytimg.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://api.reclameaqui.com.br; frame-src https://verificada.reclameaqui.com.br https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#050b14">
 <meta property="og:type" content="article">
@@ -99,6 +99,12 @@ p+p{margin-top:12px}
 .passo:before{counter-increment:p;content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:18px}
 .passo h3{font-size:17px;margin-bottom:4px}
 .passo p{color:var(--texto2);font-size:15px}
+.video-yt{position:relative;display:block;width:100%;max-width:820px;aspect-ratio:16/9;margin:26px auto 0;border:1px solid var(--linha);border-radius:20px;overflow:hidden;background:#000;cursor:pointer;padding:0}
+.video-yt img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
+.video-yt .play{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:#ff2d55;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.video-yt .play:after{content:"";position:absolute;left:34px;top:26px;border-left:24px solid #fff;border-top:16px solid transparent;border-bottom:16px solid transparent}
+.video-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-leg{text-align:center;color:var(--texto3);font-size:14px;margin-top:10px}
 .telas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
 .telas figure{background:var(--card);border:1px solid var(--linha);border-radius:20px;padding:12px}
 .telas img{width:100%;height:auto;aspect-ratio:600/1298;object-fit:cover;border-radius:12px}
@@ -219,6 +225,18 @@ footer a{text-decoration:underline}
       <li><a href="#onde-fazer">Live na própria loja ou numa rede social</a></li>
       <li><a href="#duvidas">Perguntas frequentes</a></li>
     </ol></nav>
+  </div>
+</section>
+
+<section id="video">
+  <div class="wrap centro">
+    <span class="kick"><i></i>Em vídeo</span>
+    <h2>Veja uma live shop em 2 minutos</h2>
+    <button type="button" class="video-yt" data-yt="n2nmTfGY_mo" data-ev="guia_como_fazer_live_de_vendas_video" aria-label="Assistir: Live shop: como vender ao vivo pelo celular, sem estúdio | Moviki">
+      <img src="https://i.ytimg.com/vi/n2nmTfGY_mo/hqdefault.jpg" alt="Live shop: como vender ao vivo pelo celular, sem estúdio | Moviki" width="480" height="360" loading="lazy">
+      <span class="play" aria-hidden="true"></span>
+    </button>
+    <p class="video-leg">Vídeo do canal <a href="https://www.youtube.com/@movikiliveshop" rel="noopener" data-ev="guia_como_fazer_live_de_vendas_canal_yt">Moviki Live Shop no YouTube</a></p>
   </div>
 </section>
 
@@ -374,7 +392,22 @@ footer a{text-decoration:underline}
   }catch(e){}
 })();
 </script>
-<script>window.MOVIKI_VERSAO='2026-10-20-guias2';</script>
+<script>window.MOVIKI_VERSAO='2026-10-22-video';</script>
+<script>
+(function(){
+  document.querySelectorAll('.video-yt[data-yt]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-yt'); if(!/^[\w-]{11}$/.test(id)) return;
+      var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0';
+      f.title=b.getAttribute('aria-label')||'Vídeo';
+      f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen=true;
+      b.innerHTML=''; b.appendChild(f); b.style.cursor='default';
+    },{once:true});
+  });
+})();
+</script>
 <script>
 (function(){
   document.addEventListener('click',function(e){
@@ -471,6 +504,24 @@ footer a{text-decoration:underline}
      }
     }
    ]
+  },
+  {
+   "@type": "VideoObject",
+   "name": "Live shop: como vender ao vivo pelo celular, sem estúdio | Moviki",
+   "description": "Como a loja vende ao vivo pelo celular com o Moviki: mostra o produto, responde no chat e recebe o pedido durante a transmissão, sem estúdio e sem aplicativo.",
+   "thumbnailUrl": "https://i.ytimg.com/vi/n2nmTfGY_mo/hqdefault.jpg",
+   "uploadDate": "2026-09-13",
+   "duration": "PT2M39S",
+   "embedUrl": "https://www.youtube.com/embed/n2nmTfGY_mo",
+   "contentUrl": "https://www.youtube.com/watch?v=n2nmTfGY_mo",
+   "publisher": {
+    "@type": "Organization",
+    "name": "Moviki",
+    "logo": {
+     "@type": "ImageObject",
+     "url": "https://www.moviki.com.br/logo.png"
+    }
+   }
   }
  ]
 }
