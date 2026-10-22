@@ -7,14 +7,14 @@
 <meta name="description" content="Modelo de roteiro de live de vendas para loja: blocos de 45 minutos, o que falar em cada momento e checklist da véspera, de 1 hora antes e do pós-live.">
 <link rel="canonical" href="https://www.moviki.com.br/guia/roteiro-de-live">
 <!--
-  guias/roteiro-de-live.html — 2026-10-20-guias2 (rota /guia/roteiro-de-live no vercel.json). P86, cluster de cauda longa.
+  guias/roteiro-de-live.html — 2026-10-22-video (rota /guia/roteiro-de-live no vercel.json). P86, cluster de cauda longa.
   Guia de intencao de lojista ligado a /live-shop. Regras: nenhuma marca de terceiro; descreve a
   REGRA, nunca o resultado; sem promessa de venda; recurso Enterprise dito como Enterprise;
   "teste gratis", nunca "trial". FAQPage so com perguntas visiveis. Data no Article = data real
   da ultima revisao do texto.
 -->
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://api.reclameaqui.com.br; frame-src https://verificada.reclameaqui.com.br; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://s3.amazonaws.com/raichu-beta/ra-verified/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://s3.amazonaws.com/raichu-beta/ra-verified/; font-src https://fonts.gstatic.com; img-src 'self' data: https://s3.amazonaws.com/raichu-beta/ra-verified/ https://i.ytimg.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://api.reclameaqui.com.br; frame-src https://verificada.reclameaqui.com.br https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#050b14">
 <meta property="og:type" content="article">
@@ -99,6 +99,12 @@ p+p{margin-top:12px}
 .passo:before{counter-increment:p;content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:18px}
 .passo h3{font-size:17px;margin-bottom:4px}
 .passo p{color:var(--texto2);font-size:15px}
+.video-yt{position:relative;display:block;width:100%;max-width:820px;aspect-ratio:16/9;margin:26px auto 0;border:1px solid var(--linha);border-radius:20px;overflow:hidden;background:#000;cursor:pointer;padding:0}
+.video-yt img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
+.video-yt .play{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:#ff2d55;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.video-yt .play:after{content:"";position:absolute;left:34px;top:26px;border-left:24px solid #fff;border-top:16px solid transparent;border-bottom:16px solid transparent}
+.video-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-leg{text-align:center;color:var(--texto3);font-size:14px;margin-top:10px}
 .telas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
 .telas figure{background:var(--card);border:1px solid var(--linha);border-radius:20px;padding:12px}
 .telas img{width:100%;height:auto;aspect-ratio:600/1298;object-fit:cover;border-radius:12px}
@@ -356,7 +362,7 @@ footer a{text-decoration:underline}
   }catch(e){}
 })();
 </script>
-<script>window.MOVIKI_VERSAO='2026-10-20-guias2';</script>
+<script>window.MOVIKI_VERSAO='2026-10-22-video';</script>
 <script>
 (function(){
   document.addEventListener('click',function(e){
