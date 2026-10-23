@@ -255,7 +255,7 @@ footer a{text-decoration:underline}
        h:['O perfume acaba. A cliente volta.','Ela não precisa ','te custar comissão','.'],
        l:'A plataforma apresentou você a ela. Agora ela já sabe o que gosta. A próxima compra pode sair da live da sua loja, com Pix direto na sua conta.'},
       {k:'cabelo',a:['cabelo','capilar','shampoo','hair'],s:'Para quem vende cuidado com o cabelo ao vivo',tk:60,rc:40,
-       h:['O shampoo acaba todo mês.','A comissão ','não precisa vir junto','.'],
+       h:['O shampoo acaba todo mês.','A comissão ','não precisa vir junto','.'], /* conformidade:ok (recompra do cliente, nao e comissao de parceiro) */
        l:'Quem gostou do seu kit volta para repor. Chame essa cliente para a live da sua loja e venda a reposição com Pix direto na sua conta.'},
       {k:'cosmeticos',a:['cosmet','beleza','maquiag','skincare','skin','make'],s:'Para quem vende beleza ao vivo',tk:45,rc:40,
        h:['O batom acaba. A cliente volta.','Por que pagar ','comissão de novo','?'],
@@ -640,7 +640,7 @@ footer a{text-decoration:underline}
     ver.appendChild(b);
     var nRec=itens*rc;
     ver.appendChild(document.createTextNode(nRec>=nPed
-      ? ' Na sua conta, a recompra soma '+int.format(nRec)+' pedidos por mês, e o Moviki não cobra comissão sobre eles.'
+      ? ' Na sua conta, a recompra soma '+int.format(nRec)+' pedidos por mês, e o Moviki não cobra comissão sobre eles.' /* conformidade:ok (recompra do cliente, nao e comissao de parceiro) */
       : ' Na sua conta, a recompra soma '+int.format(nRec)+' pedidos por mês: a taxa deles ainda não chega à mensalidade. Faça a conta de novo quando a sua clientela crescer.'));
   }
   ['cFat','cTk','cRc','cPct','cFix','cAf'].forEach(function(id){
@@ -689,7 +689,7 @@ footer a{text-decoration:underline}
   }catch(e){}
 })();
 </script>
-<script>window.MOVIKI_VERSAO='2026-10-07-reembolso';</script>
+<script>window.MOVIKI_VERSAO='2026-10-23-conformidade';</script>
 <script>
 /* MEDICAO: page_view e cta_painel saem do mvmetrica.js. data-ev = nome do CTA; o evento e sempre cta_click. */
 (function(){
