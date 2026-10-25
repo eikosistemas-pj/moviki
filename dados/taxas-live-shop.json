@@ -1,0 +1,60 @@
+{
+  "_leia": "FONTE UNICA das tarifas da calculadora (/guia/calculadora-taxas-live-shop e /embed). Mudou a tarifa oficial? Trocar aqui, a data 'conferido_em' da plataforma e os numeros escritos no HTML da calculadora e do guia de taxas, no MESMO Pull Request. A tarefa agendada 'Moviki - conferencia semanal das taxas' confere as fontes toda segunda. Mais de 60 dias sem conferir: a pagina mostra aviso. Mais de 100 dias: a plataforma sai da conta e aparece em revisao. Tarifa igual: o robo so renova a data quando ela passa de 30 dias (um PR por mes).",
+  "versao": "2026-10-25-calculadora",
+  "plataformas": {
+    "tiktok": {
+      "nome": "TikTok Shop",
+      "conferido_em": "2026-10-22",
+      "vigencia": "2026-07-15",
+      "fonte_nome": "TikTok Shop Seller Center Brasil, Tarifa de Comissão da Plataforma (atualizada em 12/06/2026) e guia oficial de 14/08/2026",
+      "fonte_url": "https://seller-br.tiktok.com/",
+      "faixas": [
+        { "abaixo_de": 50, "pct": 10, "fixo": 4 },
+        { "abaixo_de": null, "pct": 6, "fixo": 6 }
+      ],
+      "notas": [
+        "Calculada sobre o preço depois dos descontos do próprio vendedor.",
+        "Vendedor novo que cumpre as missões pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia de taxas.",
+        "Programas opcionais (frete, afiliados) têm custo próprio, fora desta conta."
+      ]
+    },
+    "shopee": {
+      "nome": "Shopee",
+      "conferido_em": "2026-10-25",
+      "vigencia": "2026-10-01",
+      "fonte_nome": "Centro de Educação do Vendedor Shopee BR, Política de Comissão (última atualização em 21/10/2026)",
+      "fonte_url": "https://seller.shopee.com.br/edu/article/18483/",
+      "fonte_cpf_url": "https://seller.shopee.com.br/edu/article/18484/",
+      "faixas": [
+        { "abaixo_de": 80, "pct": 20, "fixo": 4.5 },
+        { "abaixo_de": 100, "pct": 14, "fixo": 16 },
+        { "abaixo_de": 200, "pct": 14, "fixo": 20 },
+        { "abaixo_de": null, "pct": 14, "fixo": 26 }
+      ],
+      "abaixo_de_8_fixo_metade_do_preco": true,
+      "cpf_adicional_por_item": 3,
+      "cpf_pedidos_90_dias": 450,
+      "cpf_regressiva_abaixo_de": 12,
+      "notas": [
+        "Tabela para vendedor CNPJ; a comissão já inclui a taxa de transação.",
+        "Item abaixo de R$ 8: o valor fixo por item é a metade do preço.",
+        "Vendedor CPF com mais de 450 pedidos em 90 dias paga mais R$ 3 por item (abaixo de R$ 12 a taxa é regressiva).",
+        "O subsídio Pix (5% a 8%) é desconto dado ao comprador; segundo a Shopee, o vendedor recebe o mesmo valor."
+      ]
+    },
+    "moviki": {
+      "nome": "Moviki",
+      "conferido_em": "2026-10-25",
+      "taxa_por_venda": 0,
+      "planos": [
+        { "id": "premium", "nome": "Premium", "mensal": 69.90, "resumo": "Live com pedido pelo WhatsApp" },
+        { "id": "enterprise", "nome": "Enterprise", "mensal": 129.90, "resumo": "Pix dentro da live" }
+      ],
+      "notas": [
+        "Sem comissão por venda: o Pix vai para a conta da loja, nunca para a do Moviki.",
+        "Com a conta Asaas conectada, a tarifa do Pix é do Asaas, não do Moviki.",
+        "Se um dia houver tarifa por pedido, ela será fixa, nunca porcentagem, com aviso de 30 dias."
+      ]
+    }
+  }
+}

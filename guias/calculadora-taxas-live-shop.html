@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calculadora de taxas de live shop: TikTok Shop, Shopee e loja própria</title>
+<meta name="description" content="Calculadora grátis de taxas de live shop: digite o preço e quantos itens vende e veja quanto fica com o TikTok Shop, com a Shopee e com a live na própria loja. Tarifas com fonte oficial e data.">
+<link rel="canonical" href="https://www.moviki.com.br/guia/calculadora-taxas-live-shop">
+<!--
+  guias/calculadora-taxas-live-shop.html — 2026-10-25-calculadora (rota /guia/calculadora-taxas-live-shop no vercel.json).
+  TERCEIRA excecao controlada a regra de 29/09 (citar TikTok), e primeira a citar a Shopee: pedida pelo dono em 25/10/2026
+  ("Quero montar a calculadora"). Mesmas condicoes do guia de taxas (vault R - Regras de ouro novas de 01102026 - live shop):
+   - numero com fonte oficial e data; tarifa padrao e regra geral, com as excecoes escritas;
+   - sem depreciar (CONAR art. 32), sem logo, sem cor de marca de terceiro, sem sugerir parceria;
+   - mostra onde a plataforma ganha; nenhuma promessa de venda: e conta de TARIFA.
+  As tarifas moram em /dados/taxas-live-shop.json (fonte unica). O texto fixo desta pagina repete os numeros para o Google:
+  mudou a tarifa, trocar o JSON E este HTML no mesmo PR. Mais de 60 dias sem conferir = aviso; mais de 100 = plataforma "em revisao".
+-->
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#050b14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moviki">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="https://www.moviki.com.br/guia/calculadora-taxas-live-shop">
+<meta property="og:title" content="Calculadora de taxas de live shop">
+<meta property="og:description" content="Digite o preço e quantos itens vende: veja quanto fica com cada plataforma e quanto sobra para a sua loja. Grátis, com fonte oficial.">
+<meta property="og:image" content="https://www.moviki.com.br/calculadora-img/og-calculadora.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Calculadora de taxas de live shop do Moviki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Calculadora de taxas de live shop">
+<meta name="twitter:description" content="Quanto fica com cada plataforma e quanto sobra para a sua loja. Grátis, com fonte oficial.">
+<meta name="twitter:image" content="https://www.moviki.com.br/calculadora-img/og-calculadora.jpg">
+<link rel="icon" href="/favicon512.png">
+<link rel="apple-touch-icon" href="/icone-180.png">
+<link rel="preload" href="/dados/taxas-live-shop.json" as="fetch" crossorigin>
+<script src="/mvmetrica.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ciano:#00D4FF; --azul:#0066FF; --fundo:#050b14; --fundo2:#08111f; --card:#0d1829; --card2:#111f35;
+  --linha:rgba(255,255,255,.08); --linha2:rgba(255,255,255,.14);
+  --texto:#eaf3ff; --texto2:#9db4d0; --texto3:#6f87a6;
+  --ouro:#ffcf4d; --verde:#22d39a; --vermelho:#ff6b6b; --cinza:#8ea2bf;
+  --raio:22px; --sombra:0 24px 60px rgba(0,0,0,.45);
+  --grad:linear-gradient(135deg,#00D4FF 0%,#0066FF 100%);
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Poppins',system-ui,-apple-system,sans-serif;background:var(--fundo);color:var(--texto);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img,video{max-width:100%;display:block}
+b,strong{font-weight:700}
+button{font:inherit;color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+section{position:relative;padding:76px 0}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ciano)}
+.kick i{width:8px;height:8px;border-radius:50%;background:var(--ciano);box-shadow:0 0 0 4px rgba(0,212,255,.18);animation:pulso 2.2s ease-in-out infinite}
+@keyframes pulso{50%{box-shadow:0 0 0 8px rgba(0,212,255,0)}}
+h1,h2,h3{line-height:1.12;letter-spacing:-.02em}
+h2{font-size:clamp(27px,4.2vw,42px);font-weight:800;margin:12px 0 14px}
+h2 em,h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+h3{font-size:19px;font-weight:700}
+.lead{font-size:clamp(16px,2vw,19px);color:var(--texto2);max-width:740px}
+.centro{text-align:center}.centro .lead{margin:0 auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border-radius:999px;font-weight:700;font-size:16px;cursor:pointer;border:0;transition:transform .18s var(--ease),box-shadow .18s var(--ease),background .18s}
+.btn:active{transform:scale(.97)}
+.btn-pri{background:var(--grad);color:#fff;box-shadow:0 14px 34px rgba(0,102,255,.38),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-pri:hover{box-shadow:0 18px 44px rgba(0,102,255,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-sec{background:rgba(255,255,255,.06);color:var(--texto);border:1px solid var(--linha2)}
+.btn-sec:hover{background:rgba(255,255,255,.1)}
+.btn-peq{min-height:44px;padding:0 18px;font-size:14.5px}
+
+/* topo */
+.topo{position:sticky;top:0;z-index:40;background:rgba(5,11,20,.78);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--linha)}
+.topo .wrap{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
+.topo img{height:28px;width:auto}
+.topo .mini{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;background:var(--grad);font-weight:700;font-size:14px;color:#fff;white-space:nowrap}
+
+/* hero */
+.hero{padding:40px 0 30px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:-30% -10% auto auto;width:820px;height:820px;background:radial-gradient(closest-side,rgba(0,102,255,.32),transparent 70%);pointer-events:none}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,212,255,.045) 1px,transparent 1px) 0 0/56px 56px,linear-gradient(90deg,rgba(0,212,255,.045) 1px,transparent 1px) 0 0/56px 56px;mask-image:radial-gradient(ellipse at 70% 30%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 30%,#000 10%,transparent 70%);pointer-events:none}
+.hgrid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(36px,6.2vw,64px);font-weight:800;margin:14px 0 16px}
+.micro{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:13.5px;color:var(--texto2)}
+.micro span{display:inline-flex;align-items:center;gap:7px}
+.micro span:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--verde);flex:none}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.cena{position:relative;aspect-ratio:1/1;max-width:500px;margin:0 auto;width:100%}
+.cena video,.cena img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;mask-image:radial-gradient(circle at 50% 48%,#000 52%,transparent 71%);-webkit-mask-image:radial-gradient(circle at 50% 48%,#000 52%,transparent 71%)}
+.cena .anel{position:absolute;inset:6%;border-radius:50%;border:1px solid rgba(0,212,255,.22);animation:gira 18s linear infinite}
+.cena .anel:before{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;border-radius:50%;background:var(--ciano);box-shadow:0 0 14px var(--ciano)}
+.cena .anel.b{inset:13%;animation-duration:26s;animation-direction:reverse;border-color:rgba(0,102,255,.25)}
+@keyframes gira{to{transform:rotate(360deg)}}
+.chipf{position:absolute;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:14px;background:rgba(8,17,31,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--linha2);font-size:13px;font-weight:600;box-shadow:0 14px 30px rgba(0,0,0,.35);animation:flutua 6s ease-in-out infinite}
+.chipf b{font-size:15px}
+.chipf.c1{left:-2%;top:16%}.chipf.c1 b{color:var(--vermelho)}
+.chipf.c2{right:-2%;top:48%;animation-delay:-2s}.chipf.c2 b{color:var(--verde)}
+.chipf.c3{left:8%;bottom:6%;animation-delay:-4s}.chipf.c3 b{color:var(--ciano)}
+@keyframes flutua{50%{transform:translateY(-10px)}}
+
+/* calculadora */
+#calculadora{padding-top:24px}
+.painel{position:relative;border-radius:30px;padding:1px;background:linear-gradient(140deg,rgba(0,212,255,.55),rgba(0,102,255,.15) 40%,rgba(255,255,255,.06) 60%,rgba(0,212,255,.4));box-shadow:var(--sombra),0 0 80px rgba(0,102,255,.18)}
+.painel>.dentro{position:relative;border-radius:29px;background:linear-gradient(180deg,#0b1626,#08111f);padding:28px;overflow:hidden}
+.painel>.dentro:before{content:"";position:absolute;inset:-40% -20% auto auto;width:600px;height:600px;background:radial-gradient(closest-side,rgba(0,212,255,.10),transparent 70%);pointer-events:none}
+.pgrid{position:relative;display:grid;grid-template-columns:.9fr 1.1fr;gap:28px}
+.campos{display:grid;gap:22px;align-content:start}
+.campo{background:rgba(255,255,255,.025);border:1px solid var(--linha);border-radius:20px;padding:18px}
+.campo .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.campo label{font-size:14px;color:var(--texto2);font-weight:600}
+.valor{display:flex;align-items:center;gap:6px;background:var(--fundo);border:1px solid var(--linha2);border-radius:14px;padding:0 12px;min-height:48px;transition:border-color .2s}
+.valor:focus-within{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.15)}
+.valor span{color:var(--texto3);font-weight:600;font-size:15px}
+.valor input{width:110px;background:transparent;border:0;color:var(--texto);font:700 20px Poppins,system-ui,sans-serif;text-align:right;outline:none;-moz-appearance:textfield}
+.valor input::-webkit-outer-spin-button,.valor input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;cursor:pointer;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--ciano),var(--azul)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.09)}
+input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--ciano),var(--azul)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.09)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;margin-top:-9px;border:5px solid var(--ciano);box-shadow:0 0 0 6px rgba(0,212,255,.15),0 6px 16px rgba(0,0,0,.4);transition:transform .15s}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:5px solid var(--ciano);box-shadow:0 0 0 6px rgba(0,212,255,.15)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
+input[type=range]:focus-visible{outline:2px solid var(--ciano);outline-offset:4px;border-radius:8px}
+.atalhos{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.atalhos button{background:rgba(255,255,255,.05);border:1px solid var(--linha2);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;color:var(--texto2);cursor:pointer;transition:all .15s}
+.atalhos button:hover,.atalhos button[aria-pressed=true]{color:#fff;border-color:var(--ciano);background:rgba(0,212,255,.12)}
+.opcoes{display:grid;gap:12px}
+.troca{display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:14px;color:var(--texto2)}
+.troca input{position:absolute;opacity:0;width:1px;height:1px}
+.troca .sw{flex:none;width:44px;height:26px;border-radius:99px;background:rgba(255,255,255,.12);position:relative;transition:background .2s;margin-top:1px}
+.troca .sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s var(--ease)}
+.troca input:checked+.sw{background:var(--azul)}
+.troca input:checked+.sw:after{transform:translateX(18px)}
+.troca input:focus-visible+.sw{outline:2px solid var(--ciano);outline-offset:2px}
+.seg{display:inline-flex;background:var(--fundo);border:1px solid var(--linha2);border-radius:999px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:700;color:var(--texto2);cursor:pointer;transition:all .2s}
+.seg button[aria-pressed=true]{background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(0,102,255,.35)}
+
+.resultados{display:grid;gap:14px;align-content:start}
+.plat{position:relative;display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--linha);border-radius:20px;padding:18px 20px;overflow:hidden;transition:transform .3s var(--ease),border-color .3s}
+.plat .nome{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.plat .nome i{width:10px;height:10px;border-radius:50%;background:var(--cinza);flex:none}
+.plat .regra{grid-column:1/-1;font-size:13px;color:var(--texto3)}
+.plat .grande{text-align:right}
+.plat .grande small{display:block;font-size:11.5px;color:var(--texto3);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.plat .grande b{font-size:clamp(22px,3vw,28px);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.plat .detalhe{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13.5px;color:var(--texto2);font-variant-numeric:tabular-nums}
+.plat .detalhe b{color:var(--texto)}
+.plat .barra-v{grid-column:1/-1;height:8px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:6px}
+.plat .barra-v span{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#5d7395,#8ea2bf);transition:width .7s var(--ease)}
+.plat.mov{background:linear-gradient(150deg,rgba(0,102,255,.20),rgba(0,212,255,.06));border-color:rgba(0,212,255,.35)}
+.plat.mov .nome i{background:var(--ciano);box-shadow:0 0 10px var(--ciano)}
+.plat.mov .barra-v span{background:var(--grad)}
+.plat.mov .grande b{color:#fff}
+.plat .selo{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--grad);color:#fff;opacity:0;transform:scale(.6);transition:all .3s var(--ease);white-space:nowrap}
+.plat.menor .selo{opacity:1;transform:none}
+.plat .nome{flex-wrap:wrap}
+.plat .revisao{grid-column:1/-1;font-size:13px;color:var(--ouro)}
+.plat.off{opacity:.55}
+.conclusao{position:relative;margin-top:4px;padding:18px 20px;border-radius:20px;background:rgba(34,211,154,.07);border:1px solid rgba(34,211,154,.28);font-size:15px;color:var(--texto2)}
+.conclusao b{color:var(--texto)}
+.conclusao .eq{display:block;margin-top:6px;font-size:14px}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.nota{font-size:12.5px;color:var(--texto3)}
+.aviso-frescor{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(255,207,77,.08);border:1px solid rgba(255,207,77,.3);font-size:13.5px;color:var(--texto2)}
+.aviso-frescor b{color:var(--ouro)}
+.carregando .grande b,.carregando .detalhe{filter:blur(4px);opacity:.6}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);opacity:0;z-index:80;background:#0d1829;border:1px solid rgba(0,212,255,.4);border-radius:14px;padding:12px 18px;font-size:14.5px;font-weight:600;transition:all .3s var(--ease);pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* secoes */
+.tres{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.card{position:relative;background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:24px;transition:transform .3s var(--ease),border-color .3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.3)}
+.card img.ic{width:72px;height:72px;object-fit:contain;margin:-6px 0 10px -6px;filter:drop-shadow(0 10px 18px rgba(0,102,255,.35))}
+.card h3{margin-bottom:6px}
+.card p{color:var(--texto2);font-size:15px}
+.dois{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.dois .card ul{list-style:none;display:grid;gap:8px;margin-top:10px}
+.dois .card li{padding-left:18px;position:relative;color:var(--texto2);font-size:15px}
+.dois .card li:before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--ciano)}
+.tabela{width:100%;border-collapse:collapse;margin-top:26px;font-size:15px;background:var(--fundo2);border:1px solid var(--linha);border-radius:18px;overflow:hidden}
+.tabela th,.tabela td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--linha)}
+.tabela thead th{background:var(--card2);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--texto2)}
+.tabela tr:last-child td{border-bottom:0}
+.tabela td small{display:block;color:var(--texto3);font-size:12.5px;margin-top:4px}
+.tabela a{text-decoration:underline}
+.rolar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.embed{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-top:26px}
+.codigo{position:relative;background:#040910;border:1px solid var(--linha2);border-radius:18px;padding:18px;font:500 12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#bfe9ff;white-space:pre-wrap;word-break:break-all;max-height:260px;overflow:auto}
+.embed .prev{border-radius:20px;overflow:hidden;border:1px solid var(--linha2);background:#08111f}
+.embed .prev iframe{width:100%;height:620px;border:0;display:block}
+.faq{max-width:820px;margin-top:26px;display:grid;gap:12px}
+.faq details{background:var(--fundo2);border:1px solid var(--linha);border-radius:16px;padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:600;font-size:16px;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--ciano);font-size:22px;line-height:1;transition:transform .2s}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq details p{color:var(--texto2);font-size:15px;padding-bottom:16px}
+.fonte{font-size:13px;color:var(--texto3);margin-top:14px;max-width:820px}
+.fonte a{text-decoration:underline}
+.final{background:linear-gradient(160deg,rgba(0,102,255,.20),rgba(0,212,255,.05));border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.links a{font-size:14px;padding:8px 14px;border-radius:999px;border:1px solid var(--linha2);color:var(--texto2)}
+.links a:hover{color:var(--texto)}
+footer{padding:36px 0 110px;color:var(--texto3);font-size:13px}
+footer p+p{margin-top:8px}
+footer a{text-decoration:underline}
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(5,11,20,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--linha);display:none;text-align:center}
+.barra .btn{width:100%;max-width:440px}
+.barra small{display:block;font-size:11.5px;color:var(--texto3);margin-top:4px}
+
+/* entrada na tela */
+.rev{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rev.on{opacity:1;transform:none}
+.rev.d1{transition-delay:.08s}.rev.d2{transition-delay:.16s}.rev.d3{transition-delay:.24s}
+
+@media (max-width:980px){
+  .hgrid,.pgrid,.embed,.dois{grid-template-columns:1fr}
+  .tres{grid-template-columns:1fr}
+  .cena{max-width:380px}
+  section{padding:58px 0}
+  .barra{display:block}
+}
+@media (max-width:520px){
+  .painel>.dentro{padding:18px}
+  .valor input{width:90px;font-size:18px}
+  .chipf{font-size:12px;padding:7px 10px}
+  .chipf b{font-size:13px}
+  .topo .mini{padding:0 12px;font-size:13px}
+  .tabela th,.tabela td{padding:12px 10px;font-size:14px}
+  .hero .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rev{opacity:1;transform:none;transition:none}
+  .chipf,.cena .anel,.kick i{animation:none}
+  .plat .barra-v span,.btn,.card{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <a href="/" aria-label="Moviki, página inicial"><img src="/logo.png" alt="Moviki" width="94" height="28" onerror="this.style.display='none'"></a>
+    <a class="mini" href="/live-shop" data-ev="calc_topo">Live shop na sua loja</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hgrid">
+    <div>
+      <span class="kick"><i></i>Ferramenta grátis · live shop</span>
+      <h1>Calculadora de taxas de <em style="white-space:nowrap">live shop</em></h1>
+      <p class="lead">Digite o preço e quantos itens você vende no mês. Veja quanto fica com o TikTok Shop, com a Shopee e com a live na própria loja, e quanto sobra para você.</p>
+      <div class="micro">
+        <span>Tarifas com fonte oficial e data</span>
+        <span>Sem cadastro</span>
+        <span>Conta de tarifa, não previsão de venda</span>
+      </div>
+      <div class="ctas">
+        <a class="btn btn-pri" href="#calculadora" data-ev="calc_hero_fazer_conta">Fazer a minha conta ↓</a>
+        <a class="btn btn-sec" href="#embed" data-ev="calc_hero_embed">Pôr no meu site</a>
+      </div>
+    </div>
+    <div class="cena" aria-hidden="true">
+      <div class="anel"></div><div class="anel b"></div>
+      <img class="poster" src="/calculadora-img/calc-hero.webp" alt="" width="720" height="720" fetchpriority="high">
+      <video id="heroVideo" muted loop playsinline preload="none" poster="/calculadora-img/calc-hero.webp" width="720" height="720"></video>
+      <span class="chipf c1">Tarifa por pedido <b id="chip1">− R$ 12,00</b></span>
+      <span class="chipf c2">Comissão por venda <b>R$ 0</b></span>
+      <span class="chipf c3">Sobra por item <b id="chip3">R$ 97,67</b></span>
+    </div>
+  </div>
+</section>
+
+<section id="calculadora">
+  <div class="wrap">
+    <div class="painel rev">
+      <div class="dentro">
+        <div class="pgrid">
+          <div class="campos">
+            <div class="campo">
+              <div class="top">
+                <label for="nPreco">Preço do item</label>
+                <div class="valor"><span>R$</span><input id="nPreco" type="number" inputmode="decimal" min="1" max="100000" step="0.01" value="100" aria-describedby="dPreco"></div>
+              </div>
+              <input id="rPreco" type="range" min="5" max="600" step="1" value="100" aria-label="Preço do item">
+              <div class="atalhos" id="atPreco">
+                <button type="button" data-v="29.9">R$ 29,90</button>
+                <button type="button" data-v="49.9">R$ 49,90</button>
+                <button type="button" data-v="89.9">R$ 89,90</button>
+                <button type="button" data-v="149.9">R$ 149,90</button>
+                <button type="button" data-v="299">R$ 299</button>
+              </div>
+              <p class="nota" id="dPreco" style="margin-top:8px">Preço que o cliente paga, depois do seu desconto.</p>
+            </div>
+            <div class="campo">
+              <div class="top">
+                <label for="nQtd">Itens vendidos no mês</label>
+                <div class="valor"><input id="nQtd" type="number" inputmode="numeric" min="1" max="100000" step="1" value="30"><span>itens</span></div>
+              </div>
+              <input id="rQtd" type="range" min="1" max="500" step="1" value="30" aria-label="Itens vendidos no mês">
+              <div class="atalhos" id="atQtd">
+                <button type="button" data-v="10">10</button>
+                <button type="button" data-v="30">30</button>
+                <button type="button" data-v="60">60</button>
+                <button type="button" data-v="120">120</button>
+                <button type="button" data-v="300">300</button>
+              </div>
+            </div>
+            <div class="campo opcoes">
+              <div class="top" style="margin:0"><span style="font-size:14px;color:var(--texto2);font-weight:600">Plano do Moviki</span>
+                <div class="seg" role="group" aria-label="Plano do Moviki">
+                  <button type="button" data-plano="premium" aria-pressed="true">Premium</button>
+                  <button type="button" data-plano="enterprise" aria-pressed="false">Enterprise</button>
+                </div>
+              </div>
+              <p class="nota" id="dPlano">Premium: live com pedido pelo WhatsApp. Enterprise: Pix dentro da live.</p>
+              <label class="troca"><input type="checkbox" id="cCpf"><span class="sw"></span><span>Vendo na Shopee como <b>CPF</b> com mais de 450 pedidos em 90 dias</span></label>
+            </div>
+          </div>
+
+          <div class="resultados carregando" id="resultados" aria-live="polite">
+            <div class="plat" id="pTiktok">
+              <div class="nome"><i></i>TikTok Shop<span class="selo">Menor tarifa</span></div>
+              <div class="grande"><small>Tarifa no mês</small><b data-k="mes">R$ 360,00</b></div>
+              <div class="regra" data-k="regra">6% + R$ 6,00 por item</div>
+              <div class="detalhe"><span>Por item <b data-k="item">R$ 12,00</b></span><span><b data-k="pct">12%</b> do preço</span><span>Sobra no mês <b data-k="sobra">R$ 2.640,00</b></span></div>
+              <div class="barra-v"><span></span></div>
+            </div>
+            <div class="plat" id="pShopee">
+              <div class="nome"><i></i>Shopee<span class="selo">Menor tarifa</span></div>
+              <div class="grande"><small>Tarifa no mês</small><b data-k="mes">R$ 1.020,00</b></div>
+              <div class="regra" data-k="regra">14% + R$ 20,00 por item</div>
+              <div class="detalhe"><span>Por item <b data-k="item">R$ 34,00</b></span><span><b data-k="pct">34%</b> do preço</span><span>Sobra no mês <b data-k="sobra">R$ 1.980,00</b></span></div>
+              <div class="barra-v"><span></span></div>
+            </div>
+            <div class="plat mov" id="pMoviki">
+              <div class="nome"><i></i>Live na sua loja · Moviki<span class="selo">Menor custo</span></div>
+              <div class="grande"><small>Mensalidade fixa</small><b data-k="mes">R$ 69,90</b></div>
+              <div class="regra" data-k="regra">0% por venda · plano Premium</div>
+              <div class="detalhe"><span>Por item <b data-k="item">R$ 2,33</b></span><span><b data-k="pct">2,3%</b> do preço</span><span>Sobra no mês <b data-k="sobra">R$ 2.930,10</b></span></div>
+              <div class="barra-v"><span></span></div>
+            </div>
+            <div class="conclusao" id="conclusao">Com 30 itens de R$ 100,00, a tarifa da plataforma soma até R$ 1.020,00 no mês; a mensalidade do Moviki Premium é R$ 69,90.</div>
+            <div class="aviso-frescor" id="avisoFrescor"></div>
+            <div class="acoes">
+              <button class="btn btn-sec btn-peq" type="button" id="bCopiar" data-ev="calc_copiar_link">Copiar link desta conta</button>
+              <a class="btn btn-sec btn-peq" id="bZap" href="https://wa.me/?text=" target="_blank" rel="noopener" data-ev="calc_whatsapp">Enviar no WhatsApp</a>
+              <a class="btn btn-pri btn-peq" href="https://app.moviki.com.br/?criar=1&amp;utm_source=site&amp;utm_medium=calculadora&amp;utm_campaign=calculadora-taxas" data-ev="calc_cadastro">Testar 30 dias grátis</a>
+            </div>
+            <p class="nota">Só a tarifa da plataforma: sem frete, impostos, anúncios, programas opcionais e sem incentivo de vendedor novo. <span id="datasConf">TikTok Shop conferido em 22/10/2026 · Shopee em 25/10/2026.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona">
+  <div class="wrap">
+    <span class="kick rev"><i></i>Como a conta é feita</span>
+    <h2 class="rev d1">Três números, <em>nenhum chute</em></h2>
+    <p class="lead rev d2">A calculadora aplica a tarifa padrão publicada por cada plataforma sobre o preço que você digitou. Nada de estimativa de venda.</p>
+    <div class="tres">
+      <div class="card rev d1"><img class="ic" src="/calculadora-img/calc-recibo.webp" alt="" width="256" height="256" loading="lazy"><h3>Tarifa por pedido</h3><p>Nas plataformas, cada item vendido paga uma porcentagem do preço mais um valor fixo. A faixa muda com o preço do item.</p></div>
+      <div class="card rev d2"><img class="ic" src="/calculadora-img/calc-balanca.webp" alt="" width="256" height="256" loading="lazy"><h3>Mensalidade fixa</h3><p>Na live da própria loja, o Moviki não cobra por venda: é o plano do mês. Quanto mais você vende, menos ele pesa em cada item.</p></div>
+      <div class="card rev d3"><img class="ic" src="/calculadora-img/calc-elo.webp" alt="" width="256" height="256" loading="lazy"><h3>Fonte e data</h3><p>Cada tarifa vem da página oficial, com a data em que foi conferida. A conferência é refeita toda semana.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="tarifas" style="padding-top:20px">
+  <div class="wrap">
+    <span class="kick rev"><i></i>As tarifas usadas</span>
+    <h2 class="rev d1">Tabela com <em>fonte oficial</em></h2>
+    <div class="rolar rev d2">
+      <table class="tabela" id="tabelaTarifas">
+        <thead><tr><th>Onde</th><th>Tarifa por item</th><th>Fonte e conferência</th></tr></thead>
+        <tbody>
+          <tr><td><b>TikTok Shop</b><small>Tarifa padrão, vigência 15/07/2026</small></td><td>Abaixo de R$ 50: 10% + R$ 4,00<br>A partir de R$ 50: 6% + R$ 6,00<small>Vendedor novo que cumpre as missões pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia.</small></td><td><a href="https://seller-br.tiktok.com/" rel="nofollow noopener" target="_blank">Seller Center Brasil</a><small>Conferido em 22/10/2026</small></td></tr>
+          <tr><td><b>Shopee</b><small>Vendedor CNPJ, vigência 01/10/2026</small></td><td>Até R$ 79,99: 20% + R$ 4,50<br>R$ 80 a R$ 99,99: 14% + R$ 16,00<br>R$ 100 a R$ 199,99: 14% + R$ 20,00<br>A partir de R$ 200: 14% + R$ 26,00<small>Abaixo de R$ 8, o fixo é a metade do preço. CPF com mais de 450 pedidos em 90 dias: + R$ 3,00 por item. A comissão já inclui a taxa de transação.</small></td><td><a href="https://seller.shopee.com.br/edu/article/18483/" rel="nofollow noopener" target="_blank">Centro de Educação do Vendedor</a><small>Atualizada pela Shopee em 21/10/2026 · conferido em 25/10/2026</small></td></tr>
+          <tr><td><b>Moviki</b><small>Live na sua loja</small></td><td>0% por venda<br>Premium R$ 69,90 por mês · Enterprise R$ 129,90 por mês<small>O Pix vai para a conta da loja. Com a conta Asaas conectada, a tarifa do Pix é do Asaas.</small></td><td><a href="/premium.html">Planos do Moviki</a><small>Conferido em 25/10/2026</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fonte">TikTok e TikTok Shop são marcas dos seus titulares; Shopee é marca do seu titular. O Moviki não tem relação com essas empresas. Os números vêm das páginas oficiais citadas, nas datas indicadas; confirme sempre na fonte antes de decidir. Detalhes da tarifa do TikTok Shop no <a href="/guia/taxas-live-shop">guia de taxas de live shop</a>.</p>
+  </div>
+</section>
+
+<section id="onde-ganha" style="padding-top:30px">
+  <div class="wrap">
+    <span class="kick rev"><i></i>Sem torcida</span>
+    <h2 class="rev d1">Onde cada caminho <em>ganha</em></h2>
+    <p class="lead rev d2">Tarifa não é a única coisa que importa. Muita loja usa os dois caminhos ao mesmo tempo.</p>
+    <div class="dois">
+      <div class="card rev d1"><h3>Live dentro de uma plataforma de vendas</h3><ul>
+        <li><b>Público novo:</b> a plataforma pode mostrar a sua live para quem ainda não conhece a loja.</li>
+        <li><b>Hábito:</b> o comprador já passa o dia ali.</li>
+        <li><b>Estrutura pronta:</b> envio, afiliados e campanhas da própria plataforma.</li>
+        <li>Em troca, a tarifa por pedido e as regras da plataforma para abrir live e vender.</li>
+      </ul></div>
+      <div class="card rev d2"><h3>Live na própria loja (Moviki)</h3><ul>
+        <li><b>Sem comissão por venda:</b> o Moviki cobra o plano fixo do mês.</li>
+        <li><b>Sem mínimo de seguidores</b> para abrir a live.</li>
+        <li><b>O cliente é seu:</b> link próprio, seu WhatsApp, pedido no seu painel.</li>
+        <li>Em troca, o Moviki não entrega audiência pronta: assiste quem você chama.</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="embed">
+  <div class="wrap">
+    <span class="kick rev"><i></i>Para blogs, consultores e grupos de lojistas</span>
+    <h2 class="rev d1">Coloque a calculadora <em>no seu site</em></h2>
+    <p class="lead rev d2">É grátis. Copie o código e cole na sua página: a calculadora fica sempre com as tarifas conferidas, sem você atualizar nada.</p>
+    <div class="embed">
+      <div class="rev d1">
+        <pre class="codigo" id="codigoEmbed">&lt;iframe src="https://www.moviki.com.br/guia/calculadora-taxas-live-shop/embed" title="Calculadora de taxas de live shop" width="100%" height="620" style="border:0;border-radius:16px;max-width:560px" loading="lazy"&gt;&lt;/iframe&gt;
+&lt;p style="font:13px/1.4 sans-serif;margin:6px 0 0"&gt;&lt;a href="https://www.moviki.com.br/guia/calculadora-taxas-live-shop"&gt;Calculadora de taxas de live shop&lt;/a&gt; por Moviki&lt;/p&gt;</pre>
+        <div class="acoes" style="margin-top:14px"><button class="btn btn-pri btn-peq" type="button" id="bCopiarEmbed" data-ev="calc_copiar_embed">Copiar o código</button></div>
+        <p class="nota" style="margin-top:10px">A versão para colar não usa cookie nem medição de visita.</p>
+      </div>
+      <div class="prev rev d2"><iframe src="/guia/calculadora-taxas-live-shop/embed" title="Prévia da calculadora para colar no site" loading="lazy"></iframe></div>
+    </div>
+  </div>
+</section>
+
+<section id="duvidas" style="padding-top:20px">
+  <div class="wrap">
+    <span class="kick rev"><i></i>Dúvidas</span>
+    <h2 class="rev d1">Perguntas sobre <em>taxas de live shop</em></h2>
+    <div class="faq rev d2">
+      <details><summary>Quanto o TikTok Shop cobra por venda no Brasil?</summary><p>Na tarifa padrão em vigor desde 15/07/2026: item abaixo de R$ 50 paga 10% de comissão mais R$ 4 por item; a partir de R$ 50, 6% mais R$ 6 por item. Vendedor novo que cumpre as missões pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia. Conferido no Seller Center Brasil em 22/10/2026.</p></details>
+      <details><summary>Quanto a Shopee cobra por venda?</summary><p>Para vendedor CNPJ, desde 01/10/2026: até R$ 79,99, 20% + R$ 4,50 por item; de R$ 80 a R$ 99,99, 14% + R$ 16; de R$ 100 a R$ 199,99, 14% + R$ 20; a partir de R$ 200, 14% + R$ 26. Abaixo de R$ 8, o fixo é a metade do preço. Vendedor CPF com mais de 450 pedidos em 90 dias paga mais R$ 3 por item. Página atualizada pela Shopee em 21/10/2026 e conferida em 25/10/2026.</p></details>
+      <details><summary>A tarifa vale sobre o preço cheio ou com desconto?</summary><p>No TikTok Shop, sobre o preço do item depois dos descontos do próprio vendedor. Na Shopee, sobre o valor do produto vendido. Por isso a calculadora pede o preço que o cliente paga.</p></details>
+      <details><summary>O Moviki cobra comissão sobre a venda na live?</summary><p>Não. A taxa do Moviki por venda é 0%: você paga o plano do mês (Premium R$ 69,90 ou Enterprise R$ 129,90), e o Pix vai para a conta da loja. Se um dia houver tarifa por pedido, ela será fixa, nunca porcentagem, com aviso de 30 dias.</p></details>
+      <details><summary>Com poucas vendas, a mensalidade compensa?</summary><p>Nem sempre. Com poucos itens no mês, a tarifa por pedido pode sair mais barata que uma mensalidade fixa. A calculadora mostra a partir de quantos itens a mensalidade fica abaixo da tarifa, com o seu preço.</p></details>
+      <details><summary>Com que frequência as tarifas são conferidas?</summary><p>Toda semana, nas páginas oficiais. A data de cada conferência aparece na tabela. Se a conferência passar de 60 dias, a página avisa; se passar de 100, a plataforma sai da conta até ser revista.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap centro">
+    <h2>Quer fazer a live <em>na sua loja?</em></h2>
+    <p class="lead">30 dias grátis, sem cartão e sem fidelidade. Sem comissão por venda.</p>
+    <div class="ctas" style="justify-content:center">
+      <a class="btn btn-pri" href="https://app.moviki.com.br/?criar=1&amp;utm_source=site&amp;utm_medium=calculadora&amp;utm_campaign=calculadora-taxas" data-ev="calc_final">Ativar meus 30 dias grátis →</a>
+    </div>
+    <div class="links" style="justify-content:center">
+      <a href="/live-shop" data-ev="calc_link_liveshop">Live shop para lojista</a>
+      <a href="/guia/taxas-live-shop" data-ev="calc_link_guia_taxas">Guia de taxas</a>
+      <a href="/guia/como-fazer-live-de-vendas" data-ev="calc_link_como_fazer">Como fazer live de vendas</a>
+      <a href="/aovivo" data-ev="calc_link_aovivo">Veja uma live funcionando</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA · CNPJ 68.289.841/0001-02 · Curitiba/PR · <a href="tel:+554120186848">(41) 2018-6848</a></p>
+    <p>Ferramenta informativa. Não é recomendação financeira nem promessa de resultado. A conta mostra só a tarifa da plataforma com os números que você digitou.</p>
+    <p><a href="/">Site do Moviki</a> · <a href="/termos.html">Termos de uso</a> · <a href="/reembolso.html">Reembolso</a> · <a href="/privacidade.html">Privacidade</a></p>
+  </div>
+</footer>
+
+<div class="barra">
+  <a class="btn btn-pri" href="#calculadora" data-ev="calc_barra">Fazer a minha conta</a>
+  <small>Grátis · sem cadastro</small>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>window.MOVIKI_VERSAO='2026-10-25-calculadora';</script>
+<script src="/mvcalculadora.js"></script>
+<script>
+(function(){
+  var C=window.MVCALC, $=function(id){return document.getElementById(id);};
+  var nP=$('nPreco'), rP=$('rPreco'), nQ=$('nQtd'), rQ=$('rQtd'), cCpf=$('cCpf');
+  var D=null, plano='premium', medido=false;
+  var st=C.lerLink();
+  if(st.preco) nP.value=st.preco; if(st.qtd) nQ.value=st.qtd; if(st.cpf450) cCpf.checked=true; if(st.plano) plano=st.plano;
+
+  function num(el,min,max){ var v=parseFloat(String(el.value).replace(',','.')); if(!isFinite(v)) return NaN; return Math.min(max,Math.max(min,v)); }
+  function trilha(r){ var p=(r.value-r.min)/(r.max-r.min)*100; r.style.setProperty('--p',Math.max(0,Math.min(100,p))+'%'); }
+  function marcaAtalho(box,v){ [].forEach.call($(box).querySelectorAll('button'),function(b){ b.setAttribute('aria-pressed', String(Math.abs(parseFloat(b.dataset.v)-v)<.001)); }); }
+
+  function preenche(card, o){
+    var q=function(k){return card.querySelector('[data-k="'+k+'"]');};
+    C.animar(q('mes'), o.mes); C.animar(q('item'), o.item); C.animar(q('sobra'), o.sobra);
+    C.animar(q('pct'), o.pct, C.pct);
+    q('regra').textContent=o.regra;
+  }
+  function estadoCard(card, plat){
+    var f=C.frescor(plat), r=card.querySelector('.revisao');
+    if(f.estado==='revisao'){
+      card.classList.add('off');
+      if(!r){ r=document.createElement('div'); r.className='revisao'; card.appendChild(r); }
+      r.textContent='Tarifa em revisão: confira na página oficial da plataforma.';
+      return false;
+    }
+    card.classList.remove('off'); if(r) r.remove();
+    return true;
+  }
+
+  function conta(){
+    if(!D) return;
+    var p=num(nP,1,100000), q=Math.round(num(nQ,1,100000));
+    if(!(p>0)||!(q>0)) return;
+    rP.value=Math.min(rP.max,Math.max(rP.min,p)); rQ.value=Math.min(rQ.max,Math.max(rQ.min,q)); trilha(rP); trilha(rQ);
+    marcaAtalho('atPreco',p); marcaAtalho('atQtd',q);
+    var P=D.plataformas, receita=p*q, linhas=[];
+
+    var tk=C.tarifaItem(P.tiktok,p), sh=C.tarifaItem(P.shopee,p,{cpf450:cCpf.checked});
+    var okT=estadoCard($('pTiktok'),P.tiktok), okS=estadoCard($('pShopee'),P.shopee);
+    var pl=P.moviki.planos.filter(function(x){return x.id===plano;})[0]||P.moviki.planos[0];
+    preenche($('pTiktok'),{mes:tk.valor*q,item:tk.valor,pct:tk.pctPreco,sobra:receita-tk.valor*q,regra:tk.regra+(tk.nota?' · '+tk.nota:'')});
+    preenche($('pShopee'),{mes:sh.valor*q,item:sh.valor,pct:sh.pctPreco,sobra:receita-sh.valor*q,regra:sh.regra+(sh.nota?' · '+sh.nota:'')});
+    preenche($('pMoviki'),{mes:pl.mensal,item:pl.mensal/q,pct:pl.mensal/receita*100,sobra:receita-pl.mensal,regra:'0% por venda · plano '+pl.nome+' · '+pl.resumo});
+    $('dPlano').textContent='Premium: live com pedido pelo WhatsApp. Enterprise: Pix dentro da live.';
+
+    if(okT) linhas.push({id:'pTiktok',v:tk.valor*q,nome:'TikTok Shop',item:tk.valor});
+    if(okS) linhas.push({id:'pShopee',v:sh.valor*q,nome:'Shopee',item:sh.valor});
+    linhas.push({id:'pMoviki',v:pl.mensal,nome:'Moviki '+pl.nome});
+    var max=Math.max.apply(null,linhas.map(function(l){return l.v;}))||1, min=Math.min.apply(null,linhas.map(function(l){return l.v;}));
+    ['pTiktok','pShopee','pMoviki'].forEach(function(id){
+      var l=linhas.filter(function(x){return x.id===id;})[0], card=$(id);
+      card.querySelector('.barra-v span').style.width=(l?Math.max(3,l.v/max*100):0)+'%';
+      card.classList.toggle('menor', !!l && l.v===min);
+    });
+
+    /* conclusao: so fatos da tarifa */
+    var plats=linhas.filter(function(l){return l.id!=='pMoviki';});
+    var txt='', eq='';
+    if(plats.length){
+      var maior=plats.reduce(function(a,b){return b.v>a.v?b:a;}), menorP=plats.reduce(function(a,b){return b.v<a.v?b:a;});
+      txt='Com <b>'+q+' '+(q===1?'item':'itens')+' de '+C.brl(p)+'</b>, a tarifa por pedido soma de <b>'+C.brl(menorP.v)+'</b> a <b>'+C.brl(maior.v)+'</b> no mês. A mensalidade do Moviki '+pl.nome+' é <b>'+C.brl(pl.mensal)+'</b>, sem comissão por venda.';
+      var n=Math.ceil(pl.mensal/menorP.item);
+      if(isFinite(n)) eq= q>=n ? 'Com o seu preço, a partir de <b>'+n+' itens por mês</b> a mensalidade fica abaixo da menor tarifa por pedido.' : 'Com '+q+' itens, a tarifa por pedido ainda sai mais barata que a mensalidade. Com o seu preço, a mensalidade fica abaixo dela a partir de <b>'+n+' itens por mês</b>.';
+    } else { txt='As tarifas das plataformas estão em revisão. Confira nas páginas oficiais.'; }
+    $('conclusao').innerHTML=txt+(eq?'<span class="eq">'+eq+'</span>':'');
+
+    $('chip1').textContent='− '+C.brl(tk.valor); $('chip3').textContent=C.brl(p-pl.mensal/q);
+
+    /* link compartilhavel (so numeros) */
+    var u=new URL(location.href); u.search=''; u.hash='calculadora';
+    u.searchParams.set('preco',String(p)); u.searchParams.set('qtd',String(q)); if(cCpf.checked) u.searchParams.set('cpf','1'); if(plano!=='premium') u.searchParams.set('plano',plano);
+    $('bCopiar').dataset.url=u.toString();
+    $('bZap').href='https://wa.me/?text='+encodeURIComponent('Fiz a conta das taxas da live shop com o meu preço: '+u.toString());
+    if(!medido){ medido=true; try{ if(window.mvEv && (st.preco||st.qtd)) window.mvEv('calculadora_link_aberto',{pagina:'calculadora'}); }catch(e){} }
+  }
+  var usou=false;
+  function usado(){ if(usou) return; usou=true; try{ if(window.mvEv) window.mvEv('calculadora_usada',{pagina:'calculadora'}); }catch(e){} }
+
+  nP.addEventListener('input',function(){conta();usado();});
+  nQ.addEventListener('input',function(){conta();usado();});
+  rP.addEventListener('input',function(){nP.value=rP.value;conta();usado();});
+  rQ.addEventListener('input',function(){nQ.value=rQ.value;conta();usado();});
+  cCpf.addEventListener('change',function(){conta();usado();});
+  $('atPreco').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b) return; nP.value=b.dataset.v; conta(); usado();});
+  $('atQtd').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b) return; nQ.value=b.dataset.v; conta(); usado();});
+  [].forEach.call(document.querySelectorAll('.seg button'),function(b){
+    b.setAttribute('aria-pressed',String(b.dataset.plano===plano));
+    b.addEventListener('click',function(){ plano=b.dataset.plano; [].forEach.call(document.querySelectorAll('.seg button'),function(x){x.setAttribute('aria-pressed',String(x===b));}); conta(); usado(); });
+  });
+
+  function toast(t){ var el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(el._t); el._t=setTimeout(function(){el.classList.remove('on');},2200); }
+  function copiar(txt,ok){
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){toast(ok);}).catch(function(){
+      var t=document.createElement('textarea'); t.value=txt; document.body.appendChild(t); t.select(); try{document.execCommand('copy'); toast(ok);}catch(e){} t.remove();
+    });
+  }
+  $('bCopiar').addEventListener('click',function(){ copiar(this.dataset.url||location.href,'Link copiado'); });
+  $('bCopiarEmbed').addEventListener('click',function(){ copiar($('codigoEmbed').textContent,'Código copiado: é só colar no seu site'); });
+
+  /* tabela e datas a partir do JSON (o HTML fixo repete os mesmos numeros para o Google) */
+  function avisoFrescor(){
+    var P=D.plataformas, partes=[];
+    ['tiktok','shopee'].forEach(function(k){ var f=C.frescor(P[k]); if(f.estado==='aviso') partes.push(P[k].nome+' conferido há '+f.dias+' dias'); });
+    var el=$('avisoFrescor');
+    if(partes.length){ el.style.display='block'; el.innerHTML='<b>Atenção:</b> '+partes.join(' · ')+'. Confirme a tarifa na página oficial antes de decidir.'; }
+    $('datasConf').textContent='TikTok Shop conferido em '+C.dataBR(P.tiktok.conferido_em)+' · Shopee em '+C.dataBR(P.shopee.conferido_em)+'.';
+  }
+
+  C.carregar().then(function(d){ D=d; $('resultados').classList.remove('carregando'); avisoFrescor(); conta(); })
+   .catch(function(){ $('resultados').classList.remove('carregando'); $('conclusao').textContent='Não foi possível carregar as tarifas agora. Recarregue a página.'; });
+
+  /* video do hero: so baixa se a pessoa vai ver e se nao economiza dados */
+  (function(){
+    var v=$('heroVideo'), con=navigator.connection||{};
+    if(C.reduz || con.saveData || /2g/.test(con.effectiveType||'')) { v.remove(); return; }
+    var go=function(){ v.src='/calculadora-img/calc-hero.mp4'; v.play&&v.play().catch(function(){}); };
+    if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:1800}); else setTimeout(go,900);
+  })();
+
+  /* entrada na tela */
+  (function(){
+    var els=document.querySelectorAll('.rev');
+    if(!('IntersectionObserver' in window)){ [].forEach.call(els,function(e){e.classList.add('on');}); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} }); },{rootMargin:'0px 0px -8% 0px'});
+    [].forEach.call(els,function(e){io.observe(e);});
+  })();
+
+  /* MEDICAO: page_view sai do mvmetrica.js; data-ev = nome do CTA; evento cta_click. */
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('[data-ev]'):null; if(!a) return;
+    try{ if(window.mvEv) window.mvEv('cta_click',{cta:a.getAttribute('data-ev'),pagina:'calculadora'}); }catch(err){}
+  },true);
+})();
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"Moviki","item":"https://www.moviki.com.br/"},
+        {"@type":"ListItem","position":2,"name":"Live shop","item":"https://www.moviki.com.br/live-shop"},
+        {"@type":"ListItem","position":3,"name":"Calculadora de taxas de live shop","item":"https://www.moviki.com.br/guia/calculadora-taxas-live-shop"}
+      ]
+    },
+    {
+      "@type":"WebApplication",
+      "name":"Calculadora de taxas de live shop",
+      "url":"https://www.moviki.com.br/guia/calculadora-taxas-live-shop",
+      "applicationCategory":"BusinessApplication",
+      "operatingSystem":"Qualquer navegador",
+      "inLanguage":"pt-BR",
+      "isAccessibleForFree":true,
+      "offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},
+      "description":"Calcula a tarifa por item e no mês do TikTok Shop e da Shopee e compara com a mensalidade da live na própria loja, com tarifas de fonte oficial e data.",
+      "image":"https://www.moviki.com.br/calculadora-img/og-calculadora.jpg",
+      "dateModified":"2026-10-25",
+      "publisher":{"@type":"Organization","name":"Moviki","url":"https://www.moviki.com.br/","logo":{"@type":"ImageObject","url":"https://www.moviki.com.br/logo.png"}}
+    },
+    {
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Quanto o TikTok Shop cobra por venda no Brasil?","acceptedAnswer":{"@type":"Answer","text":"Na tarifa padrão em vigor desde 15/07/2026: item abaixo de R$ 50 paga 10% de comissão mais R$ 4 por item; a partir de R$ 50, 6% mais R$ 6 por item. Vendedor novo que cumpre as missões pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia. Conferido no Seller Center Brasil em 22/10/2026."}},
+        {"@type":"Question","name":"Quanto a Shopee cobra por venda?","acceptedAnswer":{"@type":"Answer","text":"Para vendedor CNPJ, desde 01/10/2026: até R$ 79,99, 20% + R$ 4,50 por item; de R$ 80 a R$ 99,99, 14% + R$ 16; de R$ 100 a R$ 199,99, 14% + R$ 20; a partir de R$ 200, 14% + R$ 26. Abaixo de R$ 8, o fixo é a metade do preço. Vendedor CPF com mais de 450 pedidos em 90 dias paga mais R$ 3 por item. Conferido em 25/10/2026."}},
+        {"@type":"Question","name":"A tarifa vale sobre o preço cheio ou com desconto?","acceptedAnswer":{"@type":"Answer","text":"No TikTok Shop, sobre o preço do item depois dos descontos do próprio vendedor. Na Shopee, sobre o valor do produto vendido. Por isso a calculadora pede o preço que o cliente paga."}},
+        {"@type":"Question","name":"O Moviki cobra comissão sobre a venda na live?","acceptedAnswer":{"@type":"Answer","text":"Não. A taxa do Moviki por venda é 0%: você paga o plano do mês (Premium R$ 69,90 ou Enterprise R$ 129,90), e o Pix vai para a conta da loja. Se um dia houver tarifa por pedido, ela será fixa, nunca porcentagem, com aviso de 30 dias."}},
+        {"@type":"Question","name":"Com poucas vendas, a mensalidade compensa?","acceptedAnswer":{"@type":"Answer","text":"Nem sempre. Com poucos itens no mês, a tarifa por pedido pode sair mais barata que uma mensalidade fixa. A calculadora mostra a partir de quantos itens a mensalidade fica abaixo da tarifa, com o seu preço."}},
+        {"@type":"Question","name":"Com que frequência as tarifas são conferidas?","acceptedAnswer":{"@type":"Answer","text":"Toda semana, nas páginas oficiais. Se a conferência passar de 60 dias, a página avisa; se passar de 100, a plataforma sai da conta até ser revista."}}
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

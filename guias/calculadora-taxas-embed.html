@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de taxas de live shop · Moviki</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://www.moviki.com.br/guia/calculadora-taxas-live-shop">
+<!--
+  guias/calculadora-taxas-embed.html — 2026-10-25-calculadora (rota /guia/calculadora-taxas-live-shop/embed).
+  Versao para outros sites colarem num iframe. SEM mvmetrica.js: nao usa cookie nem medicao (outro site nao tem o nosso aviso de LGPD).
+  Unica pagina do site que aceita ser exibida dentro de outro site (frame-ancestors * no vercel.json). Nao tem formulario, login nem dado pessoal.
+  Tarifas: /dados/taxas-live-shop.json (fonte unica), mesmas regras de frescor da pagina principal.
+-->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="preload" href="/dados/taxas-live-shop.json" as="fetch" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ciano:#00D4FF;--azul:#0066FF;--texto:#eaf3ff;--texto2:#9db4d0;--texto3:#6f87a6;--linha:rgba(255,255,255,.09);--linha2:rgba(255,255,255,.15);--grad:linear-gradient(135deg,#00D4FF,#0066FF);--ouro:#ffcf4d}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#08111f}
+body{font-family:'Poppins',system-ui,sans-serif;color:var(--texto);padding:16px;line-height:1.5}
+a{color:inherit}
+.cx{border-radius:20px;padding:18px;background:linear-gradient(180deg,#0b1626,#08111f);border:1px solid rgba(0,212,255,.3);box-shadow:0 0 50px rgba(0,102,255,.15)}
+h1{font-size:18px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+h1 i{width:8px;height:8px;border-radius:50%;background:var(--ciano);box-shadow:0 0 10px var(--ciano)}
+.sub{font-size:12.5px;color:var(--texto3);margin:2px 0 14px}
+.campo{margin-bottom:12px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
+label{font-size:13px;color:var(--texto2);font-weight:600}
+.valor{display:flex;align-items:center;gap:5px;background:#050b14;border:1px solid var(--linha2);border-radius:12px;padding:0 10px;min-height:40px}
+.valor:focus-within{border-color:var(--ciano)}
+.valor span{color:var(--texto3);font-size:13px;font-weight:600}
+.valor input{width:84px;background:transparent;border:0;color:var(--texto);font:700 17px Poppins,system-ui,sans-serif;text-align:right;outline:none;-moz-appearance:textfield}
+.valor input::-webkit-outer-spin-button,.valor input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ciano),var(--azul)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.09)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ciano),var(--azul)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.09)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;margin-top:-7px;border:4px solid var(--ciano)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#fff;border:4px solid var(--ciano)}
+.res{display:grid;gap:8px;margin-top:6px}
+.lin{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:11px 13px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--linha)}
+.lin b.n{font-size:14.5px}
+.lin .v{font-size:19px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.lin small{grid-column:1/-1;font-size:12px;color:var(--texto3);font-variant-numeric:tabular-nums}
+.lin .bar{grid-column:1/-1;height:5px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:3px}
+.lin .bar span{display:block;height:100%;width:0;background:#7d91ae;border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.lin.mov{background:linear-gradient(150deg,rgba(0,102,255,.2),rgba(0,212,255,.06));border-color:rgba(0,212,255,.35)}
+.lin.mov .bar span{background:var(--grad)}
+.lin.off{opacity:.5}
+.rod{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;font-size:11.5px;color:var(--texto3)}
+.rod a{color:var(--ciano);font-weight:700;text-decoration:none;white-space:nowrap}
+.av{display:none;margin-top:8px;font-size:12px;color:var(--ouro)}
+@media (prefers-reduced-motion:reduce){.lin .bar span{transition:none}}
+</style>
+</head>
+<body>
+<div class="cx">
+  <h1><i></i>Calculadora de taxas de live shop</h1>
+  <p class="sub">Tarifa por pedido × mensalidade fixa. Conta de tarifa, não previsão de venda.</p>
+  <div class="campo">
+    <div class="top"><label for="nPreco">Preço do item</label><div class="valor"><span>R$</span><input id="nPreco" type="number" inputmode="decimal" min="1" max="100000" step="0.01" value="100"></div></div>
+    <input id="rPreco" type="range" min="5" max="600" step="1" value="100" aria-label="Preço do item">
+  </div>
+  <div class="campo">
+    <div class="top"><label for="nQtd">Itens no mês</label><div class="valor"><input id="nQtd" type="number" inputmode="numeric" min="1" max="100000" step="1" value="30"><span>itens</span></div></div>
+    <input id="rQtd" type="range" min="1" max="500" step="1" value="30" aria-label="Itens no mês">
+  </div>
+  <div class="res" id="res">
+    <div class="lin" id="lT"><b class="n">TikTok Shop</b><span class="v" data-k="mes">R$ 360,00</span><small data-k="info">R$ 12,00 por item · 6% + R$ 6,00</small><div class="bar"><span></span></div></div>
+    <div class="lin" id="lS"><b class="n">Shopee</b><span class="v" data-k="mes">R$ 1.020,00</span><small data-k="info">R$ 34,00 por item · 14% + R$ 20,00</small><div class="bar"><span></span></div></div>
+    <div class="lin mov" id="lM"><b class="n">Live na sua loja · Moviki</b><span class="v" data-k="mes">R$ 69,90</span><small data-k="info">0% por venda · mensalidade Premium</small><div class="bar"><span></span></div></div>
+  </div>
+  <p class="av" id="av"></p>
+  <div class="rod"><span id="datas">Tarifas oficiais conferidas em 22/10 e 25/10/2026</span><a href="https://www.moviki.com.br/guia/calculadora-taxas-live-shop?utm_source=embed&amp;utm_medium=calculadora&amp;utm_campaign=calculadora-embed" target="_blank" rel="noopener">por Moviki ↗</a></div>
+</div>
+<script src="/mvcalculadora.js"></script>
+<script>
+(function(){
+  var C=window.MVCALC, $=function(i){return document.getElementById(i);}, D=null;
+  var nP=$('nPreco'), rP=$('rPreco'), nQ=$('nQtd'), rQ=$('rQtd');
+  var st=C.lerLink(); if(st.preco) nP.value=st.preco; if(st.qtd) nQ.value=st.qtd;
+  function trilha(r){ r.style.setProperty('--p',Math.max(0,Math.min(100,(r.value-r.min)/(r.max-r.min)*100))+'%'); }
+  function linha(id,mes,info,ok){ var el=$(id); el.classList.toggle('off',!ok); C.animar(el.querySelector('[data-k="mes"]'),mes); el.querySelector('[data-k="info"]').textContent=ok?info:'Tarifa em revisão: confira na página oficial.'; }
+  function conta(){
+    if(!D) return;
+    var p=parseFloat(String(nP.value).replace(',','.')), q=parseInt(nQ.value,10);
+    if(!(p>0)||!(q>0)) return; p=Math.min(p,100000); q=Math.min(q,100000);
+    rP.value=Math.min(rP.max,Math.max(rP.min,p)); rQ.value=Math.min(rQ.max,Math.max(rQ.min,q)); trilha(rP); trilha(rQ);
+    var P=D.plataformas, t=C.tarifaItem(P.tiktok,p), s=C.tarifaItem(P.shopee,p), pl=P.moviki.planos[0];
+    var okT=C.frescor(P.tiktok).estado!=='revisao', okS=C.frescor(P.shopee).estado!=='revisao';
+    linha('lT',t.valor*q,C.brl(t.valor)+' por item · '+t.regra.replace(' por item',''),okT);
+    linha('lS',s.valor*q,C.brl(s.valor)+' por item · '+s.regra.replace(' por item',''),okS);
+    linha('lM',pl.mensal,'0% por venda · mensalidade '+pl.nome+' ('+C.brl(pl.mensal/q)+' por item)',true);
+    var vs=[okT?t.valor*q:0,okS?s.valor*q:0,pl.mensal], mx=Math.max.apply(null,vs)||1;
+    [['lT',vs[0]],['lS',vs[1]],['lM',vs[2]]].forEach(function(x){ $(x[0]).querySelector('.bar span').style.width=(x[1]?Math.max(3,x[1]/mx*100):0)+'%'; });
+  }
+  [nP,nQ].forEach(function(e){e.addEventListener('input',conta);});
+  rP.addEventListener('input',function(){nP.value=rP.value;conta();});
+  rQ.addEventListener('input',function(){nQ.value=rQ.value;conta();});
+  C.carregar().then(function(d){
+    D=d; var P=d.plataformas;
+    $('datas').textContent='Tarifas oficiais conferidas em '+C.dataBR(P.tiktok.conferido_em).slice(0,5)+' e '+C.dataBR(P.shopee.conferido_em);
+    var av=[]; ['tiktok','shopee'].forEach(function(k){ var f=C.frescor(P[k]); if(f.estado==='aviso') av.push(P[k].nome+' conferido há '+f.dias+' dias'); });
+    if(av.length){ $('av').style.display='block'; $('av').textContent='Atenção: '+av.join(' · ')+'. Confirme na fonte oficial.'; }
+    conta();
+  }).catch(function(){ $('av').style.display='block'; $('av').textContent='Não foi possível carregar as tarifas agora.'; });
+})();
+</script>
+</body>
+</html>
