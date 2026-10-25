@@ -191,6 +191,14 @@
     <p class="fundLink" id="fundLink" style="margin-top:14px;font-size:14.5px;color:#ffe08a">🏅 <b>Lote Fundador:</b> 12 meses de Enterprise por <b>R$ 990</b> à vista ou 12x de R$ 89,90 no cartão. 50 vagas, até 27/11. <a href="/fundador" data-ev="fundador_enterprise" style="color:#ffcf4d;text-decoration:underline;font-weight:700">Ver o Lote Fundador →</a></p>
     <script>if(Date.now()>Date.parse('2026-11-27T23:59:59-03:00')){var _fl=document.getElementById('fundLink');if(_fl)_fl.style.display='none';}</script>
   </div>
+<!-- 2026-10-25-calc-planos: botao para a calculadora logo abaixo dos precos (quem esta vendo o preco compara ali mesmo). Sem nome de outra plataforma aqui: so a pagina da calculadora cita. -->
+<div style="max-width:860px;margin:30px auto 0;padding:0 16px 8px;box-sizing:border-box">
+  <a href="/guia/calculadora-taxas-live-shop" data-ev="calc_planos_enterprise" style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding:20px 22px;border-radius:24px;background:linear-gradient(150deg,rgba(0,102,255,.24),rgba(0,212,255,.07));border:1.5px solid rgba(0,212,255,.5);box-shadow:0 18px 44px rgba(0,102,255,.22);text-decoration:none;color:#eaf3ff;text-align:left;font-family:Poppins,system-ui,sans-serif">
+    <img src="/calculadora-img/calc-balanca.webp" alt="" width="72" height="72" loading="lazy" style="width:72px;height:72px;flex:none;filter:drop-shadow(0 8px 16px rgba(0,102,255,.35))">
+    <span style="flex:1 1 240px;min-width:0"><b style="display:block;font-size:19px;line-height:1.3;color:#fff">Compare o Moviki com outras plataformas</b><span style="display:block;font-size:14.5px;line-height:1.5;color:#9db4d0;margin-top:4px">Digite o preço do seu produto e veja, lado a lado, quanto cada plataforma cobra por venda e quanto sobra para a sua loja.</span></span>
+    <span style="flex:1 1 100%;display:flex;align-items:center;justify-content:center;min-height:54px;padding:0 24px;border-radius:999px;background:linear-gradient(135deg,#00D4FF,#0066FF);color:#fff;font-weight:800;font-size:16.5px;text-align:center;white-space:nowrap;box-shadow:0 10px 26px rgba(0,102,255,.35)">Calcular e comparar →</span>
+  </a>
+</div>
 </div></section>
 
 <section><div class="wrap">
@@ -262,7 +270,7 @@ function mvIco(img,alt2,emoji){
 /* ===== GA4 leva 2 — medicao desta pagina (mvmetrica.js ja carregado no <head>) =====
    page_view e cta_painel saem sozinhos do mvmetrica.js.
    Aqui medimos os cliques marcados com data-ev, no mesmo padrao da home. */
-window.MOVIKI_VERSAO = '2026-10-20-selo-ra'; /* 2026-10-20-selo-ra: bloco Reclame AQUI antes do rodape (PR #68 refeito sobre 2026-10-19-links); 2026-10-19-links: rodape com live shop e guias (P86); 2026-10-07-reembolso: link Reembolso no rodape; 2026-10-01-fundador: chamada do Lote Fundador abaixo do preco; antes 2026-09-26-varejo */
+window.MOVIKI_VERSAO = '2026-10-25-calc-planos'; /* 2026-10-25-calc-planos: botao grande "Compare o Moviki com outras plataformas" logo abaixo dos precos, levando para a calculadora de taxas; antes 2026-10-20-selo-ra; 2026-10-20-selo-ra: bloco Reclame AQUI antes do rodape (PR #68 refeito sobre 2026-10-19-links); 2026-10-19-links: rodape com live shop e guias (P86); 2026-10-07-reembolso: link Reembolso no rodape; 2026-10-01-fundador: chamada do Lote Fundador abaixo do preco; antes 2026-09-26-varejo */
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
