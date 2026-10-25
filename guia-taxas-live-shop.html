@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Taxa do TikTok Shop em 2026 e o custo da live na sua loja</title>
-<meta name="description" content="Quanto custa vender ao vivo em 2026: a tarifa padrão do TikTok Shop no Brasil (10% + R$ 4 abaixo de R$ 50; 6% + R$ 6 a partir de R$ 50), com fonte oficial e data, e o custo da live na própria loja. Com calculadora.">
+<title>Taxa do TikTok Shop em 2026: tabela por preço e calculadora</title>
+<meta name="description" content="Taxa do TikTok Shop em 2026 no Brasil: 10% + R$ 4 por item abaixo de R$ 50 e 6% + R$ 6 a partir de R$ 50. Tabela pronta por preço, calculadora grátis e fonte oficial com data.">
 <link rel="canonical" href="https://www.moviki.com.br/guia/taxas-live-shop">
 <!--
-  guia-taxas-live-shop.html — 2026-10-22-taxas-conferidas (antes 2026-10-07-reembolso; tarifa reconferida em 22/10/2026 no guia oficial de 14/08/2026, sem mudanca) (rota /guia/taxas-live-shop no vercel.json). P61, caminho B.
+  guia-taxas-live-shop.html — 2026-10-25-seo-taxa (calculadora no topo lendo /dados/taxas-live-shop.json, tabela por preco, ponto de virada e 5 perguntas novas, mirando a busca "taxa tiktok shop"; aqui so TikTok Shop e Moviki: a outra plataforma aparece so na pagina da calculadora) | antes 2026-10-22-taxas-conferidas (antes 2026-10-07-reembolso; tarifa reconferida em 22/10/2026 no guia oficial de 14/08/2026, sem mudanca) (rota /guia/taxas-live-shop no vercel.json). P61, caminho B.
   EXCECAO CONTROLADA a regra de 29/09 ("nenhuma peca publicada cita TikTok"), aprovada pelo Paulo em 01/10/2026:
   esta e a UNICA pagina publicada que cita a marca. Condicoes da excecao (vault R - Regras de ouro):
    - dado verificavel com fonte oficial e data; "tarifa padrao" e "regra geral", com a excecao do vendedor novo;
@@ -15,6 +15,7 @@
    - mostra tambem onde o concorrente ganha; nenhuma promessa de venda;
    - REVISAR A DATA a cada mudanca de tarifa (PAGINA_CONFERIDA_EM abaixo e o texto visivel). Tarifa desatualizada = tirar do ar.
   Calculadora: conta de TARIFA com os numeros que o visitante digita; nunca previsao de venda.
+  Tarifa: a calculadora e a tabela leem /dados/taxas-live-shop.json (fonte unica). Os numeros escritos no HTML sao o texto que o Google le; se a tarifa mudar, o JSON manda na tela e o PR troca tambem o texto (o robo da conferencia semanal avisa).
 -->
 <meta http-equiv="Content-Security-Policy"
   content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
@@ -24,13 +25,13 @@
 <meta property="og:site_name" content="Moviki">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://www.moviki.com.br/guia/taxas-live-shop">
-<meta property="og:title" content="Taxas de live shop em 2026: quanto custa vender ao vivo">
-<meta property="og:description" content="A tarifa padrão do TikTok Shop no Brasil, com fonte oficial e data, e o custo da live na própria loja. Com calculadora.">
+<meta property="og:title" content="Taxa do TikTok Shop em 2026: tabela por preço e calculadora">
+<meta property="og:description" content="A tarifa padrão do TikTok Shop no Brasil por faixa de preço, com fonte oficial e data, calculadora grátis e o custo da live na própria loja.">
 <meta property="og:image" content="https://www.moviki.com.br/ogmoviki.jpg">
 <meta property="article:published_time" content="2026-10-01">
-<meta property="article:modified_time" content="2026-10-22">
+<meta property="article:modified_time" content="2026-10-25">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Taxas de live shop em 2026: quanto custa vender ao vivo">
+<meta name="twitter:title" content="Taxa do TikTok Shop em 2026: tabela por preço e calculadora">
 <meta name="twitter:description" content="A tarifa padrão do TikTok Shop no Brasil, com fonte oficial e data, e o custo da live na própria loja.">
 <meta name="twitter:image" content="https://www.moviki.com.br/ogmoviki.jpg">
 <link rel="icon" href="/favicon512.png">
@@ -175,6 +176,23 @@ footer a{text-decoration:underline}
 .resumo div{background:var(--card);border:1px solid var(--linha);border-left:3px solid var(--ciano);border-radius:12px;padding:14px 16px;color:var(--texto2);font-size:15px}
 .resumo b{color:var(--texto)}
 .data{display:inline-block;margin-top:12px;font-size:13px;color:var(--texto3);border:1px solid var(--linha2);border-radius:999px;padding:5px 12px}
+.calc input[type=range]{-webkit-appearance:none;appearance:none;min-height:0;height:26px;padding:0;border:0;background:transparent;cursor:pointer;--p:50%}
+.calc input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ciano),var(--azul)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.09)}
+.calc input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--ciano),var(--azul)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.09)}
+.calc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;margin-top:-8px;border:4px solid var(--ciano)}
+.calc input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--ciano)}
+.calc input[type=range]:focus{outline:none}
+.calc>*{min-width:0}.calc .entrada{align-content:start}.calc input{min-width:0;max-width:100%}
+.atalhos{display:flex;flex-wrap:wrap;gap:8px}
+.atalhos button{min-height:38px;padding:0 13px;border-radius:999px;border:1px solid var(--linha2);background:rgba(255,255,255,.04);color:var(--texto2);font:600 13.5px Poppins,system-ui,sans-serif;cursor:pointer}
+.atalhos button.on{border-color:var(--ciano);color:var(--texto);background:rgba(0,212,255,.12)}
+.linha.destaque{border:1px solid rgba(0,212,255,.35);background:linear-gradient(150deg,rgba(0,102,255,.18),rgba(0,212,255,.05));border-radius:14px;padding:12px 14px;color:var(--texto)}
+.linha.destaque b{font-size:22px}
+.virada{font-size:14.5px;color:var(--texto);background:rgba(34,211,154,.08);border:1px solid rgba(34,211,154,.3);border-radius:14px;padding:12px 14px}
+.virada b{color:var(--verde)}
+.calc .saida .btn{margin-top:4px;min-height:48px;font-size:15px}
+.tabela.preco td:first-child{width:auto;font-weight:700;color:var(--texto);white-space:nowrap}
+.tabela.preco td,.tabela.preco th{white-space:nowrap}
 @media (max-width:900px){.calc,.dois{grid-template-columns:1fr}}
 </style>
 </head>
@@ -192,13 +210,44 @@ footer a{text-decoration:underline}
 <section class="hero" style="padding-bottom:40px">
   <div class="wrap">
     <span class="kick"><i></i>Guia · taxas de live shop</span>
-    <h1>Quanto custa <em>vender ao vivo</em> em 2026</h1>
-    <p class="lead">As taxas do TikTok Shop no Brasil, com a fonte oficial e a data, e quanto custa fazer a live na própria loja. Sem promessa de venda: é a conta da tarifa, para você decidir onde vender.</p>
+    <h1>Taxa do <em>TikTok Shop</em> em 2026</h1>
+    <p class="lead">Quanto o TikTok Shop cobra em cada venda no Brasil, com a fonte oficial e a data: a regra, uma tabela pronta por preço e uma calculadora para a conta com os seus números. No fim, quanto custa a live na própria loja. Sem promessa de venda: é a conta da tarifa, para você decidir onde vender.</p>
     <span class="data">Conferido na fonte oficial em 22/10/2026</span>
     <div class="resumo">
       <div><b>TikTok Shop, tarifa padrão desde 15/07/2026:</b> produto abaixo de R$ 50 paga 10% + R$ 4 por item; a partir de R$ 50, 6% + R$ 6 por item.</div>
       <div><b>Vendedor novo</b> que cumpre as missões do programa pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia de taxas.</div>
       <div><b>Live na própria loja (Moviki):</b> 0% por venda. Você paga o plano fixo do mês: Premium R$ 69,90 ou Enterprise R$ 129,90.</div>
+    </div>
+  </div>
+</section>
+
+<section id="calculadora" style="padding-top:10px">
+  <div class="wrap">
+    <span class="kick"><i></i>Calculadora</span>
+    <h2>Calcule a taxa do TikTok Shop <em>na sua venda</em></h2>
+    <p class="lead">Digite o preço do item e quantos itens você vende no mês. A conta mostra só a tarifa padrão; ela não prevê venda nenhuma.</p>
+    <div class="calc">
+      <div class="entrada">
+        <label for="cPreco">Preço do item (R$)<input id="cPreco" type="number" inputmode="decimal" min="1" max="100000" step="0.01" value="100"></label>
+        <input id="rgPreco" type="range" min="5" max="500" step="1" value="100" aria-label="Preço do item">
+        <div class="atalhos" role="group" aria-label="Preços de exemplo">
+          <button type="button" data-p="29.9">R$ 29,90</button><button type="button" data-p="49.9">R$ 49,90</button><button type="button" data-p="79.9">R$ 79,90</button><button type="button" data-p="129.9">R$ 129,90</button><button type="button" data-p="199.9">R$ 199,90</button>
+        </div>
+        <label for="cQtd">Itens vendidos no mês<input id="cQtd" type="number" inputmode="numeric" min="1" max="100000" step="1" value="30"></label>
+        <input id="rgQtd" type="range" min="1" max="300" step="1" value="30" aria-label="Itens vendidos no mês">
+        <p class="nota">Exemplo preenchido: troque pelos seus números.</p>
+      </div>
+      <div class="saida" aria-live="polite">
+        <div class="linha"><span>Taxa do TikTok Shop por item</span><b id="rItem">R$ 12,00</b></div>
+        <div class="linha"><span>Regra aplicada</span><b id="rRegra">6% + R$ 6,00</b></div>
+        <div class="linha"><span>Parte do preço que fica na taxa</span><b id="rPct">12%</b></div>
+        <div class="linha"><span>Sobra por item, antes de frete e impostos</span><b id="rSobra">R$ 88,00</b></div>
+        <div class="linha destaque"><span>Taxa do TikTok Shop no mês</span><b id="rMes">R$ 360,00</b></div>
+        <div class="linha"><span>Live na própria loja (Moviki Premium)</span><b style="white-space:normal;text-align:right;flex:none"><span style="white-space:nowrap">R$ 69,90/mês</span><br><small style="font-size:12.5px;color:var(--verde);font-weight:600">0% por venda</small></b></div>
+        <p class="virada" id="rVirada">Com item de R$ 100,00, a partir de <b>6 itens no mês</b> a taxa por venda passa da mensalidade do Premium.</p>
+        <p class="nota" id="rObs">Tarifa padrão conferida na fonte oficial em 22/10/2026. Sem o incentivo de vendedor novo, frete, impostos, anúncios e comissão de afiliado.</p>
+        <a class="btn btn-sec" id="rMais" href="/guia/calculadora-taxas-live-shop?preco=100&amp;qtd=30" data-ev="guia_taxas_calc_completa">Comparar com mais plataformas →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -225,41 +274,31 @@ footer a{text-decoration:underline}
 
 <section id="exemplos" style="padding-top:20px">
   <div class="wrap">
-    <span class="kick"><i></i>Conta de exemplo</span>
-    <h2>Quanto fica com a plataforma <em>em cada venda</em></h2>
-    <p class="lead">Só a tarifa padrão, sem frete, sem impostos, sem anúncios e sem o incentivo de vendedor novo.</p>
+    <span class="kick"><i></i>Tabela pronta</span>
+    <h2>Taxa do TikTok Shop <em>por preço do item</em></h2>
+    <p class="lead">Quanto a tarifa padrão leva em cada venda, a parte do preço que isso representa e quanto sobra para a loja antes de frete, impostos e anúncios. A última coluna mostra a partir de quantos itens no mês a tarifa passa da mensalidade do Moviki Premium (R$ 69,90, sem taxa por venda).</p>
     <div class="rolar">
-      <table class="tabela">
-        <thead><tr><th>Preço do item</th><th>Tarifa padrão do TikTok Shop</th><th>Taxa do Moviki por venda</th></tr></thead>
+      <table class="tabela preco" id="tabelaPreco">
+        <thead><tr><th>Preço do item</th><th>Regra</th><th>Taxa por item</th><th>% do preço</th><th>Sobra por item</th><th>Passa R$ 69,90 com</th></tr></thead>
         <tbody>
-          <tr><td>R$ 40,00</td><td>R$ 8,00 (10% + R$ 4 = 20% do preço)</td><td class="ok">R$ 0</td></tr>
-          <tr><td>R$ 100,00</td><td>R$ 12,00 (6% + R$ 6 = 12% do preço)</td><td class="ok">R$ 0</td></tr>
-          <tr><td>R$ 150,00</td><td>R$ 15,00 (6% + R$ 6 = 10% do preço)</td><td class="ok">R$ 0</td></tr>
+          <tr data-preco="10"><td>R$ 10,00</td><td data-k="regra">10% + R$ 4,00</td><td data-k="taxa">R$ 5,00</td><td data-k="pct">50%</td><td data-k="sobra" class="ok">R$ 5,00</td><td data-k="virada">14 itens</td></tr>
+          <tr data-preco="20"><td>R$ 20,00</td><td data-k="regra">10% + R$ 4,00</td><td data-k="taxa">R$ 6,00</td><td data-k="pct">30%</td><td data-k="sobra" class="ok">R$ 14,00</td><td data-k="virada">12 itens</td></tr>
+          <tr data-preco="29.9"><td>R$ 29,90</td><td data-k="regra">10% + R$ 4,00</td><td data-k="taxa">R$ 6,99</td><td data-k="pct">23,4%</td><td data-k="sobra" class="ok">R$ 22,91</td><td data-k="virada">11 itens</td></tr>
+          <tr data-preco="39.9"><td>R$ 39,90</td><td data-k="regra">10% + R$ 4,00</td><td data-k="taxa">R$ 7,99</td><td data-k="pct">20%</td><td data-k="sobra" class="ok">R$ 31,91</td><td data-k="virada">9 itens</td></tr>
+          <tr data-preco="49.9"><td>R$ 49,90</td><td data-k="regra">10% + R$ 4,00</td><td data-k="taxa">R$ 8,99</td><td data-k="pct">18%</td><td data-k="sobra" class="ok">R$ 40,91</td><td data-k="virada">8 itens</td></tr>
+          <tr data-preco="50"><td>R$ 50,00</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 9,00</td><td data-k="pct">18%</td><td data-k="sobra" class="ok">R$ 41,00</td><td data-k="virada">8 itens</td></tr>
+          <tr data-preco="59.9"><td>R$ 59,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 9,59</td><td data-k="pct">16%</td><td data-k="sobra" class="ok">R$ 50,31</td><td data-k="virada">8 itens</td></tr>
+          <tr data-preco="79.9"><td>R$ 79,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 10,79</td><td data-k="pct">13,5%</td><td data-k="sobra" class="ok">R$ 69,11</td><td data-k="virada">7 itens</td></tr>
+          <tr data-preco="99.9"><td>R$ 99,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 11,99</td><td data-k="pct">12%</td><td data-k="sobra" class="ok">R$ 87,91</td><td data-k="virada">6 itens</td></tr>
+          <tr data-preco="129.9"><td>R$ 129,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 13,79</td><td data-k="pct">10,6%</td><td data-k="sobra" class="ok">R$ 116,11</td><td data-k="virada">6 itens</td></tr>
+          <tr data-preco="149.9"><td>R$ 149,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 14,99</td><td data-k="pct">10%</td><td data-k="sobra" class="ok">R$ 134,91</td><td data-k="virada">5 itens</td></tr>
+          <tr data-preco="199.9"><td>R$ 199,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 17,99</td><td data-k="pct">9%</td><td data-k="sobra" class="ok">R$ 181,91</td><td data-k="virada">4 itens</td></tr>
+          <tr data-preco="299.9"><td>R$ 299,90</td><td data-k="regra">6% + R$ 6,00</td><td data-k="taxa">R$ 23,99</td><td data-k="pct">8%</td><td data-k="sobra" class="ok">R$ 275,91</td><td data-k="virada">3 itens</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="nota" style="margin-top:12px">Item de R$ 49,90 fica na faixa de baixo (10% + R$ 4); a partir de R$ 50,00 vale a de cima (6% + R$ 6). Na virada as duas dão quase o mesmo valor (R$ 8,99 e R$ 9,00). Acima de R$ 50, a parte do preço que fica na taxa vai caindo: 18% em R$ 50,00 e 12% em R$ 100,00.</p>
     <p class="aviso"><b>No Moviki a conta é outra:</b> não existe taxa por venda, existe a mensalidade do plano. Com o Pix pela sua chave, o Moviki não cobra nada sobre o pedido; com a conta Asaas conectada, quem cobra a tarifa do Pix é o Asaas. Se um dia o Moviki tiver tarifa por pedido, ela será fixa, nunca porcentagem, com aviso de 30 dias.</p>
-  </div>
-</section>
-
-<section id="calculadora" style="padding-top:20px">
-  <div class="wrap">
-    <span class="kick"><i></i>Calculadora</span>
-    <h2>Faça a conta <em>com os seus números</em></h2>
-    <p class="lead">Digite o preço médio do item e quantos itens você vende por mês. A conta mostra só a tarifa; ela não prevê venda nenhuma.</p>
-    <div class="calc">
-      <div class="entrada">
-        <label for="cPreco">Preço médio do item (R$)<input id="cPreco" type="number" inputmode="decimal" min="1" max="100000" step="0.01" value="100"></label>
-        <label for="cQtd">Itens vendidos no mês<input id="cQtd" type="number" inputmode="numeric" min="0" max="100000" step="1" value="10"></label>
-        <p class="nota">Exemplo preenchido: troque pelos seus números.</p>
-      </div>
-      <div class="saida" aria-live="polite">
-        <div class="linha"><span>TikTok Shop, tarifa padrão no mês</span><b id="rTik">R$ 120,00</b></div>
-        <div class="linha"><span>Moviki Premium no mês (pedido pelo WhatsApp)</span><b>R$ 69,90</b></div>
-        <div class="linha"><span>Moviki Enterprise no mês (Pix dentro da live)</span><b>R$ 129,90</b></div>
-        <p class="nota" id="rObs">Sem impostos, frete, anúncios, programas opcionais e sem o incentivo de vendedor novo. Tarifa conferida em 22/10/2026.</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -319,6 +358,11 @@ footer a{text-decoration:underline}
     <h2>Perguntas sobre <em>taxas de live shop</em></h2>
     <div class="faq">
       <details><summary>Quanto o TikTok Shop cobra por venda no Brasil?</summary><p>Na tarifa padrão em vigor desde 15/07/2026: item abaixo de R$ 50 paga 10% de comissão mais R$ 4 por item; a partir de R$ 50, 6% mais R$ 6 por item. Vendedor novo que cumpre as missões pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia. Fonte: Seller Center Brasil, conferido em 22/10/2026.</p></details>
+      <details><summary>Qual a taxa do TikTok Shop para produto abaixo de R$ 50?</summary><p>10% do preço mais R$ 4,00 por item, na tarifa padrão em vigor desde 15/07/2026. Num item de R$ 30,00 a taxa é R$ 7,00, cerca de 23,3% do preço. Quanto mais barato o item, mais a parte fixa pesa.</p></details>
+      <details><summary>Quanto o TikTok Shop cobra numa venda de R$ 100?</summary><p>R$ 12,00 por item na tarifa padrão: 6% de R$ 100,00 (R$ 6,00) mais a taxa fixa de R$ 6,00. Sobra R$ 88,00 antes de frete, impostos, anúncios e comissão de afiliado.</p></details>
+      <details><summary>A taxa fixa do TikTok Shop é por item ou por pedido?</summary><p>Por item vendido. Um pedido com 3 itens paga a taxa fixa 3 vezes, além da comissão sobre o preço de cada item.</p></details>
+      <details><summary>O frete e a comissão de afiliado entram nessa taxa?</summary><p>Não. A tabela mostra só a tarifa padrão de comissão e taxa por item. Programas opcionais, como o de frete, e a comissão que o vendedor define para afiliados têm custo próprio, com regras na página oficial do Seller Center.</p></details>
+      <details><summary>Com quantas vendas a mensalidade do Moviki sai mais barata que a taxa por venda?</summary><p>Depende do preço do item. Com item de R$ 40,00 a taxa padrão é R$ 8,00, e a partir de 9 itens no mês ela passa da mensalidade do Premium (R$ 69,90). Com item de R$ 100,00, a partir de 6 itens. A comparação é só de tarifa: no Moviki quem assiste à live é quem você chama, sem audiência pronta.</p></details>
       <details><summary>A taxa vale sobre o preço cheio ou com desconto?</summary><p>Segundo a página oficial, sobre o preço do item depois dos descontos do vendedor. Desconto bancado pela plataforma não entra no cálculo.</p></details>
       <details><summary>O Moviki cobra comissão sobre a venda na live?</summary><p>Não. Hoje a taxa do Moviki por venda é 0%: você paga o plano do mês (Premium R$ 69,90 ou Enterprise R$ 129,90). Se um dia houver tarifa, ela será fixa por pedido, nunca porcentagem, com aviso de 30 dias.</p></details>
       <details><summary>Vale a pena vender no TikTok Shop?</summary><p>Depende do que a sua loja precisa. A plataforma ajuda a encontrar público novo e cobra tarifa por pedido; a live na própria loja não cobra por venda, mas quem assiste é quem você chama. Muita loja usa os dois. Faça a conta da tarifa com os seus números antes de decidir.</p></details>
@@ -359,24 +403,59 @@ footer a{text-decoration:underline}
   <small>Sem comissão por venda · 30 dias grátis</small>
 </div>
 
-<script>window.MOVIKI_VERSAO='2026-10-25-calculadora';</script>
+<script>window.MOVIKI_VERSAO='2026-10-25-seo-taxa';</script>
+<script src="/mvcalculadora.js"></script>
 <script>
-/* Tarifa padrao do TikTok Shop BR, vigencia 15/07/2026, conferida em 01/10/2026 na pagina oficial e de novo em 22/10/2026 (guia oficial do Seller Center de 14/08/2026: mesmos valores).
-   Mudou a tarifa? Trocar aqui, nas tabelas, no resumo, no FAQ, no JSON-LD e a data em todos os lugares. */
-var PAGINA_CONFERIDA_EM='22/10/2026';
-function tarifaItem(p){ return p<50 ? p*0.10+4 : p*0.06+6; }
-function brl(v){ try{ return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }catch(e){ return 'R$ '+v.toFixed(2).replace('.',','); } }
+/* 2026-10-25-seo-taxa: calculadora e tabela leem /dados/taxas-live-shop.json (mvcalculadora.js), a mesma fonte da
+   calculadora completa. Sem o arquivo, vale a tarifa escrita abaixo (padrao de 15/07/2026, conferida em 22/10/2026).
+   So TikTok Shop e Moviki aqui: as outras plataformas aparecem so na pagina da calculadora (regra de marcas, 25/10/2026). */
 (function(){
-  var ip=document.getElementById('cPreco'), iq=document.getElementById('cQtd'), out=document.getElementById('rTik'), medido=false;
+  var C=window.MVCALC||null, $=function(i){return document.getElementById(i);};
+  var TK={faixas:[{abaixo_de:50,pct:10,fixo:4},{abaixo_de:null,pct:6,fixo:6}],conferido_em:'2026-10-22'}, PREMIUM=69.90, emRevisao=false;
+  function brl(v){ try{ return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }catch(e){ return 'R$ '+v.toFixed(2).replace('.',','); } }
+  function pct(v){ var r=Math.round(v*10)/10; return r.toLocaleString('pt-BR',{maximumFractionDigits:1})+'%'; }
+  function faixa(p){ for(var i=0;i<TK.faixas.length;i++){ var f=TK.faixas[i]; if(f.abaixo_de===null||p<f.abaixo_de) return f; } return TK.faixas[TK.faixas.length-1]; }
+  function taxa(p){ var f=faixa(p); return {v:p*f.pct/100+f.fixo, r:f.pct+'% + '+brl(f.fixo)}; }
+  var ip=$('cPreco'), iq=$('cQtd'), rp=$('rgPreco'), rq=$('rgQtd'), medido=false;
+  function trilha(r){ r.style.setProperty('--p',Math.max(0,Math.min(100,(r.value-r.min)/(r.max-r.min)*100))+'%'); }
+  function setTxt(id,v){ var el=$(id); if(el) el.textContent=v; }
   function conta(){
     var p=parseFloat(String(ip.value).replace(',','.')), q=parseInt(iq.value,10);
-    if(!(p>0)||!(q>=0)){ out.textContent='—'; return; }
+    if(!(p>0)||!(q>0)) return;
     p=Math.min(p,100000); q=Math.min(q,100000);
-    out.textContent=brl(Math.round(tarifaItem(p)*q*100)/100);
+    rp.value=Math.min(rp.max,Math.max(rp.min,p)); rq.value=Math.min(rq.max,Math.max(rq.min,q)); trilha(rp); trilha(rq);
+    [].forEach.call(document.querySelectorAll('.atalhos button'),function(b){ b.classList.toggle('on',Math.abs(parseFloat(b.getAttribute('data-p'))-p)<0.005); });
+    var t=taxa(p), mes=t.v*q, vir=Math.floor(PREMIUM/t.v)+1;
+    if(C&&C.animar&&!emRevisao) C.animar($('rMes'),mes,brl); else setTxt('rMes',emRevisao?'em revisão':brl(mes));
+    setTxt('rItem',emRevisao?'em revisão':brl(t.v)); setTxt('rRegra',emRevisao?'—':t.r); setTxt('rPct',emRevisao?'—':pct(t.v/p*100)); setTxt('rSobra',emRevisao?'—':brl(p-t.v));
+    var vi=$('rVirada');
+    if(vi){ vi.innerHTML=emRevisao?'Tarifa em revisão: confira na página oficial do Seller Center.':('Com item de '+brl(p)+', a partir de <b>'+vir+' '+(vir===1?'item':'itens')+' no mês</b> a taxa por venda passa da mensalidade do Premium.'); }
+    var mais=$('rMais'); if(mais) mais.href='/guia/calculadora-taxas-live-shop?preco='+encodeURIComponent(Math.round(p*100)/100)+'&qtd='+q;
     if(!medido){ medido=true; try{ if(window.mvEv) window.mvEv('calculadora_usada',{pagina:'guia-taxas'}); }catch(e){} }
   }
+  function tabela(){
+    [].forEach.call(document.querySelectorAll('#tabelaPreco tr[data-preco]'),function(tr){
+      var p=parseFloat(tr.getAttribute('data-preco')), t=taxa(p), q=function(k){return tr.querySelector('[data-k="'+k+'"]');};
+      if(emRevisao){ q('taxa').textContent='em revisão'; return; }
+      q('regra').textContent=t.r; q('taxa').textContent=brl(t.v); q('pct').textContent=pct(t.v/p*100); q('sobra').textContent=brl(p-t.v);
+      var v=Math.floor(PREMIUM/t.v)+1; q('virada').textContent=v+' '+(v===1?'item':'itens');
+    });
+  }
   ip.addEventListener('input',conta); iq.addEventListener('input',conta);
+  rp.addEventListener('input',function(){ ip.value=rp.value; conta(); });
+  rq.addEventListener('input',function(){ iq.value=rq.value; conta(); });
+  [].forEach.call(document.querySelectorAll('.atalhos button'),function(b){ b.addEventListener('click',function(){ ip.value=b.getAttribute('data-p'); conta(); }); });
   medido=true; conta(); medido=false;
+  if(C&&C.carregar){
+    C.carregar().then(function(d){
+      var P=d&&d.plataformas; if(!P||!P.tiktok||!Array.isArray(P.tiktok.faixas)) return;
+      TK=P.tiktok;
+      var pl=(P.moviki&&P.moviki.planos||[]).filter(function(x){return x.id==='premium';})[0]; if(pl&&pl.mensal>0) PREMIUM=pl.mensal;
+      emRevisao=C.frescor(TK).estado==='revisao';
+      var dt=C.dataBR(TK.conferido_em); if(dt) setTxt('rObs','Tarifa padrão conferida na fonte oficial em '+dt+'. Sem o incentivo de vendedor novo, frete, impostos, anúncios e comissão de afiliado.');
+      medido=true; conta(); medido=false; tabela();
+    }).catch(function(){});
+  }
 })();
 /* MEDICAO: page_view sai do mvmetrica.js; data-ev = nome do CTA; evento cta_click. */
 (function(){
@@ -396,15 +475,15 @@ function brl(v){ try{ return v.toLocaleString('pt-BR',{style:'currency',currency
       "itemListElement":[
         {"@type":"ListItem","position":1,"name":"Moviki","item":"https://www.moviki.com.br/"},
         {"@type":"ListItem","position":2,"name":"Live shop","item":"https://www.moviki.com.br/live-shop"},
-        {"@type":"ListItem","position":3,"name":"Taxas de live shop em 2026","item":"https://www.moviki.com.br/guia/taxas-live-shop"}
+        {"@type":"ListItem","position":3,"name":"Taxa do TikTok Shop em 2026","item":"https://www.moviki.com.br/guia/taxas-live-shop"}
       ]
     },
     {
       "@type":"Article",
-      "headline":"Taxas de live shop em 2026: TikTok Shop, marketplace e live na própria loja",
+      "headline":"Taxa do TikTok Shop em 2026: tabela por preço e calculadora",
       "description":"A tarifa padrão do TikTok Shop no Brasil, com fonte oficial e data, e o custo da live na própria loja.",
       "datePublished":"2026-10-01",
-      "dateModified":"2026-10-22",
+      "dateModified":"2026-10-25",
       "inLanguage":"pt-BR",
       "mainEntityOfPage":"https://www.moviki.com.br/guia/taxas-live-shop",
       "image":"https://www.moviki.com.br/ogmoviki.jpg",
@@ -415,6 +494,11 @@ function brl(v){ try{ return v.toLocaleString('pt-BR',{style:'currency',currency
       "@type":"FAQPage",
       "mainEntity":[
         {"@type":"Question","name":"Quanto o TikTok Shop cobra por venda no Brasil?","acceptedAnswer":{"@type":"Answer","text":"Na tarifa padrão em vigor desde 15/07/2026: item abaixo de R$ 50 paga 10% de comissão mais R$ 4 por item; a partir de R$ 50, 6% mais R$ 6 por item. Vendedor novo que cumpre as missões pode ter comissão de 0% por 60 dias, com limite de R$ 17.000 em economia. Fonte: Seller Center Brasil, conferido em 22/10/2026."}},
+        {"@type":"Question","name":"Qual a taxa do TikTok Shop para produto abaixo de R$ 50?","acceptedAnswer":{"@type":"Answer","text":"10% do preço mais R$ 4,00 por item, na tarifa padrão em vigor desde 15/07/2026. Num item de R$ 30,00 a taxa é R$ 7,00, cerca de 23,3% do preço. Quanto mais barato o item, mais a parte fixa pesa."}},
+        {"@type":"Question","name":"Quanto o TikTok Shop cobra numa venda de R$ 100?","acceptedAnswer":{"@type":"Answer","text":"R$ 12,00 por item na tarifa padrão: 6% de R$ 100,00 (R$ 6,00) mais a taxa fixa de R$ 6,00. Sobra R$ 88,00 antes de frete, impostos, anúncios e comissão de afiliado."}},
+        {"@type":"Question","name":"A taxa fixa do TikTok Shop é por item ou por pedido?","acceptedAnswer":{"@type":"Answer","text":"Por item vendido. Um pedido com 3 itens paga a taxa fixa 3 vezes, além da comissão sobre o preço de cada item."}},
+        {"@type":"Question","name":"O frete e a comissão de afiliado entram nessa taxa?","acceptedAnswer":{"@type":"Answer","text":"Não. A tabela mostra só a tarifa padrão de comissão e taxa por item. Programas opcionais, como o de frete, e a comissão que o vendedor define para afiliados têm custo próprio, com regras na página oficial do Seller Center."}},
+        {"@type":"Question","name":"Com quantas vendas a mensalidade do Moviki sai mais barata que a taxa por venda?","acceptedAnswer":{"@type":"Answer","text":"Depende do preço do item. Com item de R$ 40,00 a taxa padrão é R$ 8,00, e a partir de 9 itens no mês ela passa da mensalidade do Premium (R$ 69,90). Com item de R$ 100,00, a partir de 6 itens. A comparação é só de tarifa: no Moviki quem assiste à live é quem você chama, sem audiência pronta."}},
         {"@type":"Question","name":"A taxa vale sobre o preço cheio ou com desconto?","acceptedAnswer":{"@type":"Answer","text":"Segundo a página oficial, sobre o preço do item depois dos descontos do vendedor. Desconto bancado pela plataforma não entra no cálculo."}},
         {"@type":"Question","name":"O Moviki cobra comissão sobre a venda na live?","acceptedAnswer":{"@type":"Answer","text":"Não. Hoje a taxa do Moviki por venda é 0%: você paga o plano do mês (Premium R$ 69,90 ou Enterprise R$ 129,90). Se um dia houver tarifa, ela será fixa por pedido, nunca porcentagem, com aviso de 30 dias."}},
         {"@type":"Question","name":"Vale a pena vender no TikTok Shop?","acceptedAnswer":{"@type":"Answer","text":"Depende do que a sua loja precisa. A plataforma ajuda a encontrar público novo e cobra tarifa por pedido; a live na própria loja não cobra por venda, mas quem assiste é quem você chama. Muita loja usa os dois. Faça a conta da tarifa com os seus números antes de decidir."}},
