@@ -158,6 +158,14 @@
       "destination": "/guias/tiktok-shop-para-loja-fisica.html"
     },
     {
+      "source": "/guia/calculadora-taxas-live-shop",
+      "destination": "/guias/calculadora-taxas-live-shop.html"
+    },
+    {
+      "source": "/guia/calculadora-taxas-live-shop/embed",
+      "destination": "/guias/calculadora-taxas-embed.html"
+    },
+    {
       "source": "/fundador",
       "destination": "/fundador.html"
     },
@@ -371,7 +379,41 @@
       ]
     },
     {
-      "source": "/(.*)",
+      "source": "/guia/calculadora-taxas-live-shop/embed",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors *"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/dados/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=600, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/((?!guia/calculadora-taxas-live-shop/embed).*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
