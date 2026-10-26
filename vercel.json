@@ -9,6 +9,291 @@
       "source": "/ig",
       "destination": "https://ig.me/m/moviki.oficial?ref=qr",
       "permanent": false
+    },
+    {
+      "source": "/regras-da-live.html",
+      "destination": "/regras-da-live",
+      "permanent": true
+    },
+    {
+      "source": "/criadores.html",
+      "destination": "/criadores",
+      "permanent": true
+    },
+    {
+      "source": "/imprensa.html",
+      "destination": "/imprensa",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop.html",
+      "destination": "/live-shop",
+      "permanent": true
+    },
+    {
+      "source": "/guia-taxas-live-shop.html",
+      "destination": "/guia/taxas-live-shop",
+      "permanent": true
+    },
+    {
+      "source": "/guias/como-fazer-live-de-vendas.html",
+      "destination": "/guia/como-fazer-live-de-vendas",
+      "permanent": true
+    },
+    {
+      "source": "/guias/roteiro-de-live.html",
+      "destination": "/guia/roteiro-de-live",
+      "permanent": true
+    },
+    {
+      "source": "/guias/receber-pix-na-live.html",
+      "destination": "/guia/receber-pix-na-live",
+      "permanent": true
+    },
+    {
+      "source": "/guias/live-sem-seguidores.html",
+      "destination": "/guia/live-sem-seguidores",
+      "permanent": true
+    },
+    {
+      "source": "/guias/como-divulgar-live.html",
+      "destination": "/guia/como-divulgar-live",
+      "permanent": true
+    },
+    {
+      "source": "/guias/melhor-horario-para-live.html",
+      "destination": "/guia/melhor-horario-para-live",
+      "permanent": true
+    },
+    {
+      "source": "/guias/equipamento-para-live.html",
+      "destination": "/guia/equipamento-para-live",
+      "permanent": true
+    },
+    {
+      "source": "/guias/ideias-de-live-de-vendas.html",
+      "destination": "/guia/ideias-de-live-de-vendas",
+      "permanent": true
+    },
+    {
+      "source": "/guias/vender-na-live-do-instagram.html",
+      "destination": "/guia/vender-na-live-do-instagram",
+      "permanent": true
+    },
+    {
+      "source": "/guias/vender-online-sem-loja-virtual.html",
+      "destination": "/guia/vender-online-sem-loja-virtual",
+      "permanent": true
+    },
+    {
+      "source": "/guias/tiktok-shop-para-loja-fisica.html",
+      "destination": "/guia/tiktok-shop-para-loja-fisica",
+      "permanent": true
+    },
+    {
+      "source": "/fundador.html",
+      "destination": "/fundador",
+      "permanent": true
+    },
+    {
+      "source": "/black-friday.html",
+      "destination": "/black-friday",
+      "permanent": true
+    },
+    {
+      "source": "/clientela.html",
+      "destination": "/live-shop/clientela",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/moda.html",
+      "destination": "/live-shop/moda",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/cosmeticos.html",
+      "destination": "/live-shop/cosmeticos",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/perfumaria.html",
+      "destination": "/live-shop/perfumaria",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/semijoias.html",
+      "destination": "/live-shop/semijoias",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/bijuteria.html",
+      "destination": "/live-shop/bijuteria",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/calcados.html",
+      "destination": "/live-shop/calcados",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/suplementos.html",
+      "destination": "/live-shop/suplementos",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/pet.html",
+      "destination": "/live-shop/pet",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/farmacia.html",
+      "destination": "/live-shop/farmacia",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/otica.html",
+      "destination": "/live-shop/otica",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/lingerie.html",
+      "destination": "/live-shop/lingerie",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/moda-infantil.html",
+      "destination": "/live-shop/moda-infantil",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/bebe.html",
+      "destination": "/live-shop/bebe",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/brinquedos.html",
+      "destination": "/live-shop/brinquedos",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/moda-masculina.html",
+      "destination": "/live-shop/moda-masculina",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/moda-fitness.html",
+      "destination": "/live-shop/moda-fitness",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/moda-praia.html",
+      "destination": "/live-shop/moda-praia",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/acessorios-celular.html",
+      "destination": "/live-shop/acessorios-celular",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/eletroportateis.html",
+      "destination": "/live-shop/eletroportateis",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/presentes.html",
+      "destination": "/live-shop/presentes",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/confeitaria.html",
+      "destination": "/live-shop/confeitaria",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/sertanejos.html",
+      "destination": "/live-shop/sertanejos",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/boutique.html",
+      "destination": "/live-shop/boutique",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/brecho.html",
+      "destination": "/live-shop/brecho",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/esportes.html",
+      "destination": "/live-shop/esportes",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/acai.html",
+      "destination": "/live-shop/acai",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/autopecas.html",
+      "destination": "/live-shop/autopecas",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/emporio.html",
+      "destination": "/live-shop/emporio",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/naturais.html",
+      "destination": "/live-shop/naturais",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/utilidades.html",
+      "destination": "/live-shop/utilidades",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/cama-mesa-banho.html",
+      "destination": "/live-shop/cama-mesa-banho",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/acougue.html",
+      "destination": "/live-shop/acougue",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/cabelo.html",
+      "destination": "/live-shop/cabelo",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/chocolateria.html",
+      "destination": "/live-shop/chocolateria",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/festa.html",
+      "destination": "/live-shop/festa",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/floricultura.html",
+      "destination": "/live-shop/floricultura",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/games.html",
+      "destination": "/live-shop/games",
+      "permanent": true
+    },
+    {
+      "source": "/live-shop-ramos/padaria.html",
+      "destination": "/live-shop/padaria",
+      "permanent": true
     }
   ],
   "rewrites": [
