@@ -1,13 +1,13 @@
 {
-  "_leia": "FONTE UNICA das tarifas da calculadora (/guia/calculadora-taxas-live-shop e /embed). Mudou a tarifa oficial? Trocar aqui, a data 'conferido_em' da plataforma e os numeros escritos no HTML da calculadora e do guia de taxas, no MESMO Pull Request. A tarefa agendada 'Moviki - conferencia semanal das taxas' confere as fontes toda segunda. Mais de 60 dias sem conferir: a pagina mostra aviso. Mais de 100 dias: a plataforma sai da conta e aparece em revisao. Tarifa igual: o robo so renova a data quando ela passa de 30 dias (um PR por mes).",
-  "versao": "2026-10-25-calculadora",
+  "_leia": "FONTE UNICA das tarifas da calculadora (/guia/calculadora-taxas-live-shop e /embed). Mudou a tarifa oficial? Trocar aqui, a data 'conferido_em' da plataforma e os numeros escritos no HTML da calculadora e do guia de taxas, no MESMO Pull Request. A tarefa agendada 'Moviki - Conferencia das taxas da calculadora' confere as fontes oficiais toda segunda (no Chrome do computador do dono). Mais de 60 dias sem conferir: a pagina mostra aviso. Mais de 100 dias: a plataforma sai da conta e aparece em revisao. Tarifa igual: o robo so renova a data quando ela passa de 30 dias (um PR por mes).",
+  "versao": "2026-10-26-taxas-conferidas",
   "plataformas": {
     "tiktok": {
       "nome": "TikTok Shop",
-      "conferido_em": "2026-10-22",
+      "conferido_em": "2026-10-26",
       "vigencia": "2026-07-15",
-      "fonte_nome": "TikTok Shop Seller Center Brasil, Tarifa de Comissão da Plataforma (atualizada em 12/06/2026) e guia oficial de 14/08/2026",
-      "fonte_url": "https://seller-br.tiktok.com/",
+      "fonte_nome": "Seller Center do TikTok Shop Brasil, guia oficial [Guia 2026] Comissões e taxas do TikTok Shop explicadas (14/08/2026)",
+      "fonte_url": "https://seller.tiktok.com/br/blog/guia-2026-comiss-es-e-taxas-do-tiktok-shop-explicadas/10025289",
       "faixas": [
         { "abaixo_de": 50, "pct": 10, "fixo": 4 },
         { "abaixo_de": null, "pct": 6, "fixo": 6 }
@@ -20,7 +20,7 @@
     },
     "shopee": {
       "nome": "Shopee",
-      "conferido_em": "2026-10-25",
+      "conferido_em": "2026-10-26",
       "vigencia": "2026-10-01",
       "fonte_nome": "Centro de Educação do Vendedor Shopee BR, Política de Comissão (última atualização em 21/10/2026)",
       "fonte_url": "https://seller.shopee.com.br/edu/article/18483/",
