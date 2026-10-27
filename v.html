@@ -74,8 +74,7 @@
 
   /* ---------- cena 3D ---------- */
   .cena{perspective:1100px;width:min(100%,350px);margin-top:6px;touch-action:pan-y}
-  .incl{transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
-  .incl.segue{transition:transform .12s linear}
+  .incl{transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
   .cracha{position:relative;width:100%;aspect-ratio:54/86;transform-style:preserve-3d;
     transition:transform .8s cubic-bezier(.2,.7,.2,1);cursor:pointer;transform-origin:50% 0}
   .cracha.virado{transform:rotateY(180deg)}
@@ -142,7 +141,7 @@
   .holo::before{content:'';position:absolute;inset:-40% -60%;background:
       linear-gradient(105deg,transparent 35%,rgba(255,255,255,.95) 47%,rgba(255,255,255,0) 58%),
       repeating-linear-gradient(115deg,rgba(0,102,255,.07) 0 6px,rgba(168,85,247,.07) 6px 12px,rgba(18,183,106,.07) 12px 18px);
-    transform:translateX(var(--brilho,-30%));transition:transform .25s ease-out;pointer-events:none}
+    transform:translateX(var(--brilho,-30%));pointer-events:none}
   .holoLinha{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .vivo{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#3d4f66}
   .cracha.ok .vivo{color:#0a5c3a}
@@ -272,7 +271,7 @@
 </div>
 
 <script type="module">
-/* MOVIKI v.html | versao 2026-10-27-crachavivo2
+/* MOVIKI v.html | versao 2026-10-27-semtremido
    (antes: 2026-10-27-crachavivo; 2026-10-12-ramoqr; 2026-09-03-verificacao)
    ---------------------------------------------------------------------------
    A pagina que o COMERCIANTE abre, no celular dele, na frente do parceiro.
@@ -305,7 +304,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-10-27-crachavivo2'; /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
+window.MOVIKI_VERSAO = '2026-10-27-semtremido'; /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
 const app = initializeApp(firebaseConfig);
 /* APP CHECK (03/09/2026): o Firestore esta com o App Check ligado. Sem este
    bloco a pagina para de responder CALADA. try/catch: nunca derruba a pagina. */
@@ -409,37 +408,66 @@ function ligarVida(){
   tic(); setInterval(tic, 1000);
 
   const cena = el('cena'), incl = el('incl'), cracha = el('cracha');
-  /* u e v vao de 0 a 1 (posicao do dedo/inclinacao). Tudo sai daqui:
-     inclinacao do cracha, brilho, faixa holografica e cor do selo. */
-  function aplica(u, v, segue){
-    u = Math.max(0, Math.min(1, u)); v = Math.max(0, Math.min(1, v));
+  /* 27/10 (sem tremido): o celular do Paulo gravou o cracha tremendo. Causa:
+     o giroscopio manda dezenas de leituras por segundo, com ruido, e a
+     "respiracao" automatica brigava com ele a cada 120 ms — duas fontes
+     empurrando o cracha para lugares diferentes. Agora existe UM alvo (dedo,
+     giroscopio OU respiracao, nunca dois ao mesmo tempo) e o cracha desliza
+     ate ele a cada quadro, com amortecimento. O giroscopio passa por filtro,
+     zona morta e parte da posicao em que a pessoa segura o celular. */
+  const alvo = { u:.5, v:.5 }, pos = { u:.5, v:.5 };
+  let fonte = 'resp', ultimoToque = 0, giroBase = null, giroF = null, ultimoGiro = 0, t = 0, vis = true;
+  const lim = x => Math.max(0, Math.min(1, x));
+  function pinta(u, v){
     if (!REDUZ){
-      incl.classList.toggle('segue', !!segue);
-      incl.style.setProperty('--ry', ((u - .5) * 16).toFixed(2) + 'deg');
-      incl.style.setProperty('--rx', ((.5 - v) * 12).toFixed(2) + 'deg');
+      incl.style.setProperty('--ry', ((u - .5) * 12).toFixed(2) + 'deg');
+      incl.style.setProperty('--rx', ((.5 - v) * 9).toFixed(2) + 'deg');
     }
-    document.querySelectorAll('.face').forEach(f => { f.style.setProperty('--gx', (u * 100) + '%'); f.style.setProperty('--gy', (v * 100) + '%'); });
-    document.querySelectorAll('.holo').forEach(h => h.style.setProperty('--brilho', Math.round(u * 80 - 40) + '%'));
-    document.querySelectorAll('.holoSelo').forEach(s => s.style.setProperty('--ang', Math.round((u * 220) + (v * 140)) + 'deg'));
+    document.querySelectorAll('.face').forEach(f => { f.style.setProperty('--gx', (u * 100).toFixed(1) + '%'); f.style.setProperty('--gy', (v * 100).toFixed(1) + '%'); });
+    document.querySelectorAll('.holo').forEach(h => h.style.setProperty('--brilho', (u * 80 - 40).toFixed(1) + '%'));
+    document.querySelectorAll('.holoSelo').forEach(x => x.style.setProperty('--ang', ((u * 220) + (v * 140)).toFixed(1) + 'deg'));
   }
-  let mexeu = 0;
-  function pelo(x, y){ const r = cena.getBoundingClientRect(); mexeu = Date.now(); aplica((x - r.left) / r.width, (y - r.top) / r.height, true); }
-  cena.addEventListener('pointermove', ev => pelo(ev.clientX, ev.clientY));
-  cena.addEventListener('touchmove', ev => { const t = ev.touches[0]; if (t) pelo(t.clientX, t.clientY); }, { passive:true });
-  cena.addEventListener('pointerleave', () => aplica(.5, .5, false));
+  function quadro(){
+    requestAnimationFrame(quadro);
+    if (!vis || document.hidden) return;
+    const agora = Date.now();
+    if (fonte === 'dedo' && agora - ultimoToque > 1800) fonte = (agora - ultimoGiro < 1000) ? 'giro' : 'resp';
+    if (fonte === 'giro' && agora - ultimoGiro > 1000) fonte = 'resp';
+    if (fonte === 'resp' && !REDUZ){ t += 0.006; alvo.u = .5 + Math.sin(t) * .22; alvo.v = .5 + Math.cos(t * .7) * .12; }
+    const k = fonte === 'dedo' ? .18 : .06;
+    const du = alvo.u - pos.u, dv = alvo.v - pos.v;
+    if (Math.abs(du) < .0008 && Math.abs(dv) < .0008) return;   /* parado: nao repinta */
+    pos.u += du * k; pos.v += dv * k;
+    pinta(pos.u, pos.v);
+  }
+  function pelo(x, y){
+    const r = cena.getBoundingClientRect();
+    fonte = 'dedo'; ultimoToque = Date.now();
+    alvo.u = lim((x - r.left) / r.width); alvo.v = lim((y - r.top) / r.height);
+  }
+  cena.addEventListener('pointermove', ev => { if (ev.pointerType === 'mouse') pelo(ev.clientX, ev.clientY); });
+  cena.addEventListener('touchmove', ev => { const tt = ev.touches[0]; if (tt) pelo(tt.clientX, tt.clientY); }, { passive:true });
+  cena.addEventListener('pointerleave', () => { if (fonte === 'dedo'){ alvo.u = .5; alvo.v = .5; ultimoToque = 0; } });
   /* inclinacao do celular, onde o navegador deixa sem pedir permissao (Android) */
   try{
     window.addEventListener('deviceorientation', ev => {
-      if (typeof ev.gamma !== 'number' || typeof ev.beta !== 'number') return;
-      if (Date.now() - mexeu < 1500) return;
-      aplica((ev.gamma + 25) / 50, (ev.beta - 20) / 50, true);
+      if (REDUZ || typeof ev.gamma !== 'number' || typeof ev.beta !== 'number') return;
+      const g = { a: ev.gamma, b: ev.beta };
+      if (!giroBase){ giroBase = g; giroF = { a: g.a, b: g.b }; return; }
+      giroF.a += (g.a - giroF.a) * .12; giroF.b += (g.b - giroF.b) * .12;       /* filtro: tira o ruido */
+      giroBase.a += (giroF.a - giroBase.a) * .004; giroBase.b += (giroF.b - giroBase.b) * .004;   /* a posicao de segurar vira o centro, devagar */
+      let da = giroF.a - giroBase.a, db = giroF.b - giroBase.b;
+      const morta = 1.5;                                                         /* zona morta: mao parada nao mexe nada */
+      da = Math.abs(da) < morta ? 0 : da - Math.sign(da) * morta;
+      db = Math.abs(db) < morta ? 0 : db - Math.sign(db) * morta;
+      ultimoGiro = Date.now();
+      if (fonte === 'dedo') return;
+      fonte = 'giro';
+      alvo.u = lim(.5 + da / 40); alvo.v = lim(.5 + db / 40);
     });
   }catch(e){}
-  /* parado, o cracha respira devagar; com "reduzir movimento", so o relogio prova a vida */
-  if (!REDUZ){
-    let t = 0;
-    setInterval(() => { if (Date.now() - mexeu < 2500) return; t += 0.04; aplica(.5 + Math.sin(t) * .32, .5 + Math.cos(t * .7) * .18, false); }, 120);
-  }
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { vis = !!(es[0] && es[0].isIntersecting); }).observe(cena);
+  if (REDUZ) pinta(.5, .5); else requestAnimationFrame(quadro);
 
   function virar(){ cracha.classList.toggle('virado'); cracha.setAttribute('aria-label', cracha.classList.contains('virado') ? 'Verso do crachá. Toque para ver a frente.' : 'Crachá do parceiro. Toque para ver o verso.');
     try{ if(window.mvEv) mvEv('cta_click', { cta:'cracha_virar', pagina:'verificacao' }); }catch(e){} }
