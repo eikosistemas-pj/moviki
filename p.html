@@ -111,8 +111,7 @@
 
   /* topo */
   .topo{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
-  .marca{font-weight:800;font-size:22px}
-  .marca b{color:var(--ciano)}
+  .marca img{display:block;height:32px;width:auto}
   .topoLink{font-size:13.5px;color:var(--suave);border-bottom:1px solid rgba(159,178,198,.3)}
 
   /* HERO */
@@ -313,7 +312,7 @@
 <div id="pagina" class="escondido">
 
   <header class="wrap topo">
-    <div class="marca">mo<b>viki</b></div>
+    <div class="marca"><img src="/logo.png" width="560" height="192" alt="Moviki"></div>
     <a class="topoLink" id="topoCracha" href="#">Conferir o crachá</a>
   </header>
 
@@ -520,7 +519,7 @@ async function iniciar(){
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   });
-  window.MOVIKI_VERSAO = '2026-10-27-indicacao2';
+  window.MOVIKI_VERSAO = '2026-10-27-indicacao3'; /* 27/10: logo oficial no topo */
   try { initializeAppCheck(app, { provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'), isTokenAutoRefreshEnabled: true }); }
   catch (e) { console.error('App Check:', e); }
   let d = null;
