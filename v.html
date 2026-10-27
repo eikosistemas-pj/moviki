@@ -82,6 +82,16 @@
     18%{opacity:1} 45%{transform:rotate(3.6deg)} 70%{transform:rotate(-1.6deg)} 100%{transform:rotate(0)}}
   .face{position:absolute;inset:0;border-radius:22px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
     box-shadow:0 40px 70px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.5) inset}
+  /* 27/10 (pedido do Paulo): moldura dourada, metal escovado. O reflexo do
+     ouro anda com o dedo e com a inclinacao (--gx), como o resto do cracha. */
+  .face::after{content:'';position:absolute;inset:0;border-radius:inherit;padding:4px;pointer-events:none;z-index:9;
+    background:linear-gradient(135deg,#8a6116 0%,#d9b157 18%,#fff1bf 32%,#c99a3a 46%,#7d5512 60%,#e8c56e 76%,#fff3c9 88%,#a87822 100%);
+    background-size:220% 220%;background-position:var(--gx,30%) var(--gy,20%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+  .face::before{content:'';position:absolute;inset:6px;border-radius:17px;pointer-events:none;z-index:9;border:1px solid rgba(201,154,58,.45)}
+  .cracha.ruim .face::after{background:linear-gradient(135deg,#7d8794,#d5dbe3 30%,#8f99a6 55%,#e3e8ee 80%,#7d8794)}
+  .cracha.ruim .face::before{border-color:rgba(125,135,148,.4)}
   .frente{background:var(--perola);color:var(--tinta);display:flex;flex-direction:column}
   .verso{transform:rotateY(180deg);background:linear-gradient(170deg,#0e2546,#061328);color:var(--claro);padding:32px 22px 18px;display:flex;flex-direction:column}
   /* fundo de seguranca: linhas finas onduladas, como em cedula */
@@ -270,7 +280,7 @@
 </div>
 
 <script type="module">
-/* MOVIKI v.html | versao 2026-10-27-logo
+/* MOVIKI v.html | versao 2026-10-27-borda
    (antes: 2026-10-27-crachavivo; 2026-10-12-ramoqr; 2026-09-03-verificacao)
    ---------------------------------------------------------------------------
    A pagina que o COMERCIANTE abre, no celular dele, na frente do parceiro.
@@ -303,7 +313,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-10-27-logo'; /* 27/10: logo oficial (logo.png, pino + moviki) no topo e na faixa do cracha, no lugar do texto. */ /* antes: 2026-10-27-semtremido */ /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
+window.MOVIKI_VERSAO = '2026-10-27-borda'; /* 27/10: moldura dourada com reflexo que anda com o dedo/inclinacao; cinza no nao confirmado. */ /* antes: 2026-10-27-logo */ /* 27/10: logo oficial (logo.png, pino + moviki) no topo e na faixa do cracha, no lugar do texto. */ /* antes: 2026-10-27-semtremido */ /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
 const app = initializeApp(firebaseConfig);
 /* APP CHECK (03/09/2026): o Firestore esta com o App Check ligado. Sem este
    bloco a pagina para de responder CALADA. try/catch: nunca derruba a pagina. */
