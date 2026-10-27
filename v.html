@@ -54,8 +54,7 @@
   .wrap{max-width:540px;margin:0 auto;padding:0 18px calc(48px + env(safe-area-inset-bottom))}
 
   .topo{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 0}
-  .marca{font-weight:800;font-size:21px;letter-spacing:-.01em}
-  .marca b{color:var(--ciano)}
+  .marca img{display:block;height:30px;width:auto}
   .topoTxt{font-size:12.5px;color:var(--suave)}
 
   /* ---------- cordao e presilha ---------- */
@@ -103,8 +102,8 @@
   .faixaTopo{position:relative;height:96px;flex:0 0 96px;overflow:hidden;
     background:linear-gradient(135deg,#071a36 0%,#0a2c5c 55%,#0057d9 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:0 18px 13px}
   .faixaTopo .seg{opacity:.35}
-  .faixaTopo .mk{position:relative;font-weight:800;font-size:21px;color:#fff;letter-spacing:-.01em}
-  .faixaTopo .mk b{color:var(--ciano)}
+  .faixaTopo .mk{position:relative;display:block}
+  .faixaTopo .mk img{display:block;height:30px;width:auto}
   .faixaTopo .papel{position:relative;font-size:11.5px;font-weight:600;color:#cfe3ff;text-align:right;line-height:1.3}
 
   .corpo{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;padding:0 20px;text-align:center}
@@ -234,7 +233,7 @@
 
 <div class="wrap">
   <div class="topo">
-    <div class="marca">mo<b>viki</b></div>
+    <div class="marca"><img src="/logo.png" width="560" height="192" alt="Moviki"></div>
     <div class="topoTxt">Crachá do parceiro</div>
   </div>
 
@@ -271,7 +270,7 @@
 </div>
 
 <script type="module">
-/* MOVIKI v.html | versao 2026-10-27-semtremido
+/* MOVIKI v.html | versao 2026-10-27-logo
    (antes: 2026-10-27-crachavivo; 2026-10-12-ramoqr; 2026-09-03-verificacao)
    ---------------------------------------------------------------------------
    A pagina que o COMERCIANTE abre, no celular dele, na frente do parceiro.
@@ -304,7 +303,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-10-27-semtremido'; /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
+window.MOVIKI_VERSAO = '2026-10-27-logo'; /* 27/10: logo oficial (logo.png, pino + moviki) no topo e na faixa do cracha, no lugar do texto. */ /* antes: 2026-10-27-semtremido */ /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
 const app = initializeApp(firebaseConfig);
 /* APP CHECK (03/09/2026): o Firestore esta com o App Check ligado. Sem este
    bloco a pagina para de responder CALADA. try/catch: nunca derruba a pagina. */
@@ -525,7 +524,7 @@ function pintarAutorizado(d, apelido){
   el('frente').innerHTML =
     fundoSeguranca('#b9cde6', 46, 560) +
     '<div class="furo"></div>' +
-    '<div class="faixaTopo">' + fundoSeguranca('#4f8fe6', 14, 96) + '<span class="mk">mo<b>viki</b></span><span class="papel">Programa de<br>Parceiros</span></div>' +
+    '<div class="faixaTopo">' + fundoSeguranca('#4f8fe6', 14, 96) + '<span class="mk"><img src="/logo.png" width="560" height="192" alt="Moviki"></span><span class="papel">Programa de<br>Parceiros</span></div>' +
     '<div class="corpo">' +
       '<div class="fotoCaixa"><div class="foto" id="foto">' + esc(iniciais(nome)) + '</div>' +
         '<span class="holoSelo" aria-hidden="true"><i><span class="gira"></span>' + I.check + '</i></span></div>' +
@@ -616,7 +615,7 @@ function pintarNegado(apelido, existe, falhaRede){
   el('frente').innerHTML =
     fundoSeguranca('#c6ced8', 46, 560) +
     '<div class="furo"></div>' +
-    '<div class="faixaTopo"><span class="mk">mo<b>viki</b></span><span class="papel">Programa de<br>Parceiros</span></div>' +
+    '<div class="faixaTopo"><span class="mk"><img src="/logo.png" width="560" height="192" alt="Moviki"></span><span class="papel">Programa de<br>Parceiros</span></div>' +
     '<div class="carimbo">' + (falhaRede ? 'SEM CONEXÃO' : 'NÃO CONFIRMADO') + '</div>' +
     '<div class="corpo">' +
       '<div class="fotoCaixa"><div class="foto" style="background:#c9d0da">?</div></div>' +
