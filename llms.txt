@@ -1,0 +1,48 @@
+# Moviki
+
+> Moviki (Moviki Live Shop) é uma plataforma brasileira de venda ao vivo (live shop) para lojas de shopping, de rua e de bairro. O lojista transmite pela câmera do celular, o cliente vê o produto com o preço na tela, pergunta no chat e compra na hora. O pedido cai na Central de Pedidos do próprio Moviki e o Pix vai direto para a conta do lojista, sem comissão por venda. Empresa: EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA, CNPJ 68.289.841/0001-02, Curitiba (PR).
+
+Versão: 2026-10-27-redes-posicionamento
+
+## O que o Moviki faz
+
+- Live shop pelo celular: a loja transmite ao vivo, com produto e preço na tela, chat e botão de compra.
+- Pix direto na conta do lojista. O Moviki cobra mensalidade fixa e não fica com porcentagem das vendas.
+- Central de Pedidos própria: cada pedido tem número, etapas (separando, pronto, saiu para entrega, entregue) e comanda de separação.
+- Estoque por produto, com a peça reservada enquanto o Pix não é pago.
+- Entrega por bairro com taxa definida pelo lojista, retirada na loja e entrega grátis acima de um valor.
+- Reserva para pagar na loja e agendamento de serviço com sinal no Pix (salão, barbearia, estética).
+- Ensaio da live: o lojista testa a transmissão antes de abrir para o público.
+- Lista VIP: o cliente pede para ser avisado e recebe o aviso quando a loja entra ao vivo.
+- Vitrine online da loja: catálogo com tamanhos e cores, horário, perguntas frequentes e redes sociais.
+- Localização no mapa, inclusive para quem vende em movimento (feira, food truck, loja móvel).
+- Teste grátis de 30 dias, sem cartão.
+
+## Planos (mensal)
+
+- Básico: grátis.
+- Pró: R$ 39,90 (anual R$ 399,00).
+- Premium: R$ 69,90 (anual R$ 699,00). A live começa no Premium.
+- Enterprise: R$ 129,90. Inclui Pix dentro da live e as ferramentas de venda da transmissão.
+
+## Programa de parceiros
+
+Qualquer pessoa pode indicar lojistas para o Moviki e receber 15% de cada mensalidade paga pelo lojista indicado, enquanto ele continuar cliente. É grátis participar. Não há ganho garantido: a comissão depende de lojistas que assinem pelo link do parceiro.
+
+## Páginas principais
+
+- [Início](https://www.moviki.com.br/): o que é o Moviki e os planos.
+- [Live shop para lojas](https://www.moviki.com.br/live-shop): como funciona a venda ao vivo.
+- [Live funcionando](https://www.moviki.com.br/aovivo): exemplos de live por ramo.
+- [Para comerciantes](https://www.moviki.com.br/comerciantes.html): live, catálogo e pedidos.
+- [Premium](https://www.moviki.com.br/premium.html) e [Enterprise](https://www.moviki.com.br/enterprise.html): recursos de cada plano.
+- [Programa de parceiros](https://www.moviki.com.br/parceiros-ganhos.html) e [regulamento](https://www.moviki.com.br/regulamento.html).
+- [Calculadora de taxas de live shop](https://www.moviki.com.br/guia/calculadora-taxas-live-shop): compara a tarifa por venda de outras plataformas com a mensalidade fixa.
+- [Guias de live de vendas](https://www.moviki.com.br/guia/como-fazer-live-de-vendas).
+- [Imprensa](https://www.moviki.com.br/imprensa).
+- [Termos](https://www.moviki.com.br/termos.html) e [Privacidade](https://www.moviki.com.br/privacidade.html).
+
+## Contato
+
+- Suporte: suporte@moviki.com.br · WhatsApp (41) 2018-6848.
+- Instagram: https://www.instagram.com/movikiliveshop/ · YouTube: https://www.youtube.com/@movikiliveshop
