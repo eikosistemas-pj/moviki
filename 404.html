@@ -1363,7 +1363,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   };
-  window.MOVIKI_VERSAO='2026-10-20-lojaramo';   /* 20/10 (P86): rodape da loja com link para /live-shop/<ramo> do segmento (ou /live-shop). */ /* antes: 2026-10-20-agenda */   /* 20/10 (P85 Fase 2b, tela 9): com checkout_publico.agenda.ativo, botao Agendar horario no topo: servico -> dia (fechado pelo horario por dia) -> horario livre (robo agenda_livres) -> dados -> Pix do sinal (mesma tela do Pix) ou confirmado sem sinal; Desmarcar ate 2 h antes (agenda_desmarcar). Horario guardado no aparelho em mv_ag_{uid} ate o dia. */ /* antes: 2026-10-20-reserva */   /* 20/10 (P85 Fase 2b): com checkout_publico.reserva, a retirada ganha "Como voce quer pagar": Pix agora ou "Reservar e pagar na loja" (2 h). A reserva vai como pagamento:'reserva' no compra_criar; a tela mostra ate que horas e onde buscar e acompanha o status. */ /* antes: 2026-10-19-combina */   /* 19/10 (P85 Fase 2b): COMBINA COM — depois de por um item na sacola aparece uma faixa com ate 3 produtos de OUTRAS categorias (com foto primeiro, sem esgotado, sem o que ja esta na sacola) e o pedido mostra "Aproveite e leve". Sem desconto (preco continua o do cardapio, quem cobra e o robo). GA4 combina_visto / combina_add. */ /* antes: 2026-10-19-capavideo */   /* 19/10 (P85 Fase 2b): negocios.capaVideo (regra v37, so Storage do Moviki na pasta do dono) toca sem som em loop no topo, por cima da foto de capa, com o mesmo direito das fotos (Premium, Enterprise e teste). Nao toca com economia de dados ou movimento reduzido; so baixa depois que a pagina abriu. CSP: media-src do Storage. */ /* antes: 2026-10-19-variacao */   /* 19/10 (P85 Fase 2b): produto com variacoes (negocios.cardapio[].produtos[].variacoes) abre a escolha de tamanho/cor antes da sacola; cada escolha e uma linha da sacola; o teto de quantidade e do produto somado; o pedido manda itens[].escolha e o robo confere (erro 'opcao'). */ /* antes: 2026-10-19-gratis */   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X (checkout_publico.gratisAcima; o robo zera a taxa) com "faltam R$ Y" na barra da sacola e no pedido; "Adicionar a tela inicial" no Mais, com manifest da loja (/api/manifest). */ /* antes: 2026-10-19-vitrine2 */   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
+  window.MOVIKI_VERSAO='2026-10-28-cartao';   /* 28/10: cartao de credito na sacola (Pix agora | Cartao de credito | Reservar), parcelas sem juros, pagamento na pagina segura do Asaas da loja. */ /* antes: 2026-10-20-lojaramo */   /* 20/10 (P86): rodape da loja com link para /live-shop/<ramo> do segmento (ou /live-shop). */ /* antes: 2026-10-20-agenda */   /* 20/10 (P85 Fase 2b, tela 9): com checkout_publico.agenda.ativo, botao Agendar horario no topo: servico -> dia (fechado pelo horario por dia) -> horario livre (robo agenda_livres) -> dados -> Pix do sinal (mesma tela do Pix) ou confirmado sem sinal; Desmarcar ate 2 h antes (agenda_desmarcar). Horario guardado no aparelho em mv_ag_{uid} ate o dia. */ /* antes: 2026-10-20-reserva */   /* 20/10 (P85 Fase 2b): com checkout_publico.reserva, a retirada ganha "Como voce quer pagar": Pix agora ou "Reservar e pagar na loja" (2 h). A reserva vai como pagamento:'reserva' no compra_criar; a tela mostra ate que horas e onde buscar e acompanha o status. */ /* antes: 2026-10-19-combina */   /* 19/10 (P85 Fase 2b): COMBINA COM — depois de por um item na sacola aparece uma faixa com ate 3 produtos de OUTRAS categorias (com foto primeiro, sem esgotado, sem o que ja esta na sacola) e o pedido mostra "Aproveite e leve". Sem desconto (preco continua o do cardapio, quem cobra e o robo). GA4 combina_visto / combina_add. */ /* antes: 2026-10-19-capavideo */   /* 19/10 (P85 Fase 2b): negocios.capaVideo (regra v37, so Storage do Moviki na pasta do dono) toca sem som em loop no topo, por cima da foto de capa, com o mesmo direito das fotos (Premium, Enterprise e teste). Nao toca com economia de dados ou movimento reduzido; so baixa depois que a pagina abriu. CSP: media-src do Storage. */ /* antes: 2026-10-19-variacao */   /* 19/10 (P85 Fase 2b): produto com variacoes (negocios.cardapio[].produtos[].variacoes) abre a escolha de tamanho/cor antes da sacola; cada escolha e uma linha da sacola; o teto de quantidade e do produto somado; o pedido manda itens[].escolha e o robo confere (erro 'opcao'). */ /* antes: 2026-10-19-gratis */   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X (checkout_publico.gratisAcima; o robo zera a taxa) com "faltam R$ Y" na barra da sacola e no pedido; "Adicionar a tela inicial" no Mais, com manifest da loja (/api/manifest). */ /* antes: 2026-10-19-vitrine2 */   /* 19/10 (P85 Fase 2a): horarios, agendaLives, faq e redes (regra v36) + botao Loja online do pacote 2026-10-16-lojaonline (campo lojaOnline, regra v35), que ficou sem merge. */ /* antes: 2026-10-19-claro */   /* 19/10 (P85 Fase 1): pagina clara com a cor da loja; escuro so se negocios/{uid}.tema==='escuro'. */ /* antes: 2026-10-17-vocab */   /* 17/10: Cardapio so para comida e bebida; demais ramos veem Catalogo com icone do ramo na barra de baixo (vocab.js); subtitulo com o nome do ramo, nao o id. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao; aparece tambem no teste gratis. */ /* antes: 2026-10-06-avalrobo */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista) passa uid e pecas ao mventrega.js. */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP). */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */   /* 03/10 (P70 etapa 2): opcao Enviar para outra cidade no pedido do cardapio. */ /* antes: 2026-10-01-conforto */   /* antes: 2026-09-30-estoque. 01/10 (P65 lote 3): WhatsApp unico botao cheio, Como chegar de contorno, Fechado em cinza, icones de informacao numa cor, promocao e evento sem fundo colorido */
   const app=initializeApp(firebaseConfig);
   /* ---- App Check — 03/09/2026 ----
      Prova ao Firebase que quem esta falando e ESTA pagina, num navegador de
@@ -2601,7 +2601,8 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
      ===================================================================== */
   const MV_ROBO='https://moviki-robo.vercel.app';
   let COMPRA={ativo:false,modo:'',minimo:0,entrega:'retirada',bairros:[],minimoEntrega:0,prazo:'',cidadeEntrega:'',retirada:''};
-  let PD_PAG='pix';   /* 2026-10-20-reserva: 'pix' | 'reserva' */
+  let PD_PAG='pix';   /* 2026-10-20-reserva: 'pix' | 'reserva' | 'cartao' (2026-10-28-cartao) */
+  let PD_PARC=1;   /* 2026-10-28-cartao: parcelas escolhidas */
   let SACOLA=[], PEDIDO=null, PD_TIMER=null, PD_COMPROV=null, PD_ENT='retirada', PD_ENVIANDO=false, PD_FRETE=null, PD_FRETE_ENV=null;
   /* Tudo que ja e pagamento confirmado. Desde 26/09/2026 o lojista move o
      pedido por etapas depois do Pix; a tela nao pode esperar so por 'pago'. */
@@ -2631,6 +2632,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
         minimoEntrega:Number((d&&d.minimoEntrega)||0)||0,
         gratisAcima:Number((d&&d.gratisAcima)||0)||0,   /* 2026-10-19-gratis */
         reserva:!!(d&&d.reserva===true),   /* 2026-10-20-reserva */
+        cartao:(d&&d.cartao&&d.cartao.ativo===true)?{max:Math.max(1,Math.min(12,Number(d.cartao.maxParcelas)||1)),min:Number(d.cartao.parcelaMin)||5}:null,   /* 2026-10-28-cartao */
         agenda:(d&&d.agenda&&typeof d.agenda==='object')?d.agenda:null,   /* 2026-10-20-agenda */
         prazo:String((d&&d.prazo)||''),
         cidadeEntrega:String((d&&d.cidadeEntrega)||''),
@@ -2857,21 +2859,27 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       h+='<div style="font-size:12px;color:var(--mv-txt-3);line-height:1.5">A entrega e o envio são feitos pelo próprio negócio. O Moviki não faz entrega.</div>';
       h+='</div>';
     }
-    /* 2026-10-20-reserva: so na retirada, so com a opcao ligada pelo lojista */
+    /* 2026-10-20-reserva: so na retirada, so com a opcao ligada pelo lojista.
+       2026-10-28-cartao: cartao vale para retirada, entrega e envio. */
     const podeReservar=!!(COMPRA.reserva&&podeRetirar);
-    if(!podeReservar)PD_PAG='pix';
-    if(podeReservar){
-      h+='<div class="pdBloco" id="pdPagBox" style="'+(PD_ENT==='retirada'?'':'display:none')+'"><h4>Como você quer pagar</h4><div class="pdEnt">'+
+    const podeCartao=!!COMPRA.cartao;
+    if(!podeReservar&&PD_PAG==='reserva')PD_PAG='pix';
+    if(!podeCartao&&PD_PAG==='cartao')PD_PAG='pix';
+    if(podeReservar||podeCartao){
+      const mostraBox=podeCartao||PD_ENT==='retirada';
+      h+='<div class="pdBloco" id="pdPagBox" style="'+(mostraBox?'':'display:none')+'"><h4>Como você quer pagar</h4><div class="pdEnt">'+
         '<button type="button" id="pdPagPix" class="'+(PD_PAG==='pix'?'on':'')+'" onclick="mvPagamento(\'pix\')">Pix agora</button>'+
-        '<button type="button" id="pdPagRes" class="'+(PD_PAG==='reserva'?'on':'')+'" onclick="mvPagamento(\'reserva\')">Reservar e pagar na loja</button></div>'+
-        '<div id="pdPagInfo" style="font-size:12.5px;color:var(--mv-txt-2);line-height:1.5;margin-top:10px">'+(PD_PAG==='reserva'?'A loja separa para você por <b>2 horas</b>. Você busca e paga lá — Pix, cartão ou dinheiro.':'Você paga agora e busca quando estiver pronto.')+'</div></div>';
+        (podeCartao?'<button type="button" id="pdPagCar" class="'+(PD_PAG==='cartao'?'on':'')+'" onclick="mvPagamento(\'cartao\')">Cartão de crédito</button>':'')+
+        (podeReservar?'<button type="button" id="pdPagRes" class="'+(PD_PAG==='reserva'?'on':'')+'" style="'+(PD_ENT==='retirada'?'':'display:none')+'" onclick="mvPagamento(\'reserva\')">Reservar e pagar na loja</button>':'')+'</div>'+
+        (podeCartao?'<div class="pdCampo" id="pdParcBox" style="margin-top:11px;'+(PD_PAG==='cartao'?'':'display:none')+'"><label for="pdParc">Parcelas</label><select id="pdParc" onchange="mvParcelas(this.value)"></select></div>':'')+
+        '<div id="pdPagInfo" style="font-size:12.5px;color:var(--mv-txt-2);line-height:1.5;margin-top:10px">'+pdPagInfo()+'</div></div>';
     }
 
     h+='<div class="pdBloco"><label class="pdAceite"><input type="checkbox" id="pdAceite">'+
        '<span>Concordo que este pedido é feito direto com <b>'+esc((dadosNeg&&dadosNeg.nome)||'o negócio')+'</b>, que é quem vende, cobra e entrega. '+
        'Autorizo o uso do meu nome, WhatsApp e CPF para identificar este pedido.</span></label></div>';
 
-    h+='<button class="pdEnviar" type="button" id="pdEnviar" onclick="enviarPedido()"'+(falta?' disabled':'')+'>'+(PD_PAG==='reserva'&&PD_ENT==='retirada'?'Reservar por 2 horas':'Gerar o Pix')+'</button>';
+    h+='<button class="pdEnviar" type="button" id="pdEnviar" onclick="enviarPedido()"'+(falta?' disabled':'')+'>'+pdRotEnviar()+'</button>';
     h+='<div class="pdAviso" id="pdAviso"></div>';
 
     const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
@@ -2890,7 +2898,24 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(lin)lin.style.display=(frAt!=null)?'':'none';
     if(val)val.textContent=fr>0?fmtReal(fr):'grátis';
     if(tv)tv.textContent=fmtReal(tot+fr);
+    pintarParcelas(tot+fr);   /* 2026-10-28-cartao */
   }
+  /* 2026-10-28-cartao: parcelas que cabem no total (cada uma de pelo menos R$ 5). */
+  function pintarParcelas(total){
+    const s=el('pdParc'); if(!s||!COMPRA.cartao)return;
+    const max=Math.max(1,Math.min(COMPRA.cartao.max,Math.floor(total/(COMPRA.cartao.min||5))||1));
+    if(PD_PARC>max)PD_PARC=max;
+    let o='';
+    for(let i=1;i<=max;i++)o+='<option value="'+i+'"'+(i===PD_PARC?' selected':'')+'>'+(i===1?'À vista · '+fmtReal(total):i+'x de '+fmtReal(Math.floor(total/i*100)/100)+' sem juros')+'</option>';
+    s.innerHTML=o;
+  }
+  window.mvParcelas=function(v){ PD_PARC=Math.max(1,parseInt(v,10)||1); ev('parcelas_escolha',{n:PD_PARC}); };
+  function pdPagInfo(){
+    if(PD_PAG==='reserva')return 'A loja separa para você por <b>2 horas</b>. Você busca e paga lá — Pix, cartão ou dinheiro.';
+    if(PD_PAG==='cartao')return 'Você paga na <b>página segura do Asaas</b>, que recebe pela loja. Os dados do cartão não passam pelo Moviki.';
+    return 'Você paga agora e busca quando estiver pronto.';
+  }
+  function pdRotEnviar(){ return (PD_PAG==='reserva'&&PD_ENT==='retirada'&&COMPRA.reserva)?'Reservar por 2 horas':(PD_PAG==='cartao'&&COMPRA.cartao?'Pagar com cartão':'Gerar o Pix'); }
   window.mvEntrega=function(t){
     PD_ENT=t;
     const r=el('pdBtnRet'), e=el('pdBtnEnt'), cx=el('pdEndBox'), ri=el('pdRetInfo'), v=el('pdBtnEnv'), vx=el('pdEnvBox');
@@ -2900,20 +2925,24 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(cx)cx.style.display=(t==='entrega')?'':'none';
     if(vx)vx.style.display=(t==='envio')?'':'none';
     if(ri)ri.style.display=(t==='retirada')?'':'none';
-    const pb=el('pdPagBox'); if(pb)pb.style.display=(t==='retirada')?'':'none';   /* 2026-10-20-reserva */
+    if(t!=='retirada'&&PD_PAG==='reserva')mvPagamento('pix');
+    const pb=el('pdPagBox'); if(pb)pb.style.display=(t==='retirada'||COMPRA.cartao)?'':'none';   /* 2026-10-20-reserva / 2026-10-28-cartao */
+    const pr=el('pdPagRes'); if(pr)pr.style.display=(t==='retirada')?'':'none';
     pintarBotaoEnviar();
     pintarTotalPedido();
   };
   /* 2026-10-20-reserva */
   window.mvPagamento=function(t){
-    PD_PAG=(t==='reserva')?'reserva':'pix';
-    const a=el('pdPagPix'), b=el('pdPagRes'), i=el('pdPagInfo');
-    if(a)a.classList.toggle('on',PD_PAG==='pix'); if(b)b.classList.toggle('on',PD_PAG==='reserva');
-    if(i)i.innerHTML=PD_PAG==='reserva'?'A loja separa para você por <b>2 horas</b>. Você busca e paga lá — Pix, cartão ou dinheiro.':'Você paga agora e busca quando estiver pronto.';
+    PD_PAG=(t==='reserva')?'reserva':((t==='cartao'&&COMPRA.cartao)?'cartao':'pix');
+    const a=el('pdPagPix'), b=el('pdPagRes'), c=el('pdPagCar'), i=el('pdPagInfo'), pc=el('pdParcBox');
+    if(a)a.classList.toggle('on',PD_PAG==='pix'); if(b)b.classList.toggle('on',PD_PAG==='reserva'); if(c)c.classList.toggle('on',PD_PAG==='cartao');
+    if(pc)pc.style.display=PD_PAG==='cartao'?'':'none';
+    if(i)i.innerHTML=pdPagInfo();
     pintarBotaoEnviar();
+    pintarTotalPedido();
     ev('pagamento_escolha',{tipo:PD_PAG});
   };
-  function pintarBotaoEnviar(){ const b=el('pdEnviar'); if(b&&!PD_ENVIANDO)b.textContent=(PD_PAG==='reserva'&&PD_ENT==='retirada'&&COMPRA.reserva)?'Reservar por 2 horas':'Gerar o Pix'; }
+  function pintarBotaoEnviar(){ const b=el('pdEnviar'); if(b&&!PD_ENVIANDO)b.textContent=pdRotEnviar(); }
 
   /* 04/10 (P70 etapa 6): pecas da sacola, para o frete automatico cotar o pacote. */
   function pdItensEnvio(){return (SACOLA||[]).map(function(x){return {sku:x.sku||'',nome:x.nome,qtd:Number(x.qtd)||1};});}
@@ -2937,6 +2966,10 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       reserva_ja:'Você já tem uma reserva aberta nesta loja'+(extra&&extra.ate?' até as '+horaDe(extra.ate):'')+'. Busque essa primeiro ou pague no Pix.',
       reserva_indisponivel:'Esta loja não está aceitando reserva agora. Escolha pagar no Pix.',
       reserva_retirada:'A reserva vale só para retirar na loja.',
+      cartao_indisponivel:'Esta loja não está aceitando cartão agora. Escolha pagar no Pix.',   /* 2026-10-28-cartao */
+      parcelas:'Escolha de novo em quantas vezes'+(extra&&extra.max?' (até '+Number(extra.max)+'x)':'')+'.',
+      parcela_minima:'Cada parcela precisa ter pelo menos '+fmtReal((extra&&extra.minimo)||5)+'. Escolha menos parcelas.',
+      asaas:(extra&&extra.mensagem)?String(extra.mensagem).slice(0,160):'O pagamento não abriu agora. Tente de novo.',
       opcao:'Escolha '+String((extra&&extra.grupo)||'a opção').toLowerCase()+(extra&&extra.nome?' de “'+extra.nome+'”':'')+' de novo: tire o item da sacola e adicione outra vez.',
       minimo:'Pedido mínimo de '+fmtReal((extra&&extra.minimo)||COMPRA.minimo)+' neste negócio.',
       freio:'Muitos pedidos ao mesmo tempo. Tente de novo em alguns minutos.',
@@ -2995,13 +3028,15 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
 
     const btn=el('pdEnviar'); const rot=btn.textContent;
     const reservar=(PD_PAG==='reserva'&&PD_ENT==='retirada'&&COMPRA.reserva);   /* 2026-10-20-reserva */
-    PD_ENVIANDO=true; btn.disabled=true; btn.textContent=reservar?'Reservando...':'Gerando...';
+    const noCartao=(PD_PAG==='cartao'&&!!COMPRA.cartao);   /* 2026-10-28-cartao */
+    PD_ENVIANDO=true; btn.disabled=true; btn.textContent=reservar?'Reservando...':(noCartao?'Abrindo o cartão...':'Gerando...');
     try{
       const {j}=await apiPedido({
         acao:'compra_criar', origem:'cardapio', lojistaUid:negocioUid,
         nome:nome, whatsapp:wpp, cpf:cpf,
         entrega:PD_ENT, detalhe:end, aceite:true,
         ...(reservar?{pagamento:'reserva'}:{}),
+        ...(noCartao?{pagamento:'cartao',parcelas:PD_PARC}:{}),
         ...(endObj&&(PD_ENT==='entrega'||PD_ENT==='envio')?{endereco:endObj}:{}),
         itens:SACOLA.map(x=>(x.esc?{sku:x.sku,nome:x.nome,qtd:x.qtd,escolha:x.esc}:{sku:x.sku,nome:x.nome,qtd:x.qtd}))
       });
@@ -3009,7 +3044,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       PEDIDO=j; PD_COMPROV=null;
       guardarPedido(j.pedidoId,j.chave);
       ev('pedido_criado',{modo:j.modo||''}); mvContar('cardapio');
-      if(j.modo==='reserva')telaReserva(); else telaPagamento();
+      if(j.modo==='reserva')telaReserva(); else if(j.modo==='cartao')telaCartao(); else telaPagamento();
     }catch(e){
       av.textContent='Sem conexão com o servidor. Tente de novo.';
     }
@@ -3206,6 +3241,29 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     }catch(_){ const st=el('pgStatus'); if(st){st.className='pgStatus ruim';st.textContent='Sem conexão. Tente de novo.';} }
   };
 
+  /* ---------------- cartao (2026-10-28-cartao) ----------------
+     O cartao e digitado na fatura do Asaas, que recebe pela loja. O link so
+     abre por toque (o navegador bloqueia janela aberta sozinha depois da
+     espera). Esta tela fica acompanhando e avisa quando o cartao for aprovado. */
+  function urlCartao(u){ u=String(u||''); return /^https:\/\/[a-z0-9.-]*asaas\.com\//i.test(u)?u:''; }
+  function telaCartao(){
+    if(!PEDIDO)return;
+    el('pedidoTitulo').textContent='Pague com cartão';
+    const c=PEDIDO.cartao||{}, n=Number(c.parcelas)||1, u=urlCartao(c.url);
+    let h=passos(2)+
+      '<div class="pgTot"><div class="v">'+fmtReal(PEDIDO.total)+'</div>'+
+      '<div class="l">'+(n>1?n+'x de '+fmtReal(Number(c.valorParcela)||PEDIDO.total/n)+' sem juros':'À vista no cartão')+'</div>'+
+      (Number(PEDIDO.frete)>0?'<div class="l" style="margin-top:4px">Produtos '+fmtReal(PEDIDO.subtotal)+' + entrega '+fmtReal(PEDIDO.frete)+'</div>':'')+
+      (PEDIDO.numero?'<div class="l" style="margin-top:4px">Pedido nº '+String(PEDIDO.numero).padStart(4,'0')+'</div>':'')+'</div>';
+    h+=(u?'<a class="pgCopiar" style="display:block;text-align:center;text-decoration:none" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer" onclick="try{if(window.mvEv)mvEv(\'cartao_aberto\',{})}catch(_){}">Abrir a página do cartão</a>':'')+
+      '<div class="pgConfere"><h4>Como funciona</h4><p>Você digita os dados do cartão na página segura do <b>Asaas</b>, que recebe pela loja. Os dados do cartão não passam pelo Moviki. Depois de pagar, volte para esta tela.</p></div>'+
+      '<div class="pgStatus" id="pgStatus">Assim que o cartão for aprovado, esta tela avisa. Pode deixar aberta.</div>';
+    const w=wppDaUnidade();
+    if(w)h+='<a class="pgWpp" href="https://wa.me/55'+mvWpp(w)+'?text='+encodeURIComponent('Olá! Fiz um pedido pelo Moviki no valor de '+fmtReal(PEDIDO.total)+' no cartão.')+'" target="_blank" rel="noopener">Falar no WhatsApp</a>';
+    const box=el('corpoPedido'); box.innerHTML=h; box.scrollTop=0;
+    iniciarPolling(6000);
+  }
+
   /* ---------------- pagamento ---------------- */
   function telaPagamento(){
     if(!PEDIDO)return;
@@ -3341,10 +3399,11 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     entregue:'Pedido entregue. Bom proveito!',
     recusado:'O negócio não confirmou este pagamento. Chame no WhatsApp.',
     expirado:'Este pedido expirou. Se você pagou, chame o negócio no WhatsApp — o pagamento ainda pode ser confirmado.',
+    cartao_aguardando:'Aguardando o pagamento no cartão.',
     cancelado:'Pedido cancelado.',
     estornado:'Pagamento estornado.'
   };
-  function pdRotulo(j){ if(j&&j.modo==='reserva'&&(j.status==='expirado'||j.status==='cancelado'))return j.status==='expirado'?'A reserva venceu. Fale com a loja se ainda quiser as peças.':'A loja cancelou a reserva.'; return (j&&j.envio===true&&j.status==='saiu')?'Seu pedido foi enviado.':(PD_ROTULO[j&&j.status]||''); }
+  function pdRotulo(j){ if(j&&j.modo==='cartao'&&j.status==='expirado')return 'O pagamento no cartão não foi concluído. Se quiser, faça o pedido de novo.'; if(j&&j.modo==='cartao'&&j.status==='aguardando')return PD_ROTULO.cartao_aguardando; if(j&&j.modo==='reserva'&&(j.status==='expirado'||j.status==='cancelado'))return j.status==='expirado'?'A reserva venceu. Fale com a loja se ainda quiser as peças.':'A loja cancelou a reserva.'; return (j&&j.envio===true&&j.status==='saiu')?'Seu pedido foi enviado.':(PD_ROTULO[j&&j.status]||''); }
   function iniciarPolling(ms){
     if(PD_TIMER)clearInterval(PD_TIMER);
     PD_TIMER=setInterval(consultarStatus,ms||8000);
@@ -3427,8 +3486,9 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     if(!j.ok){ esquecerPedido(); return; }
     el('pedidoTitulo').textContent='Seu pedido';
     const box=el('corpoPedido');
+    const uC=(j.modo==='cartao'&&j.status==='aguardando'&&j.cartao)?urlCartao(j.cartao.url):'';   /* 2026-10-28-cartao */
     box.innerHTML=passos(3)+'<div class="pgStatus'+(PD_PAGOS.indexOf(j.status)>=0?' ok':'')+'">'+
-      esc(pdRotulo(j))+'</div>'+blocoCodigo(j);
+      esc(pdRotulo(j))+'</div>'+(uC?'<a class="pgCopiar" style="display:block;text-align:center;text-decoration:none" href="'+esc(uC)+'" target="_blank" rel="noopener noreferrer">Abrir a página do cartão</a>':'')+blocoCodigo(j);
     abrirFolha('folhaPedido');
     if(j.status==='entregue'||j.status==='recusado'||j.status==='cancelado'||j.status==='estornado')esquecerPedido();
   };
