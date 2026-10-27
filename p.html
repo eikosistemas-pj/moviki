@@ -512,7 +512,7 @@ async function iniciar(){
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   });
-  window.MOVIKI_VERSAO = '2026-10-27-indicacao4'; /* 27/10: sai o selo '0%' de cima do video. Antes: indicacao3 (logo oficial no topo) */
+  window.MOVIKI_VERSAO = '2026-10-27-indicacao5'; /* 27/10: um video por vez (o que comeca a tocar pausa os outros). Antes: indicacao4 (sem o selo 0%) */
   try { initializeAppCheck(app, { provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'), isTokenAutoRefreshEnabled: true }); }
   catch (e) { console.error('App Check:', e); }
   let d = null;
@@ -580,12 +580,33 @@ function pintar(d){
 /* VIDEOS (27/10/2026, pedido do Paulo: "a gente tem um monte de video legal"):
    nada toca sozinho e nada baixa do YouTube antes do toque — a capa e uma
    imagem; o toque troca pela reproducao (youtube-nocookie), com som. */
+/* UM VIDEO POR VEZ (27/10, mesma trava da home): todo player nasce com a API
+   do YouTube ligada (enablejsapi). Quando um comeca a tocar — pelo nosso
+   botao ou pelo play de dentro do proprio YouTube — os outros recebem
+   "pausar". Trocar de ramo tira o video antigo da tela, entao ele para junto. */
+const YT = 'https://www.youtube-nocookie.com';
+function ytFala(f, msg){ try { f.contentWindow.postMessage(JSON.stringify(msg), YT); } catch (e) {} }
+function pausaOutros(menos){
+  document.querySelectorAll('.tela iframe').forEach(f => { if (f !== menos) ytFala(f, { event:'command', func:'pauseVideo', args:[] }); });
+}
+window.addEventListener('message', e => {
+  if (e.origin !== YT) return;
+  let d = e.data;
+  if (typeof d === 'string') { try { d = JSON.parse(d); } catch (err) { return; } }
+  if (!d || !d.info || d.info.playerState !== 1) return;
+  const quem = Array.from(document.querySelectorAll('.tela iframe')).find(f => f.contentWindow === e.source);
+  if (quem) pausaOutros(quem);
+});
 function tocar(tela){
   const id = tela.getAttribute('data-video'); if (!id || tela.querySelector('iframe')) return;
   const f = document.createElement('iframe');
-  f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  f.src = YT + '/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
   f.title = tela.getAttribute('data-titulo') || 'Vídeo do Moviki';
   f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  /* avisa o YouTube que queremos ouvir o estado deste player */
+  f.addEventListener('load', () => { ytFala(f, { event:'listening', id:1, channel:'widget' }); });
+  pausaOutros(f);
   tela.innerHTML = ''; tela.appendChild(f);
   try { if (window.mvEv) mvEv('video_play', { video: tela.getAttribute('data-nome') || id, pagina: 'indicacao' }); } catch (e) {}
 }
