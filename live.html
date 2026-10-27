@@ -570,7 +570,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-28-cartao';   /* 28/10: Pix ou cartao de credito na compra da live, com parcelas sem juros, pagina segura do Asaas da loja; antes 2026-10-19-gratis */   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X no Pix da live — o mventrega.js mostra a taxa riscada ou "faltam R$ Y" e a taxa e repintada quando a quantidade muda. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
+  window.MOVIKI_VERSAO='2026-10-28-mercadopago';   /* 28/10 (2): o cartao da live pode sair pelo Mercado Pago da loja (parcelas sem a promessa 'sem juros'; pagina do Mercado Pago). Antes: 2026-10-28-cartao. */   /* 28/10: Pix ou cartao de credito na compra da live, com parcelas sem juros, pagina segura do Asaas da loja; antes 2026-10-19-gratis */   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X no Pix da live — o mventrega.js mostra a taxa riscada ou "faltam R$ Y" e a taxa e repintada quando a quantidade muda. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1431,7 +1431,7 @@ svg{display:block}
   let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null,ckPrazoT=null;
   const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
   /* 2026-10-28-cartao */
-  function ckCartaoCfg(){const c=CK_CFG&&CK_CFG.cartao;return (c&&c.ativo===true)?{max:Math.max(1,Math.min(12,Number(c.maxParcelas)||1)),min:Number(c.parcelaMin)||5}:null;}
+  function ckCartaoCfg(){const c=CK_CFG&&CK_CFG.cartao;return (c&&c.ativo===true)?{max:Math.max(1,Math.min(12,Number(c.maxParcelas)||1)),min:Number(c.parcelaMin)||5,mp:c.via==='mercadopago',sj:c.semJuros!==false}:null;}   /* mp e sj: 2026-10-28-mercadopago */
   function ckNoCartao(){return !!(ckCartaoCfg()&&(document.querySelector('input[name="ckPag"]:checked')||{}).value==='cartao');}
   function ckPagMontar(){
     const c=ckCartaoCfg(), bx=el('ckPagBox'); if(!bx)return;
@@ -1447,10 +1447,10 @@ svg{display:block}
   function ckParcPintar(total){
     const c=ckCartaoCfg(), s=el('ckParc'); if(!c||!s)return;
     const max=Math.max(1,Math.min(c.max,Math.floor(total/c.min)||1)), atual=Math.min(max,Number(s.value)||1);
-    let o=''; for(let i=1;i<=max;i++)o+='<option value="'+i+'"'+(i===atual?' selected':'')+'>'+(i===1?'À vista · '+brl(total):i+'x de '+brl(Math.floor(total/i*100)/100)+' sem juros')+'</option>';
+    let o=''; for(let i=1;i<=max;i++)o+='<option value="'+i+'"'+(i===atual?' selected':'')+'>'+(i===1?'À vista · '+brl(total):(c.sj?i+'x de '+brl(Math.floor(total/i*100)/100)+' sem juros':'Até '+i+'x no cartão'))+'</option>';
     s.innerHTML=o;
   }
-  function ckUrlCartao(u){u=String(u||'');return /^https:\/\/[a-z0-9.-]*asaas\.com\//i.test(u)?u:'';}
+  function ckUrlCartao(u){u=String(u||'');return (/^https:\/\/[a-z0-9.-]*asaas\.com\//i.test(u)||/^https:\/\/(www\.)?mercadopago\.com(\.br)?\//i.test(u))?u:'';}   /* 2026-10-28-mercadopago */
   document.querySelectorAll('input[name="ckPag"]').forEach(x=>x.addEventListener('change',ckPagTrocar));
   const ERR_CK={cartao_indisponivel:'O vendedor não está aceitando cartão agora. Escolha o Pix.',parcelas:'Escolha de novo em quantas vezes.',parcela_minima:'Cada parcela precisa ter pelo menos R$ 5. Escolha menos parcelas.',bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',pix_pausado:'O pagamento está pausado por algumas horas, por segurança. Tente mais tarde.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',ocupado:'Muita gente comprando agora. Tente de novo em instantes.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.',carrinho_off:'O carrinho não está disponível agora. Compre um produto por vez.'};
   /* ================= CARRINHO (03/10/2026, P70) =================
@@ -1625,7 +1625,7 @@ svg{display:block}
     ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||'',numero:r.numero||0,frete:r.frete||0,entrega:r.entrega||ent_,
       validoAte:Number(r.validoAte)||(Date.now()+(Number(r.validadeMin)||30)*60000),criado:Date.now(),
       copia:String((r.pix&&r.pix.copiaCola)||''),imagem:String((r.pix&&r.pix.imagem)||''),receb:(r.pix&&r.pix.recebedor)||null,
-      cartaoUrl:ckUrlCartao(r.cartao&&r.cartao.url),parcelas:Number(r.cartao&&r.cartao.parcelas)||0,valorParcela:Number(r.cartao&&r.cartao.valorParcela)||0,
+      cartaoUrl:ckUrlCartao(r.cartao&&r.cartao.url),parcelas:Number(r.cartao&&r.cartao.parcelas)||0,valorParcela:Number(r.cartao&&r.cartao.valorParcela)||0,cartaoMP:!!(r.cartao&&r.cartao.via==='mercadopago'),
       oferta:!!(ofNa&&(emCarr?lstC.some(x=>x.p.nome===ofNa.nome):ofNa.nome===ckP.nome)),avisou:false,vencido:false};
     if(emCarr){ckPed.produto=carrResumo(lstC);ckPed.qtd=1;ckPed.itens=lstC.map(x=>({nome:x.p.nome,q:x.q}));carr=[];carrSalvar();pintarCarr();}
     guardarPed();
@@ -1646,8 +1646,8 @@ svg{display:block}
       ['ckQr','ckQrC','ckCod','ckCopiar','ckReceb','ckPaguei'].forEach(i=>el(i).classList.add('escondido'));
       el('ckTit').textContent='Pagar com cartão';
       if(g.cartaoUrl){ca.href=g.cartaoUrl;ca.classList.remove('escondido');}else ca.classList.add('escondido');
-      el('ckPixTotal').textContent=brl(g.total)+(g.parcelas>1?' · '+g.parcelas+'x de '+brl(g.valorParcela||g.total/g.parcelas):'');
-      el('ckNota').textContent='Toque em «Abrir a página do cartão» e digite os dados na página segura do Asaas, que recebe por '+((neg&&neg.nome)||'este negócio')+'. Os dados do cartão não passam pelo Moviki. Depois volte para a live: esta tela confirma sozinha.';
+      el('ckPixTotal').textContent=brl(g.total)+(g.parcelas>1?(g.cartaoMP?' · até '+g.parcelas+'x':' · '+g.parcelas+'x de '+brl(g.valorParcela||g.total/g.parcelas)):'');
+      el('ckNota').textContent='Toque em «Abrir a página do cartão» e digite os dados na página segura do '+(g.cartaoMP?'Mercado Pago':'Asaas')+', que recebe por '+((neg&&neg.nome)||'este negócio')+'. Os dados do cartão não passam pelo Moviki. Depois volte para a live: esta tela confirma sozinha.';
       el('ckEst').textContent='Esperando o pagamento no cartão…';
       if(g.vencido||Date.now()>=g.validoAte)vencerPix(g.vencidoMotivo||''); else contarPrazo();
       esperarPagamento();
