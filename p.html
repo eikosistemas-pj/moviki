@@ -190,10 +190,6 @@
   .ramoTela .tela{border-radius:18px}
   .ramoTela .play{padding-bottom:24px}
   .ramoTela .play .bola{width:64px;height:64px;top:46%}
-  .balao{position:absolute;left:-46px;top:30%;background:var(--perola);color:var(--tinta);border-radius:14px;padding:9px 12px;font-size:12.5px;font-weight:600;
-    box-shadow:0 14px 30px rgba(0,0,0,.4);max-width:190px;line-height:1.35}
-  .balao b{display:block;font-size:15px;color:#0a6b42}
-  .balao.dir{left:auto;right:-40px;top:58%}
 
   /* ECONOMIA */
   .economia{background:var(--noite2);border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
@@ -285,7 +281,6 @@
     .rCard{flex:0 0 84px;scroll-snap-align:start}
     .heroGrade,.ecoGrade{grid-template-columns:1fr}
     .celular{margin-top:24px}
-    .balao{left:-18px}.balao.dir{right:-14px}
     .passos{grid-template-columns:1fr 1fr;row-gap:34px}
     .fixa{display:block}
     body{padding-bottom:76px}
@@ -300,7 +295,6 @@
     .plano .d{grid-column:1/-1}
     .hero .lead{font-size:16.5px}
     .acoesHero .cta{width:100%}
-    .balao{display:none}
   }
   @media (prefers-reduced-motion:reduce){ .pulso,.spin{animation:none} .enche,.fixa{transition:none} html{scroll-behavior:auto} }
 </style>
@@ -342,7 +336,6 @@
             <span class="pSub">1 minuto, com som e as telas de verdade</span>
           </button>
         </div>
-        <div class="balao dir"><b>0%</b>de comissão do Moviki por venda</div>
       </div>
     </div>
   </section>
@@ -519,7 +512,7 @@ async function iniciar(){
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   });
-  window.MOVIKI_VERSAO = '2026-10-27-indicacao3'; /* 27/10: logo oficial no topo */
+  window.MOVIKI_VERSAO = '2026-10-27-indicacao4'; /* 27/10: sai o selo '0%' de cima do video. Antes: indicacao3 (logo oficial no topo) */
   try { initializeAppCheck(app, { provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'), isTokenAutoRefreshEnabled: true }); }
   catch (e) { console.error('App Check:', e); }
   let d = null;
