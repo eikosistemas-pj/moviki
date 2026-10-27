@@ -31,7 +31,7 @@
 <link rel="icon" href="/favicon512.png">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
 <script>
-/* MOVIKI p.html | versao 2026-10-27-indicacao
+/* MOVIKI p.html | versao 2026-10-27-indicacao2 (27/10, 2a rodada: ramos em abas com a tela da live de cada um)
    (antes: 2026-10-16-ramo, que era so um redirecionador para a comerciantes.html)
    ---------------------------------------------------------------------------
    /p/apelido (parceiro) e /c/apelido (criador).
@@ -164,13 +164,27 @@
   .pSub{font-size:12.5px;color:#c6d6ea}
   /* VIDEOS POR RAMO */
   .ramosGrade{margin-top:28px;display:grid;grid-template-columns:1fr 300px;grid-template-areas:'esc tela' 'txt tela';grid-template-rows:auto 1fr;column-gap:34px;row-gap:0;align-items:start}
-  .rgEsc{grid-area:esc}.rgTxt{grid-area:txt}.ramoTela{grid-area:tela}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{padding:10px 16px;border-radius:999px;border:1px solid var(--linha);background:var(--painel);color:var(--claro);font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
-  .chip[aria-pressed="true"]{background:var(--claro);color:var(--tinta);border-color:var(--claro)}
-  .chip:focus-visible{outline:3px solid var(--ciano);outline-offset:2px}
-  .ramoMais{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--suave)}
-  .ramoMais select{font-family:inherit;font-size:14.5px;padding:9px 12px;border-radius:12px;background:var(--painel);color:var(--claro);border:1px solid var(--linha);max-width:100%}
+  .rgEsc{grid-area:esc;min-width:0}.rgTxt{grid-area:txt;min-width:0}.ramoTela{grid-area:tela}
+  /* escolha do ramo: abas por tipo de loja + telefones com a tela da live */
+  .abas{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px;border-radius:14px;background:var(--painel);border:1px solid var(--linha);width:max-content;max-width:100%}
+  .abas::-webkit-scrollbar{display:none}
+  .aba{flex:0 0 auto;padding:9px 14px;border-radius:10px;border:0;background:transparent;color:var(--suave);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .aba[aria-selected="true"]{background:var(--claro);color:var(--tinta)}
+  .aba small{font-weight:500;opacity:.7;margin-left:4px}
+  .trilhoRamos{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:14px 12px}
+  .rCard{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;padding:0;border:0;background:none;color:var(--claro);font-family:inherit;cursor:pointer;text-align:center}
+  .rTel{position:relative;width:100%;aspect-ratio:540/1168;border-radius:14px;overflow:hidden;background:#0b1626;border:2px solid #1c3457;transition:transform .2s ease,border-color .2s ease}
+  .rTel img{width:100%;height:100%;object-fit:cover;display:block}
+  .rTel::after{content:'';position:absolute;left:50%;top:5px;width:26%;height:4px;transform:translateX(-50%);border-radius:3px;background:rgba(0,0,0,.55)}
+  .rNome{font-size:12.5px;font-weight:600;line-height:1.25;color:#c6d6ea}
+  .rCard:hover .rTel{transform:translateY(-3px);border-color:#2d5a93}
+  .rCard[aria-pressed="true"] .rTel{border-color:var(--ciano);box-shadow:0 0 0 3px rgba(0,212,255,.25)}
+  .rCard[aria-pressed="true"] .rNome{color:#fff}
+  .rTocando{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);display:none;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;background:var(--ciano);color:#03111f;font-size:10.5px;font-weight:800;white-space:nowrap}
+  .rTocando i{width:6px;height:6px;border-radius:50%;background:#e5484d}
+  .rCard[aria-pressed="true"] .rTocando{display:inline-flex}
+  .rCard:focus-visible{outline:none}.rCard:focus-visible .rTel{outline:3px solid var(--ciano);outline-offset:2px}
+  .ramoLeg{margin-top:12px;font-size:11.5px;color:var(--apagado)}
   .ramoTxt{margin-top:22px;font-size:15px;color:#c6d6ea;max-width:46ch}
   .ramoTxt b{color:#fff}
   .ramoTela{width:100%;max-width:300px;aspect-ratio:9/16;border-radius:24px;padding:8px;background:linear-gradient(160deg,#1a2a44,#0a1322);box-shadow:0 30px 60px rgba(0,0,0,.5);justify-self:center}
@@ -267,6 +281,9 @@
 
   @media (max-width:880px){
     .ramosGrade{grid-template-columns:1fr;grid-template-areas:'esc' 'tela' 'txt';row-gap:24px}
+    .trilhoRamos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:10px;margin-left:-16px;margin-right:-16px;padding:2px 16px 4px}
+    .trilhoRamos::-webkit-scrollbar{display:none}
+    .rCard{flex:0 0 84px;scroll-snap-align:start}
     .heroGrade,.ecoGrade{grid-template-columns:1fr}
     .celular{margin-top:24px}
     .balao{left:-18px}.balao.dir{right:-14px}
@@ -338,8 +355,9 @@
       <p class="intro">Escolha o que você vende. Cada vídeo mostra como a live funciona para quem vende o que você vende.</p>
       <div class="ramosGrade">
         <div class="rgEsc">
-          <div class="chips" id="chips" role="group" aria-label="Escolha o seu ramo"></div>
-          <div class="ramoMais"><label for="ramoSel">Outro ramo:</label><select id="ramoSel"></select></div>
+          <div class="abas" id="abas" role="tablist" aria-label="Tipo de loja"></div>
+          <div class="trilhoRamos" id="trilhoRamos" role="tabpanel"></div>
+          <p class="ramoLeg">Cenas ilustrativas · lojas fictícias</p>
         </div>
         <div class="ramoTela"><div class="tela" id="telaRamo"></div></div>
         <div class="rgTxt">
@@ -502,7 +520,7 @@ async function iniciar(){
     messagingSenderId: "451920150738",
     appId: "1:451920150738:web:be458392064c964c792d0b"
   });
-  window.MOVIKI_VERSAO = '2026-10-27-indicacao';
+  window.MOVIKI_VERSAO = '2026-10-27-indicacao2';
   try { initializeAppCheck(app, { provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'), isTokenAutoRefreshEnabled: true }); }
   catch (e) { console.error('App Check:', e); }
   let d = null;
@@ -597,26 +615,55 @@ const RAMOS = [
   ['padaria','Padaria','1uPBllWMIko'],['perfumaria','Perfumaria','yRylkHjAfB0'],['presentes','Presentes','lPVOdxwTZFI'],
   ['sertanejos','Produtos sertanejos','297M0GAV0SQ']
 ];
-const CHIPS = 10;
+/* 27/10 (2a rodada, pedido do Paulo: "organiza melhor os botoes"): os 38 ramos
+   em 5 abas por tipo de loja, cada ramo com a tela da live dele (ramos/<k>.webp,
+   a mesma imagem do carrossel da home). Toque = o video falado do ramo toca. */
+const ABAS = [
+  ['Moda', ['moda','moda-masculina','moda-infantil','moda-fitness','moda-praia','lingerie','boutique','brecho','calcados','esportes']],
+  ['Beleza e acessórios', ['semijoias','bijuteria','cosmeticos','perfumaria','cabelo','otica']],
+  ['Comida', ['acai','confeitaria','chocolateria','padaria','acougue','emporio','naturais','sertanejos','suplementos']],
+  ['Casa e presentes', ['utilidades','cama-mesa-banho','eletroportateis','presentes','festa','floricultura','brinquedos','bebe']],
+  ['Outros', ['pet','acessorios-celular','games','autopecas','farmacia']]
+];
+const POR_K = {}; RAMOS.forEach(r => POR_K[r[0]] = r);
 function ligarRamos(primeiro){
-  const chips = el('chips'), sel = el('ramoSel'), tela = el('telaRamo');
-  chips.innerHTML = RAMOS.slice(0, CHIPS).map((r, i) => '<button type="button" class="chip" data-r="' + i + '" aria-pressed="false">' + r[1] + '</button>').join('');
-  sel.innerHTML = '<option value="">Escolha</option>' + RAMOS.slice(CHIPS).slice().sort((a, b) => a[1].localeCompare(b[1], 'pt-BR'))
-    .map(r => '<option value="' + RAMOS.indexOf(r) + '">' + r[1] + '</option>').join('');
-  function escolher(i, porToque){
-    const r = RAMOS[i]; if (!r) return;
-    chips.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c.getAttribute('data-r') === String(i) ? 'true' : 'false'));
-    if (i < CHIPS) sel.value = '';
-    tela.setAttribute('data-video', r[2]); tela.setAttribute('data-nome', 'ramo_' + r[0]); tela.setAttribute('data-titulo', 'Vídeo: live de ' + r[1]);
-    tela.innerHTML = '<img src="https://i.ytimg.com/vi/' + r[2] + '/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' +
-      '<button class="play" type="button" aria-label="Assistir: live de ' + r[1] + '"><span class="bola"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
+  const abas = el('abas'), trilho = el('trilhoRamos'), tela = el('telaRamo');
+  let atual = 'moda', abaAtual = 0;
+  abas.innerHTML = ABAS.map((a, i) => '<button type="button" class="aba" role="tab" data-a="' + i + '" aria-selected="' + (i === 0) + '">' + a[0] + '<small>' + a[1].length + '</small></button>').join('');
+  function pintarAba(i){
+    abaAtual = i;
+    abas.querySelectorAll('.aba').forEach(b => b.setAttribute('aria-selected', b.getAttribute('data-a') === String(i) ? 'true' : 'false'));
+    trilho.innerHTML = ABAS[i][1].filter(k => POR_K[k]).map(k => {
+      const r = POR_K[k];
+      return '<button type="button" class="rCard" data-k="' + k + '" aria-pressed="' + (k === atual) + '" aria-label="Ver a live de ' + r[1] + '">' +
+        '<span class="rTel"><img src="/ramos/' + k + '.webp?v=20261001" width="540" height="1168" alt="" loading="lazy" decoding="async">' +
+        '<span class="rTocando"><i></i>Tocando</span></span><span class="rNome">' + r[1] + '</span></button>';
+    }).join('');
+    trilho.scrollLeft = 0;
+  }
+  function escolher(k, porToque){
+    const r = POR_K[k]; if (!r) return;
+    atual = k;
+    trilho.querySelectorAll('.rCard').forEach(c => c.setAttribute('aria-pressed', c.getAttribute('data-k') === k ? 'true' : 'false'));
+    tela.setAttribute('data-video', r[2]); tela.setAttribute('data-nome', 'ramo_' + k); tela.setAttribute('data-titulo', 'Vídeo: live de ' + r[1]);
+    tela.innerHTML = '<img src="/ramos/' + k + '.webp?v=20261001" alt="" loading="lazy" onerror="this.remove()">' +
+      '<button class="play" type="button" aria-label="Assistir: live de ' + r[1] + ', com som"><span class="bola"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
       '<span class="pRot">Live de ' + r[1].toLowerCase() + '</span><span class="pSub">Toque para ver com som</span></button>';
     el('ramoTxt').innerHTML = 'Imagine a <b>sua</b> loja de ' + r[1].toLowerCase() + ' assim: o cliente pergunta, você mostra de perto e o pedido chega com o Pix. ' + esc(primeiro) + ' te ajuda a montar a primeira.';
-    if (porToque) { tocar(tela); try { if (window.mvEv) mvEv('indicacao_ramo', { ramo: r[0] }); } catch (e) {} }
+    const cta = document.querySelector('[data-ev="indicacao_cadastrar_ramo"]');
+    if (cta) cta.href = 'https://app.moviki.com.br/?criar=1&ramo=' + encodeURIComponent(k) + '&' + P.q;
+    if (porToque) {
+      tocar(tela);
+      try { if (window.mvEv) mvEv('indicacao_ramo', { ramo: k }); } catch (e) {}
+      /* no celular o video fica abaixo da lista: traz ele para a tela */
+      const r2 = tela.getBoundingClientRect();
+      if (r2.top < 0 || r2.bottom > innerHeight) tela.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    }
   }
-  chips.addEventListener('click', ev => { const c = ev.target.closest('.chip'); if (c) escolher(+c.getAttribute('data-r'), true); });
-  sel.addEventListener('change', () => { if (sel.value !== '') escolher(+sel.value, true); });
-  escolher(0, false);
+  abas.addEventListener('click', ev => { const b = ev.target.closest('.aba'); if (b) pintarAba(+b.getAttribute('data-a')); });
+  trilho.addEventListener('click', ev => { const c = ev.target.closest('.rCard'); if (c) escolher(c.getAttribute('data-k'), true); });
+  pintarAba(0);
+  escolher('moda', false);
 }
 
 function pintarDuvidas(primeiro, ref){
