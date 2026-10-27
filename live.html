@@ -493,6 +493,8 @@ svg{display:block}
     <p class="nota escondido" id="ckRetInfo" style="margin:8px 0 0"></p>
     <input class="campo escondido" id="ckEnd" maxlength="140" placeholder="Endereço ou ponto de referência para a entrega" style="margin-top:8px">
     <div id="ckEndBox" class="escondido"></div>
+    <!-- 2026-10-28-cartao: Pix ou cartao, so com o cartao ligado pelo lojista -->
+    <div id="ckPagBox" class="escondido"><span class="ckRot">Como você vai pagar?</span><div class="ckEnt"><label><input type="radio" name="ckPag" value="pix" checked> Pix</label><label><input type="radio" name="ckPag" value="cartao"> Cartão de crédito</label></div><select class="campo escondido" id="ckParc" style="margin-top:8px" aria-label="Parcelas"></select></div>
     <label class="ckChk"><input type="checkbox" id="ckMostrar"><span>Pode mostrar na live que eu comprei (só o meu primeiro nome).</span></label>
     <label class="ckChk"><input type="checkbox" id="ckAceite"><span>Li e aceito os <a href="/termos.html" target="_blank" rel="noopener" style="color:var(--mv-ciano)">Termos de Uso</a> e a <a href="/privacidade.html" target="_blank" rel="noopener" style="color:var(--mv-ciano)">Política de Privacidade</a>, e autorizo o uso dos meus dados para gerar o Pix e para o vendedor combinar a entrega.</span></label>
     <p class="nota" id="ckAviso"></p>
@@ -515,6 +517,7 @@ svg{display:block}
          deixa-lo a vista convidaria a pagar um preco ou uma unidade que ja nao valem. -->
     <div class="ckVenc escondido" id="ckVenc"><strong>O prazo deste Pix acabou</strong><span id="ckVencTxt">Não pague mais este código.</span></div>
     <button type="button" class="btnGrad escondido" id="ckNovo" style="width:100%">Gerar novo Pix</button>
+    <a class="btnGrad escondido" id="ckCartaoAbrir" href="#" target="_blank" rel="noopener noreferrer" style="width:100%;margin-top:10px;display:block;text-align:center;text-decoration:none">Abrir a página do cartão</a>
     <div class="ckEst" id="ckEst">Esperando o pagamento…</div>
     <!-- MODO CHAVE PIX DO LOJISTA (16/09/2026): aqui NAO existe gateway a quem
          perguntar, entao a tela nunca confirma sozinha. Quem confirma e o
@@ -567,7 +570,7 @@ svg{display:block}
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, limit, serverTimestamp, Timestamp, getCountFromServer }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  window.MOVIKI_VERSAO='2026-10-19-gratis';   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X no Pix da live — o mventrega.js mostra a taxa riscada ou "faltam R$ Y" e a taxa e repintada quando a quantidade muda. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
+  window.MOVIKI_VERSAO='2026-10-28-cartao';   /* 28/10: Pix ou cartao de credito na compra da live, com parcelas sem juros, pagina segura do Asaas da loja; antes 2026-10-19-gratis */   /* 19/10 (P85 Fase 2b): entrega gratis acima de R$ X no Pix da live — o mventrega.js mostra a taxa riscada ou "faltam R$ Y" e a taxa e repintada quando a quantidade muda. */ /* antes: 2026-10-17-vippadrao */   /* 17/10 (P84): Lista VIP ligada por padrao para quem tem live. */ /* antes: 2026-10-16-tiktok */   /* 16/10: padrao TikTok Shop (card fixado, folha branca com galeria cheia, rodape Comprar, sacolinha na barra, + Seguir). */ /* antes: 2026-10-06-pixtrava */   /* 04/10 (P70 etapa 6): envio com frete automatico (Melhor Envio do lojista). */ /* antes: 2026-10-03-vip */   /* 03/10 (P70 etapa 4): botao Me avise da proxima live (Lista VIP), na lateral e na tela sem live. */ /* antes: 2026-10-03-rastreio */   /* 03/10 (P70 etapa 3): pedido pago de envio mostra que o rastreio chega pelo WhatsApp da loja (e o link de acompanhamento, se ja houver), sem o codigo de porta. */ /* antes: 2026-10-03-envio */
   const app=initializeApp({
     apiKey:"AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",authDomain:"moviki-app.firebaseapp.com",projectId:"moviki-app",
     storageBucket:"moviki-app.firebasestorage.app",messagingSenderId:"451920150738",appId:"1:451920150738:web:be458392064c964c792d0b"
@@ -1427,7 +1430,29 @@ svg{display:block}
   function pixPode(p){return pixAtivo&&nivel==='enterprise'&&noAr&&precoUnit(p)>0&&!esgotado(p);}
   let ckP=null,ckQ=1,ckPoll=null,ckPed=null,ckFrete=null,ckPrazoT=null;
   const CK_PAGOS=['pago','separando','pronto','saiu','entregue'];
-  const ERR_CK={bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',pix_pausado:'O pagamento está pausado por algumas horas, por segurança. Tente mais tarde.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',ocupado:'Muita gente comprando agora. Tente de novo em instantes.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.',carrinho_off:'O carrinho não está disponível agora. Compre um produto por vez.'};
+  /* 2026-10-28-cartao */
+  function ckCartaoCfg(){const c=CK_CFG&&CK_CFG.cartao;return (c&&c.ativo===true)?{max:Math.max(1,Math.min(12,Number(c.maxParcelas)||1)),min:Number(c.parcelaMin)||5}:null;}
+  function ckNoCartao(){return !!(ckCartaoCfg()&&(document.querySelector('input[name="ckPag"]:checked')||{}).value==='cartao');}
+  function ckPagMontar(){
+    const c=ckCartaoCfg(), bx=el('ckPagBox'); if(!bx)return;
+    bx.classList.toggle('escondido',!c);
+    const pr=document.querySelector('input[name="ckPag"][value="pix"]'); if(pr)pr.checked=true;
+    ckPagTrocar();
+  }
+  function ckPagTrocar(){
+    const car=ckNoCartao(), s=el('ckParc');
+    if(s)s.classList.toggle('escondido',!car);
+    const b=el('ckGerar'); if(b&&!b.disabled)b.textContent=car?'Pagar com cartão':'Gerar Pix';
+  }
+  function ckParcPintar(total){
+    const c=ckCartaoCfg(), s=el('ckParc'); if(!c||!s)return;
+    const max=Math.max(1,Math.min(c.max,Math.floor(total/c.min)||1)), atual=Math.min(max,Number(s.value)||1);
+    let o=''; for(let i=1;i<=max;i++)o+='<option value="'+i+'"'+(i===atual?' selected':'')+'>'+(i===1?'À vista · '+brl(total):i+'x de '+brl(Math.floor(total/i*100)/100)+' sem juros')+'</option>';
+    s.innerHTML=o;
+  }
+  function ckUrlCartao(u){u=String(u||'');return /^https:\/\/[a-z0-9.-]*asaas\.com\//i.test(u)?u:'';}
+  document.querySelectorAll('input[name="ckPag"]').forEach(x=>x.addEventListener('change',ckPagTrocar));
+  const ERR_CK={cartao_indisponivel:'O vendedor não está aceitando cartão agora. Escolha o Pix.',parcelas:'Escolha de novo em quantas vezes.',parcela_minima:'Cada parcela precisa ter pelo menos R$ 5. Escolha menos parcelas.',bairro:'Escolha o bairro da entrega.',bairro_fora:'Este negócio ainda não entrega nesse bairro. Escolha retirar no local.',cep:'Esse CEP está incompleto. São 8 números.',sem_entrega:'Este negócio não faz entrega. Escolha retirar no local.',so_entrega:'Este negócio só trabalha com entrega.',aceite:'Marque que aceita os Termos e a Política de Privacidade.',nome:'Escreva nome e sobrenome.',cpf:'CPF inválido.',whatsapp:'WhatsApp com DDD.',endereco:'Escreva a rua e o número da entrega.',freio:'Muitos pedidos daqui agora. Espere uns minutos.',live_fora:'A live acabou. O pagamento ficou fechado.',indisponivel:'O pagamento pela live não está disponível agora.',pix_pausado:'O pagamento está pausado por algumas horas, por segurança. Tente mais tarde.',produto:'Este produto saiu da sacolinha.',esgotado:'Esgotou! Não sobrou essa quantidade.',ocupado:'Muita gente comprando agora. Tente de novo em instantes.',reserva_limite:'Já tem Pix desta oferta esperando pagamento nesta internet. Pague o que você gerou ou espere alguns minutos.',oferta_fim:'A oferta acabou agora. Confira o preço e tente de novo.',minimo:'Pedido mínimo pelo Pix.',dados:'Dados incompletos.',carrinho_off:'O carrinho não está disponível agora. Compre um produto por vez.'};
   /* ================= CARRINHO (03/10/2026, P70) =================
      So existe com o recurso ligado pelo dono para este lojista
      (checkout_publico/{uid}.recursos.carrinho; o robo confere de novo na
@@ -1471,6 +1496,7 @@ svg{display:block}
     try{const g=JSON.parse(localStorage.getItem('mv_ck_dados')||'{}');if(g.nome)el('ckNome').value=g.nome;if(g.wpp)el('ckWpp').value=g.wpp;}catch(_){}
     if(!el('ckNome').value&&meuNome().includes(' '))el('ckNome').value=meuNome();
     montarEntrega();
+    ckPagMontar();   /* 2026-10-28-cartao */
     ckTotal(); el('folhaSacola').classList.add('escondido'); el('folhaCompra').classList.remove('escondido'); ev('live_comprar_abrir',{slug});
   }
   /* 26/09/2026: as opcoes de recebimento seguem a configuracao do lojista
@@ -1532,7 +1558,7 @@ svg{display:block}
   function ckTotal(){const u=precoUnit(ckP);el('ckUnit').textContent=brl(u)+' cada';el('ckQ').textContent=ckQ;
     const ent=(document.querySelector('input[name="ckEnt"]:checked')||{}).value, comFrete=(ent==='entrega'||ent==='envio');const fr=(comFrete&&ckFrete!=null)?ckFrete:0;
     el('ckFreteLin').classList.toggle('escondido',!(comFrete&&ckFrete!=null));el('ckFrete').textContent=fr>0?brl(fr):'grátis';
-    el('ckTotal').textContent=brl(ckSub()+fr);}
+    el('ckTotal').textContent=brl(ckSub()+fr);ckParcPintar(ckSub()+fr);}
   /* frete gratis acima de X depende do subtotal: repinta quando a quantidade muda */
   function ckRepintarFrete(){const box=el('ckEFrete');if(ckBoxModo==='envio'&&box){const uf=el('ckEUf');if(uf)uf.dispatchEvent(new Event('input'));}
     /* 2026-10-19-gratis: entrega gratis acima de R$ X depende do subtotal */
@@ -1566,9 +1592,11 @@ svg{display:block}
     const corpo={acao:'compra_criar',lojistaUid:uid,produto:ckP.nome,qtd:ckQ,nome:el('ckNome').value,whatsapp:el('ckWpp').value,cpf:el('ckCpf').value,entrega:ent_,detalhe:detalhe_,mostrarNome:el('ckMostrar').checked,aceite:true};
     if(emCarr){delete corpo.produto;delete corpo.qtd;corpo.itens=lstC.map(x=>({nome:x.p.nome,qtd:x.q}));}
     if(endereco_)corpo.endereco=endereco_;
-    b.disabled=true; b.textContent='Gerando o Pix…';
+    const noCartao_=ckNoCartao();   /* 2026-10-28-cartao */
+    if(noCartao_){corpo.pagamento='cartao';corpo.parcelas=Number((el('ckParc')||{}).value)||1;}
+    b.disabled=true; b.textContent=noCartao_?'Abrindo o cartão…':'Gerando o Pix…';
     let r; try{r=await (await fetch(ROBO,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(corpo)})).json();}catch(_){r={ok:false,erro:'rede'};}
-    b.disabled=false; b.textContent='Gerar Pix';
+    b.disabled=false; b.textContent=noCartao_?'Pagar com cartão':'Gerar Pix';
     if(!r||!r.ok){
       let msg=(r&&r.erro==='asaas')?(r.mensagem||'O banco recusou. Tente de novo.'):(ERR_CK[r&&r.erro]||(window.mvEnt&&r&&mvEnt.msg(r.erro))||'Não deu certo. Confira a internet e tente de novo.');
       if(r&&r.erro==='minimo'&&r.minimo>0)msg='O pedido mínimo pelo Pix é de '+brl(r.minimo)+'. Junte mais itens na sacolinha.';
@@ -1597,10 +1625,11 @@ svg{display:block}
     ckPed={id:r.pedidoId,chave:r.chave,produto:r.produto,qtd:r.qtd,total:r.total,modo:r.modo||'',numero:r.numero||0,frete:r.frete||0,entrega:r.entrega||ent_,
       validoAte:Number(r.validoAte)||(Date.now()+(Number(r.validadeMin)||30)*60000),criado:Date.now(),
       copia:String((r.pix&&r.pix.copiaCola)||''),imagem:String((r.pix&&r.pix.imagem)||''),receb:(r.pix&&r.pix.recebedor)||null,
+      cartaoUrl:ckUrlCartao(r.cartao&&r.cartao.url),parcelas:Number(r.cartao&&r.cartao.parcelas)||0,valorParcela:Number(r.cartao&&r.cartao.valorParcela)||0,
       oferta:!!(ofNa&&(emCarr?lstC.some(x=>x.p.nome===ofNa.nome):ofNa.nome===ckP.nome)),avisou:false,vencido:false};
     if(emCarr){ckPed.produto=carrResumo(lstC);ckPed.qtd=1;ckPed.itens=lstC.map(x=>({nome:x.p.nome,q:x.q}));carr=[];carrSalvar();pintarCarr();}
     guardarPed();
-    ev('live_pix_gerado',{slug,valor:r.total});
+    ev(r.modo==='cartao'?'live_cartao_gerado':'live_pix_gerado',{slug,valor:r.total});
     mostrarPix();
   };
   function guardarPed(){try{sessionStorage.setItem('mv_ck_ped',JSON.stringify(ckPed));}catch(_){}}
@@ -1611,6 +1640,21 @@ svg{display:block}
     el('ckForm').classList.add('escondido'); el('ckOk').classList.add('escondido'); el('ckPix').classList.remove('escondido');
     el('ckVenc').classList.add('escondido'); el('ckNovo').classList.add('escondido'); el('ckNota').classList.remove('escondido');
     el('ckPixProd').textContent=(g.qtd>1?g.qtd+'x ':'')+(g.produto||''); el('ckPixTotal').textContent=brl(g.total);
+    /* 2026-10-28-cartao: o cartao e digitado na pagina segura do Asaas da loja */
+    const ca=el('ckCartaoAbrir');
+    if(g.modo==='cartao'){
+      ['ckQr','ckQrC','ckCod','ckCopiar','ckReceb','ckPaguei'].forEach(i=>el(i).classList.add('escondido'));
+      el('ckTit').textContent='Pagar com cartão';
+      if(g.cartaoUrl){ca.href=g.cartaoUrl;ca.classList.remove('escondido');}else ca.classList.add('escondido');
+      el('ckPixTotal').textContent=brl(g.total)+(g.parcelas>1?' · '+g.parcelas+'x de '+brl(g.valorParcela||g.total/g.parcelas):'');
+      el('ckNota').textContent='Toque em «Abrir a página do cartão» e digite os dados na página segura do Asaas, que recebe por '+((neg&&neg.nome)||'este negócio')+'. Os dados do cartão não passam pelo Moviki. Depois volte para a live: esta tela confirma sozinha.';
+      el('ckEst').textContent='Esperando o pagamento no cartão…';
+      if(g.vencido||Date.now()>=g.validoAte)vencerPix(g.vencidoMotivo||''); else contarPrazo();
+      esperarPagamento();
+      return;
+    }
+    if(ca)ca.classList.add('escondido');
+    el('ckTit').textContent='Comprar com Pix';
     /* QR SEMPRE NA TELA (16/09/2026). No modo Asaas o banco devolve a
        imagem pronta; no modo chave-Pix-do-lojista nao vem imagem nenhuma e
        a tela ficava so com o copia-e-cola — inutil para quem vai pagar do
@@ -1650,7 +1694,7 @@ svg{display:block}
       if(!ckPed||ckPed.vencido){clearInterval(ckPrazoT);return;}
       const s=Math.max(0,Math.floor((ckPed.validoAte-Date.now())/1000)), cx=el('ckPrazo');
       cx.classList.toggle('pouco',s<120);
-      cx.innerHTML=ckPed.avisou?'':('Este Pix vale por <b>'+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'</b>');
+      cx.innerHTML=ckPed.avisou?'':((ckPed.modo==='cartao'?'Pague no cartão em até ':'Este Pix vale por ')+'<b>'+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')+'</b>');
       if(s<=0){clearInterval(ckPrazoT);vencerPix('');}
     };
     tick(); ckPrazoT=setInterval(tick,1000);
@@ -1668,6 +1712,16 @@ svg{display:block}
     ['ckQr','ckQrC','ckCod','ckCopiar','ckReceb'].forEach(i=>el(i).classList.add('escondido'));
     el('ckNota').classList.add('escondido');
     if(ckPed.avisou){el('ckEst').textContent='O vendedor está conferindo o seu pagamento.';return;}
+    if(ckPed.modo==='cartao'){
+      el('ckCartaoAbrir').classList.add('escondido');
+      const sg=el('ckVenc').querySelector('strong'); if(sg)sg.textContent='O pagamento no cartão não foi concluído';
+      el('ckVencTxt').textContent=ckPed.oferta?'A unidade da oferta foi liberada para outra pessoa.':'Se ainda quiser, faça o pedido de novo.';
+      el('ckVenc').classList.remove('escondido'); el('ckNovo').classList.remove('escondido'); el('ckNovo').textContent='Fazer o pedido de novo';
+      el('ckPaguei').classList.add('escondido'); el('ckEst').textContent='';
+      if(primeira)ev('live_cartao_vencido',{slug});
+      return;
+    }
+    { const sg=el('ckVenc').querySelector('strong'); if(sg)sg.textContent='O prazo deste Pix acabou'; el('ckNovo').textContent='Gerar novo Pix'; }
     el('ckVencTxt').textContent=(ckPed.vencidoMotivo==='cancelado'?'Este Pix foi cancelado. ':'')+'Não pague mais este código. '+
       (ckPed.oferta?'A unidade da oferta foi liberada para outra pessoa.':'Se ainda quiser, gere um novo com o preço de agora.');
     el('ckVenc').classList.remove('escondido'); el('ckNovo').classList.remove('escondido');
