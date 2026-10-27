@@ -3,55 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex,nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Moviki · Seu negócio no mapa, e agora também ao vivo</title>
-<!-- 16/09/2026 — ESTA PAGINA E O LINK MAIS COMPARTILHADO DO PROJETO, e ate
-     hoje ela nao tinha uma unica metatag de previa. Quem recebia o link do
-     parceiro no WhatsApp via um cartao com a palavra "Moviki" e o dominio,
-     sem imagem e sem uma linha explicando o que era. Peca de live no post,
-     cartao mudo no link.
-     O redirecionamento e por JavaScript; o robo de previa do WhatsApp e do
-     Facebook le o HTML ANTES de rodar script, entao estas linhas funcionam
-     mesmo com a pagina redirecionando na hora.
-     O texto fala com o LOJISTA, que e quem recebe a indicacao — nao com o
-     parceiro. E acompanha o destino: a `comerciantes.html`. Mudou la, muda
-     aqui. -->
-<meta name="description" content="Seu negócio no mapa em tempo real e ao vivo pela câmera do celular. Cardápio, promoções e um link só seu. 30 dias grátis, sem cartão e sem comissão por venda.">
-<!-- og 2026-09-19-og1: previa do link no WhatsApp, Facebook e Instagram
-     2026-10-16-ramo: imagem trocada da logo (ogmoviki.jpg, que o WhatsApp corta
-     no meio) pela miniatura geral da live (og/aovivo/geral.jpg).
-     Link COM ?ramo=<k> (Material de apoio por ramo): os robos de previa nem chegam
-     aqui; o vercel.json manda para api/aovivo-og, com a miniatura do ramo. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moviki · Um convite para a sua loja vender ao vivo</title>
+<!-- 16/09/2026 — ESTA PAGINA E O LINK MAIS COMPARTILHADO DO PROJETO. Os robos
+     de previa do WhatsApp e do Facebook leem estas linhas ANTES de rodar script.
+     O texto fala com o LOJISTA, que e quem recebe a indicacao.
+     og 2026-09-19-og1 / 2026-10-16-ramo: link COM ?ramo=<k> nem chega aqui
+     para os robos; o vercel.json manda para api/aovivo-og. -->
+<meta name="description" content="Mostre o que você vende pela câmera do celular, receba o pedido com Pix na sua conta e não pague comissão por venda. 30 dias grátis, sem cartão.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Moviki">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:url" content="https://www.moviki.com.br/comerciantes.html">
-<meta property="og:title" content="Moviki · Seu negócio no mapa, e agora também ao vivo">
+<meta property="og:title" content="Moviki · Sua loja vendendo ao vivo, sem comissão por venda">
 <meta property="og:description" content="Mostre o que você vende pela câmera do celular e apareça para quem está perto agora. 30 dias grátis, sem cartão e sem comissão por venda.">
 <meta property="og:image" content="https://www.moviki.com.br/og/aovivo/geral.jpg?v=20261016">
 <meta property="og:image:secure_url" content="https://www.moviki.com.br/og/aovivo/geral.jpg?v=20261016">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Moviki — seu negócio no mapa e em vídeo">
+<meta property="og:image:alt" content="Moviki — sua loja ao vivo pelo celular">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Moviki · Seu negócio no mapa, e agora também ao vivo">
+<meta name="twitter:title" content="Moviki · Sua loja vendendo ao vivo, sem comissão por venda">
 <meta name="twitter:description" content="Mostre o que você vende pela câmera do celular e apareça para quem está perto agora. 30 dias grátis, sem cartão.">
 <meta name="twitter:image" content="https://www.moviki.com.br/og/aovivo/geral.jpg?v=20261016">
+<meta name="theme-color" content="#050b14">
+<link rel="icon" href="/favicon512.png">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com https://www.youtube-nocookie.com; base-uri 'self'; object-src 'none'">
 <script>
-/* MOVIKI p.html | versao 2026-10-16-ramo (antes: 2026-09-19-linkcriador) | redirecionador do link de parceiro /p/apelido e do criador /c/apelido
-   NAO carrega Google Analytics de proposito: a pagina redireciona na hora e o GA nao
-   teria tempo de enviar nada. Em vez disso, ela CARIMBA o destino com UTM — assim o
-   comerciantes.html mede a visita ja sabendo que ela veio de indicacao, e de quem. */
+/* MOVIKI p.html | versao 2026-10-27-indicacao
+   (antes: 2026-10-16-ramo, que era so um redirecionador para a comerciantes.html)
+   ---------------------------------------------------------------------------
+   /p/apelido (parceiro) e /c/apelido (criador).
+   27/10/2026 — pedido do Paulo: a pagina de indicacao tem de anular as
+   objecoes e fazer o lojista enxergar economia e desenvolvimento. Ela deixa de
+   redirecionar e passa a ser o CONVITE do parceiro: o cartao dele (o mesmo
+   material do cracha /v/), a conta da comissao que o lojista paga hoje, o que
+   fica com ele, as duvidas de verdade respondidas e o caminho de 4 passos.
+
+   O que NAO mudou (comissao depende disto):
+   - cookie mv_ref no dominio pai, 90 dias, so o apelido;
+   - as mesmas UTMs (parceiro/criador, ?canal= da lista);
+   - ?ramo=<k> continua indo NA HORA para a live de exemplo do ramo;
+   - parceiro nao encontrado, inativo, ou banco sem responder em 3,5 s:
+     segue para a comerciantes.html com as UTMs, como sempre foi.
+   --------------------------------------------------------------------------- */
 (function(){
-  /* 2026-09-19-linkcriador — PADRAO DE LINKS (R - Padrao de links e UTMs).
-     /p/apelido  -> parceiro comum  (utm_source=parceiro, campanha programa_parceiros)
-     /c/apelido  -> criador de conteudo (utm_source=criador, campanha programa_criadores)
-     Os dois gravam o MESMO ref e o MESMO cookie: a comissao nao muda, so o
-     relatorio passa a separar criador de parceiro comum.
-     ?canal=ig|tt|yt|wa|qr|bio|story|dm|grupo (opcional) vira utm_medium, para
-     saber QUAL canal do parceiro trouxe o comerciante. Valor fora da lista e
-     ignorado (fica 'indicacao'). */
   var m=location.pathname.match(/\/([pc])\/([^\/?#]+)/);
   var tipo=(m&&m[1]==='c')?'criador':'parceiro';
   var ref=(m?decodeURIComponent(m[2]):'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);
@@ -65,25 +62,640 @@
       +'&utm_content='+encodeURIComponent(ref.length>=3?ref:'sem_ref');
   if(ref.length>=3){
     q+='&ref='+encodeURIComponent(ref);
-    /* COOKIE DE INDICACAO — 04/09/2026.
-       O ?ref viajava so na URL: bastava o comerciante ler a landing, fechar a
-       aba e voltar depois pelo Google para a indicacao do parceiro morrer no
-       caminho. O cookie e gravado no dominio PAI (.moviki.com.br), entao o
-       app.moviki.com.br, que e outro dominio para o localStorage, enxerga o
-       mesmo valor. 90 dias, first-party, so o apelido do parceiro — nada de
-       publicidade e nada de terceiro. */
+    /* COOKIE DE INDICACAO — 04/09/2026: dominio pai, 90 dias, first-party. */
     try{ document.cookie='mv_ref='+encodeURIComponent(ref)+
       '; Max-Age=7776000; Path=/; Domain=.moviki.com.br; SameSite=Lax; Secure'; }catch(e){}
   }
-  /* 2026-10-16-ramo: ?ramo=<k> vem das pecas por ramo do Material de apoio.
-     Com ramo, a pessoa cai na live de exemplo do ramo (/aovivo le o ramo antes do
-     utm_content). Sem ramo, segue para a comerciantes.html, como sempre. O ref e o
-     cookie mv_ref sao os mesmos nos dois caminhos: a comissao nao muda. */
   var ramo='';
   try{ ramo=(new URLSearchParams(location.search).get('ramo')||'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40); }catch(e){}
-  location.replace(ramo.length>=2 ? '/aovivo?ramo='+encodeURIComponent(ramo)+'&'+q : '/comerciantes.html?'+q);
+  if(ramo.length>=2){ location.replace('/aovivo?ramo='+encodeURIComponent(ramo)+'&'+q); window.__MVP={sair:1}; return; }
+  if(ref.length<3){ location.replace('/comerciantes.html?'+q); window.__MVP={sair:1}; return; }
+  /* A pagina agora RENDERIZA: carimba as UTMs na propria URL (sem recarregar)
+     para o mvmetrica medir a visita ja sabendo de quem ela veio e levar as
+     UTMs para o cadastro. */
+  try{ history.replaceState(null,'',location.pathname+'?'+q); }catch(e){}
+  window.__MVP={ref:ref, tipo:tipo, q:q};
+  /* rede de seguranca: banco nao respondeu, a pessoa nao fica olhando tela vazia */
+  window.__MVP.fuga=setTimeout(function(){ location.replace('/comerciantes.html?'+q); }, 3500);
 })();
 </script>
+<script src="/mvmetrica.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/home-live-capa-9x16.jpg">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<style>
+  :root{
+    --noite:#050b14; --noite2:#081426; --painel:#0c1b31; --linha:rgba(120,170,230,.16);
+    --claro:#eaf3ff; --suave:#9fb2c6; --apagado:#6f849c;
+    --ciano:#00d4ff; --azul:#0066ff; --ok:#25e39b; --okEsc:#12b76a;
+    --perola:#f7f9fc; --perola2:#e9eef5; --tinta:#0b1b30; --tinta2:#4a5d75;
+    --hoje:#a855f7; --nos:#1596c2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{font-family:'Poppins',system-ui,-apple-system,sans-serif;background:var(--noite);color:var(--claro);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .estreito{max-width:720px}
+  section{padding:64px 0}
+  h1,h2,h3{letter-spacing:-.02em;line-height:1.15}
+  h2{font-size:clamp(26px,4.2vw,38px);font-weight:800;max-width:22ch}
+  .intro{margin-top:12px;font-size:16.5px;color:var(--suave);max-width:58ch}
+  .escondido{display:none!important}
+
+  .carregando{min-height:100vh;display:flex;align-items:center;justify-content:center;color:var(--suave);font-size:14px}
+  .spin{width:24px;height:24px;margin-right:12px;border:3px solid rgba(255,255,255,.14);border-top-color:var(--ciano);border-radius:50%;animation:gira .8s linear infinite}
+  @keyframes gira{to{transform:rotate(360deg)}}
+
+  /* topo */
+  .topo{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+  .marca{font-weight:800;font-size:22px}
+  .marca b{color:var(--ciano)}
+  .topoLink{font-size:13.5px;color:var(--suave);border-bottom:1px solid rgba(159,178,198,.3)}
+
+  /* HERO */
+  .hero{padding:18px 0 56px;background:radial-gradient(900px 460px at 78% 10%,rgba(0,102,255,.20),transparent 70%)}
+  .heroGrade{display:grid;grid-template-columns:1.12fr .88fr;gap:44px;align-items:center}
+  /* o convite: o mesmo material do cracha */
+  .convite{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,var(--perola),var(--perola2));color:var(--tinta);
+    border-radius:18px;padding:12px 16px 12px 12px;max-width:440px;box-shadow:0 18px 40px rgba(0,0,0,.45);position:relative}
+  .convite::before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,var(--ciano),var(--azul))}
+  .cFoto{width:58px;height:58px;flex:0 0 58px;border-radius:15px;background:linear-gradient(135deg,#0a6cff,#00b8e6);color:#fff;font-weight:800;font-size:21px;
+    display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;position:relative}
+  .cFoto.temFoto{font-size:0}
+  .cFoto i{position:absolute;right:-5px;bottom:-5px;width:22px;height:22px;border-radius:50%;background:var(--okEsc);border:3px solid var(--perola);display:flex;align-items:center;justify-content:center}
+  .cFoto i svg{width:11px;height:11px;color:#fff}
+  .cTxt{min-width:0}
+  .cDe{font-size:12.5px;color:var(--tinta2)}
+  .cNome{font-weight:800;font-size:17px;line-height:1.2;word-break:break-word}
+  .cSelo{margin-top:3px;display:block;font-size:12px;font-weight:600;color:#0a6b42;line-height:1.4}
+  .cSelo .pulso{display:inline-block;margin-right:6px;vertical-align:1px}
+  .cSelo u{text-decoration:none;color:var(--azul);font-weight:700}
+  .pulso{width:7px;height:7px;border-radius:50%;background:var(--okEsc);box-shadow:0 0 0 0 rgba(18,183,106,.5);animation:pulso 1.8s infinite}
+  @keyframes pulso{70%{box-shadow:0 0 0 7px rgba(18,183,106,0)}100%{box-shadow:0 0 0 0 rgba(18,183,106,0)}}
+
+  .hero h1{margin-top:26px;font-size:clamp(34px,5.6vw,56px);font-weight:800;max-width:15ch}
+  .hero .lead{margin-top:16px;font-size:18px;color:#c6d6ea;max-width:46ch}
+  .cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 26px;border-radius:14px;
+    background:linear-gradient(120deg,var(--ciano),var(--azul));color:#03111f;font-weight:800;font-size:16.5px;border:0;cursor:pointer;font-family:inherit}
+  .cta:hover{filter:brightness(1.06)}
+  .cta:focus-visible,.calmo:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--ciano);outline-offset:3px}
+  .acoesHero{margin-top:26px;display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center}
+  .garantias{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--suave)}
+  .garantias span{display:inline-flex;align-items:center;gap:7px}
+  .garantias svg{width:16px;height:16px;color:var(--ok)}
+  .calmo{font-size:15px;font-weight:600;color:var(--claro);border-bottom:1px solid rgba(234,243,255,.3);padding-bottom:1px}
+
+  .celular{justify-self:center;position:relative;width:min(300px,78vw);aspect-ratio:9/19;border-radius:40px;padding:10px;
+    background:linear-gradient(160deg,#1a2a44,#0a1322);box-shadow:0 40px 80px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.08)}
+  .celular img{width:100%;height:100%;object-fit:cover;border-radius:31px}
+  .tela{position:relative;width:100%;height:100%;border-radius:31px;overflow:hidden;background:#000}
+  .tela img,.tela iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
+  .play{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;padding:0 16px 34px;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(3,10,20,.85));border:0;color:#fff;font-family:inherit;cursor:pointer;text-align:center}
+  .play .bola{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;
+    background:linear-gradient(120deg,var(--ciano),var(--azul));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 10px rgba(0,212,255,.18),0 18px 40px rgba(0,0,0,.5)}
+  .play .bola svg{width:32px;height:32px;fill:#03111f;margin-left:4px}
+  .play:hover .bola{filter:brightness(1.08)}
+  .play:focus-visible{outline:3px solid var(--ciano);outline-offset:-3px}
+  .pRot{font-weight:800;font-size:17px}
+  .pSub{font-size:12.5px;color:#c6d6ea}
+  /* VIDEOS POR RAMO */
+  .ramosGrade{margin-top:28px;display:grid;grid-template-columns:1fr 300px;grid-template-areas:'esc tela' 'txt tela';grid-template-rows:auto 1fr;column-gap:34px;row-gap:0;align-items:start}
+  .rgEsc{grid-area:esc}.rgTxt{grid-area:txt}.ramoTela{grid-area:tela}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:10px 16px;border-radius:999px;border:1px solid var(--linha);background:var(--painel);color:var(--claro);font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--claro);color:var(--tinta);border-color:var(--claro)}
+  .chip:focus-visible{outline:3px solid var(--ciano);outline-offset:2px}
+  .ramoMais{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--suave)}
+  .ramoMais select{font-family:inherit;font-size:14.5px;padding:9px 12px;border-radius:12px;background:var(--painel);color:var(--claro);border:1px solid var(--linha);max-width:100%}
+  .ramoTxt{margin-top:22px;font-size:15px;color:#c6d6ea;max-width:46ch}
+  .ramoTxt b{color:#fff}
+  .ramoTela{width:100%;max-width:300px;aspect-ratio:9/16;border-radius:24px;padding:8px;background:linear-gradient(160deg,#1a2a44,#0a1322);box-shadow:0 30px 60px rgba(0,0,0,.5);justify-self:center}
+  .ramoTela .tela{border-radius:18px}
+  .ramoTela .play{padding-bottom:24px}
+  .ramoTela .play .bola{width:64px;height:64px;top:46%}
+  .balao{position:absolute;left:-46px;top:30%;background:var(--perola);color:var(--tinta);border-radius:14px;padding:9px 12px;font-size:12.5px;font-weight:600;
+    box-shadow:0 14px 30px rgba(0,0,0,.4);max-width:190px;line-height:1.35}
+  .balao b{display:block;font-size:15px;color:#0a6b42}
+  .balao.dir{left:auto;right:-40px;top:58%}
+
+  /* ECONOMIA */
+  .economia{background:var(--noite2);border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+  .ecoGrade{margin-top:30px;display:grid;grid-template-columns:.95fr 1.05fr;gap:28px;align-items:start}
+  .campos{background:var(--painel);border:1px solid var(--linha);border-radius:20px;padding:22px}
+  .campo+.campo{margin-top:22px}
+  .campo label{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;font-weight:600}
+  .campo label output{white-space:nowrap;font-weight:800;color:var(--ciano);font-variant-numeric:tabular-nums}
+  .campo small{display:block;font-size:12.5px;color:var(--apagado);margin-top:3px}
+  input[type=range]{width:100%;margin-top:12px;accent-color:#00b8e6;height:28px}
+  .resultado{background:var(--painel);border:1px solid var(--linha);border-radius:20px;padding:22px}
+  .barra{margin-top:14px}
+  .barra .rot{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--suave)}
+  .barra .rot b{color:var(--claro);font-variant-numeric:tabular-nums}
+  .trilho{margin-top:6px;height:16px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden}
+  .enche{height:100%;border-radius:0 4px 4px 0;transition:width .35s ease}
+  .enche.hoje{background:var(--hoje)} .enche.nos{background:var(--nos)}
+  .saldo{margin-top:20px;padding-top:18px;border-top:1px solid var(--linha)}
+  .saldo .grande{font-size:clamp(30px,5vw,44px);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+  .saldo .grande.pos{color:var(--ok)}
+  .saldo p{margin-top:6px;font-size:14.5px;color:var(--suave)}
+  .notaEco{margin-top:14px;font-size:12.5px;color:var(--apagado)}
+  .notaEco a{color:var(--suave);border-bottom:1px solid rgba(159,178,198,.35)}
+  .semOnline{margin-top:16px;font-size:14px;color:#c6d6ea;background:rgba(0,212,255,.06);border:1px solid var(--linha);border-radius:14px;padding:12px 14px}
+
+  /* DESENVOLVIMENTO */
+  .ficaGrade{margin-top:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .fica{padding:22px;border-radius:18px;background:var(--painel);border:1px solid var(--linha)}
+  .fica .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(0,212,255,.08);color:var(--ciano)}
+  .fica .ic svg{width:21px;height:21px}
+  .fica h3{margin-top:14px;font-size:18px;font-weight:700}
+  .fica p{margin-top:6px;font-size:14.5px;color:var(--suave)}
+  .fica.largo{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:linear-gradient(120deg,rgba(0,102,255,.16),rgba(0,212,255,.05));}
+  .fica.largo h3{margin-top:0}
+
+  /* DUVIDAS */
+  .duvidas{margin-top:28px;display:flex;flex-direction:column;gap:10px}
+  details{background:var(--painel);border:1px solid var(--linha);border-radius:16px}
+  summary{list-style:none;cursor:pointer;padding:17px 52px 17px 20px;font-weight:600;font-size:16px;position:relative}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'';position:absolute;right:22px;top:50%;width:10px;height:10px;border-right:2px solid var(--suave);border-bottom:2px solid var(--suave);transform:translateY(-70%) rotate(45deg);transition:transform .2s}
+  details[open] summary::after{transform:translateY(-30%) rotate(225deg)}
+  details .r{padding:0 20px 18px;font-size:15px;color:#c6d6ea;line-height:1.65}
+  details .r b{color:#fff;font-weight:600}
+  details .r a{color:var(--ciano);border-bottom:1px solid rgba(0,212,255,.35)}
+
+  /* PASSOS (sequencia real) */
+  .passos{margin-top:30px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:p}
+  .passo{position:relative;padding:22px 18px 20px;border-top:2px solid var(--linha)}
+  .passo::before{counter-increment:p;content:counter(p);position:absolute;top:-17px;left:18px;width:32px;height:32px;border-radius:50%;
+    background:var(--noite);border:2px solid var(--ciano);color:var(--ciano);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .passo h3{font-size:16.5px;font-weight:700;margin-top:8px}
+  .passo p{margin-top:6px;font-size:14px;color:var(--suave)}
+
+  /* PLANOS */
+  .planos{margin-top:28px;border:1px solid var(--linha);border-radius:18px;overflow:hidden}
+  .plano{display:grid;grid-template-columns:190px 150px 1fr;gap:12px;align-items:center;padding:16px 20px;border-top:1px solid var(--linha)}
+  .plano:first-child{border-top:0}
+  .plano .n{font-weight:700}
+  .plano .v{font-weight:800;font-variant-numeric:tabular-nums}
+  .plano .v small{font-weight:500;color:var(--suave);font-size:12.5px}
+  .plano .d{font-size:14px;color:var(--suave)}
+  .plano.live{background:rgba(0,212,255,.06)}
+  .plano.live .n::after{content:'com live';margin-left:8px;font-size:11px;font-weight:700;color:#03111f;background:var(--ciano);padding:2px 8px;border-radius:999px;vertical-align:2px}
+  .planoNota{margin-top:12px;font-size:13.5px;color:var(--suave)}
+
+  /* FINAL */
+  .final{padding:72px 0 40px;text-align:center;background:radial-gradient(700px 360px at 50% 0,rgba(0,102,255,.18),transparent 70%)}
+  .final h2{margin:0 auto;max-width:20ch}
+  .final .intro{margin:12px auto 0}
+  .final .convite{margin:28px auto 0;text-align:left}
+  .final .acoesHero{justify-content:center}
+
+  .pe{padding:34px 0 calc(40px + env(safe-area-inset-bottom));text-align:center;font-size:12px;line-height:1.7;color:var(--suave);border-top:1px solid var(--linha)}
+  .pe b{color:#c7d6ea;font-weight:600}
+  .pe .links{margin-top:6px;display:flex;gap:5px 15px;justify-content:center;flex-wrap:wrap}
+  .pe a{border-bottom:1px solid rgba(255,255,255,.14)}
+
+  /* barra fixa no celular */
+  .fixa{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(5,11,20,.92);backdrop-filter:blur(8px);
+    border-top:1px solid var(--linha);display:none;z-index:20;transform:translateY(110%);transition:transform .3s ease}
+  .fixa.ver{transform:none}
+  .fixa .cta{width:100%;padding:14px}
+
+  @media (max-width:880px){
+    .ramosGrade{grid-template-columns:1fr;grid-template-areas:'esc' 'tela' 'txt';row-gap:24px}
+    .heroGrade,.ecoGrade{grid-template-columns:1fr}
+    .celular{margin-top:24px}
+    .balao{left:-18px}.balao.dir{right:-14px}
+    .passos{grid-template-columns:1fr 1fr;row-gap:34px}
+    .fixa{display:block}
+    body{padding-bottom:76px}
+  }
+  @media (max-width:560px){
+    section{padding:52px 0}
+    .wrap{padding:0 16px}
+    .ficaGrade{grid-template-columns:1fr}
+    .fica.largo{grid-template-columns:1fr}
+    .passos{grid-template-columns:1fr}
+    .plano{grid-template-columns:1fr auto;row-gap:2px}
+    .plano .d{grid-column:1/-1}
+    .hero .lead{font-size:16.5px}
+    .acoesHero .cta{width:100%}
+    .balao{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){ .pulso,.spin{animation:none} .enche,.fixa{transition:none} html{scroll-behavior:auto} }
+</style>
 </head>
-<body style="background:#050b14"></body>
+<body>
+
+<div id="carregando" class="carregando"><div class="spin"></div>Abrindo o convite…</div>
+
+<div id="pagina" class="escondido">
+
+  <header class="wrap topo">
+    <div class="marca">mo<b>viki</b></div>
+    <a class="topoLink" id="topoCracha" href="#">Conferir o crachá</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" data-mv-sem-motion>
+    <div class="wrap heroGrade">
+      <div>
+        <div class="convite" id="conviteTopo"></div>
+        <h1>Sua loja vendendo ao vivo, sem entregar um pedaço de cada venda.</h1>
+        <p class="lead">Mostre o produto pela câmera do celular, receba o pedido com Pix na sua conta e apareça para quem está perto. Sem comissão por venda: se gostar, você paga uma mensalidade fixa.</p>
+        <div class="acoesHero">
+          <a class="cta" data-ev="indicacao_cadastrar_topo" data-cad href="#">Criar minha conta grátis</a>
+          <a class="calmo" href="#conta">Ver quanto fica com você</a>
+        </div>
+        <div class="garantias">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>30 dias grátis</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>Sem cartão</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>2 lives no teste</span>
+        </div>
+      </div>
+      <div class="celular">
+        <div class="tela" data-video="IdlnPRxwEzM" data-nome="tela_dupla" data-titulo="Vídeo: como a live do Moviki vende">
+          <img src="/home-live-capa-9x16.jpg" width="720" height="1280" alt="" decoding="async" fetchpriority="high">
+          <button class="play" type="button" aria-label="Assistir ao vídeo: como a live do Moviki vende, 1 minuto">
+            <span class="bola"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="pRot">Veja uma live vendendo</span>
+            <span class="pSub">1 minuto, com som e as telas de verdade</span>
+          </button>
+        </div>
+        <div class="balao dir"><b>0%</b>de comissão do Moviki por venda</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEOS POR RAMO -->
+  <section id="ramos" style="padding-top:20px">
+    <div class="wrap">
+      <h2>Veja como fica uma live do seu ramo.</h2>
+      <p class="intro">Escolha o que você vende. Cada vídeo mostra como a live funciona para quem vende o que você vende.</p>
+      <div class="ramosGrade">
+        <div class="rgEsc">
+          <div class="chips" id="chips" role="group" aria-label="Escolha o seu ramo"></div>
+          <div class="ramoMais"><label for="ramoSel">Outro ramo:</label><select id="ramoSel"></select></div>
+        </div>
+        <div class="ramoTela"><div class="tela" id="telaRamo"></div></div>
+        <div class="rgTxt">
+          <p class="ramoTxt" id="ramoTxt"></p>
+          <div class="acoesHero"><a class="cta" data-ev="indicacao_cadastrar_ramo" data-cad href="#">Quero a minha loja assim</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ECONOMIA -->
+  <section class="economia" id="conta">
+    <div class="wrap">
+      <h2>Faça a conta com os seus números.</h2>
+      <p class="intro">Muita plataforma de venda cobra uma porcentagem de cada pedido. Quanto mais você vende, mais você paga. No Moviki o custo é fixo.</p>
+      <div class="ecoGrade">
+        <div class="campos">
+          <div class="campo">
+            <label for="vendas">Quanto você vende por mês pela internet <output id="oVendas">R$ 5.000</output></label>
+            <input type="range" id="vendas" min="500" max="50000" step="500" value="5000" aria-describedby="hVendas">
+            <small id="hVendas">Some live, marketplace e loja online.</small>
+          </div>
+          <div class="campo">
+            <label for="pct">Quanto paga hoje em cada venda <output id="oPct">12%</output></label>
+            <input type="range" id="pct" min="0" max="25" step="1" value="12" aria-describedby="hPct">
+            <small id="hPct">Comissão e taxa da plataforma juntas. Não sabe? Olhe o extrato de uma venda.</small>
+          </div>
+          <div class="semOnline">Ainda não vende pela internet? Aí a conta é outra: cada pedido que chegar pela live é uma venda que hoje não existe.</div>
+        </div>
+        <div class="resultado" aria-live="polite">
+          <div class="barra">
+            <div class="rot"><span>Você entrega hoje, por mês</span><b id="rHoje">R$ 600,00</b></div>
+            <div class="trilho"><div class="enche hoje" id="bHoje" style="width:100%"></div></div>
+          </div>
+          <div class="barra">
+            <div class="rot"><span>No Moviki, com live (Premium)</span><b>R$ 69,90</b></div>
+            <div class="trilho"><div class="enche nos" id="bNos" style="width:12%"></div></div>
+          </div>
+          <div class="saldo">
+            <div class="grande pos" id="rSaldo">R$ 530,10</div>
+            <p id="rSaldoTxt">a mais no seu caixa por mês. Em um ano: <b id="rAno">R$ 6.361,20</b>.</p>
+          </div>
+          <p class="notaEco">Simulação com os números que você escolheu. Não inclui a tarifa do seu banco ou da maquininha. Quer comparar plataforma por plataforma, com a tarifa oficial de cada uma? <a href="/guia/calculadora-taxas-live-shop" data-ev="indicacao_calculadora">Abra a calculadora completa</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESENVOLVIMENTO -->
+  <section>
+    <div class="wrap">
+      <h2>Além da economia, o que passa a ser seu.</h2>
+      <p class="intro">Seguidor de rede social é da rede. No Moviki, a loja, o link e a lista de clientes ficam com você.</p>
+      <div class="ficaGrade">
+        <div class="fica largo">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span>
+          <div><h3>Uma lista de clientes que é sua</h3><p>Quem gosta da sua loja toca em "Me avise da próxima live" e entra na sua Lista VIP, com autorização. Na próxima live, eles recebem o aviso. Mudou de rede social, a lista continua com você.</p></div>
+        </div>
+        <div class="fica">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></span>
+          <h3>Um link só da sua loja</h3><p>Catálogo, promoções, horário e a live num endereço com o nome da sua loja, para pôr na bio e mandar no WhatsApp.</p>
+        </div>
+        <div class="fica">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.1 7-12a7 7 0 0 0-14 0c0 5.9 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+          <h3>No mapa, para quem está perto</h3><p>Quem procura no Moviki encontra a sua loja no mapa, perto de onde está.</p>
+        </div>
+        <div class="fica">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
+          <h3>Pedido organizado, não conversa solta</h3><p>Cada pedido chega numerado, com o que foi comprado, o Pix e a entrega ou retirada. Nada de responder um por um no direct.</p>
+        </div>
+        <div class="fica">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/></svg></span>
+          <h3>Você enxerga o que funciona</h3><p>Visitas e pedidos de cada dia no seu painel, para decidir com número qual produto e qual horário rendem mais.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DUVIDAS -->
+  <section style="background:var(--noite2);border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)">
+    <div class="wrap estreito">
+      <h2>As dúvidas que todo lojista tem antes de começar.</h2>
+      <div class="duvidas" id="duvidas"></div>
+    </div>
+  </section>
+
+  <!-- PASSOS -->
+  <section>
+    <div class="wrap">
+      <h2>Do convite à primeira live.</h2>
+      <p class="intro" id="passosIntro">Dá para fazer tudo em uma tarde.</p>
+      <div class="passos">
+        <div class="passo"><h3>Crie a conta</h3><p>Nome da loja, WhatsApp e e-mail. Um minuto, sem cartão.</p></div>
+        <div class="passo"><h3>Monte o catálogo</h3><p>Escolha o tipo do seu negócio e um catálogo de exemplo aparece pronto. Troque as fotos e os preços.</p></div>
+        <div class="passo"><h3>Faça um ensaio</h3><p>Transmita de verdade, sem ninguém ver, até ficar à vontade com a câmera.</p></div>
+        <div class="passo"><h3>Abra a primeira live</h3><p>Mande o link para os seus clientes no WhatsApp e mostre os produtos.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section style="padding-top:12px">
+    <div class="wrap estreito">
+      <h2>Preço fixo, sem surpresa.</h2>
+      <div class="planos">
+        <div class="plano"><span class="n">Básico</span><span class="v">Grátis</span><span class="d">Sua loja no mapa, link próprio e avaliações</span></div>
+        <div class="plano"><span class="n">Pró</span><span class="v">R$ 39,90<small>/mês</small></span><span class="d">Catálogo, promoções, eventos e desempenho</span></div>
+        <div class="plano live"><span class="n">Premium</span><span class="v">R$ 69,90<small>/mês</small></span><span class="d">Pró + Modo Live, catálogo com Pix, pedidos com entrega</span></div>
+        <div class="plano"><span class="n">Enterprise</span><span class="v">R$ 129,90<small>/mês</small></span><span class="d">Várias lojas, Pix dentro da live e relatórios</span></div>
+      </div>
+      <p class="planoNota">O teste grátis libera o Pró por 30 dias com 2 lives. Depois, se você não fizer nada, a conta fica no Básico, grátis, e o seu link continua no ar.</p>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="final">
+    <div class="wrap">
+      <h2 id="finalTitulo">Comece hoje, com quem te indicou do seu lado.</h2>
+      <p class="intro" id="finalIntro"></p>
+      <div class="convite" id="conviteFim"></div>
+      <div class="acoesHero" style="margin-top:28px">
+        <a class="cta" data-ev="indicacao_cadastrar_fim" data-cad href="#">Criar minha conta grátis</a>
+        <a class="calmo" id="zapMoviki" data-ev="indicacao_zap" target="_blank" rel="noopener" href="https://wa.me/554120186848">Prefiro falar com o Moviki</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pe">
+    <div class="wrap">
+      <div><b>EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA</b></div>
+      <div>CNPJ 68.289.841/0001-02 &middot; Curitiba/PR</div>
+      <div class="links">
+        <a href="/termos.html">Termos de uso</a>
+        <a href="/reembolso.html">Reembolso</a>
+        <a href="/privacidade.html">Privacidade</a>
+        <a href="https://wa.me/554120186848" target="_blank" rel="noopener">(41) 2018-6848</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="fixa" id="fixa"><a class="cta" data-ev="indicacao_cadastrar_fixa" data-cad href="#">Criar minha conta grátis</a></div>
+</div>
+
+<script type="module">
+/* Leitura do espelho publico do parceiro (o mesmo que a /v/ le). Nunca le
+   parceiros/{uid}. Campos usados: nome, foto, arroba (so com prova), ativo. */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const P = window.__MVP || {};
+if (!P.sair && P.ref) iniciar();
+
+async function iniciar(){
+  const app = initializeApp({
+    apiKey: "AIzaSyAjr0QED8JfHvIb1UtsM0CWHDXmJzDQhWw",
+    authDomain: "moviki-app.firebaseapp.com",
+    projectId: "moviki-app",
+    storageBucket: "moviki-app.firebasestorage.app",
+    messagingSenderId: "451920150738",
+    appId: "1:451920150738:web:be458392064c964c792d0b"
+  });
+  window.MOVIKI_VERSAO = '2026-10-27-indicacao';
+  try { initializeAppCheck(app, { provider: new ReCaptchaV3Provider('6LdwcHQtAAAAAJKPpfIrUr8QQ_PfvXl89uJFq9-w'), isTokenAutoRefreshEnabled: true }); }
+  catch (e) { console.error('App Check:', e); }
+  let d = null;
+  try {
+    const s = await getDoc(doc(getFirestore(app), 'parceiros_publicos', P.ref));
+    d = s.exists() ? (s.data() || {}) : null;
+  } catch (e) { d = null; }
+  if (!d || d.ativo !== true) { clearTimeout(P.fuga); location.replace('/comerciantes.html?' + P.q); return; }
+  clearTimeout(P.fuga);
+  pintar(d);
+}
+
+const el = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const brl = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const brl0 = v => 'R$ ' + v.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+function iniciais(n){ const p = String(n||'').trim().split(/\s+/).filter(Boolean); return ((p[0]||'P').charAt(0) + (p.length>1 ? p[p.length-1].charAt(0) : '')).toUpperCase(); }
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>';
+
+function cartao(nome, ref, de){
+  return '<div class="cFoto" data-foto>' + esc(iniciais(nome)) + '<i>' + CHECK + '</i></div>' +
+    '<div class="cTxt"><div class="cDe">' + de + '</div><div class="cNome">' + esc(nome) + '</div>' +
+    '<a class="cSelo" data-ev="indicacao_ver_cracha" href="/v/' + encodeURIComponent(ref) + '"><span class="pulso"></span>Parceiro autorizado · <u>ver crachá</u></a></div>';
+}
+
+function pintar(d){
+  const ref = P.ref;
+  const nome = String(d.nome || 'Parceiro Moviki');
+  const primeiro = nome.trim().split(/\s+/)[0] || 'O parceiro';
+  const pEsc = esc(primeiro);
+  el('conviteTopo').innerHTML = cartao(nome, ref, 'Você recebeu um convite de');
+  el('conviteFim').innerHTML = cartao(nome, ref, 'Quem te indicou');
+  el('topoCracha').href = '/v/' + encodeURIComponent(ref);
+  el('passosIntro').innerHTML = 'Dá para fazer tudo em uma tarde. E ' + pEsc + ' pode te ajudar em cada passo, sem cobrar nada.';
+  el('finalIntro').innerHTML = pEsc + ' te mostra como funciona, ajuda a montar o catálogo e a fazer o ensaio. Sem custo nenhum: quem paga a parte dele é o Moviki.';
+  el('zapMoviki').href = 'https://wa.me/554120186848?text=' + encodeURIComponent('Olá! ' + primeiro + ' me indicou o Moviki (/p/' + ref + ') e eu tenho uma dúvida.');
+  document.title = 'Moviki · Convite de ' + primeiro;
+
+  /* cadastro: mesmo ref e mesmas UTMs do redirecionador antigo */
+  const cad = 'https://app.moviki.com.br/?criar=1&' + P.q;
+  document.querySelectorAll('[data-cad]').forEach(a => a.href = cad);
+
+  /* foto: a do painel (no espelho) ou, com @ provado, a do Instagram */
+  const ok = f => typeof f === 'string' && /^data:image\/(png|jpe?g|webp);base64,[A-Za-z0-9+\/=]+$/.test(f);
+  const porFoto = f => document.querySelectorAll('[data-foto]').forEach(x => { x.style.backgroundImage = 'url("' + f + '")'; x.classList.add('temFoto'); });
+  if (ok(d.foto)) porFoto(d.foto);
+  else {
+    const puro = String(d.arroba || '').replace(/^@+/, '');
+    if (/^[a-z0-9._]{2,30}$/i.test(puro)) {
+      fetch('https://moviki-robo.vercel.app/api/novo-parceiro?instagram=' + encodeURIComponent(puro))
+        .then(r => r.json()).then(j => { if (j && j.achou && ok(j.foto)) porFoto(j.foto); }).catch(() => {});
+    }
+  }
+
+  pintarDuvidas(primeiro, ref);
+  ligarRamos(primeiro);
+  ligarConta();
+  ligarFixa();
+
+  el('carregando').classList.add('escondido');
+  el('pagina').classList.remove('escondido');
+  try { if (window.mvEv) mvEv('indicacao_ver', { ref: ref, tipo: P.tipo }); } catch (e) {}
+}
+
+/* VIDEOS (27/10/2026, pedido do Paulo: "a gente tem um monte de video legal"):
+   nada toca sozinho e nada baixa do YouTube antes do toque — a capa e uma
+   imagem; o toque troca pela reproducao (youtube-nocookie), com som. */
+function tocar(tela){
+  const id = tela.getAttribute('data-video'); if (!id || tela.querySelector('iframe')) return;
+  const f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  f.title = tela.getAttribute('data-titulo') || 'Vídeo do Moviki';
+  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
+  tela.innerHTML = ''; tela.appendChild(f);
+  try { if (window.mvEv) mvEv('video_play', { video: tela.getAttribute('data-nome') || id, pagina: 'indicacao' }); } catch (e) {}
+}
+document.addEventListener('click', ev => { const b = ev.target.closest && ev.target.closest('.tela .play'); if (b) tocar(b.closest('.tela')); });
+
+const RAMOS = [
+  ['moda','Moda','YTYp5O3fvks'],['semijoias','Semijoias','ew33Ys8ubKc'],['cosmeticos','Cosméticos','NhRkerW1Go4'],
+  ['calcados','Calçados','6RR4LoBYE5U'],['pet','Pet shop','71NdVOrPPtc'],['acai','Açaí e lanches','xAH7ESvOWck'],
+  ['confeitaria','Confeitaria','6v6pVU6rJ3c'],['bebe','Bebê','IyyXKoAegcw'],['suplementos','Suplementos','YswPUBxUrI0'],
+  ['utilidades','Utilidades','JTZUWYnhGv8'],
+  ['acessorios-celular','Acessórios de celular','I5f0Z_aaX0w'],['acougue','Açougue','LpYX3I58eUw'],['autopecas','Autopeças','0zetdYisdwI'],
+  ['bijuteria','Bijuteria','_lByMr9zBn8'],['boutique','Boutique','UYne3gjd7Qo'],['brecho','Brechó','QgUyyAa8T2M'],
+  ['brinquedos','Brinquedos','DKjhufTXn_w'],['cabelo','Cabelo','Uy_meYHgMeE'],['cama-mesa-banho','Cama, mesa e banho','wDDHktVxUaU'],
+  ['chocolateria','Chocolateria','gZS9TgJTWEc'],['eletroportateis','Eletroportáteis','J69Qy2-fnzU'],['emporio','Empório','eg_Rc_PNqJc'],
+  ['esportes','Artigos esportivos','M0KANp1i8qg'],['farmacia','Farmácia','Z7ksI3xaJ7Q'],['festa','Artigos de festa','5E3w3xKOxAs'],
+  ['floricultura','Floricultura','tYeLe1dEfaE'],['games','Games e informática','8vFWKRKkMG4'],['lingerie','Moda íntima','egYP3RPwPvg'],
+  ['moda-fitness','Moda fitness','RTB8zAxiJ5A'],['moda-infantil','Moda infantil','SDR8kcvjzuQ'],['moda-masculina','Moda masculina','aUHocnc7NdE'],
+  ['moda-praia','Moda praia','YSUgBVn7OTE'],['naturais','Produtos naturais','5yQwFsSuAbk'],['otica','Ótica','BgaFQpdp4ns'],
+  ['padaria','Padaria','1uPBllWMIko'],['perfumaria','Perfumaria','yRylkHjAfB0'],['presentes','Presentes','lPVOdxwTZFI'],
+  ['sertanejos','Produtos sertanejos','297M0GAV0SQ']
+];
+const CHIPS = 10;
+function ligarRamos(primeiro){
+  const chips = el('chips'), sel = el('ramoSel'), tela = el('telaRamo');
+  chips.innerHTML = RAMOS.slice(0, CHIPS).map((r, i) => '<button type="button" class="chip" data-r="' + i + '" aria-pressed="false">' + r[1] + '</button>').join('');
+  sel.innerHTML = '<option value="">Escolha</option>' + RAMOS.slice(CHIPS).slice().sort((a, b) => a[1].localeCompare(b[1], 'pt-BR'))
+    .map(r => '<option value="' + RAMOS.indexOf(r) + '">' + r[1] + '</option>').join('');
+  function escolher(i, porToque){
+    const r = RAMOS[i]; if (!r) return;
+    chips.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c.getAttribute('data-r') === String(i) ? 'true' : 'false'));
+    if (i < CHIPS) sel.value = '';
+    tela.setAttribute('data-video', r[2]); tela.setAttribute('data-nome', 'ramo_' + r[0]); tela.setAttribute('data-titulo', 'Vídeo: live de ' + r[1]);
+    tela.innerHTML = '<img src="https://i.ytimg.com/vi/' + r[2] + '/hqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' +
+      '<button class="play" type="button" aria-label="Assistir: live de ' + r[1] + '"><span class="bola"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>' +
+      '<span class="pRot">Live de ' + r[1].toLowerCase() + '</span><span class="pSub">Toque para ver com som</span></button>';
+    el('ramoTxt').innerHTML = 'Imagine a <b>sua</b> loja de ' + r[1].toLowerCase() + ' assim: o cliente pergunta, você mostra de perto e o pedido chega com o Pix. ' + esc(primeiro) + ' te ajuda a montar a primeira.';
+    if (porToque) { tocar(tela); try { if (window.mvEv) mvEv('indicacao_ramo', { ramo: r[0] }); } catch (e) {} }
+  }
+  chips.addEventListener('click', ev => { const c = ev.target.closest('.chip'); if (c) escolher(+c.getAttribute('data-r'), true); });
+  sel.addEventListener('change', () => { if (sel.value !== '') escolher(+sel.value, true); });
+  escolher(0, false);
+}
+
+function pintarDuvidas(primeiro, ref){
+  const p = esc(primeiro);
+  const lista = [
+    ['Tenho vergonha de aparecer na câmera.',
+     'Quase todo lojista sente isso antes da primeira live. Por isso existe o <b>ensaio</b>: você transmite de verdade, ninguém vê, e repete quantas vezes precisar. Também dá para mostrar só o produto e as mãos, sem aparecer o rosto.'],
+    ['Não tenho tempo para mais uma coisa.',
+     'Uma live de 15 a 20 minutos, no horário que você escolher, já mostra os produtos da semana. O catálogo nasce com um exemplo do seu ramo, então você troca fotos e preços em vez de começar do zero.'],
+    ['Já vendo pelo Instagram e pelo WhatsApp.',
+     'Continue vendendo lá. O Moviki é o link que você põe na bio e manda no WhatsApp: o pedido chega organizado, com o Pix, e você para de responder "quanto custa?" um por um.'],
+    ['Quanto vou pagar de comissão por venda?',
+     '<b>Nenhuma.</b> O Moviki não cobra porcentagem das suas vendas. Se continuar depois do teste, você paga só a mensalidade do plano, que é fixa.'],
+    ['E se não der certo para mim?',
+     'São 30 dias grátis, sem cartão. Se não quiser continuar, não faz nada: a conta volta para o Básico, que é grátis, e o seu link continua no ar. Se assinar e mudar de ideia, cancela a renovação pelo próprio painel, sem multa, e tem 7 dias depois do primeiro pagamento para desistir com o dinheiro de volta.'],
+    ['Preciso baixar aplicativo? E o meu cliente?',
+     'Não. Tudo funciona no navegador do celular. O seu cliente abre o link da loja ou da live e compra ali, sem baixar nada.'],
+    [p + ' vai me cobrar alguma coisa?',
+     'Não. ' + p + ' é parceiro autorizado e quem paga a comissão dele é o Moviki, e só se você assinar um plano. Ninguém do Moviki pede senha, código do celular ou Pix em nome da empresa. <a href="/v/' + encodeURIComponent(ref) + '">Confira o crachá de ' + p + ' agora</a>.'],
+    ['Preciso de equipamento especial?',
+     'Não. O celular que você já tem e uma boa luz, de preferência de frente para uma janela. Um suporte ajuda, mas não é obrigatório.'],
+    ['Minha loja é pequena e tenho poucos seguidores.',
+     'A live não depende de seguidores: você manda o link para quem já compra de você, no WhatsApp, e a loja aparece no mapa para quem procura por perto. Começar com os clientes que você já tem é o jeito mais seguro.'],
+    ['Quem está por trás do Moviki?',
+     'A EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA, CNPJ 68.289.841/0001-02, de Curitiba/PR. Atendimento pelo WhatsApp (41) 2018-6848 e pelo e-mail suporte@moviki.com.br.']
+  ];
+  el('duvidas').innerHTML = lista.map((x, i) => '<details' + (i === 0 ? ' open' : '') + '><summary>' + x[0] + '</summary><div class="r">' + x[1] + '</div></details>').join('');
+  el('duvidas').addEventListener('toggle', ev => {
+    const s = ev.target && ev.target.open && ev.target.querySelector('summary');
+    if (s) try { if (window.mvEv) mvEv('indicacao_duvida', { duvida: s.textContent.slice(0, 60) }); } catch (e) {}
+  }, true);
+}
+
+function ligarConta(){
+  const PREMIUM = 69.90;
+  const v = el('vendas'), p = el('pct');
+  let medida = false;
+  function conta(){
+    const vendas = +v.value, pct = +p.value;
+    const hoje = vendas * pct / 100;
+    const saldo = hoje - PREMIUM;
+    el('oVendas').textContent = brl0(vendas);
+    el('oPct').textContent = pct + '%';
+    el('rHoje').textContent = brl(hoje);
+    const topo = Math.max(hoje, PREMIUM);
+    el('bHoje').style.width = (hoje / topo * 100) + '%';
+    el('bNos').style.width = (PREMIUM / topo * 100) + '%';
+    const g = el('rSaldo');
+    if (saldo > 0) {
+      g.textContent = brl(saldo); g.classList.add('pos');
+      el('rSaldoTxt').innerHTML = 'a mais no seu caixa por mês. Em um ano: <b>' + brl(saldo * 12) + '</b>.';
+    } else {
+      g.textContent = '+ ' + brl(-saldo) + ' por mês'; g.classList.remove('pos');
+      el('rSaldoTxt').innerHTML = 'é quanto a mensalidade custa a mais com esse volume. O que você ganha aqui é a sua lista de clientes e o seu link, e o custo não sobe quando as vendas crescerem.';
+    }
+  }
+  const mediu = () => { if (medida) return; medida = true; try { if (window.mvEv) mvEv('indicacao_conta', {}); } catch (e) {} };
+  v.addEventListener('input', () => { conta(); mediu(); });
+  p.addEventListener('input', () => { conta(); mediu(); });
+  conta();
+}
+
+function ligarFixa(){
+  const f = el('fixa');
+  const alvo = document.querySelector('.hero .acoesHero');
+  const fim = document.querySelector('.final');
+  if (!('IntersectionObserver' in window) || !alvo) return;
+  let heroVisivel = true, fimVisivel = false;
+  const upd = () => f.classList.toggle('ver', !heroVisivel && !fimVisivel);
+  new IntersectionObserver(e => { heroVisivel = e[0].isIntersecting; upd(); }).observe(alvo);
+  if (fim) new IntersectionObserver(e => { fimVisivel = e[0].isIntersecting; upd(); }).observe(fim);
+}
+
+/* MEDICAO DOS CTAs: data-ev = nome do CTA, evento cta_click. */
+document.addEventListener('click', function(e){
+  const a = e.target && e.target.closest ? e.target.closest('[data-ev]') : null;
+  if (!a) return;
+  try { if (window.mvEv) window.mvEv('cta_click', { cta: a.getAttribute('data-ev'), pagina: 'indicacao' }); } catch (err) {}
+});
+</script>
+</body>
 </html>
