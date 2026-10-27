@@ -727,6 +727,9 @@ h1.nomeNeg{font-size:clamp(23px,6vw,34px);font-weight:800;letter-spacing:-.6px;t
 .pdCampo input,.pdCampo textarea{width:100%;background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:11px;
   padding:12px 13px;color:var(--mv-txt);font-size:15px;font-family:inherit;resize:vertical;}
 .pdCampo input:focus,.pdCampo textarea:focus{outline:none;border-color:var(--ciano);}
+/* 2026-10-28-mercadopago: a escolha das parcelas com a mesma cara dos outros campos (antes saia o select cru do navegador) */
+.pdCampo select{width:100%;background:var(--mv-campo);border:1px solid var(--mv-linha);border-radius:11px;padding:12px 13px;color:var(--mv-txt);font-size:15px;font-family:inherit;}
+.pdCampo select:focus{outline:none;border-color:var(--ciano);}
 .pdEnt{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 .pdEnt button{min-height:46px;border-radius:var(--mv-r);border:1px solid var(--mv-linha);background:var(--mv-campo);
   color:var(--mv-txt-2);font-family:inherit;font-weight:600;font-size:13.5px;cursor:pointer;}
@@ -3255,7 +3258,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
       '<div class="l">'+(n>1?(cMP?'Até '+n+'x no cartão':n+'x de '+fmtReal(Number(c.valorParcela)||PEDIDO.total/n)+' sem juros'):'À vista no cartão')+'</div>'+
       (Number(PEDIDO.frete)>0?'<div class="l" style="margin-top:4px">Produtos '+fmtReal(PEDIDO.subtotal)+' + entrega '+fmtReal(PEDIDO.frete)+'</div>':'')+
       (PEDIDO.numero?'<div class="l" style="margin-top:4px">Pedido nº '+String(PEDIDO.numero).padStart(4,'0')+'</div>':'')+'</div>';
-    h+=(u?'<a class="pgCopiar" style="display:block;text-align:center;text-decoration:none" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer" onclick="try{if(window.mvEv)mvEv(\'cartao_aberto\',{})}catch(_){}">Abrir a página do cartão</a>':'')+
+    h+=(u?'<a class="pgCopiar" style="display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer" onclick="try{if(window.mvEv)mvEv(\'cartao_aberto\',{})}catch(_){}">Abrir a página do cartão</a>':'')+
       '<div class="pgConfere"><h4>Como funciona</h4><p>Você digita os dados do cartão na página segura do <b>'+cNome+'</b>, que recebe pela loja. Os dados do cartão não passam pelo Moviki.'+(cMP?' As parcelas e os juros aparecem lá.':'')+' Depois de pagar, volte para esta tela.</p></div>'+
       '<div class="pgStatus" id="pgStatus">Assim que o cartão for aprovado, esta tela avisa. Pode deixar aberta.</div>';
     const w=wppDaUnidade();
