@@ -30,20 +30,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* CRACHA VIVO — 27/10/2026, pedido do Paulo: "dar vida de verdade ao cracha".
-     A ideia que manda na pagina: um cracha FISICO, branco, pendurado no
-     cordao, que prova que e de verdade porque esta VIVO — o relogio anda e a
-     faixa holografica acompanha o dedo. Print e foto ficam parados. */
+  /* CRACHA VIVO — 27/10/2026, pedido do Paulo: "dar vida de verdade ao cracha"
+     e, na segunda rodada, "mais caprichado". O que faz dele um documento:
+     - fundo de seguranca (linhas finas tipo cedula) e microtexto na borda;
+     - selo holografico redondo que muda de cor com o dedo e com o celular;
+     - o cracha inteiro inclina em 3D e o brilho corre pela superficie;
+     - a conferencia ACONTECE na frente da pessoa: a luz passa de cima a baixo,
+       o selo vira verde e o "Verificado agora" liga o relogio;
+     - codigo do cracha (sai do apelido, sempre o mesmo) e QR na frente. */
   :root{
-    --noite:#050b14; --noite2:#0a1628; --tinta:#0b1b30; --tinta2:#4a5d75;
-    --perola:#f7f9fc; --perola2:#e9eef5; --ciano:#00d4ff; --azul:#0066ff;
+    --noite:#050b14; --noite2:#0a1628; --tinta:#0b1b30; --tinta2:#4a5d75; --tinta3:#7b8ca1;
+    --perola:#f8fafc; --perola2:#e8edf4; --ciano:#00d4ff; --azul:#0066ff; --marinho:#0a2347;
     --ok:#12b76a; --okfundo:#e7f8ef; --alerta:#f79009; --perigo:#e5484d;
     --claro:#eaf3ff; --suave:#9fb2c6; --linha:rgba(0,212,255,.16);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{font-family:'Poppins',system-ui,-apple-system,sans-serif;color:var(--claro);background:
-      radial-gradient(1200px 520px at 50% -140px,rgba(0,102,255,.22),transparent 70%),var(--noite);
+      radial-gradient(900px 520px at 50% 18%,rgba(0,102,255,.20),transparent 70%),
+      radial-gradient(600px 400px at 50% 110%,rgba(0,212,255,.08),transparent 70%),var(--noite);
     line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:540px;margin:0 auto;padding:0 18px calc(48px + env(safe-area-inset-bottom))}
@@ -53,105 +58,138 @@
   .marca b{color:var(--ciano)}
   .topoTxt{font-size:12.5px;color:var(--suave)}
 
-  /* ---------- palco do cracha ---------- */
-  .palco{position:relative;display:flex;flex-direction:column;align-items:center;padding-top:0;margin-top:6px}
-  .cordao{width:26px;height:74px;background:
-      repeating-linear-gradient(180deg,#0057d9 0 10px,#0a6cff 10px 20px);
-    border-radius:0 0 4px 4px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);position:relative}
-  .cordao::after{content:'moviki';position:absolute;left:50%;top:14px;transform:translateX(-50%) rotate(90deg);
-    transform-origin:center;font-size:10px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:.08em}
-  .presilha{width:44px;height:22px;margin-top:-2px;border-radius:7px 7px 11px 11px;
-    background:linear-gradient(180deg,#d7dee8,#9aa7b8);box-shadow:0 2px 3px rgba(0,0,0,.35);position:relative;z-index:2}
-  .presilha::after{content:'';position:absolute;left:50%;bottom:-9px;width:12px;height:14px;transform:translateX(-50%);
-    border:3px solid #9aa7b8;border-top:0;border-radius:0 0 8px 8px}
+  /* ---------- cordao e presilha ---------- */
+  .palco{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:4px}
+  .cordao{width:30px;height:84px;position:relative;border-radius:0 0 5px 5px;
+    background:
+      repeating-linear-gradient(180deg,rgba(255,255,255,.06) 0 1px,transparent 1px 3px),
+      linear-gradient(90deg,#003c9e,#0a66ff 30%,#2f80ff 50%,#0a66ff 70%,#003c9e);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.4)}
+  .cordao::before{content:'';position:absolute;left:3px;right:3px;top:0;bottom:0;border-left:1px dashed rgba(255,255,255,.28);border-right:1px dashed rgba(255,255,255,.28)}
+  .cordao span{position:absolute;left:50%;top:10px;transform:translateX(-50%);writing-mode:vertical-rl;font-size:9.5px;font-weight:800;letter-spacing:.14em;color:rgba(255,255,255,.85)}
+  .presilha{width:50px;height:26px;margin-top:-3px;border-radius:8px 8px 13px 13px;position:relative;z-index:2;
+    background:linear-gradient(180deg,#f1f4f8,#b7c2cf 55%,#8995a5);box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 #fff}
+  .presilha::before{content:'';position:absolute;left:50%;top:7px;width:18px;height:5px;transform:translateX(-50%);border-radius:3px;background:#6d7888;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
+  .presilha::after{content:'';position:absolute;left:50%;bottom:-11px;width:14px;height:16px;transform:translateX(-50%);border:3px solid #a3aebb;border-top:0;border-radius:0 0 9px 9px}
 
-  .cena{perspective:1400px;width:min(100%,348px);margin-top:4px}
+  /* ---------- cena 3D ---------- */
+  .cena{perspective:1100px;width:min(100%,350px);margin-top:6px;touch-action:pan-y}
+  .incl{transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+  .incl.segue{transition:transform .12s linear}
   .cracha{position:relative;width:100%;aspect-ratio:54/86;transform-style:preserve-3d;
-    transition:transform .7s cubic-bezier(.2,.7,.2,1);cursor:pointer;transform-origin:50% 0}
+    transition:transform .8s cubic-bezier(.2,.7,.2,1);cursor:pointer;transform-origin:50% 0}
   .cracha.virado{transform:rotateY(180deg)}
   .cracha.chegou{animation:balanca 2.4s cubic-bezier(.3,.6,.2,1) 1}
-  @keyframes balanca{0%{transform:translateY(-36px) rotate(-6deg);opacity:0}
-    20%{opacity:1} 45%{transform:rotate(3.5deg)} 70%{transform:rotate(-1.6deg)} 100%{transform:rotate(0)}}
-  .face{position:absolute;inset:0;border-radius:20px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-    box-shadow:0 30px 60px rgba(0,0,0,.55),0 2px 0 rgba(255,255,255,.06) inset}
-  .frente{background:linear-gradient(180deg,var(--perola),var(--perola2));color:var(--tinta);display:flex;flex-direction:column}
-  .verso{transform:rotateY(180deg);background:linear-gradient(170deg,#0d2240,#071224);color:var(--claro);padding:24px 22px 18px;display:flex;flex-direction:column}
-  /* furo do cordao */
-  .furo{position:absolute;top:12px;left:50%;width:58px;height:11px;transform:translateX(-50%);border-radius:8px;
-    background:var(--noite);box-shadow:inset 0 2px 3px rgba(0,0,0,.6);z-index:3}
+  @keyframes balanca{0%{transform:translateY(-40px) rotate(-7deg);opacity:0}
+    18%{opacity:1} 45%{transform:rotate(3.6deg)} 70%{transform:rotate(-1.6deg)} 100%{transform:rotate(0)}}
+  .face{position:absolute;inset:0;border-radius:22px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    box-shadow:0 40px 70px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.5) inset}
+  .frente{background:var(--perola);color:var(--tinta);display:flex;flex-direction:column}
+  .verso{transform:rotateY(180deg);background:linear-gradient(170deg,#0e2546,#061328);color:var(--claro);padding:32px 22px 18px;display:flex;flex-direction:column}
+  /* fundo de seguranca: linhas finas onduladas, como em cedula */
+  .seg{position:absolute;inset:0;pointer-events:none;opacity:.55}
+  .verso .seg{opacity:.28}
+  /* brilho que corre pela superficie quando o cracha inclina */
+  .brilho{position:absolute;inset:0;pointer-events:none;z-index:6;mix-blend-mode:soft-light;
+    background:radial-gradient(420px 320px at var(--gx,30%) var(--gy,20%),rgba(255,255,255,.42),rgba(255,255,255,0) 60%)}
+  .furo{position:absolute;top:13px;left:50%;width:60px;height:12px;transform:translateX(-50%);border-radius:8px;
+    background:var(--noite);box-shadow:inset 0 2px 3px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.6);z-index:7}
 
-  .faixaTopo{position:relative;height:92px;flex:0 0 92px;background:
-      linear-gradient(135deg,#0b1b30 0%,#0a2a55 55%,#0057d9 100%);display:flex;align-items:flex-end;
-    justify-content:space-between;padding:0 18px 12px}
-  .faixaTopo .mk{font-weight:800;font-size:20px;color:#fff;letter-spacing:-.01em}
+  /* luz que confere: passa uma vez, de cima a baixo */
+  .scan{position:absolute;left:0;right:0;top:-30%;height:30%;z-index:5;pointer-events:none;opacity:0;
+    background:linear-gradient(180deg,rgba(0,212,255,0),rgba(0,212,255,.28) 70%,rgba(0,212,255,.75) 96%,rgba(255,255,255,.95))}
+  .cracha.conferindo .scan{animation:scan 1.15s cubic-bezier(.45,0,.3,1) .35s 1 forwards}
+  @keyframes scan{0%{top:-30%;opacity:1}88%{opacity:1}100%{top:100%;opacity:0}}
+
+  .faixaTopo{position:relative;height:96px;flex:0 0 96px;overflow:hidden;
+    background:linear-gradient(135deg,#071a36 0%,#0a2c5c 55%,#0057d9 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:0 18px 13px}
+  .faixaTopo .seg{opacity:.35}
+  .faixaTopo .mk{position:relative;font-weight:800;font-size:21px;color:#fff;letter-spacing:-.01em}
   .faixaTopo .mk b{color:var(--ciano)}
-  .faixaTopo .papel{font-size:11.5px;font-weight:600;color:#cfe3ff;text-align:right;line-height:1.3}
+  .faixaTopo .papel{position:relative;font-size:11.5px;font-weight:600;color:#cfe3ff;text-align:right;line-height:1.3}
 
-  .corpo{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 20px;text-align:center}
-  .fotoCaixa{position:relative;margin-top:-50px}
-  .foto{width:112px;height:112px;border-radius:26px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,#0a6cff,#00b8e6);color:#fff;font-weight:800;font-size:40px;letter-spacing:-.02em;
-    border:5px solid var(--perola);box-shadow:0 8px 20px rgba(11,27,48,.22);background-size:cover;background-position:center;overflow:hidden}
+  .corpo{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;padding:0 20px;text-align:center}
+  .fotoCaixa{position:relative;margin-top:-54px;z-index:2}
+  .foto{width:116px;height:116px;border-radius:28px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#0a6cff,#00b8e6);color:#fff;font-weight:800;font-size:42px;letter-spacing:-.02em;
+    border:5px solid var(--perola);box-shadow:0 0 0 1px rgba(11,27,48,.1),0 10px 24px rgba(11,27,48,.25);background-size:cover;background-position:center;overflow:hidden}
   .foto.temFoto{font-size:0;color:transparent}
-  .selinho{position:absolute;right:-6px;bottom:-6px;width:34px;height:34px;border-radius:50%;background:var(--ok);
-    border:4px solid var(--perola);display:flex;align-items:center;justify-content:center;color:#fff}
-  .selinho svg{width:16px;height:16px}
-  .nome{margin-top:12px;font-size:22px;font-weight:800;line-height:1.18;letter-spacing:-.015em;word-break:break-word}
-  .papel2{margin-top:2px;font-size:13px;font-weight:600;color:var(--azul)}
-  .arroba{margin-top:6px;display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--tinta2);font-weight:500}
-  .arroba svg{width:14px;height:14px;color:var(--ok)}
+  /* selo holografico */
+  .holoSelo{position:absolute;right:-16px;bottom:-12px;width:50px;height:50px;border-radius:50%;
+    background:conic-gradient(from var(--ang,0deg),#7ef0ff,#b9a6ff,#ffd38a,#9bffcb,#7ef0ff);
+    box-shadow:0 0 0 3px var(--perola),0 6px 14px rgba(11,27,48,.28);display:flex;align-items:center;justify-content:center}
+  .holoSelo::before{content:'';position:absolute;inset:5px;border-radius:50%;background:
+    repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.35) 0 1px,transparent 1px 3px)}
+  .holoSelo i{position:relative;width:30px;height:30px;border-radius:50%;background:#9aa7b6;display:flex;align-items:center;justify-content:center;
+    transition:background .35s ease,transform .35s cubic-bezier(.3,1.6,.5,1)}
+  .holoSelo i svg{width:16px;height:16px;color:#fff}
+  .holoSelo i svg path{stroke-dasharray:28;stroke-dashoffset:28}
+  .holoSelo .gira{position:absolute;inset:-3px;border-radius:50%;border:3px solid transparent;border-top-color:var(--azul);animation:gira .8s linear infinite}
+  .cracha.ok .holoSelo i{background:var(--ok);transform:scale(1.08)}
+  .cracha.ok .holoSelo i svg path{transition:stroke-dashoffset .45s ease .1s;stroke-dashoffset:0}
+  .cracha.ok .holoSelo .gira{display:none}
+  .cracha.ok .holoSelo::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--ok);animation:onda .9s ease-out 1 forwards}
+  @keyframes onda{from{transform:scale(1);opacity:.9}to{transform:scale(1.9);opacity:0}}
 
-  /* faixa holografica: a prova de vida */
-  .holo{position:relative;margin:14px -20px 0;width:calc(100% + 40px);padding:10px 18px;overflow:hidden;
+  .nome{margin-top:14px;font-size:22px;font-weight:800;line-height:1.18;letter-spacing:-.015em;word-break:break-word}
+  .papel2{margin-top:3px;font-size:13px;font-weight:600;color:var(--azul)}
+  .arroba{margin-top:5px;font-size:13px;color:var(--tinta2);font-weight:500}
+
+  /* faixa holografica com o relogio */
+  .holo{position:relative;margin:13px -20px 0;width:calc(100% + 40px);padding:10px 18px 9px;overflow:hidden;
     background:linear-gradient(110deg,#d9f7ff,#e9e0ff 30%,#dcffe9 55%,#fff1d6 78%,#d9f7ff);
     border-top:1px solid rgba(11,27,48,.08);border-bottom:1px solid rgba(11,27,48,.08)}
   .holo::before{content:'';position:absolute;inset:-40% -60%;background:
-      linear-gradient(105deg,transparent 35%,rgba(255,255,255,.9) 47%,rgba(255,255,255,0) 58%),
+      linear-gradient(105deg,transparent 35%,rgba(255,255,255,.95) 47%,rgba(255,255,255,0) 58%),
       repeating-linear-gradient(115deg,rgba(0,102,255,.07) 0 6px,rgba(168,85,247,.07) 6px 12px,rgba(18,183,106,.07) 12px 18px);
     transform:translateX(var(--brilho,-30%));transition:transform .25s ease-out;pointer-events:none}
   .holoLinha{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .vivo{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#0a5c3a}
-  .pulso{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(18,183,106,.55);animation:pulso 1.6s infinite}
+  .vivo{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#3d4f66}
+  .cracha.ok .vivo{color:#0a5c3a}
+  .pulso{width:9px;height:9px;border-radius:50%;background:#9aa7b6}
+  .cracha.ok .pulso{background:var(--ok);box-shadow:0 0 0 0 rgba(18,183,106,.55);animation:pulso 1.6s infinite}
   @keyframes pulso{70%{box-shadow:0 0 0 9px rgba(18,183,106,0)}100%{box-shadow:0 0 0 0 rgba(18,183,106,0)}}
-  .relogio{font-variant-numeric:tabular-nums;font-weight:800;font-size:17px;color:var(--tinta);letter-spacing:.01em}
+  .relogio{font-variant-numeric:tabular-nums;font-weight:800;font-size:18px;color:var(--tinta);letter-spacing:.01em}
   .holoData{position:relative;margin-top:1px;font-size:11.5px;color:var(--tinta2);text-align:left}
 
-  .dados{width:100%;margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;text-align:left}
-  .dado .r{font-size:11px;color:var(--tinta2)}
-  .dado .v{font-size:13.5px;font-weight:700;color:var(--tinta);line-height:1.3;word-break:break-word}
-  .credenciais{width:100%;margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-  .cred{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:var(--okfundo);
-    color:#0a6b42;font-size:11.5px;font-weight:700;border:1px solid rgba(18,183,106,.25)}
-  .cred svg{width:13px;height:13px}
-  .rodapeCartao{margin-top:auto;width:100%;padding:10px 0 14px;display:flex;align-items:center;justify-content:space-between;
-    font-size:11px;color:var(--tinta2);border-top:1px dashed rgba(11,27,48,.14)}
-  .rodapeCartao b{color:var(--tinta);font-weight:600}
-  .virar{display:inline-flex;align-items:center;gap:5px;font-weight:700;color:var(--azul)}
-  .virar svg{width:14px;height:14px}
+  .dados{width:100%;margin-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:9px 12px;text-align:left}
+  .dado .r{font-size:10.5px;color:var(--tinta3)}
+  .dado .v{font-size:13.5px;font-weight:700;color:var(--tinta);line-height:1.3;word-break:break-word;font-variant-numeric:tabular-nums}
+  .credenciais{width:100%;margin-top:10px;display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-start}
+  .cred{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;background:var(--okfundo);
+    color:#0a6b42;font-size:11px;font-weight:700;border:1px solid rgba(18,183,106,.25)}
+  .cred svg{width:12px;height:12px}
+  .rodapeCartao{margin-top:auto;width:100%;padding:10px 0 12px;display:flex;align-items:center;gap:11px;border-top:1px solid rgba(11,27,48,.1);text-align:left}
+  .qrMini{width:58px;height:58px;flex:0 0 58px;border-radius:8px;background:#fff;padding:3px;box-shadow:0 0 0 1px rgba(11,27,48,.1)}
+  .rodTxt{flex:1;min-width:0;font-size:11px;color:var(--tinta2);line-height:1.45}
+  .rodTxt b{display:block;color:var(--tinta);font-weight:700;font-size:11.5px;word-break:break-all}
+  .virar{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--azul);margin-top:2px}
+  .virar svg{width:13px;height:13px}
+  /* microtexto na borda de baixo */
+  .micro{position:absolute;left:0;right:0;bottom:0;height:9px;overflow:hidden;white-space:nowrap;font-size:5.5px;line-height:9px;font-weight:600;
+    letter-spacing:.06em;color:rgba(10,35,71,.45);background:linear-gradient(90deg,#e8eef7,#f4f7fb);text-align:center}
 
   /* verso */
-  .verso h3{font-size:16px;font-weight:800;margin:6px 0 10px}
-  .verso ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .verso h3{position:relative;font-size:15.5px;font-weight:800;margin:4px 0 9px}
+  .verso ul{position:relative;list-style:none;display:flex;flex-direction:column;gap:7px}
   .verso li{display:flex;gap:9px;font-size:13px;line-height:1.45;color:#d6e4f5}
   .verso li svg{width:16px;height:16px;flex:0 0 auto;margin-top:2px}
   .verso .sim svg{color:#3ee08f} .verso .nao svg{color:#ff8a8f}
-  .qrBox{margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+  .qrBox{position:relative;margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
   .qrBox canvas{width:84px;height:84px;background:#fff;border-radius:10px;padding:5px;flex:0 0 auto}
   .qrBox p{font-size:12px;color:#b9cbe0;line-height:1.45}
   .qrBox p b{color:#fff}
+  .emissor{display:block;margin-top:6px;font-size:10px;color:#7f95b0;line-height:1.4}
 
   /* nao confirmado */
-  .cracha.ruim .frente{background:linear-gradient(180deg,#f2f4f7,#e4e7ec)}
-  .cracha.ruim .faixaTopo{background:linear-gradient(135deg,#3b4455,#5b6577)}
+  .cracha.ruim .frente{filter:grayscale(.85)}
   .carimbo{position:absolute;left:50%;top:64%;transform:translate(-50%,-50%) rotate(-14deg);padding:8px 16px;
     border:4px solid var(--perigo);border-radius:10px;color:var(--perigo);font-weight:800;font-size:22px;letter-spacing:.06em;
-    background:rgba(255,255,255,.55);white-space:nowrap;z-index:4}
-  .cracha.ruim .holo{background:linear-gradient(110deg,#fff3e0,#ffe7e7)}
-  .cracha.ruim .vivo{color:#8a2c10}
-  .cracha.ruim .pulso{background:var(--alerta);animation:none}
+    background:rgba(255,255,255,.6);white-space:nowrap;z-index:8}
+  .cracha.ruim .holoSelo{background:#c9d0da}
 
   /* ---------- abaixo do cracha ---------- */
-  .dicaVivo{margin:18px auto 0;max-width:420px;display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--suave)}
+  .dicaVivo{margin:20px auto 0;max-width:420px;display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--suave)}
   .dicaVivo svg{width:20px;height:20px;flex:0 0 auto;color:var(--ciano);margin-top:1px}
   .dicaVivo b{color:var(--claro);font-weight:600}
 
@@ -187,9 +225,10 @@
   .pe a{border-bottom:1px solid rgba(255,255,255,.14)}
   .escondido{display:none!important}
   @media (prefers-reduced-motion:reduce){
-    .cracha.chegou{animation:none}.pulso,.spin{animation:none}.cracha{transition:none}.holo::before{transition:none}
+    .cracha.chegou{animation:none}.pulso,.spin,.holoSelo .gira{animation:none!important}.cracha,.incl{transition:none}
+    .holo::before{transition:none}.cracha.conferindo .scan{animation:none}
   }
-  @media (max-width:360px){.nome{font-size:20px}.foto{width:98px;height:98px}.dados{gap:8px}}
+  @media (max-width:360px){.nome{font-size:20px}.foto{width:100px;height:100px}.dados{gap:7px}.qrMini{width:50px;height:50px;flex-basis:50px}}
 </style>
 </head>
 <body>
@@ -204,12 +243,14 @@
 
   <div id="conteudo" class="escondido">
     <div class="palco" data-mv-sem-motion>
-      <div class="cordao" aria-hidden="true"></div>
+      <div class="cordao" aria-hidden="true"><span>MOVIKI</span></div>
       <div class="presilha" aria-hidden="true"></div>
-      <div class="cena">
-        <div class="cracha" id="cracha" role="button" tabindex="0" aria-label="Crachá do parceiro. Toque para ver o verso.">
-          <div class="face frente" id="frente"></div>
-          <div class="face verso" id="verso"></div>
+      <div class="cena" id="cena">
+        <div class="incl" id="incl">
+          <div class="cracha" id="cracha" role="button" tabindex="0" aria-label="Crachá do parceiro. Toque para ver o verso.">
+            <div class="face frente" id="frente"></div>
+            <div class="face verso" id="verso"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -231,24 +272,26 @@
 </div>
 
 <script type="module">
-/* MOVIKI v.html | versao 2026-10-27-crachavivo
-   (antes: 2026-10-12-ramoqr; 2026-09-03-verificacao)
+/* MOVIKI v.html | versao 2026-10-27-crachavivo2
+   (antes: 2026-10-27-crachavivo; 2026-10-12-ramoqr; 2026-09-03-verificacao)
    ---------------------------------------------------------------------------
    A pagina que o COMERCIANTE abre, no celular dele, na frente do parceiro.
    Responde uma pergunta so: essa pessoa e mesmo do Moviki?
 
-   27/10/2026 — CRACHA VIVO. Antes era um cartao com selo verde. Agora e um
-   cracha de verdade, pendurado no cordao, que PROVA que e a pagina ao vivo e
-   nao um print: o relogio de "Verificado agora" anda de segundo em segundo e a
-   faixa holografica acompanha o dedo (e o movimento do celular, onde o
-   navegador deixa). O verso (toque no cracha) diz o que o parceiro faz e o
-   que ele NUNCA faz — e traz o QR desta mesma pagina, para o parceiro mostrar
-   a outro comerciante.
+   27/10/2026 — CRACHA VIVO. Prova que e a pagina ao vivo, e nao um print: o
+   relogio de "Verificado agora" anda, a faixa holografica e o selo redondo
+   mudam com o dedo e com a inclinacao do celular, e o cracha inteiro inclina.
+   A conferencia acontece na frente da pessoa (luz que passa, selo que fica
+   verde). O verso diz o que o parceiro faz e o que ele NUNCA faz.
+
+   Codigo do cracha: MVK-XXXX-XXXX, calculado do apelido (sempre o mesmo para o
+   mesmo parceiro). Nao e segredo nem senha: serve para o comerciante citar ao
+   falar com o Moviki.
 
    Le `parceiros_publicos/{slug}` — o espelho publico escrito pelo robo. NAO le
    `parceiros/{uid}`, e nunca vai ler: aquele documento guarda a chave Pix.
    Campos usados: nome, arroba (so com prova de posse), desde, ativo, foto,
-   treinado, conduta (27/10). Nivel, seguidores e ganhos NUNCA aparecem aqui.
+   treinado, conduta. Nivel, seguidores e ganhos NUNCA aparecem aqui.
    --------------------------------------------------------------------------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
@@ -262,7 +305,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-10-27-crachavivo'; /* 27/10: cracha vivo (cordao, foto, relogio de verificacao ao vivo, faixa holografica, verso com o que o parceiro faz e nunca faz + QR desta pagina; selo de conduta). 'Conhecer melhor' leva a /p/apelido (pagina de indicacao nova). Antes: 2026-10-12-ramoqr. */
+window.MOVIKI_VERSAO = '2026-10-27-crachavivo2'; /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
 const app = initializeApp(firebaseConfig);
 /* APP CHECK (03/09/2026): o Firestore esta com o App Check ligado. Sem este
    bloco a pagina para de responder CALADA. try/catch: nunca derruba a pagina. */
@@ -275,6 +318,7 @@ try {
 const db = getFirestore(app);
 
 const ROBO = 'https://moviki-robo.vercel.app/api/novo-parceiro';
+const REDUZ = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const el = id => document.getElementById(id);
 /* O nome do parceiro e texto que ELE digitou. Escapar nao e opcional. */
 const esc = s => String(s == null ? '' : s)
@@ -285,13 +329,23 @@ const I = {
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   virar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/></svg>',
   livro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>',
-  mao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v6c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
-  ig: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6.5L9.4 17.2 4 11.8"/></svg>',
   olho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
   escudo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.6 9-8 10-4.4-1-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
-  pix: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18"/></svg>',
-  pessoa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>'
+  pix: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18"/></svg>'
 };
+
+/* Fundo de seguranca: varias linhas senoidais finas, desenhadas em SVG.
+   Cor e espessura mudam por face (frente clara, faixa e verso escuros). */
+function fundoSeguranca(cor, linhas, alt){
+  let p = '';
+  for (let i = 0; i < linhas; i++){
+    const y0 = (i / linhas) * alt, a = 5 + (i % 4) * 2, f = 0.018 + (i % 3) * 0.004;
+    let d = 'M0 ' + y0.toFixed(1);
+    for (let x = 6; x <= 360; x += 6) d += ' L' + x + ' ' + (y0 + Math.sin(x * f + i * 0.7) * a).toFixed(1);
+    p += '<path d="' + d + '"/>';
+  }
+  return '<svg class="seg" viewBox="0 0 360 ' + alt + '" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="' + cor + '" stroke-width=".5">' + p + '</g></svg>';
+}
 
 /* /v/joao_silva -> joao_silva. Mesmo alfabeto do apelido do parceiro. */
 function apelidoDaUrl(){
@@ -330,8 +384,19 @@ function iniciais(nome){
   const p = String(nome||'').trim().split(/\s+/).filter(Boolean);
   return ((p[0]||'P').charAt(0) + (p.length > 1 ? p[p.length-1].charAt(0) : '')).toUpperCase();
 }
+/* Codigo do cracha: FNV-1a do apelido, em base 32 sem letras que confundem. */
+function codigoCracha(apelido){
+  let h = 0x811c9dc5, h2 = 0x01000193;
+  for (const c of apelido){ h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; h2 = Math.imul(h2 ^ c.charCodeAt(0), 2246822519) >>> 0; }
+  const A = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let s = '';
+  for (let i = 0; i < 4; i++){ s += A[h & 31]; h >>>= 5; }
+  s += '-';
+  for (let i = 0; i < 4; i++){ s += A[h2 & 31]; h2 >>>= 5; }
+  return 'MVK-' + s;
+}
 
-/* ---------- PROVA DE VIDA: relogio e faixa holografica ---------- */
+/* ---------- PROVA DE VIDA: relogio, inclinacao, brilho e selo ---------- */
 function ligarVida(){
   const rel = el('relogio'), dt = el('holoData');
   const fmtH = new Intl.DateTimeFormat('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit', timeZone:'America/Sao_Paulo' });
@@ -343,24 +408,37 @@ function ligarVida(){
   }
   tic(); setInterval(tic, 1000);
 
-  /* A faixa acompanha o dedo/mouse sobre o cracha e, onde o navegador deixa
-     sem pedir permissao (Android), a inclinacao do celular. */
-  const cracha = el('cracha');
-  const holos = () => document.querySelectorAll('.holo');
-  function brilho(frac){
-    const v = Math.round((Math.max(0, Math.min(1, frac)) * 80 - 40)) + '%';
-    holos().forEach(h => h.style.setProperty('--brilho', v));
+  const cena = el('cena'), incl = el('incl'), cracha = el('cracha');
+  /* u e v vao de 0 a 1 (posicao do dedo/inclinacao). Tudo sai daqui:
+     inclinacao do cracha, brilho, faixa holografica e cor do selo. */
+  function aplica(u, v, segue){
+    u = Math.max(0, Math.min(1, u)); v = Math.max(0, Math.min(1, v));
+    if (!REDUZ){
+      incl.classList.toggle('segue', !!segue);
+      incl.style.setProperty('--ry', ((u - .5) * 16).toFixed(2) + 'deg');
+      incl.style.setProperty('--rx', ((.5 - v) * 12).toFixed(2) + 'deg');
+    }
+    document.querySelectorAll('.face').forEach(f => { f.style.setProperty('--gx', (u * 100) + '%'); f.style.setProperty('--gy', (v * 100) + '%'); });
+    document.querySelectorAll('.holo').forEach(h => h.style.setProperty('--brilho', Math.round(u * 80 - 40) + '%'));
+    document.querySelectorAll('.holoSelo').forEach(s => s.style.setProperty('--ang', Math.round((u * 220) + (v * 140)) + 'deg'));
   }
-  cracha.addEventListener('pointermove', ev => { const r = cracha.getBoundingClientRect(); brilho((ev.clientX - r.left) / r.width); });
-  cracha.addEventListener('touchmove', ev => { const t = ev.touches[0]; if(!t) return; const r = cracha.getBoundingClientRect(); brilho((t.clientX - r.left) / r.width); }, { passive:true });
+  let mexeu = 0;
+  function pelo(x, y){ const r = cena.getBoundingClientRect(); mexeu = Date.now(); aplica((x - r.left) / r.width, (y - r.top) / r.height, true); }
+  cena.addEventListener('pointermove', ev => pelo(ev.clientX, ev.clientY));
+  cena.addEventListener('touchmove', ev => { const t = ev.touches[0]; if (t) pelo(t.clientX, t.clientY); }, { passive:true });
+  cena.addEventListener('pointerleave', () => aplica(.5, .5, false));
+  /* inclinacao do celular, onde o navegador deixa sem pedir permissao (Android) */
   try{
-    window.addEventListener('deviceorientation', ev => { if(typeof ev.gamma === 'number') brilho((ev.gamma + 30) / 60); });
+    window.addEventListener('deviceorientation', ev => {
+      if (typeof ev.gamma !== 'number' || typeof ev.beta !== 'number') return;
+      if (Date.now() - mexeu < 1500) return;
+      aplica((ev.gamma + 25) / 50, (ev.beta - 20) / 50, true);
+    });
   }catch(e){}
-  /* sem movimento nenhum, a faixa respira sozinha devagar (devagar o bastante
-     para nao incomodar; com "reduzir movimento" ligado, fica parada e quem
-     prova a vida e so o relogio) */
-  if(!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)){
-    let t = 0; setInterval(() => { t += 0.05; brilho(0.5 + Math.sin(t) * 0.35); }, 120);
+  /* parado, o cracha respira devagar; com "reduzir movimento", so o relogio prova a vida */
+  if (!REDUZ){
+    let t = 0;
+    setInterval(() => { if (Date.now() - mexeu < 2500) return; t += 0.04; aplica(.5 + Math.sin(t) * .32, .5 + Math.cos(t * .7) * .18, false); }, 120);
   }
 
   function virar(){ cracha.classList.toggle('virado'); cracha.setAttribute('aria-label', cracha.classList.contains('virado') ? 'Verso do crachá. Toque para ver a frente.' : 'Crachá do parceiro. Toque para ver o verso.');
@@ -369,22 +447,27 @@ function ligarVida(){
   cracha.addEventListener('keydown', ev => { if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); virar(); } });
 }
 
-/* QR desta pagina no verso: o parceiro mostra para o proximo comerciante. */
-function desenharQR(apelido){
-  const cv = el('qrVerso'); if(!cv) return;
+/* QR desta pagina: pequeno na frente, grande no verso. */
+function desenharQRs(apelido){
+  const alvos = [['qrFrente', 160], ['qrVerso', 220]];
   const tenta = (n) => {
     if(window.mvQR && window.mvQRDesenhar){
       const q = window.mvQR('https://moviki.com.br/v/' + apelido);
-      if(q){ window.mvQRDesenhar(cv, q, 220, '#ffffff', '#0b1b30'); return; }
+      if(q){ alvos.forEach(([id, lado]) => { const cv = el(id); if (cv) window.mvQRDesenhar(cv, q, lado, '#ffffff', '#0b1b30'); }); return; }
     }
-    if(n < 40) setTimeout(() => tenta(n + 1), 100); else cv.style.display = 'none';
+    if(n < 40) setTimeout(() => tenta(n + 1), 100);
+    else alvos.forEach(([id]) => { const cv = el(id); if (cv) cv.style.display = 'none'; });
   };
   tenta(0);
 }
 
 /* ---------- frente e verso ---------- */
-function montarVerso(apelido){
-  return '<h3>O que este parceiro faz</h3>' +
+function microtexto(){
+  return '<div class="micro" aria-hidden="true">' + 'MOVIKI · PARCEIRO AUTORIZADO · EIKO SISTEMAS · CONFERIDO AO VIVO · '.repeat(6) + '</div>';
+}
+function montarVerso(apelido, codigo){
+  return fundoSeguranca('#7fd8ff', 34, 560) +
+    '<h3>O que este parceiro faz</h3>' +
     '<ul>' +
       '<li class="sim">' + I.check + '<span>Apresenta o Moviki e mostra como a sua loja aparece e vende ao vivo.</span></li>' +
       '<li class="sim">' + I.check + '<span>Ajuda a criar a sua conta, montar o catálogo e fazer o ensaio da primeira live.</span></li>' +
@@ -396,38 +479,46 @@ function montarVerso(apelido){
       '<li class="nao">' + I.x + '<span>Receber Pix em nome do Moviki. A assinatura é paga só dentro do painel.</span></li>' +
     '</ul>' +
     '<div class="qrBox"><canvas id="qrVerso" width="220" height="220" aria-label="QR code deste crachá"></canvas>' +
-      '<p>Mostre este QR para outro comerciante conferir. Ele abre <b>moviki.com.br/v/' + esc(apelido) + '</b>.</p></div>';
+      '<p>Mostre este QR para outro comerciante conferir. Ele abre <b>moviki.com.br/v/' + esc(apelido) + '</b>.' +
+      '<span class="emissor">Emitido por EIKO SISTEMAS · CNPJ 68.289.841/0001-02' + (codigo ? '<br>' + codigo : '') + '</span></p></div>' +
+    '<div class="brilho"></div>';
 }
 
 function pintarAutorizado(d, apelido){
   const nome = String(d.nome || 'Parceiro Moviki');
   const arroba = String(d.arroba || '');
   const desde = mesAno(d.desde);
+  const codigo = codigoCracha(apelido);
   const creds = [];
   if(d.treinado) creds.push('<span class="cred">' + I.check + 'Treinamento concluído</span>');
   if(d.conduta) creds.push('<span class="cred">' + I.check + 'Compromisso de conduta</span>');
   if(arroba) creds.push('<span class="cred">' + I.check + 'Instagram confirmado</span>');
 
   el('frente').innerHTML =
+    fundoSeguranca('#b9cde6', 46, 560) +
     '<div class="furo"></div>' +
-    '<div class="faixaTopo"><span class="mk">mo<b>viki</b></span><span class="papel">Programa de<br>Parceiros</span></div>' +
+    '<div class="faixaTopo">' + fundoSeguranca('#4f8fe6', 14, 96) + '<span class="mk">mo<b>viki</b></span><span class="papel">Programa de<br>Parceiros</span></div>' +
     '<div class="corpo">' +
-      '<div class="fotoCaixa"><div class="foto" id="foto">' + esc(iniciais(nome)) + '</div><span class="selinho" aria-hidden="true">' + I.check + '</span></div>' +
+      '<div class="fotoCaixa"><div class="foto" id="foto">' + esc(iniciais(nome)) + '</div>' +
+        '<span class="holoSelo" aria-hidden="true"><i><span class="gira"></span>' + I.check + '</i></span></div>' +
       '<div class="nome">' + esc(nome) + '</div>' +
       '<div class="papel2">Parceiro autorizado do Moviki</div>' +
       (arroba ? '<a class="arroba" href="https://instagram.com/' + encodeURIComponent(arroba.replace(/^@/,'')) + '" target="_blank" rel="noopener nofollow">' + esc(arroba) + '</a>' : '') +
-      '<div class="holo"><div class="holoLinha"><span class="vivo"><span class="pulso"></span>Verificado agora</span><span class="relogio" id="relogio">--:--:--</span></div>' +
+      '<div class="holo"><div class="holoLinha"><span class="vivo"><span class="pulso"></span><span id="estado">Conferindo no sistema…</span></span><span class="relogio" id="relogio">--:--:--</span></div>' +
         '<div class="holoData" id="holoData">conferindo…</div></div>' +
       '<div class="dados">' +
         '<div class="dado"><div class="r">Autorizado desde</div><div class="v">' + esc(desde || '—') + '</div></div>' +
-        '<div class="dado"><div class="r">Link de indicação</div><div class="v">/p/' + esc(apelido) + '</div></div>' +
+        '<div class="dado"><div class="r">Código do crachá</div><div class="v">' + codigo + '</div></div>' +
       '</div>' +
       (creds.length ? '<div class="credenciais">' + creds.join('') + '</div>' : '') +
-      '<div class="rodapeCartao"><span>moviki.com.br/v/<b>' + esc(apelido) + '</b></span><span class="virar">' + I.virar + 'Ver verso</span></div>' +
-    '</div>';
-  el('verso').innerHTML = montarVerso(apelido);
+      '<div class="rodapeCartao"><canvas class="qrMini" id="qrFrente" width="160" height="160" aria-label="QR code deste crachá"></canvas>' +
+        '<div class="rodTxt">Confira sempre por este endereço<b>moviki.com.br/v/' + esc(apelido) + '</b><span class="virar">' + I.virar + 'Toque para ver o verso</span></div></div>' +
+    '</div>' +
+    microtexto() +
+    '<div class="scan"></div><div class="brilho"></div>';
+  el('verso').innerHTML = montarVerso(apelido, codigo);
 
-  el('dicaVivo').innerHTML = I.olho + '<span><b>Este crachá está vivo.</b> O relógio anda a cada segundo e a faixa colorida brilha quando você passa o dedo. Print ou foto de tela ficam parados: se estiver parado, não vale.</span>';
+  el('dicaVivo').innerHTML = I.olho + '<span><b>Este crachá está vivo.</b> O relógio anda a cada segundo e o crachá brilha e inclina quando você passa o dedo. Print ou foto de tela ficam parados: se estiver parado, não vale.</span>';
 
   /* A indicacao comeca AQUI: o comerciante pode conferir, fechar e so se
      cadastrar a noite. Cookie no dominio pai, 90 dias, so o apelido. */
@@ -439,16 +530,14 @@ function pintarAutorizado(d, apelido){
   const rk = rCat ? rCat.k : rUrl;
   const comDemo = !!(rCat && rCat.d === 1);
   const cadastro = 'https://app.moviki.com.br/?criar=1&ref=' + ref + (rk ? '&ramo=' + encodeURIComponent(rk) : '') + '&' + utm;
-  /* 27/10: "entender melhor" vai para a pagina de indicacao do PROPRIO
-     parceiro (/p/apelido), que fala com o comerciante em nome dele. Com ramo
-     de demo, segue para a live de exemplo do ramo, como antes. */
+  /* "entender melhor" vai para a pagina de indicacao do PROPRIO parceiro
+     (/p/apelido). Com ramo de demo, segue para a live de exemplo do ramo. */
   const conhecer = comDemo
     ? ('/aovivo?ramo=' + encodeURIComponent(rCat.k) + '&' + utm + '&ref=' + ref)
     : ('/p/' + ref + '?canal=qr');
   const primeiro = esc(nome.trim().split(/\s+/)[0] || 'o parceiro');
 
-  /* ORDEM (03/09, ideia do Paulo): proteger antes de vender. O bloco "voce nao
-     paga nada a ele" vem ANTES de qualquer convite. */
+  /* ORDEM (03/09, ideia do Paulo): proteger antes de vender. */
   el('depois').innerHTML =
     '<div class="protecao"><h2>Você não paga nada a ' + primeiro + '</h2>' +
       '<p>A comissão dele sai do Moviki e só existe se você assinar um plano. <b>Nunca do seu bolso e nunca em dinheiro na mão.</b></p>' +
@@ -458,7 +547,7 @@ function pintarAutorizado(d, apelido){
       '<div class="letreiro">30 dias grátis, sem cartão. A indicação de <b>' + primeiro + '</b> fica registrada.</div>' +
       '<a class="btn calmo" data-ev="' + (comDemo ? 'verificar_live_ramo' : 'verificar_conhecer') + '" href="' + conhecer + '">' +
         (comDemo ? 'Ver uma live de exemplo do meu ramo' : 'Entender o Moviki antes') + '</a>' +
-      '<a class="zap" data-ev="verificar_zap" href="https://wa.me/554120186848?text=' + encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /v/' + apelido) + '" target="_blank" rel="noopener">Prefiro falar direto com o Moviki</a>' +
+      '<a class="zap" data-ev="verificar_zap" href="https://wa.me/554120186848?text=' + encodeURIComponent('Olá! Estou conferindo um parceiro do Moviki: /v/' + apelido + ' (' + codigo + ')') + '" target="_blank" rel="noopener">Prefiro falar direto com o Moviki</a>' +
     '</div>' +
     '<div class="porque">' +
       '<div><span class="ic">' + I.escudo + '</span><span><h3>Conferido na hora, direto do sistema</h3><p>Este crachá lê o cadastro do Moviki agora. Se o parceiro for suspenso, ele deixa de aparecer como autorizado no mesmo instante.</p></span></div>' +
@@ -480,13 +569,24 @@ function pintarAutorizado(d, apelido){
       }).catch(()=>{});
     }
   }
-  desenharQR(apelido);
+  desenharQRs(apelido);
+}
+
+/* A conferencia ja aconteceu no banco; aqui ela e MOSTRADA: a luz passa e o
+   selo fica verde. Sem movimento (reduzir movimento), fica verde na hora. */
+function concluirConferencia(){
+  const cr = el('cracha'), est = el('estado');
+  const fim = () => { cr.classList.add('ok'); if (est) est.textContent = 'Verificado agora'; };
+  if (REDUZ){ fim(); return; }
+  cr.classList.add('conferindo');
+  setTimeout(fim, 1450);
 }
 
 function pintarNegado(apelido, existe, falhaRede){
   const cr = el('cracha'); cr.classList.add('ruim');
   const titulo = falhaRede ? 'Não deu para conferir agora' : (existe ? 'Apelido não autorizado' : 'Apelido não encontrado');
   el('frente').innerHTML =
+    fundoSeguranca('#c6ced8', 46, 560) +
     '<div class="furo"></div>' +
     '<div class="faixaTopo"><span class="mk">mo<b>viki</b></span><span class="papel">Programa de<br>Parceiros</span></div>' +
     '<div class="carimbo">' + (falhaRede ? 'SEM CONEXÃO' : 'NÃO CONFIRMADO') + '</div>' +
@@ -494,11 +594,11 @@ function pintarNegado(apelido, existe, falhaRede){
       '<div class="fotoCaixa"><div class="foto" style="background:#c9d0da">?</div></div>' +
       '<div class="nome">' + (apelido ? '/v/' + esc(apelido) : 'Sem apelido') + '</div>' +
       '<div class="papel2" style="color:#b54708">' + esc(titulo) + '</div>' +
-      '<div class="holo"><div class="holoLinha"><span class="vivo"><span class="pulso"></span>Conferido agora</span><span class="relogio" id="relogio">--:--:--</span></div>' +
+      '<div class="holo"><div class="holoLinha"><span class="vivo"><span class="pulso" style="background:var(--alerta)"></span>Conferido agora</span><span class="relogio" id="relogio">--:--:--</span></div>' +
         '<div class="holoData" id="holoData">conferindo…</div></div>' +
-      '<div class="rodapeCartao"><span>moviki.com.br</span><span class="virar">' + I.virar + 'Ver verso</span></div>' +
-    '</div>';
-  el('verso').innerHTML = montarVerso(apelido || '');
+      '<div class="rodapeCartao"><div class="rodTxt">Confira sempre por<b>moviki.com.br/v/apelido</b><span class="virar">' + I.virar + 'Toque para ver o verso</span></div></div>' +
+    '</div>' + microtexto() + '<div class="brilho"></div>';
+  el('verso').innerHTML = montarVerso(apelido || '', '');
   el('dicaVivo').innerHTML = I.olho + '<span>' + (falhaRede
     ? '<b>Isto é um problema de conexão, não uma resposta sobre a pessoa.</b> Recarregue a página ou fale com a gente.'
     : '<b>Não conte isto como confirmação.</b> Pode ser só o apelido digitado errado, mas peça à pessoa o link do crachá dela ou fale direto com o Moviki.') + '</span>';
@@ -517,14 +617,13 @@ function pintarNegado(apelido, existe, falhaRede){
     '</div>';
 }
 
-function mostrar(){
+function mostrar(ok){
   el('carregando').classList.add('escondido');
   el('conteudo').classList.remove('escondido');
   ligarVida();
   const cr = el('cracha');
-  if(!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)){
-    cr.classList.add('chegou'); setTimeout(() => cr.classList.remove('chegou'), 2500);
-  }
+  if(!REDUZ){ cr.classList.add('chegou'); setTimeout(() => cr.classList.remove('chegou'), 2500); }
+  if (ok) concluirConferencia();
 }
 
 /* MEDICAO DOS CTAs (03/09/2026): data-ev = nome do CTA, evento cta_click. */
@@ -537,20 +636,20 @@ document.addEventListener('click', function(e){
 (async function(){
   const apelido = apelidoDaUrl();
   try{ if(window.mvEv) mvEv('verificar_parceiro', { ref: apelido || 'sem_ref', ramo: ramoDaUrl() || 'sem_ramo' }); }catch(_){}
-  if(!apelido){ pintarNegado('', false, false); mostrar(); return; }
+  if(!apelido){ pintarNegado('', false, false); mostrar(false); return; }
   try{
     const snap = await getDoc(doc(db, 'parceiros_publicos', apelido));
-    if(!snap.exists()){ pintarNegado(apelido, false, false); mostrar(); return; }
+    if(!snap.exists()){ pintarNegado(apelido, false, false); mostrar(false); return; }
     const d = snap.data() || {};
-    if(d.ativo !== true){ pintarNegado(apelido, true, false); mostrar(); return; }
+    if(d.ativo !== true){ pintarNegado(apelido, true, false); mostrar(false); return; }
     if(ramoDaUrl()) await esperarCatalogo();
     pintarAutorizado(d, apelido);
-    mostrar();
+    mostrar(true);
   }catch(e){
     /* Rede caiu ou o Firestore nao respondeu. NAO dizemos "nao e parceiro":
        seria acusar alguem por um problema nosso. */
     pintarNegado(apelido, false, true);
-    mostrar();
+    mostrar(false);
   }
 })();
 </script>
