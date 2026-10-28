@@ -91,6 +91,21 @@
       "permanent": true
     },
     {
+      "source": "/guias/vender-encomenda-de-natal.html",
+      "destination": "/guia/vender-encomenda-de-natal",
+      "permanent": true
+    },
+    {
+      "source": "/guias/vender-na-praia.html",
+      "destination": "/guia/vender-na-praia",
+      "permanent": true
+    },
+    {
+      "source": "/guias-todos.html",
+      "destination": "/guias",
+      "permanent": true
+    },
+    {
       "source": "/fundador.html",
       "destination": "/fundador",
       "permanent": true
@@ -393,6 +408,10 @@
     {
       "source": "/live-shop",
       "destination": "/live-shop.html"
+    },
+    {
+      "source": "/guias",
+      "destination": "/guias-todos.html"
     },
     {
       "source": "/guia/taxas-live-shop",
