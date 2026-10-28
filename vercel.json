@@ -451,6 +451,14 @@
       "destination": "/guias/calculadora-taxas-embed.html"
     },
     {
+      "source": "/guia/vender-encomenda-de-natal",
+      "destination": "/guias/vender-encomenda-de-natal.html"
+    },
+    {
+      "source": "/guia/vender-na-praia",
+      "destination": "/guias/vender-na-praia.html"
+    },
+    {
       "source": "/fundador",
       "destination": "/fundador.html"
     },

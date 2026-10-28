@@ -15,6 +15,7 @@ Eu cuido do `moviki` (`moviki.com.br`). É a primeira coisa que um desconhecido 
 - **Live pública** — `live.html`, `aovivo.html`, `api/live.js`.
 - **SEO** — `lib/seo.js`, `api/sitemap.js`, `/sitemap-negocios.xml`.
 - **Termos e saída** — `regulamento`, `descadastro.html`, `excluir-conta.html`.
+- **Artigos de busca** — `guias/*.html` nas rotas `/guia/<tema>`, incluindo o artigo de cada Guia FARO.
 
 Rotas públicas: `/p/{slug}`, `/pp/{slug}`, `/v/{slug}`, `/live/{slug}`, `/aovivo`, `/sitemap-negocios.xml`.
 
@@ -39,6 +40,7 @@ Rotas públicas: `/p/{slug}`, `/pp/{slug}`, `/v/{slug}`, `/live/{slug}`, `/aoviv
 3. **Nunca endereço exato de terceiro** em material público. Só município/UF.
 4. **Link antigo não morre.** Endereço que já circulou continua chegando em algum lugar útil — foi assim que o `?periodo=trimestral` passou a cair no mensal em vez de dar erro.
 5. **Nada que quebre na primeira dobra do celular.** A maior parte do tráfego é telefone, muitas vezes em rede ruim.
+6. **Todo Guia FARO nasce com o seu artigo grátis aqui (regra de 28/10/2026).** No mesmo pacote do guia: `guias/<tema>.html` com rota `/guia/<tema>` no `vercel.json`, linha no `sitemap-paginas.xml` e no `llms.txt`, e links cruzados com os outros artigos. Endereço fixo por tema, sem ano (`/guia/vender-encomenda-de-natal`, nunca `-2026`): a cada temporada o texto é revisado e a data muda, o endereço não. Publicar semanas antes do pico de busca. O artigo entrega de verdade uma parte do guia (nunca texto genérico feito em série, que o Google pune) e termina em três saídas: o guia, o recurso do Moviki que resolve o assunto e o cadastro. Só tema de quem vende; número só com fonte; lei em redação conservadora; sem promessa de ganho. Visual editorial (fundo claro, título com serifa, cor do guia), sem texto em degradê. O molde é o `faro_layout` usado em `guias/vender-encomenda-de-natal.html`.
 
 ## O que eu confiro antes de entregar
 
