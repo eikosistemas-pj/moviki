@@ -3491,7 +3491,7 @@ img.mvFundo{position:absolute!important;inset:0;z-index:0!important;
     const box=el('corpoPedido');
     const uC=(j.modo==='cartao'&&j.status==='aguardando'&&j.cartao)?urlCartao(j.cartao.url):'';   /* 2026-10-28-cartao */
     box.innerHTML=passos(3)+'<div class="pgStatus'+(PD_PAGOS.indexOf(j.status)>=0?' ok':'')+'">'+
-      esc(pdRotulo(j))+'</div>'+(uC?'<a class="pgCopiar" style="display:block;text-align:center;text-decoration:none" href="'+esc(uC)+'" target="_blank" rel="noopener noreferrer">Abrir a página do cartão</a>':'')+blocoCodigo(j);
+      esc(pdRotulo(j))+'</div>'+(uC?'<a class="pgCopiar" style="display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none" href="'+esc(uC)+'" target="_blank" rel="noopener noreferrer">Abrir a página do cartão</a>':'')+blocoCodigo(j);
     abrirFolha('folhaPedido');
     if(j.status==='entregue'||j.status==='recusado'||j.status==='cancelado'||j.status==='estornado')esquecerPedido();
   };
