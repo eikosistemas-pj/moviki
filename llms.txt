@@ -2,7 +2,7 @@
 
 > Moviki (Moviki Live Shop) é uma plataforma brasileira de venda ao vivo (live shop) para lojas de shopping, de rua e de bairro. O lojista transmite pela câmera do celular, o cliente vê o produto com o preço na tela, pergunta no chat e compra na hora. O pedido cai na Central de Pedidos do próprio Moviki e o Pix vai direto para a conta do lojista, sem comissão por venda. Empresa: EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA, CNPJ 68.289.841/0001-02, Curitiba (PR).
 
-Versão: 2026-10-28-faro-artigos
+Versão: 2026-10-28-guias-central
 
 ## O que o Moviki faz
 
@@ -37,6 +37,7 @@ Qualquer pessoa pode indicar lojistas para o Moviki e receber 15% de cada mensal
 - [Para comerciantes](https://www.moviki.com.br/comerciantes.html): live, catálogo e pedidos.
 - [Premium](https://www.moviki.com.br/premium.html) e [Enterprise](https://www.moviki.com.br/enterprise.html): recursos de cada plano.
 - [Programa de parceiros](https://www.moviki.com.br/parceiros-ganhos.html) e [regulamento](https://www.moviki.com.br/regulamento.html).
+- [Guias grátis do Moviki](https://www.moviki.com.br/guias): central com todos os guias do site (live de vendas, vender online, taxas e os da temporada).
 - [Calculadora de taxas de live shop](https://www.moviki.com.br/guia/calculadora-taxas-live-shop): compara a tarifa por venda de outras plataformas com a mensalidade fixa.
 - [Guias de live de vendas](https://www.moviki.com.br/guia/como-fazer-live-de-vendas).
 - [Como vender encomendas de Natal feitas em casa](https://www.moviki.com.br/guia/vender-encomenda-de-natal): cardápio, preço, calendário, sinal no Pix, MEI e vigilância sanitária.
