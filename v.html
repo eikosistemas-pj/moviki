@@ -21,7 +21,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#050b14">
 <link rel="icon" href="/favicon512.png">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://app.moviki.com.br; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://app.moviki.com.br https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com.br; connect-src 'self' https://*.googleapis.com https://moviki-robo.vercel.app https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://pagead2.googlesyndication.com; frame-src https://www.google.com; base-uri 'self'; object-src 'none'">
 <script src="/mvmetrica.js"></script>
 <script src="/mvqr.js" defer></script>
 <!-- 2026-10-12-ramoqr: catalogo unico de ramos (mora no app). Sem ele a pagina
@@ -313,7 +313,7 @@ const firebaseConfig = {
   messagingSenderId: "451920150738",
   appId: "1:451920150738:web:be458392064c964c792d0b"
 };
-window.MOVIKI_VERSAO = '2026-10-27-borda'; /* 27/10: moldura dourada com reflexo que anda com o dedo/inclinacao; cinza no nao confirmado. */ /* antes: 2026-10-27-logo */ /* 27/10: logo oficial (logo.png, pino + moviki) no topo e na faixa do cracha, no lugar do texto. */ /* antes: 2026-10-27-semtremido */ /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
+window.MOVIKI_VERSAO = '2026-10-29-csp-google-ads'; /* 27/10: moldura dourada com reflexo que anda com o dedo/inclinacao; cinza no nao confirmado. */ /* antes: 2026-10-27-logo */ /* 27/10: logo oficial (logo.png, pino + moviki) no topo e na faixa do cracha, no lugar do texto. */ /* antes: 2026-10-27-semtremido */ /* 27/10: cracha sem tremido (um alvo so, amortecido por quadro; giroscopio com filtro e zona morta). Antes: 2026-10-27-crachavivo2. */ /* 27/10 (2a rodada): fundo de seguranca, microtexto, selo holografico, inclinacao 3D com brilho, conferencia animada, codigo do cracha e QR na frente. */
 const app = initializeApp(firebaseConfig);
 /* APP CHECK (03/09/2026): o Firestore esta com o App Check ligado. Sem este
    bloco a pagina para de responder CALADA. try/catch: nunca derruba a pagina. */
