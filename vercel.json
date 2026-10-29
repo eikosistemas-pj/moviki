@@ -246,6 +246,11 @@
       "permanent": true
     },
     {
+      "source": "/live-shop-ramos/hamburgueria.html",
+      "destination": "/live-shop/hamburgueria",
+      "permanent": true
+    },
+    {
       "source": "/live-shop-ramos/acai.html",
       "destination": "/live-shop/acai",
       "permanent": true
@@ -588,6 +593,10 @@
     {
       "source": "/live-shop/esportes",
       "destination": "/live-shop-ramos/esportes.html"
+    },
+    {
+      "source": "/live-shop/hamburgueria",
+      "destination": "/live-shop-ramos/hamburgueria.html"
     },
     {
       "source": "/live-shop/acai",
