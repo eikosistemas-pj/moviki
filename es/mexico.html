@@ -19,7 +19,7 @@
   sem promessa de venda ou de publico; "prueba gratis", nunca "trial".
 -->
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.com.br; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://pagead2.googlesyndication.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#050b14">
@@ -309,7 +309,7 @@ footer a{color:var(--texto2)}
 </div>
 
 <script>
-window.MOVIKI_VERSAO='2026-10-10-neni';
+window.MOVIKI_VERSAO='2026-10-29-csp-google-ads';
 (function(){
   var aviso=document.getElementById('avisoMed');
   function fechar(){ aviso.classList.remove('on'); }

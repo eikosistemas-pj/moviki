@@ -17,7 +17,7 @@
   mudou a tarifa, trocar o JSON E este HTML no mesmo PR. Mais de 60 dias sem conferir = aviso; mais de 100 = plataforma "em revisao".
 -->
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'self'; base-uri 'none'; form-action 'none'">
+  content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.com.br; media-src 'self'; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://pagead2.googlesyndication.com; frame-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#050b14">
 <meta property="og:type" content="website">
@@ -484,7 +484,7 @@ footer a{text-decoration:underline}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script>window.MOVIKI_VERSAO='2026-10-28-guias-central';</script>
+<script>window.MOVIKI_VERSAO='2026-10-29-csp-google-ads';</script>
 <script src="/mvcalculadora.js"></script>
 <script>
 (function(){
