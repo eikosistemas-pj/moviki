@@ -66,6 +66,15 @@
  *    criava a conta pelo botao da /aovivo chegava no painel sem a UTM, e o
  *    funil do dono contava "sem origem". Agora a UTM vai junto mesmo sem fbc.
  *
+ * 01/11/2026 (versao adstag1, marca 2026-11-01-adstag) — DESTINO DO GOOGLE ADS:
+ *  - gtag('config', 'AW-18422836145') ao lado do GA4, para a conversao
+ *    "Cadastro lojista (tag Google Ads)" disparada pelo painel desde 29/10
+ *    chegar ao Google Ads (estava em "nunca recebeu dados"). Mesmo consentimento
+ *    de antes: ad_storage e ad_personalization negados, sem page_view para o
+ *    Ads, "Nao medir" desliga tudo. Politica de privacidade ja cobre (versao
+ *    2026-10-29-csp-google-ads, itens 4 e 10) e a CSP do painel ja libera os
+ *    dominios do Google Ads.
+ *
  * 25/09/2026 (versao medicao3) — "NAO MEDIR" NAO CARREGA NADA DO GOOGLE:
  *  - Com mv_medicao=nao o gtag.js nem e baixado (antes baixava e so ficava
  *    com analytics_storage negado, o que ainda manda sinal sem cookie).
@@ -79,6 +88,10 @@
 
   // >>> TROQUE AQUI pelo ID real da propriedade GA4 (comeca com G-). <<<
   var MV_GA_ID = 'G-GG5CSQZVGH';
+
+  // Conta do Google Ads (destino da conversao "Cadastro lojista (tag Google
+  // Ads)"). Nao e segredo: o mesmo ID aparece em qualquer pagina com a tag.
+  var MV_AW_ID = 'AW-18422836145';
 
   // Dominios do funil, pra atribuicao entre o site e o painel.
   var MV_DOMINIOS = ['moviki.com.br', 'app.moviki.com.br'];
@@ -383,6 +396,19 @@
 
   gtag('js', new Date());
   gtag('config', MV_GA_ID, {
+    linker: { domains: MV_DOMINIOS, accept_incoming: true }
+  });
+  // 01/11/2026 (versao adstag1): destino do Google Ads na MESMA tag do Google.
+  // O painel dispara mvEv('conversion', {send_to: MV_AW_ID + '/<rotulo>'}) no
+  // cadastro de lojista desde 29/10 (2026-10-29-adsconv), mas o destino AW
+  // nunca foi configurado no navegador: o gtag.js descartava o evento e a acao
+  // "Cadastro lojista (tag Google Ads)" ficou em "nunca recebeu dados".
+  // Continua sem cookie de publicidade (ad_storage negado), sem personalizacao
+  // e sem page_view para o Ads (nada de remarketing): so o aviso da conversao.
+  // Com "Nao medir" o gtag.js nem e baixado, entao nada sai.
+  gtag('config', MV_AW_ID, {
+    send_page_view: false,
+    allow_ad_personalization_signals: false,
     linker: { domains: MV_DOMINIOS, accept_incoming: true }
   });
 
