@@ -91,6 +91,11 @@
       "permanent": true
     },
     {
+      "source": "/guias/black-friday-ao-vivo.html",
+      "destination": "/guia/black-friday-ao-vivo",
+      "permanent": true
+    },
+    {
       "source": "/guias/vender-encomenda-de-natal.html",
       "destination": "/guia/vender-encomenda-de-natal",
       "permanent": true
@@ -498,6 +503,10 @@
     {
       "source": "/guia/calculadora-taxas-live-shop/embed",
       "destination": "/guias/calculadora-taxas-embed.html"
+    },
+    {
+      "source": "/guia/black-friday-ao-vivo",
+      "destination": "/guias/black-friday-ao-vivo.html"
     },
     {
       "source": "/guia/vender-encomenda-de-natal",
