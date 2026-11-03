@@ -2,7 +2,7 @@
 
 > Moviki (Moviki Live Shop) é uma plataforma brasileira de venda ao vivo (live shop) para lojas de shopping, de rua e de bairro. O lojista transmite pela câmera do celular, o cliente vê o produto com o preço na tela, pergunta no chat e compra na hora. O pedido cai na Central de Pedidos do próprio Moviki e o Pix vai direto para a conta do lojista, sem comissão por venda. Empresa: EIKO SISTEMAS DESENVOLVIMENTO DE SOFTWARE LTDA, CNPJ 68.289.841/0001-02, Curitiba (PR).
 
-Versão: 2026-10-28-guias-central
+Versão: 2026-11-03-guias-busca
 
 ## O que o Moviki faz
 
@@ -42,6 +42,11 @@ Qualquer pessoa pode indicar lojistas para o Moviki e receber 15% de cada mensal
 - [Guias de live de vendas](https://www.moviki.com.br/guia/como-fazer-live-de-vendas).
 - [Como vender encomendas de Natal feitas em casa](https://www.moviki.com.br/guia/vender-encomenda-de-natal): cardápio, preço, calendário, sinal no Pix, MEI e vigilância sanitária.
 - [Como vender na praia no verão](https://www.moviki.com.br/guia/vender-na-praia): licença de ambulante, produto, higiene no calor, preço e Pix.
+- [Como montar um brechó online](https://www.moviki.com.br/guia/como-montar-um-brecho-online): garimpo, consignação, triagem, preço de peça única, fotos, regra de reserva e MEI.
+- [Como vender bolo de pote e doces feitos em casa](https://www.moviki.com.br/guia/como-vender-bolo-de-pote): cardápio de sabores, preço, conservação, onde vender, pedido e Pix, MEI e vigilância sanitária.
+- [Como revender perfumes importados com segurança](https://www.moviki.com.br/guia/como-revender-perfumes-importados): modelos de revenda, fornecedor com nota, regularização na Anvisa, preço e cuidados.
+- [Como vender pelo WhatsApp sem perder pedido](https://www.moviki.com.br/guia/como-vender-pelo-whatsapp): WhatsApp Business, status, lista de transmissão sem spam e pedido organizado.
+- [Catálogo online para loja](https://www.moviki.com.br/guia/catalogo-online-para-loja): cinco caminhos comparados, o que o catálogo precisa ter, fotos e divulgação.
 - [Imprensa](https://www.moviki.com.br/imprensa).
 - [Termos](https://www.moviki.com.br/termos.html) e [Privacidade](https://www.moviki.com.br/privacidade.html).
 

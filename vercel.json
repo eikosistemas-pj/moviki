@@ -101,6 +101,31 @@
       "permanent": true
     },
     {
+      "source": "/guias/como-montar-um-brecho-online.html",
+      "destination": "/guia/como-montar-um-brecho-online",
+      "permanent": true
+    },
+    {
+      "source": "/guias/como-vender-bolo-de-pote.html",
+      "destination": "/guia/como-vender-bolo-de-pote",
+      "permanent": true
+    },
+    {
+      "source": "/guias/como-revender-perfumes-importados.html",
+      "destination": "/guia/como-revender-perfumes-importados",
+      "permanent": true
+    },
+    {
+      "source": "/guias/como-vender-pelo-whatsapp.html",
+      "destination": "/guia/como-vender-pelo-whatsapp",
+      "permanent": true
+    },
+    {
+      "source": "/guias/catalogo-online-para-loja.html",
+      "destination": "/guia/catalogo-online-para-loja",
+      "permanent": true
+    },
+    {
       "source": "/guias-todos.html",
       "destination": "/guias",
       "permanent": true
@@ -481,6 +506,26 @@
     {
       "source": "/guia/vender-na-praia",
       "destination": "/guias/vender-na-praia.html"
+    },
+    {
+      "source": "/guia/como-montar-um-brecho-online",
+      "destination": "/guias/como-montar-um-brecho-online.html"
+    },
+    {
+      "source": "/guia/como-vender-bolo-de-pote",
+      "destination": "/guias/como-vender-bolo-de-pote.html"
+    },
+    {
+      "source": "/guia/como-revender-perfumes-importados",
+      "destination": "/guias/como-revender-perfumes-importados.html"
+    },
+    {
+      "source": "/guia/como-vender-pelo-whatsapp",
+      "destination": "/guias/como-vender-pelo-whatsapp.html"
+    },
+    {
+      "source": "/guia/catalogo-online-para-loja",
+      "destination": "/guias/catalogo-online-para-loja.html"
     },
     {
       "source": "/fundador",
