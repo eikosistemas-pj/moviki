@@ -286,6 +286,11 @@
       "permanent": true
     },
     {
+      "source": "/live-shop-ramos/moveis.html",
+      "destination": "/live-shop/moveis",
+      "permanent": true
+    },
+    {
       "source": "/live-shop-ramos/acai.html",
       "destination": "/live-shop/acai",
       "permanent": true
@@ -660,6 +665,10 @@
     {
       "source": "/live-shop/bolsas",
       "destination": "/live-shop-ramos/bolsas.html"
+    },
+    {
+      "source": "/live-shop/moveis",
+      "destination": "/live-shop-ramos/moveis.html"
     },
     {
       "source": "/live-shop/acai",

@@ -1,5 +1,5 @@
 /*!
- * MOVIKI vocab.js | versao 2026-11-05-bolsas (subtipo bolsas). Antes: 2026-10-17-vocab
+ * MOVIKI vocab.js | versao 2026-11-05-moveis (subtipo moveis). Antes: 2026-11-05-bolsas; 2026-10-17-vocab
  * DUAS CÓPIAS IDÊNTICAS: moviki-app/vocab.js (painel e estúdio da live)
  * e moviki/vocab.js (página pública do negócio e prévia do link no
  * WhatsApp, lida pelo api/og.js no servidor). Mexeu numa, mexe na outra
@@ -29,6 +29,7 @@
     brinquedos:["lojas","Brinquedos",0,"sacola","infantil"],
     esportes:["lojas","Esporte e Fitness",0,"roupa","moda"],
     casa:["lojas","Casa, Cama, Mesa e Banho",0,"sacola","casa"],
+    moveis:["lojas","Móveis",0,"sacola","casa"],
     eletronicos:["lojas","Eletrônicos e Games",0,"sacola","eletronicos"],
     autopecas:["lojas","Autopeças e Acessórios",0,"sacola","automotivo"],
     presentes:["lojas","Presentes e Artigos de Festa",0,"sacola","shopping"],
