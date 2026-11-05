@@ -281,6 +281,11 @@
       "permanent": true
     },
     {
+      "source": "/live-shop-ramos/bolsas.html",
+      "destination": "/live-shop/bolsas",
+      "permanent": true
+    },
+    {
       "source": "/live-shop-ramos/acai.html",
       "destination": "/live-shop/acai",
       "permanent": true
@@ -651,6 +656,10 @@
     {
       "source": "/live-shop/hamburgueria",
       "destination": "/live-shop-ramos/hamburgueria.html"
+    },
+    {
+      "source": "/live-shop/bolsas",
+      "destination": "/live-shop-ramos/bolsas.html"
     },
     {
       "source": "/live-shop/acai",
