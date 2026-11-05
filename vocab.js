@@ -1,5 +1,5 @@
 /*!
- * MOVIKI vocab.js | versao 2026-10-17-vocab
+ * MOVIKI vocab.js | versao 2026-11-05-bolsas (subtipo bolsas). Antes: 2026-10-17-vocab
  * DUAS CÓPIAS IDÊNTICAS: moviki-app/vocab.js (painel e estúdio da live)
  * e moviki/vocab.js (página pública do negócio e prévia do link no
  * WhatsApp, lida pelo api/og.js no servidor). Mexeu numa, mexe na outra
@@ -57,6 +57,7 @@
     roupas:["moda","Moda / Roupas",0,"roupa","moda"],
     calcados:["moda","Calçados",0,"roupa","moda"],
     acessorios:["moda","Acessórios / Bijuterias",0,"sacola","joalheria"],
+    bolsas:["moda","Bolsas",0,"sacola","moda"],
     /* Artesanato */
     decoracao:["artesanato","Decoração / Utilidades",0,"sacola","artesanato"],
     bijuteriaartesanal:["artesanato","Bijuteria Artesanal",0,"sacola","joalheria"],
