@@ -1,5 +1,21 @@
 /*!
- * MOVIKI api/live.js | versao 2026-10-16-revisao | antes 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-11-09-escala | antes 2026-10-16-revisao | antes 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ *
+ * 09/11/2026 (plano de escala da live):
+ *   - VARIOS TOKENS DO CLOUDFLARE EM RODIZIO. A API do Cloudflare aceita 1.200
+ *     chamadas a cada 5 minutos POR TOKEN; passou disso, o token fica 5 minutos
+ *     bloqueado para tudo. Cada "Entrar ao vivo" gasta 2 chamadas, entao um
+ *     token so abre ~500 lives por janela de 5 min. Agora cf() usa
+ *     CF_STREAM_TOKEN e, se existirem, CF_STREAM_TOKEN_2 a CF_STREAM_TOKEN_5,
+ *     um por vez; o que levar 429 descansa o tempo do Retry-After e o proximo
+ *     assume. Sem as envs novas, funciona igual a antes, com um token.
+ *   - FILA EM VEZ DE ERRO. Com todos os tokens descansando, o iniciar responde
+ *     429 {erro:'fila', esperaSeg} e o estudio tenta de novo sozinho, mostrando
+ *     "sua live abre em X s". Antes era 502 'cloudflare' e o lojista desistia.
+ *   - DELETE que volta 404 (entrada ja apagada) conta como apagado. Sem isso,
+ *     uma abertura que apagou a entrada antiga e levou 429 no POST ficava
+ *     presa: a proxima tentativa nao conseguia apagar o que ja nao existia.
+ *   - Duracao: Premium 1 h -> 2 h, Enterprise 3 h -> 4 h. Teste gratis segue 1 h.
  *
  * 14/10/2026: o robo recusa a live aberta ao publico de quem esta no teste
  * provisorio (e-mail ainda nao confirmado) com `email_nao_confirmado`; aqui so
@@ -194,15 +210,19 @@ const ACEITE_VERSAO = '1.0';   // mudou o texto das Regras da Live -> sobe aqui,
    Enterprise. Mudar aqui muda nos dois lugares. */
 const NIVEIS = {
   premium: {
-    nivel: 'premium', limiteMin: 60, sacolaMax: 5,
+    nivel: 'premium', limiteMin: 120, sacolaMax: 5,   /* 09/11: 60 -> 120 */
     ferramentas: ['transmitir', 'destaque', 'sacola', 'chat', 'assistindo', 'agendar', 'compartilhar']
   },
   enterprise: {
-    nivel: 'enterprise', limiteMin: 180, sacolaMax: 20,
+    nivel: 'enterprise', limiteMin: 240, sacolaMax: 20,   /* 09/11: 180 -> 240 */
     ferramentas: ['transmitir', 'destaque', 'sacola', 'chat', 'assistindo', 'agendar', 'compartilhar',
                   'oferta', 'estoque', 'cupom', 'brinde', 'fila', 'dados', 'cortes', 'local']
   }
 };
+
+/* O teste gratis usa o nivel Premium, mas a duracao continua a da oferta do
+   teste (Termos 6-D): 1 hora por live. */
+const LIMITE_TESTE_MIN = 60;
 
 function origens() {
   const env = String(process.env.LIVE_ORIGENS || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -472,23 +492,64 @@ async function vereditoTeto(termos) {
 }
 
 /* ---------------- 3. Cloudflare Stream ---------------- */
-async function cf(caminho, opcoes) {
-  const conta = process.env.CF_ACCOUNT_ID, tok = process.env.CF_STREAM_TOKEN;
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 6000);
-  try {
-    const r = await fetch(CF_API + conta + '/stream' + caminho, Object.assign({
-      signal: ctrl.signal,
-      headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' }
-    }, opcoes || {}));
-    clearTimeout(t);
-    const j = await r.json().catch(() => null);
-    if (!r.ok || !j || j.success === false) {
-      console.error('live: cloudflare', r.status, JSON.stringify(j && j.errors || j).slice(0, 400));
-      return null;
-    }
-    return j.result;
-  } catch (e) { clearTimeout(t); console.error('live: cloudflare falhou', String(e)); return null; }
+/* 09/11/2026 — tokens em rodizio. O limite da API do Cloudflare e por token
+   (1.200 chamadas / 5 min); com 429 o token inteiro fica bloqueado por 5 min.
+   Cada token que levar 429 descansa e o proximo assume. */
+function tokensCf() {
+  return [process.env.CF_STREAM_TOKEN, process.env.CF_STREAM_TOKEN_2, process.env.CF_STREAM_TOKEN_3,
+          process.env.CF_STREAM_TOKEN_4, process.env.CF_STREAM_TOKEN_5].filter(Boolean);
+}
+let cfVez = 0;
+const cfFrio = {};            // indice do token -> ate quando descansa (ms)
+
+/* Quantos segundos ate algum token voltar, quando TODOS estao descansando.
+   0 = tem token livre (a falha, se houve, nao foi limite). */
+function cfEsperaSeg() {
+  const n = tokensCf().length;
+  if (!n) return 0;
+  const agora = Date.now();
+  let menor = Infinity;
+  for (let k = 0; k < n; k++) {
+    const ate = cfFrio[k] || 0;
+    if (ate <= agora) return 0;
+    if (ate < menor) menor = ate;
+  }
+  return Math.max(5, Math.ceil((menor - agora) / 1000));
+}
+
+async function cf(caminho, opcoes, opc) {
+  const conta = process.env.CF_ACCOUNT_ID;
+  const toks = tokensCf();
+  if (!conta || !toks.length) return null;
+  const inicio = cfVez;
+  for (let i = 0; i < toks.length; i++) {
+    const k = (inicio + i) % toks.length;
+    if ((cfFrio[k] || 0) > Date.now()) continue;
+    cfVez = (k + 1) % toks.length;
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 6000);
+    try {
+      const r = await fetch(CF_API + conta + '/stream' + caminho, Object.assign({
+        signal: ctrl.signal,
+        headers: { Authorization: 'Bearer ' + toks[k], 'Content-Type': 'application/json' }
+      }, opcoes || {}));
+      clearTimeout(t);
+      if (r.status === 429) {
+        const ra = Number(r.headers && r.headers.get ? r.headers.get('retry-after') : 0) || 300;
+        cfFrio[k] = Date.now() + Math.min(600, Math.max(30, ra)) * 1000;
+        console.error('live: cloudflare 429 no token', k + 1, 'de', toks.length, '- descansa', ra, 's');
+        continue;
+      }
+      if (r.status === 404 && opc && opc.aceita404) return {};
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || j.success === false) {
+        console.error('live: cloudflare', r.status, JSON.stringify(j && j.errors || j).slice(0, 400));
+        return null;
+      }
+      return j.result;
+    } catch (e) { clearTimeout(t); console.error('live: cloudflare falhou', String(e)); return null; }
+  }
+  return null;
 }
 
 /* Uma entrada por lojista, reaproveitada para sempre. O nome carrega o uid
@@ -545,7 +606,7 @@ async function apagarEntrada(uid, idConhecido) {
     id = achado || '';
   }
   if (!id) return '';                             // nunca fez live: nada a apagar
-  const del = await cf('/live_inputs/' + id, { method: 'DELETE' });
+  const del = await cf('/live_inputs/' + id, { method: 'DELETE' }, { aceita404: true });
   if (del === null) return null;
   if (listaCache.mapa) delete listaCache.mapa['mv-' + uid];
   return id;
@@ -645,7 +706,7 @@ module.exports = async (req, res) => {
     const idEntrada = await acharEntrada('mv-' + alvo);
     if (idEntrada === null) return responder(res, 502, { erro: 'cloudflare' });
     if (idEntrada) {
-      const del = await cf('/live_inputs/' + idEntrada, { method: 'DELETE' });
+      const del = await cf('/live_inputs/' + idEntrada, { method: 'DELETE' }, { aceita404: true });
       if (del === null) return responder(res, 502, { erro: 'cloudflare' });
     }
     listaCache = { mapa: null, expira: 0 };
@@ -659,10 +720,20 @@ module.exports = async (req, res) => {
   if (!nivel) return responder(res, 403, { erro: 'plano', mensagem: 'A live faz parte dos planos Premium e Enterprise.' });
 
   /* acao 'nivel': so diz o que o plano libera (abre o estudio sem gastar nada). */
-  if (corpo.acao === 'nivel') return responder(res, 200, { ok: true, nivel: nivel.nivel, limiteMin: nivel.limiteMin, sacolaMax: nivel.sacolaMax, ferramentas: nivel.ferramentas });
+  /* 09/11: o teste gratis fica com 1 h por live (Termos 6-D), mesmo no nivel Premium. */
+  const limiteMin = periodoDaAssinatura(a.doc) === 'trial' ? LIMITE_TESTE_MIN : nivel.limiteMin;
+  if (corpo.acao === 'nivel') return responder(res, 200, { ok: true, nivel: nivel.nivel, limiteMin, sacolaMax: nivel.sacolaMax, ferramentas: nivel.ferramentas });
 
   if (corpo.acao !== 'iniciar') return responder(res, 400, { erro: 'acao' });
   if (!process.env.CF_ACCOUNT_ID || !process.env.CF_STREAM_TOKEN) return responder(res, 503, { erro: 'config' });
+
+  /* 09/11: todos os tokens do Cloudflare descansando (429) — nem gasta a cota
+     no robo: responde fila e o estudio tenta de novo sozinho. */
+  const filaAntes = cfEsperaSeg();
+  if (filaAntes > 0) {
+    return responder(res, 429, { erro: 'fila', esperaSeg: filaAntes,
+      mensagem: 'Muita gente entrando ao vivo agora. Sua live abre em ' + filaAntes + ' segundos.' });
+  }
 
   /* BARREIRA 1 — memoria desta instancia. Nao custa leitura nenhuma. */
   const esperaMem = freioMemoria(uid);
@@ -778,7 +849,14 @@ module.exports = async (req, res) => {
   }
 
   const e = await entradaNovaDoLojista(uid, reserva.entradaId);
-  if (!e) return responder(res, 502, { erro: 'cloudflare' });
+  if (!e) {
+    const espera = cfEsperaSeg();
+    if (espera > 0) {
+      return responder(res, 429, { erro: 'fila', esperaSeg: espera,
+        mensagem: 'Muita gente entrando ao vivo agora. Sua live abre em ' + espera + ' segundos.' });
+    }
+    return responder(res, 502, { erro: 'cloudflare' });
+  }
 
   /* ---- ENSAIO (07/10): sessao propria, sem publico ----
      A sessao vai para live_ensaios, nao para live_sessoes: a pagina publica,
@@ -818,7 +896,7 @@ module.exports = async (req, res) => {
      ver "tente de novo" do que voltar a ter um estado que so ele escreve. */
   const sessao = await chamarRobo('live_abrir', {
     uid, whep: e.whep, entradaId: e.entradaId,
-    nivel: nivel.nivel, limiteMin: nivel.limiteMin,
+    nivel: nivel.nivel, limiteMin,
     periodo: periodoDaAssinatura(a.doc),
     jaReservado: true,          /* a cota ja andou no live_reservar */
   });
@@ -827,9 +905,12 @@ module.exports = async (req, res) => {
   }
 
   return responder(res, 200, {
-    ok: true, nivel: nivel.nivel, limiteMin: nivel.limiteMin, sacolaMax: nivel.sacolaMax,
+    ok: true, nivel: nivel.nivel, limiteMin, sacolaMax: nivel.sacolaMax,
     ferramentas: nivel.ferramentas, whip: e.whip, whep: e.whep,
     sessaoId: sessao.sessaoId || '',
     restam: (reserva.restam == null ? null : reserva.restam), cota: reserva.cota || null,
   });
 };
+
+/* teste local (testes nao vao para o repositorio publico) */
+module.exports._t = { cf, cfEsperaSeg, cfFrio, tokensCf, LIMITE_TESTE_MIN, NIVEIS };
