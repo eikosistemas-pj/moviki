@@ -1,5 +1,5 @@
 /*!
- * MOVIKI api/live.js | versao 2026-11-09-escala | antes 2026-10-16-revisao | antes 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
+ * MOVIKI api/live.js | versao 2026-11-09-recarga (recusa por teto de video avisa que da para comprar minutos extras no estudio) | antes 2026-11-09-escala | antes 2026-10-16-revisao | antes 2026-10-14-provisorio | antes 2026-10-07-ensaio | antes 2026-10-06-cerca | repo: moviki (site publico)
  *
  * 09/11/2026 (plano de escala da live):
  *   - VARIOS TOKENS DO CLOUDFLARE EM RODIZIO. A API do Cloudflare aceita 1.200
@@ -460,7 +460,7 @@ async function chamarRobo(acao, dados) {
       console.error('live: robo recusou', acao, r.status, j && j.erro);
       return { ok: false, erro: (j && j.erro) || 'robo', usadas: j && j.usadas, cota: j && j.cota, escala: j && j.escala, teto: j && j.teto,
                usadoMin: j && j.usadoMin, tetoMin: j && j.tetoMin, viraEm: j && j.viraEm, esperaSeg: j && j.esperaSeg,
-               motivo: j && j.motivo, maxDia: j && j.maxDia };
+               motivo: j && j.motivo, maxDia: j && j.maxDia, podeRecarregar: !!(j && j.podeRecarregar) };
     }
     return j;
   } catch (e) {
@@ -831,11 +831,13 @@ module.exports = async (req, res) => {
     if (reserva.erro === 'teto_video') {
       return responder(res, 403, {
         erro: 'teto_video', usadoMin: reserva.usadoMin || 0, tetoMin: reserva.tetoMin || 0,
-        viraEm: reserva.viraEm || '',
+        viraEm: reserva.viraEm || '', podeRecarregar: !!reserva.podeRecarregar,
         mensagem: 'Seu plano atingiu o limite de minutos de video deste ciclo (' +
                   (reserva.usadoMin || 0) + ' de ' + (reserva.tetoMin || 0) + ' min). ' +
                   'O limite conta espectadores x duracao' +
-                  (reserva.viraEm ? ' e a proxima live fica liberada em ' + reserva.viraEm + '.' : ' e renova no proximo ciclo.'),
+                  (reserva.podeRecarregar ? '. Compre minutos extras aqui no estudio para entrar ao vivo agora' +
+                    (reserva.viraEm ? ', ou espere a virada do ciclo em ' + reserva.viraEm + '.' : '.')
+                    : (reserva.viraEm ? ' e a proxima live fica liberada em ' + reserva.viraEm + '.' : ' e renova no proximo ciclo.')),
       });
     }
     if (reserva.erro === 'freio') {
