@@ -841,15 +841,6 @@
     },
     "api/aovivo-og.js": {
       "includeFiles": "aovivo.html"
-    },
-    "api/teste-cf.js": {
-      "maxDuration": 300
     }
-  },
-  "crons": [
-    {
-      "path": "/api/teste-cf",
-      "schedule": "0 6 10 11 *"
-    }
-  ]
+  }
 }
